@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.cli;
 import java.util.concurrent.Callable;
 import picocli.CommandLine.Command;
 
-@Command(name = "pace", mixinStandardHelpOptions = true, description = "Passive Acoustic Collection Engine")
+@Command(name = "pace", mixinStandardHelpOptions = true, description = "Passive Acoustic Collection Engine", versionProvider = VersionProvider.class)
 public class PaceCLI implements Callable<Integer> {
 
   @Override
