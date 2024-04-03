@@ -31,6 +31,8 @@ jobs:
       run: mvn -B test
     - name: Verify
       run: mvn -B verify -DskipTests
+    - id: version
+      run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
     - name: Upload Build Resources
       uses: actions/upload-artifact@v4
       with:
