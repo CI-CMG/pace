@@ -1,11 +1,12 @@
 package edu.colorado.cires.pace.core.repository;
 
+import edu.colorado.cires.pace.core.datastore.Datastore;
 import edu.colorado.cires.pace.data.Sea;
 
-public abstract class SeaRepository extends CRUDRepository<Sea, String> {
+public class SeaRepository extends CRUDRepository<Sea, String> {
 
-  protected SeaRepository() {
-    super(Sea::getUUID, Sea::getName, Sea::setUUID);
+  protected SeaRepository(Datastore<Sea, String> datastore) {
+    super(Sea::getUUID, Sea::getName, Sea::setUUID, datastore);
   }
 
   @Override

@@ -6,12 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
@@ -38,37 +37,16 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
   
   private static final FileTypeRepository fileTypeRepository = mock(FileTypeRepository.class);
   static {
-    when(fileTypeRepository.findByUUID(any())).thenReturn(Optional.of(new FileType()));
+    try {
+      when(fileTypeRepository.getByUUID(any())).thenReturn(new FileType());
+    } catch (NotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   protected CRUDRepository<Instrument, String> createRepository() {
-    return new InstrumentRepository(fileTypeRepository) {
-      @Override
-      protected Instrument saveInstrument(Instrument instrument) {
-        return saveObject(instrument);
-      }
-
-      @Override
-      public Stream<Instrument> findAll() {
-        return findAllObjects();
-      }
-
-      @Override
-      protected void delete(Instrument object) {
-        deleteObject(object);
-      }
-
-      @Override
-      protected Optional<Instrument> findByUUID(UUID uuid) {
-        return findObjectByUUID(uuid);
-      }
-
-      @Override
-      protected Optional<Instrument> findByUniqueField(String uniqueField) {
-        return findObjectByUniqueField(uniqueField);
-      }
-    };
+    return new InstrumentRepository(createDatastore(), fileTypeRepository);
   }
 
   @Override
@@ -101,14 +79,12 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
   }
   
   @Test
-  void testFileTypeDoesNotExist() {
+  void testFileTypeDoesNotExist() throws NotFoundException {
     Instrument instrument = createNewObject(1);
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(0).getUUID())).thenReturn(Optional.empty());
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(Optional.of(
-        instrument.getFileTypes().get(1)
-    ));
+    when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(0).getUUID())).thenThrow(new NotFoundException("Not found"));
+    when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(instrument.getFileTypes().get(1));
     
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.save(instrument));
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(instrument));
     assertEquals(String.format(
         "File type does not exist: %s", instrument.getFileTypes().get(0).getType()
     ), exception.getMessage());

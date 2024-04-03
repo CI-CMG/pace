@@ -3,9 +3,6 @@ package edu.colorado.cires.pace.core.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.FileType;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 class FileTypeRepositoryTest extends CrudRepositoryTest<FileType, String> {
 
@@ -31,32 +28,7 @@ class FileTypeRepositoryTest extends CrudRepositoryTest<FileType, String> {
 
   @Override
   protected CRUDRepository<FileType, String> createRepository() {
-    return new FileTypeRepository() {
-      @Override
-      public Stream<FileType> findAll() {
-        return findAllObjects();
-      }
-
-      @Override
-      protected FileType save(FileType object) {
-        return saveObject(object);
-      }
-
-      @Override
-      protected void delete(FileType object) {
-        deleteObject(object);
-      }
-
-      @Override
-      protected Optional<FileType> findByUUID(UUID uuid) {
-        return findObjectByUUID(uuid);
-      }
-
-      @Override
-      protected Optional<FileType> findByUniqueField(String uniqueField) {
-        return findObjectByUniqueField(uniqueField);
-      }
-    };
+    return new FileTypeRepository(createDatastore());
   }
 
   @Override

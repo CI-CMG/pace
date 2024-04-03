@@ -1,11 +1,12 @@
 package edu.colorado.cires.pace.core.repository;
 
+import edu.colorado.cires.pace.core.datastore.Datastore;
 import edu.colorado.cires.pace.data.Organization;
 
-public abstract class OrganizationRepository extends CRUDRepository<Organization, String> {
+public class OrganizationRepository extends CRUDRepository<Organization, String> {
 
-  protected OrganizationRepository() {
-    super(Organization::getUUID, Organization::getName, Organization::setUUID);
+  protected OrganizationRepository(Datastore<Organization, String> datastore) {
+    super(Organization::getUUID, Organization::getName, Organization::setUUID, datastore);
   }
 
   @Override

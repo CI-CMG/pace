@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.core.datastore.Datastore;
 import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
 import java.util.HashMap;
@@ -38,30 +39,38 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
 
   protected abstract CRUDRepository<O, U> createRepository();
   
-  protected Stream<O> findAllObjects() {
-    return map.values().stream();
-  }
-  
-  protected O saveObject(O object) {
-    map.put(uuidProvider.getUUID(object), object);
-    return object;
-  }
-  
-  protected O deleteObject(O object) {
-    map.remove(uuidProvider.getUUID(object));
-    return object;
-  }
-  
-  protected Optional<O> findObjectByUUID(UUID uuid) {
-    return Optional.ofNullable(
-        map.get(uuid)
-    );
-  }
-  
-  protected Optional<O> findObjectByUniqueField(U uniqueField) {
-    return map.values().stream()
-        .filter(o -> uniqueFieldProvider.getUniqueField(o).equals(uniqueField))
-        .findFirst();
+  protected Datastore<O, U> createDatastore() {
+    return new Datastore<>() {
+      @Override
+      public O save(O object) {
+        map.put(uuidProvider.getUUID(object), object);
+        return object;
+      }
+
+      @Override
+      public void delete(O object) {
+        map.remove(uuidProvider.getUUID(object));
+      }
+
+      @Override
+      public Optional<O> findByUUID(UUID uuid) {
+        return Optional.ofNullable(
+            map.get(uuid)
+        );
+      }
+
+      @Override
+      public Optional<O> findByUniqueField(U uniqueField) {
+        return map.values().stream()
+            .filter(o -> uniqueFieldProvider.getUniqueField(o).equals(uniqueField))
+            .findFirst();
+      }
+
+      @Override
+      public Stream<O> findAll() {
+        return map.values().stream();
+      }
+    };
   }
   
   @BeforeEach

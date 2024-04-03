@@ -3,9 +3,6 @@ package edu.colorado.cires.pace.core.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.Sea;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 class SeaRepositoryTest extends CrudRepositoryTest<Sea, String> {
 
@@ -31,32 +28,7 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea, String> {
 
   @Override
   protected CRUDRepository<Sea, String> createRepository() {
-    return new SeaRepository() {
-      @Override
-      public Stream<Sea> findAll() {
-        return findAllObjects();
-      }
-
-      @Override
-      protected Sea save(Sea object) {
-        return saveObject(object);
-      }
-
-      @Override
-      protected void delete(Sea object) {
-        deleteObject(object);
-      }
-
-      @Override
-      protected Optional<Sea> findByUUID(UUID uuid) {
-        return findObjectByUUID(uuid);
-      }
-
-      @Override
-      protected Optional<Sea> findByUniqueField(String uniqueField) {
-        return findObjectByUniqueField(uniqueField);
-      }
-    };
+    return new SeaRepository(createDatastore());
   }
 
   @Override

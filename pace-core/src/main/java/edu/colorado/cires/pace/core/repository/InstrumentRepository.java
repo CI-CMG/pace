@@ -1,29 +1,31 @@
 package edu.colorado.cires.pace.core.repository;
 
+import edu.colorado.cires.pace.core.datastore.Datastore;
+import edu.colorado.cires.pace.core.exception.ConflictException;
+import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
-import java.util.Optional;
+import java.util.UUID;
 
-public abstract class InstrumentRepository extends CRUDRepository<Instrument, String> {
+public class InstrumentRepository extends CRUDRepository<Instrument, String> {
   
   private final FileTypeRepository fileTypeRepository;
 
-  protected InstrumentRepository(FileTypeRepository fileTypeRepository) {
-    super(Instrument::getUUID, Instrument::getName, Instrument::setUUID);
+  protected InstrumentRepository(Datastore<Instrument, String> datastore, FileTypeRepository fileTypeRepository) {
+    super(Instrument::getUUID, Instrument::getName, Instrument::setUUID, datastore);
     this.fileTypeRepository = fileTypeRepository;
   }
 
   @Override
-  protected Instrument save(Instrument object) throws IllegalArgumentException {
-    for (FileType fileType : object.getFileTypes()) {
-      Optional<FileType> maybeFileType = fileTypeRepository.findByUUID(fileType.getUUID());
-      if (maybeFileType.isEmpty()) {
-        throw new IllegalArgumentException(String.format(
-            "File type does not exist: %s", fileType.getType()
-        ));
-      }
-    }
-    return saveInstrument(object);
+  public Instrument create(Instrument object) throws IllegalArgumentException, ConflictException {
+    checkFileTypes(object);
+    return super.create(object);
+  }
+
+  @Override
+  public Instrument update(UUID uuid, Instrument object) throws NotFoundException, IllegalArgumentException, ConflictException {
+    checkFileTypes(object);
+    return super.update(uuid, object);
   }
 
   @Override
@@ -36,5 +38,15 @@ public abstract class InstrumentRepository extends CRUDRepository<Instrument, St
     return "name";
   }
   
-  protected abstract Instrument saveInstrument(Instrument instrument);
+  private void checkFileTypes(Instrument instrument) throws IllegalArgumentException {
+    for (FileType fileType : instrument.getFileTypes()) {
+      try {
+        fileTypeRepository.getByUUID(fileType.getUUID());
+      } catch (NotFoundException e) {
+        throw new IllegalArgumentException(String.format(
+            "File type does not exist: %s", fileType.getType()
+        ), e);
+      }
+    }
+  }
 }

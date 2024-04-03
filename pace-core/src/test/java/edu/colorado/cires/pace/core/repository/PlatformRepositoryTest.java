@@ -3,9 +3,6 @@ package edu.colorado.cires.pace.core.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.Platform;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 class PlatformRepositoryTest extends CrudRepositoryTest<Platform, String> {
 
@@ -31,32 +28,7 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform, String> {
 
   @Override
   protected CRUDRepository<Platform, String> createRepository() {
-    return new PlatformRepository() {
-      @Override
-      public Stream<Platform> findAll() {
-        return findAllObjects();
-      }
-
-      @Override
-      protected Platform save(Platform object) {
-        return saveObject(object);
-      }
-
-      @Override
-      protected void delete(Platform object) {
-        deleteObject(object);
-      }
-
-      @Override
-      protected Optional<Platform> findByUUID(UUID uuid) {
-        return findObjectByUUID(uuid);
-      }
-
-      @Override
-      protected Optional<Platform> findByUniqueField(String uniqueField) {
-        return findObjectByUniqueField(uniqueField);
-      }
-    };
+    return new PlatformRepository(createDatastore());
   }
 
   @Override

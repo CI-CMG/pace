@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.core.repository;
 
+import edu.colorado.cires.pace.core.datastore.Datastore;
 import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -11,11 +11,13 @@ public abstract class CRUDRepository<O, U> {
   private final UUIDProvider<O> uuidProvider;
   private final UniqueFieldProvider<O, U> uniqueFieldProvider;
   private final UUIDSetter<O> uuidSetter;
+  private final Datastore<O, U> datastore;
 
-  protected CRUDRepository(UUIDProvider<O> uuidProvider, UniqueFieldProvider<O, U> uniqueFieldProvider, UUIDSetter<O> uuidSetter) {
+  protected CRUDRepository(UUIDProvider<O> uuidProvider, UniqueFieldProvider<O, U> uniqueFieldProvider, UUIDSetter<O> uuidSetter, Datastore<O, U> datastore) {
     this.uuidProvider = uuidProvider;
     this.uniqueFieldProvider = uniqueFieldProvider;
     this.uuidSetter = uuidSetter;
+    this.datastore = datastore;
   }
   
   public O create(O object) throws IllegalArgumentException, ConflictException {
@@ -25,7 +27,7 @@ public abstract class CRUDRepository<O, U> {
       ));
     }
     U uniqueField = uniqueFieldProvider.getUniqueField(object);
-    if (findByUniqueField(uniqueField).isPresent()) {
+    if (datastore.findByUniqueField(uniqueField).isPresent()) {
       throw new ConflictException(String.format(
           "%s with %s %s already exists", getObjectName(), getUniqueFieldName(), uniqueField
       ));
@@ -33,11 +35,11 @@ public abstract class CRUDRepository<O, U> {
     
     uuidSetter.setUUID(object, UUID.randomUUID());
     
-    return save(object);
+    return datastore.save(object);
   }
   
   public O getByUniqueField(U uniqueField) throws NotFoundException {
-    return findByUniqueField(uniqueField).orElseThrow(
+    return datastore.findByUniqueField(uniqueField).orElseThrow(
         () -> new NotFoundException(String.format(
             "%s with %s %s not found", getObjectName(), getUniqueFieldName(), uniqueField
         ))
@@ -45,15 +47,17 @@ public abstract class CRUDRepository<O, U> {
   }
   
   public O getByUUID(UUID uuid) throws NotFoundException {
-    return findByUUID(uuid).orElseThrow(
+    return datastore.findByUUID(uuid).orElseThrow(
         () -> new NotFoundException(String.format(
             "%s with uuid %s not found", getObjectName(), uuid
         ))
     );
   }
   
-  public abstract Stream<O> findAll();
-  
+  public Stream<O> findAll() {
+    return datastore.findAll();
+  }
+
   public O update(UUID uuid, O object) throws NotFoundException, IllegalArgumentException, ConflictException {
     UUID objectUUID = uuidProvider.getUUID(object);
     if (!objectUUID.equals(uuid)) {
@@ -64,27 +68,21 @@ public abstract class CRUDRepository<O, U> {
     O existingObject = getByUUID(objectUUID);
     U newUniqueField = uniqueFieldProvider.getUniqueField(object);
     U existingUniqueField = uniqueFieldProvider.getUniqueField(existingObject);
-    if (!newUniqueField.equals(existingUniqueField) && findByUniqueField(newUniqueField).isPresent()) {
+    if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
       throw new ConflictException(String.format(
           "%s with %s %s already exists", getObjectName(), getUniqueFieldName(), newUniqueField
       ));
     }
     
-    return save(object);
+    return datastore.save(object);
   }
   
   public void delete(UUID uuid) throws NotFoundException {
-    delete(
+    datastore.delete(
         getByUUID(uuid)
     );
   }
   
-  protected abstract O save(O object);
-  protected abstract void delete(O object);
-  
   protected abstract String getObjectName();
   protected abstract String getUniqueFieldName();
-  
-  protected abstract Optional<O> findByUUID(UUID uuid);
-  protected abstract Optional<O> findByUniqueField(U uniqueField);
 }

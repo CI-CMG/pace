@@ -3,9 +3,6 @@ package edu.colorado.cires.pace.core.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.Organization;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 class OrganizationRepositoryTest extends CrudRepositoryTest<Organization, String> {
 
@@ -31,32 +28,7 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization, String
 
   @Override
   protected CRUDRepository<Organization, String> createRepository() {
-    return new OrganizationRepository() {
-      @Override
-      public Stream<Organization> findAll() {
-        return findAllObjects();
-      }
-
-      @Override
-      protected Organization save(Organization object) {
-        return saveObject(object);
-      }
-
-      @Override
-      protected void delete(Organization object) {
-        deleteObject(object);
-      }
-
-      @Override
-      protected Optional<Organization> findByUUID(UUID uuid) {
-        return findObjectByUUID(uuid);
-      }
-
-      @Override
-      protected Optional<Organization> findByUniqueField(String uniqueField) {
-        return findObjectByUniqueField(uniqueField);
-      }
-    };
+    return new OrganizationRepository(createDatastore());
   }
 
   @Override
