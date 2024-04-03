@@ -12,6 +12,7 @@
   <modules>
     <module>pace-data</module>
     <module>pace-core</module>
+    <module>pace-cli</module>
   </modules>
 
   <properties>
@@ -42,6 +43,7 @@
             </execution>
             <execution>
               <id>check-coverage</id>
+              <phase>verify</phase>
               <goals>
                 <goal>check</goal>
               </goals>
@@ -58,7 +60,7 @@
           <executions>
             <execution>
               <id>check-dependencies</id>
-              <phase>prepare-package</phase>
+              <phase>verify</phase>
               <goals>
                 <goal>check</goal>
               </goals>

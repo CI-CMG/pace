@@ -11,8 +11,6 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "trunk" ]
-  pull_request:
-    branches: [ "trunk" ]
 
 jobs:
   build:
@@ -22,10 +20,58 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: graalvm/setup-graalvm@v1
       with:
         java-version: '17'
-        distribution: 'temurin'
+        distribution: 'graalvm'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Package
+      run: mvn -B package -DskipTests
+    - name: Test
+      run: mvn -B test
+    - name: Verify
+      run: mvn -B verify -DskipTests
+    - name: Upload Build Resources
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-resources
+        path: "."
+  
+  osx-arm64:
+    needs: build
+    runs-on: macos-14
+    steps:
+    - name: Set up JDK 17
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: '17'
+        distribution: 'graalvm'
+    - name: Download Resources
+      uses: actions/download-artifact@v4
+      with:
+        name: build-resources
+    - name: Build Executable
+      run: cd pace-cli && mvn native:compile
+    - name: Upload Executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: pace-cli-mac-arm64
+        path: "pace-cli/target/pace-cli"
+        
+  release:
+    needs: 
+      - build
+      - osx-arm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - run: mkdir release
+      - run: zip -r release/pace-cli-mac-arm64-${{ needs.build.outputs.version }}.zip pace-cli-mac-arm64
+      - name: Update branch release
+        uses: eine/tip@master
+        with:
+          tag: ${{ github.ref_name }}-latest
+          rm: true
+          token: ${{ secrets.RELEASE_PAT }}
+          files: release/*
+    
