@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://colorado.edu/cires/pace/detectionType.schema.json",
+  "title": "Detection Type",
+  "description": "A detection type",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "description": "The unique identifier of a detection type",
+      "type": "string",
+      "format": "uuid"
+    },
+    "source": {
+      "description": "Source of the detection type",
+      "type": "string"
+    },
+    "scienceName": {
+      "description": "Science name of the detection type",
+      "type": "string"
+    },
+    "use": {
+      "description": "Whether or not the detection type can be attached to deployments",
+      "type": "boolean"
+    }
+  },
+  "required": ["uuid", "source", "scienceName", "use"]
+}
