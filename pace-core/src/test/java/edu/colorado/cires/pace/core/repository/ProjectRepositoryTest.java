@@ -44,8 +44,8 @@ class ProjectRepositoryTest extends CrudRepositoryTest<Project, String> {
       }
 
       @Override
-      protected Project delete(Project object) {
-        return deleteObject(object);
+      protected void delete(Project object) {
+        deleteObject(object);
       }
 
       @Override

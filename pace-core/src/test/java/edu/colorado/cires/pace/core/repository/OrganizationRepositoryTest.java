@@ -43,8 +43,8 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization, String
       }
 
       @Override
-      protected Organization delete(Organization object) {
-        return deleteObject(object);
+      protected void delete(Organization object) {
+        deleteObject(object);
       }
 
       @Override

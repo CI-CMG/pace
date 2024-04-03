@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Organization;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class OrganizationServiceTest extends CrudServiceTest<Organization, String, OrganizationRepository> {
 
@@ -27,9 +26,8 @@ class OrganizationServiceTest extends CrudServiceTest<Organization, String, Orga
   }
 
   @Override
-  protected CRUDService<Organization, String> createService(OrganizationRepository repository, Consumer<Organization> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new OrganizationService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Organization, String> createService(OrganizationRepository repository) {
+    return new OrganizationService(repository);
   }
 
   @Override

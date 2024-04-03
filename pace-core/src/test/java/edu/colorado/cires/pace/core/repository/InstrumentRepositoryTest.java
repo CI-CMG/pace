@@ -55,8 +55,8 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
       }
 
       @Override
-      protected Instrument delete(Instrument object) {
-        return deleteObject(object);
+      protected void delete(Instrument object) {
+        deleteObject(object);
       }
 
       @Override

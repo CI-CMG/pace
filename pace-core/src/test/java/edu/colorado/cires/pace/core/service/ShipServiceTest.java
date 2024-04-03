@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Ship;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class ShipServiceTest extends CrudServiceTest<Ship, String, ShipRepository> {
 
@@ -27,9 +26,8 @@ class ShipServiceTest extends CrudServiceTest<Ship, String, ShipRepository> {
   }
 
   @Override
-  protected CRUDService<Ship, String> createService(ShipRepository repository, Consumer<Ship> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new ShipService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Ship, String> createService(ShipRepository repository) {
+    return new ShipService(repository);
   }
 
   @Override

@@ -43,8 +43,8 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType, Stri
       }
 
       @Override
-      protected DetectionType delete(DetectionType object) {
-        return deleteObject(object);
+      protected void delete(DetectionType object) {
+        deleteObject(object);
       }
 
       @Override

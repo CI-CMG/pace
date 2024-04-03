@@ -43,8 +43,8 @@ class ShipRepositoryTest extends CrudRepositoryTest<Ship, String> {
       }
 
       @Override
-      protected Ship delete(Ship object) {
-        return deleteObject(object);
+      protected void delete(Ship object) {
+        deleteObject(object);
       }
 
       @Override

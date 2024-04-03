@@ -43,8 +43,8 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform, String> {
       }
 
       @Override
-      protected Platform delete(Platform object) {
-        return deleteObject(object);
+      protected void delete(Platform object) {
+        deleteObject(object);
       }
 
       @Override

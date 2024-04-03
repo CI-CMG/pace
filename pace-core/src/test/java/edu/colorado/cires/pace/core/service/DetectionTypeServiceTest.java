@@ -1,12 +1,10 @@
 package edu.colorado.cires.pace.core.service;
 
 import edu.colorado.cires.pace.core.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.DetectionType;
-
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class DetectionTypeServiceTest extends CrudServiceTest<DetectionType, String, DetectionTypeRepository> {
 
@@ -26,9 +24,8 @@ class DetectionTypeServiceTest extends CrudServiceTest<DetectionType, String, De
   }
 
   @Override
-  protected CRUDService<DetectionType, String> createService(DetectionTypeRepository repository, Consumer<DetectionType> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new DetectionTypeService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<DetectionType, String> createService(DetectionTypeRepository repository) {
+    return new DetectionTypeService(repository);
   }
 
   @Override

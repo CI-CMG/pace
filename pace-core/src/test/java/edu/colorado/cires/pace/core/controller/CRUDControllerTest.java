@@ -9,16 +9,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
+import edu.colorado.cires.pace.core.controller.validation.ValidationException;
+import edu.colorado.cires.pace.core.controller.validation.Validator;
+import edu.colorado.cires.pace.core.exception.ConflictException;
+import edu.colorado.cires.pace.core.exception.NotFoundException;
+import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.service.CRUDService;
-import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
-import edu.colorado.cires.pace.core.controller.validation.Validator;
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,7 @@ abstract class CRUDControllerTest<O, U> {
   private CRUDController<O, U> controller;
   private final CRUDService<O, U> service = mock(CRUDService.class);
   private final Validator<O> validator = mock(Validator.class);
-  private Consumer<Set<ConstraintViolation>> onValidationErrorHandler;
-  private final Set<ConstraintViolation> constraintViolations = new HashSet<>(0);
-  protected abstract CRUDController<O, U> createController(CRUDService<O, U> service, Validator<O> validator, Consumer<Set<ConstraintViolation>> onValidationErrorHandler);
+  protected abstract CRUDController<O, U> createController(CRUDService<O, U> service, Validator<O> validator);
   
   protected abstract UniqueFieldProvider<O, U> getUniqueFieldProvider();
   protected abstract UUIDProvider<O> getUuidProvider();
@@ -40,15 +39,13 @@ abstract class CRUDControllerTest<O, U> {
   
   @BeforeEach
   void beforeEach() {
-    constraintViolations.clear();
-    onValidationErrorHandler = constraintViolations::addAll;
     reset(service);
     reset(validator);
-    controller = createController(service, validator, onValidationErrorHandler);
+    controller = createController(service, validator);
   }
   
   @Test
-  void testCreate() {
+  void testCreate() throws ConflictException, ValidationException {
     O object = createNewObject();
     when(validator.validate(object)).thenReturn(
         Collections.emptySet()
@@ -61,7 +58,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testCreateValidationError() {
+  void testCreateValidationError() throws ConflictException {
     O object = createNewObject();
     
     Set<ConstraintViolation> violations = Set.of(
@@ -70,16 +67,15 @@ abstract class CRUDControllerTest<O, U> {
     );
     when(validator.validate(object)).thenReturn(violations);
     
-    Exception exception = assertThrows(IllegalStateException.class, () -> controller.create(object));
+    ValidationException exception = assertThrows(ValidationException.class, () -> controller.create(object));
     assertEquals("Object validation failed", exception.getMessage());
+    assertEquals(violations, exception.getViolations());
     
     verify(service, times(0)).create(any());
-    assertEquals(2, constraintViolations.size());
-    assertEquals(constraintViolations, violations);
   }
   
   @Test
-  void testGetByUniqueField() {
+  void testGetByUniqueField() throws NotFoundException {
     O object = createNewObject();
     
     when(service.getByUniqueField(uniqueFieldProvider.getUniqueField(object))).thenReturn(object);
@@ -88,12 +84,11 @@ abstract class CRUDControllerTest<O, U> {
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
     verify(service, times(1)).getByUniqueField(any());
-    assertEquals(0, constraintViolations.size());
     verify(validator, times(0)).validate(any());
   }
   
   @Test
-  void testGetByUUID() {
+  void testGetByUUID() throws NotFoundException {
     O object = createNewObject();
     
     when(service.getByUUID(uuidProvider.getUUID(object))).thenReturn(object);
@@ -102,7 +97,6 @@ abstract class CRUDControllerTest<O, U> {
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
     verify(service, times(1)).getByUUID(any());
-    assertEquals(0, constraintViolations.size());
     verify(validator, times(0)).validate(any());
   }
   
@@ -120,12 +114,11 @@ abstract class CRUDControllerTest<O, U> {
     Stream<O> actual = controller.readAll(Collections.emptyList());
     
     assertEquals(List.of(object1, object2), actual.toList());
-    assertEquals(0, constraintViolations.size());
     verify(validator, times(0)).validate(any());
   }
   
   @Test
-  void testUpdate() {
+  void testUpdate() throws ConflictException, NotFoundException, ValidationException {
     O object = createNewObject();
     when(validator.validate(object)).thenReturn(Collections.emptySet());
     when(service.update(uuidProvider.getUUID(object), object)).thenReturn(object);
@@ -133,7 +126,6 @@ abstract class CRUDControllerTest<O, U> {
     O result = controller.update(uuidProvider.getUUID(object), object);
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
-    assertEquals(0, constraintViolations.size());
     verify(service, times(1)).update(any(), any());
   }
   
@@ -146,20 +138,18 @@ abstract class CRUDControllerTest<O, U> {
     );
     when(validator.validate(object)).thenReturn(violations);
     
-    Exception exception = assertThrows(IllegalStateException.class, () -> controller.update(uuidProvider.getUUID(object), object));
+    ValidationException exception = assertThrows(ValidationException.class, () -> controller.update(uuidProvider.getUUID(object), object));
     assertEquals("Object validation failed", exception.getMessage());
-    assertEquals(2, constraintViolations.size());
-    assertEquals(constraintViolations, violations);
+    assertEquals(violations, exception.getViolations());
   }
   
   @Test
-  void testDelete() {
+  void testDelete() throws NotFoundException {
     O object = createNewObject();
     
     controller.delete(uuidProvider.getUUID(object));
     
     verify(validator, times(0)).validate(any());
-    assertEquals(0, constraintViolations.size());
   }
   
   protected abstract O createNewObject();

@@ -43,8 +43,8 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea, String> {
       }
 
       @Override
-      protected Sea delete(Sea object) {
-        return deleteObject(object);
+      protected void delete(Sea object) {
+        deleteObject(object);
       }
 
       @Override

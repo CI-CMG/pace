@@ -3,11 +3,10 @@ package edu.colorado.cires.pace.core.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.core.repository.FileTypeRepository;
+import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.FileType;
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class FileTypeServiceTest extends CrudServiceTest<FileType, String, FileTypeRepository> {
 
@@ -27,9 +26,8 @@ class FileTypeServiceTest extends CrudServiceTest<FileType, String, FileTypeRepo
   }
 
   @Override
-  protected CRUDService<FileType, String> createService(FileTypeRepository repository, Consumer<FileType> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new FileTypeService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<FileType, String> createService(FileTypeRepository repository) {
+    return new FileTypeService(repository);
   }
 
   @Override

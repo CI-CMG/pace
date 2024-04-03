@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Person;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class PersonServiceTest extends CrudServiceTest<Person, String, PersonRepository> {
 
@@ -27,9 +26,8 @@ class PersonServiceTest extends CrudServiceTest<Person, String, PersonRepository
   }
 
   @Override
-  protected CRUDService<Person, String> createService(PersonRepository repository, Consumer<Person> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new PersonService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Person, String> createService(PersonRepository repository) {
+    return new PersonService(repository);
   }
 
   @Override

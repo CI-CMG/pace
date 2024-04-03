@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Platform;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class PlatformServiceTest extends CrudServiceTest<Platform, String, PlatformRepository> {
 
@@ -27,9 +26,8 @@ class PlatformServiceTest extends CrudServiceTest<Platform, String, PlatformRepo
   }
 
   @Override
-  protected CRUDService<Platform, String> createService(PlatformRepository repository, Consumer<Platform> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new PlatformService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Platform, String> createService(PlatformRepository repository) {
+    return new PlatformService(repository);
   }
 
   @Override

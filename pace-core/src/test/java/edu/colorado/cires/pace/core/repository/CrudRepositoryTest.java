@@ -218,8 +218,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   @Test
   void testDelete() throws ConflictException, NotFoundException {
     O object = repository.create(createNewObject(1));
-    O deleted = repository.delete(uuidProvider.getUUID(object));
-    assertObjectsEqual(object, deleted);
+    repository.delete(uuidProvider.getUUID(object));
     assertNull(map.get(uuidProvider.getUUID(object)));
   }
   

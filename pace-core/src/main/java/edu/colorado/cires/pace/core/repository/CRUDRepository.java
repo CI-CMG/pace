@@ -73,14 +73,14 @@ public abstract class CRUDRepository<O, U> {
     return save(object);
   }
   
-  public O delete(UUID uuid) throws NotFoundException {
-    return delete(
+  public void delete(UUID uuid) throws NotFoundException {
+    delete(
         getByUUID(uuid)
     );
   }
   
   protected abstract O save(O object);
-  protected abstract O delete(O object);
+  protected abstract void delete(O object);
   
   protected abstract String getObjectName();
   protected abstract String getUniqueFieldName();

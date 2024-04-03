@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Sea;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class SeaServiceTest extends CrudServiceTest<Sea, String, SeaRepository> {
 
@@ -27,8 +26,8 @@ class SeaServiceTest extends CrudServiceTest<Sea, String, SeaRepository> {
   }
 
   @Override
-  protected CRUDService<Sea, String> createService(SeaRepository repository, Consumer<Sea> onSuccessHandler, Consumer<Exception> onFailureHandler) {
-    return new SeaService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Sea, String> createService(SeaRepository repository) {
+    return new SeaService(repository);
   }
 
   @Override

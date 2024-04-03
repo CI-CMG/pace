@@ -43,8 +43,8 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person, String> {
       }
 
       @Override
-      protected Person delete(Person object) {
-        return deleteObject(object);
+      protected void delete(Person object) {
+        deleteObject(object);
       }
 
       @Override

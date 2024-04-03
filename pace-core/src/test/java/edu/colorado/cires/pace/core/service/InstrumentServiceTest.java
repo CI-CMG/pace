@@ -9,7 +9,6 @@ import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class InstrumentServiceTest extends CrudServiceTest<Instrument, String, InstrumentRepository> {
 
@@ -29,9 +28,8 @@ class InstrumentServiceTest extends CrudServiceTest<Instrument, String, Instrume
   }
 
   @Override
-  protected CRUDService<Instrument, String> createService(InstrumentRepository repository, Consumer<Instrument> onSuccessHandler,
-      Consumer<Exception> onFailureHandler) {
-    return new InstrumentService(repository, onSuccessHandler, onFailureHandler);
+  protected CRUDService<Instrument, String> createService(InstrumentRepository repository) {
+    return new InstrumentService(repository);
   }
 
   @Override

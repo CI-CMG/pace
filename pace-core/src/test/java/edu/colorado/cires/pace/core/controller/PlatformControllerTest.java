@@ -1,21 +1,17 @@
 package edu.colorado.cires.pace.core.controller;
 
-import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.controller.validation.Validator;
 import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.service.CRUDService;
 import edu.colorado.cires.pace.data.Platform;
-import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 class PlatformControllerTest extends CRUDControllerTest<Platform, String> {
 
   @Override
-  protected CRUDController<Platform, String> createController(CRUDService<Platform, String> service, Validator<Platform> validator,
-      Consumer<Set<ConstraintViolation>> onValidationErrorHandler) {
-    return new PlatformController(service, validator, onValidationErrorHandler);
+  protected CRUDController<Platform, String> createController(CRUDService<Platform, String> service, Validator<Platform> validator) {
+    return new PlatformController(service, validator);
   }
 
   @Override

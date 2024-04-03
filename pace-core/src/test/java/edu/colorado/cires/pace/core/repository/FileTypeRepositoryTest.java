@@ -43,8 +43,8 @@ class FileTypeRepositoryTest extends CrudRepositoryTest<FileType, String> {
       }
 
       @Override
-      protected FileType delete(FileType object) {
-        return deleteObject(object);
+      protected void delete(FileType object) {
+        deleteObject(object);
       }
 
       @Override

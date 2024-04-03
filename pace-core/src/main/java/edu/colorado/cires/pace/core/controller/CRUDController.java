@@ -1,43 +1,36 @@
 package edu.colorado.cires.pace.core.controller;
 
 import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
+import edu.colorado.cires.pace.core.controller.validation.ValidationException;
 import edu.colorado.cires.pace.core.controller.validation.Validator;
+import edu.colorado.cires.pace.core.exception.ConflictException;
+import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.core.service.CRUDService;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 abstract class CRUDController<O, U> {
-  
-  private static final String VALIDATION_FAILED_MESSAGE = "Object validation failed";
-  
+
   private final CRUDService<O, U> service;
   private final Validator<O> validator;
-  private final Consumer<Set<ConstraintViolation>> onValidationError;
 
-  protected CRUDController(CRUDService<O, U> service, Validator<O> validator, Consumer<Set<ConstraintViolation>> onValidationError) {
+  protected CRUDController(CRUDService<O, U> service, Validator<O> validator) {
     this.service = service;
     this.validator = validator;
-    this.onValidationError = onValidationError;
   }
   
-  public O create(O object) {
-    return validate(object).map(
-        service::create
-    ).orElseThrow(
-        () -> new IllegalStateException(VALIDATION_FAILED_MESSAGE)
-    );
+  public O create(O object) throws ConflictException, IllegalArgumentException, ValidationException {
+    return service.create(validate(object));
   }
   
-  public O getByUniqueField(U uniqueField) {
+  public O getByUniqueField(U uniqueField) throws NotFoundException {
     return service.getByUniqueField(uniqueField);
   }
   
-  public O getByUUID(UUID uuid) {
+  public O getByUUID(UUID uuid) throws NotFoundException {
     return service.getByUUID(uuid);
   }
   
@@ -45,25 +38,20 @@ abstract class CRUDController<O, U> {
     return service.readAll(filters);
   }
   
-  public O update(UUID uuid, O object) {
-    return validate(object).map(
-        o -> service.update(uuid, o)
-    ).orElseThrow(
-        () -> new IllegalStateException(VALIDATION_FAILED_MESSAGE)
-    );
+  public O update(UUID uuid, O object) throws NotFoundException, IllegalArgumentException, ConflictException, ValidationException {
+    return service.update(uuid, validate(object));
   }
   
-  public void delete(UUID uuid) {
+  public void delete(UUID uuid) throws NotFoundException {
     service.delete(uuid);
   }
   
-  private Optional<O> validate(O object) {
+  private O validate(O object) throws ValidationException {
     Set<ConstraintViolation> violations = validator.validate(object);
     if (violations.isEmpty()) {
-      return Optional.of(object);
+      return object;
     } else {
-      onValidationError.accept(violations);
-      return Optional.empty();
+      throw new ValidationException(violations);
     }
   }
 }
