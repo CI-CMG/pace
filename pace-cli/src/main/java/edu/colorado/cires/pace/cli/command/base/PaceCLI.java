@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.cli.command.base;
 
+import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand;
 import picocli.CommandLine.Command;
 

@@ -1,10 +1,9 @@
 package edu.colorado.cires.pace.cli.command.ship;
 
-import edu.colorado.cires.pace.cli.command.base.VersionProvider;
+import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
-import edu.colorado.cires.pace.core.controller.CRUDController;
 import edu.colorado.cires.pace.data.Ship;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -17,11 +16,8 @@ class DeleteShipCommand extends DeleteCommand<Ship, String> {
   private UUID uuid;
 
   @Override
-  protected CRUDController<Ship, String> createController() throws IOException {
-    return ShipControllerFactory.createController(
-        getDatastoreDirectory(),
-        objectMapper
-    );
+  protected ControllerFactory<Ship, String> getFactory() {
+    return ShipControllerFactory::createController;
   }
 
   @Override

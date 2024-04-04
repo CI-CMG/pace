@@ -9,11 +9,18 @@ import java.nio.file.Paths;
 
 public abstract class CRUDCommand<O, U> implements Runnable {
   protected final ObjectMapper objectMapper = new ObjectMapper();
-  protected abstract CRUDController<O, U> createController() throws IOException;
+  protected abstract ControllerFactory<O, U> getFactory(); 
   
+  protected CRUDController<O, U> createController() throws IOException {
+    return getFactory().createController(
+        getDatastoreDirectory(),
+        objectMapper
+    );
+  }
+
   protected abstract Object runCommand() throws Exception;
 
-  protected Path getDatastoreDirectory() {
+  private Path getDatastoreDirectory() {
     return Paths.get(
         new ApplicationPropertyResolver().getPropertyValue("pace-cli.work-dir")
     ).toAbsolutePath();

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 final class ShipControllerFactory {
   
-  public static Validator<Ship> createValidator() {
+  private static Validator<Ship> createValidator() {
     return (ship) -> {
       Set<ConstraintViolation> constraintViolations = new HashSet<>(0);
       if (StringUtils.isBlank(ship.getName())) {
