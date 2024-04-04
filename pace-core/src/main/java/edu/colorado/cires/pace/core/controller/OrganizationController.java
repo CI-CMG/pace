@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Organization;
 
 public class OrganizationController extends CRUDController<Organization, String> {
 
-  protected OrganizationController(CRUDService<Organization, String> service,
+  public OrganizationController(CRUDService<Organization, String> service,
       Validator<Organization> validator) {
     super(service, validator);
   }

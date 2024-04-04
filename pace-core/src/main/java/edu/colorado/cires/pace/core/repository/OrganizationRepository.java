@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Organization;
 
 public class OrganizationRepository extends CRUDRepository<Organization, String> {
 
-  protected OrganizationRepository(Datastore<Organization, String> datastore) {
+  public OrganizationRepository(Datastore<Organization, String> datastore) {
     super(Organization::getUUID, Organization::getName, Organization::setUUID, datastore);
   }
 

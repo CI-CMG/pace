@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Organization;
 
 public class OrganizationService extends CRUDService<Organization, String> {
 
-  protected OrganizationService(CRUDRepository<Organization, String> organizationRepository) {
+  public OrganizationService(CRUDRepository<Organization, String> organizationRepository) {
     super(organizationRepository);
   }
 }

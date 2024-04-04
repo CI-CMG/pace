@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.cli.command.base;
 
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand;
 import edu.colorado.cires.pace.cli.command.platform.PlatformCommand;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand;
@@ -13,7 +14,14 @@ import picocli.CommandLine.Command;
     mixinStandardHelpOptions = true,
     description = "Passive Acoustic Collection Engine",
     versionProvider = VersionProvider.class,
-    subcommands = { ShipCommand.class, SeaCommand.class, ProjectCommand.class, PlatformCommand.class, PersonCommand.class}
+    subcommands = {
+        ShipCommand.class,
+        SeaCommand.class,
+        ProjectCommand.class,
+        PlatformCommand.class,
+        PersonCommand.class,
+        OrganizationCommand.class
+    }
 )
 public class PaceCLI implements Runnable {
 
