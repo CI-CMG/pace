@@ -84,7 +84,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   } 
   
   @Test
-  void testCreate() throws ConflictException {
+  void testCreate() throws Exception {
     O object = createNewObject(1);
     O created = repository.create(object);
     assertNotNull(uuidProvider.getUUID(created));
@@ -110,7 +110,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testCreateNameConflict() throws ConflictException {
+  void testCreateNameConflict() throws Exception {
     O one = createNewObject(1);
     repository.create(one);
 
@@ -122,7 +122,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testGetByUniqueField() throws NotFoundException, ConflictException {
+  void testGetByUniqueField() throws Exception {
     O object = repository.create(createNewObject(1));
     O result = repository.getByUniqueField(uniqueFieldProvider.getUniqueField(object));
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
@@ -140,7 +140,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testGetByUUID() throws ConflictException, NotFoundException {
+  void testGetByUUID() throws Exception {
     O object = repository.create(createNewObject(1));
     O result = repository.getByUUID(uuidProvider.getUUID(object));
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
@@ -159,7 +159,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testFindAll() throws ConflictException {
+  void testFindAll() throws Exception {
     O one = repository.create(createNewObject(1));
     O two = repository.create(createNewObject(2));
     
@@ -174,7 +174,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testUpdate() throws ConflictException, NotFoundException {
+  void testUpdate() throws Exception {
     O object = repository.create(createNewObject(1));
     O toUpdate = createNewObject(2);
     uniqueFieldSetter.setUniqueField(object, uniqueFieldProvider.getUniqueField(toUpdate));
@@ -191,7 +191,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testUpdateUUIDsNotEqual() throws ConflictException {
+  void testUpdateUUIDsNotEqual() throws Exception {
     O object = repository.create(createNewObject(1));
     Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
     assertEquals(String.format(
@@ -211,7 +211,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testUpdateNameCollision() throws ConflictException {
+  void testUpdateNameCollision() throws Exception {
     repository.create(createNewObject(1));
     O two = repository.create(createNewObject(2));
     
@@ -225,7 +225,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   }
   
   @Test
-  void testDelete() throws ConflictException, NotFoundException {
+  void testDelete() throws Exception {
     O object = repository.create(createNewObject(1));
     repository.delete(uuidProvider.getUUID(object));
     assertNull(map.get(uuidProvider.getUUID(object)));

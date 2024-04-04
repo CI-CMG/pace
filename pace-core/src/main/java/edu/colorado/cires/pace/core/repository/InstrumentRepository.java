@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.core.repository;
 
 import edu.colorado.cires.pace.core.datastore.Datastore;
-import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
@@ -17,13 +16,13 @@ public class InstrumentRepository extends CRUDRepository<Instrument, String> {
   }
 
   @Override
-  public Instrument create(Instrument object) throws IllegalArgumentException, ConflictException {
+  public Instrument create(Instrument object) throws Exception {
     checkFileTypes(object);
     return super.create(object);
   }
 
   @Override
-  public Instrument update(UUID uuid, Instrument object) throws NotFoundException, IllegalArgumentException, ConflictException {
+  public Instrument update(UUID uuid, Instrument object) throws Exception {
     checkFileTypes(object);
     return super.update(uuid, object);
   }
@@ -38,7 +37,7 @@ public class InstrumentRepository extends CRUDRepository<Instrument, String> {
     return "name";
   }
   
-  private void checkFileTypes(Instrument instrument) throws IllegalArgumentException {
+  private void checkFileTypes(Instrument instrument) throws Exception {
     for (FileType fileType : instrument.getFileTypes()) {
       try {
         fileTypeRepository.getByUUID(fileType.getUUID());

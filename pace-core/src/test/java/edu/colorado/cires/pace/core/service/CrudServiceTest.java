@@ -8,8 +8,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.colorado.cires.pace.core.exception.ConflictException;
-import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.core.repository.CRUDRepository;
 import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
@@ -42,7 +40,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testCreate() throws ConflictException {
+  void testCreate() throws Exception {
     O object = createNewObject();
     
     when(repository.create(object)).thenReturn(object);
@@ -52,7 +50,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testCreateException() throws ConflictException {
+  void testCreateException() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.create(object)).thenThrow(exception);
@@ -61,7 +59,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testGetByUniqueField() throws NotFoundException {
+  void testGetByUniqueField() throws Exception {
     O object = createNewObject();
     
     when(repository.getByUniqueField(any())).thenReturn(object);
@@ -71,7 +69,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testGetByUniqueFieldException() throws NotFoundException {
+  void testGetByUniqueFieldException() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.getByUniqueField(any())).thenThrow(exception);
@@ -80,7 +78,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testGetByUUID() throws NotFoundException {
+  void testGetByUUID() throws Exception {
     O object = createNewObject();
     when(repository.getByUUID(any())).thenReturn(object);
     
@@ -89,7 +87,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testGetByUUIDException() throws NotFoundException {
+  void testGetByUUIDException() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.getByUUID(any())).thenThrow(exception);
@@ -98,7 +96,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testReadAll() {
+  void testReadAll() throws Exception {
     O object1 = createNewObject();
     O object2 = createNewObject();
     
@@ -113,7 +111,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testReadAllFiltered() {
+  void testReadAllFiltered() throws Exception {
     O object1 = createNewObject();
     O object2 = createNewObject();
     
@@ -130,7 +128,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testUpdate() throws ConflictException, NotFoundException {
+  void testUpdate() throws Exception {
     O object = createNewObject();
     
     when(repository.update(uuidProvider.getUUID(object), object)).thenReturn(object);
@@ -141,7 +139,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testUpdateError() throws ConflictException, NotFoundException {
+  void testUpdateError() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.update(uuidProvider.getUUID(object), object)).thenThrow(exception);
@@ -150,7 +148,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testDelete() throws NotFoundException {
+  void testDelete() throws Exception {
     O object = createNewObject();
     doNothing().when(repository).delete(uuidProvider.getUUID(object));
     
@@ -158,7 +156,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   }
   
   @Test
-  void testDeleteException() throws NotFoundException {
+  void testDeleteException() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
     doThrow(exception).when(repository).delete(uuidProvider.getUUID(object));

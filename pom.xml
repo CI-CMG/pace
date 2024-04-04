@@ -13,6 +13,7 @@
     <module>pace-data</module>
     <module>pace-core</module>
     <module>pace-cli</module>
+    <module>pace-datastore</module>
   </modules>
 
   <properties>

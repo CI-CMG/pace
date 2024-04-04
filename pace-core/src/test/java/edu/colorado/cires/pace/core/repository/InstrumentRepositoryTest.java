@@ -39,7 +39,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
   static {
     try {
       when(fileTypeRepository.getByUUID(any())).thenReturn(new FileType());
-    } catch (NotFoundException e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
@@ -79,7 +79,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
   }
   
   @Test
-  void testFileTypeDoesNotExist() throws NotFoundException {
+  void testFileTypeDoesNotExist() throws Exception {
     Instrument instrument = createNewObject(1);
     when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(0).getUUID())).thenThrow(new NotFoundException("Not found"));
     when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(instrument.getFileTypes().get(1));

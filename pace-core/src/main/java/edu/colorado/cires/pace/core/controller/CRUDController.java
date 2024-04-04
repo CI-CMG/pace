@@ -3,8 +3,6 @@ package edu.colorado.cires.pace.core.controller;
 import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.controller.validation.ValidationException;
 import edu.colorado.cires.pace.core.controller.validation.Validator;
-import edu.colorado.cires.pace.core.exception.ConflictException;
-import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.core.service.CRUDService;
 import java.util.List;
 import java.util.Set;
@@ -22,27 +20,27 @@ abstract class CRUDController<O, U> {
     this.validator = validator;
   }
   
-  public O create(O object) throws ConflictException, IllegalArgumentException, ValidationException {
+  public O create(O object) throws Exception {
     return service.create(validate(object));
   }
   
-  public O getByUniqueField(U uniqueField) throws NotFoundException {
+  public O getByUniqueField(U uniqueField) throws Exception {
     return service.getByUniqueField(uniqueField);
   }
   
-  public O getByUUID(UUID uuid) throws NotFoundException {
+  public O getByUUID(UUID uuid) throws Exception {
     return service.getByUUID(uuid);
   }
   
-  public Stream<O> readAll(List<Function<O, Boolean>> filters) {
+  public Stream<O> readAll(List<Function<O, Boolean>> filters) throws Exception {
     return service.readAll(filters);
   }
   
-  public O update(UUID uuid, O object) throws NotFoundException, IllegalArgumentException, ConflictException, ValidationException {
+  public O update(UUID uuid, O object) throws Exception {
     return service.update(uuid, validate(object));
   }
   
-  public void delete(UUID uuid) throws NotFoundException {
+  public void delete(UUID uuid) throws Exception {
     service.delete(uuid);
   }
   

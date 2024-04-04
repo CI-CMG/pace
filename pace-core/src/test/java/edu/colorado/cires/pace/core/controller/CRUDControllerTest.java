@@ -12,8 +12,6 @@ import static org.mockito.Mockito.when;
 import edu.colorado.cires.pace.core.controller.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.controller.validation.ValidationException;
 import edu.colorado.cires.pace.core.controller.validation.Validator;
-import edu.colorado.cires.pace.core.exception.ConflictException;
-import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.core.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.service.CRUDService;
@@ -45,7 +43,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testCreate() throws ConflictException, ValidationException {
+  void testCreate() throws Exception {
     O object = createNewObject();
     when(validator.validate(object)).thenReturn(
         Collections.emptySet()
@@ -58,7 +56,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testCreateValidationError() throws ConflictException {
+  void testCreateValidationError() throws Exception {
     O object = createNewObject();
     
     Set<ConstraintViolation> violations = Set.of(
@@ -75,7 +73,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testGetByUniqueField() throws NotFoundException {
+  void testGetByUniqueField() throws Exception {
     O object = createNewObject();
     
     when(service.getByUniqueField(uniqueFieldProvider.getUniqueField(object))).thenReturn(object);
@@ -88,7 +86,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testGetByUUID() throws NotFoundException {
+  void testGetByUUID() throws Exception {
     O object = createNewObject();
     
     when(service.getByUUID(uuidProvider.getUUID(object))).thenReturn(object);
@@ -101,7 +99,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testReadAll() {
+  void testReadAll() throws Exception {
     O object1 = createNewObject();
     O object2 = createNewObject();
 
@@ -118,7 +116,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testUpdate() throws ConflictException, NotFoundException, ValidationException {
+  void testUpdate() throws Exception {
     O object = createNewObject();
     when(validator.validate(object)).thenReturn(Collections.emptySet());
     when(service.update(uuidProvider.getUUID(object), object)).thenReturn(object);
@@ -144,7 +142,7 @@ abstract class CRUDControllerTest<O, U> {
   }
   
   @Test
-  void testDelete() throws NotFoundException {
+  void testDelete() throws Exception {
     O object = createNewObject();
     
     controller.delete(uuidProvider.getUUID(object));

@@ -20,7 +20,7 @@ public abstract class CRUDRepository<O, U> {
     this.datastore = datastore;
   }
   
-  public O create(O object) throws IllegalArgumentException, ConflictException {
+  public O create(O object) throws Exception {
     if (uuidProvider.getUUID(object) != null) {
       throw new IllegalArgumentException(String.format(
           "uuid for new %s must not be defined", getObjectName()
@@ -38,7 +38,7 @@ public abstract class CRUDRepository<O, U> {
     return datastore.save(object);
   }
   
-  public O getByUniqueField(U uniqueField) throws NotFoundException {
+  public O getByUniqueField(U uniqueField) throws Exception {
     return datastore.findByUniqueField(uniqueField).orElseThrow(
         () -> new NotFoundException(String.format(
             "%s with %s %s not found", getObjectName(), getUniqueFieldName(), uniqueField
@@ -46,7 +46,7 @@ public abstract class CRUDRepository<O, U> {
     );
   }
   
-  public O getByUUID(UUID uuid) throws NotFoundException {
+  public O getByUUID(UUID uuid) throws Exception {
     return datastore.findByUUID(uuid).orElseThrow(
         () -> new NotFoundException(String.format(
             "%s with uuid %s not found", getObjectName(), uuid
@@ -54,11 +54,11 @@ public abstract class CRUDRepository<O, U> {
     );
   }
   
-  public Stream<O> findAll() {
+  public Stream<O> findAll() throws Exception {
     return datastore.findAll();
   }
 
-  public O update(UUID uuid, O object) throws NotFoundException, IllegalArgumentException, ConflictException {
+  public O update(UUID uuid, O object) throws Exception {
     UUID objectUUID = uuidProvider.getUUID(object);
     if (!objectUUID.equals(uuid)) {
       throw new IllegalArgumentException(String.format(
@@ -77,7 +77,7 @@ public abstract class CRUDRepository<O, U> {
     return datastore.save(object);
   }
   
-  public void delete(UUID uuid) throws NotFoundException {
+  public void delete(UUID uuid) throws Exception {
     datastore.delete(
         getByUUID(uuid)
     );

@@ -6,10 +6,10 @@ import java.util.stream.Stream;
 
 public interface Datastore<O, U> {
 
-  O save(O object);
-  void delete(O object);
-  Optional<O> findByUUID(UUID uuid);
-  Optional<O> findByUniqueField(U uniqueField);
-  Stream<O> findAll();
+  O save(O object) throws Exception;
+  void delete(O object) throws Exception;
+  Optional<O> findByUUID(UUID uuid) throws Exception;
+  Optional<O> findByUniqueField(U uniqueField) throws Exception;
+  Stream<O> findAll() throws Exception;
   
 }
