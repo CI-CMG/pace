@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Person;
 
 public class PersonController extends CRUDController<Person, String> {
 
-  protected PersonController(CRUDService<Person, String> service,
+  public PersonController(CRUDService<Person, String> service,
       Validator<Person> validator) {
     super(service, validator);
   }

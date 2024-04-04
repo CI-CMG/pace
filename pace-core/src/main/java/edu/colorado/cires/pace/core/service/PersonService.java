@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Person;
 
 public class PersonService extends CRUDService<Person, String> {
 
-  protected PersonService(CRUDRepository<Person, String> personRepository) {
+  public PersonService(CRUDRepository<Person, String> personRepository) {
     super(personRepository);
   }
 }

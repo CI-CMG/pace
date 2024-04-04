@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Person;
 
 public class PersonRepository extends CRUDRepository<Person, String> {
 
-  protected PersonRepository(Datastore<Person, String> datastore) {
+  public PersonRepository(Datastore<Person, String> datastore) {
     super(Person::getUUID, Person::getName, Person::setUUID, datastore);
   }
 
