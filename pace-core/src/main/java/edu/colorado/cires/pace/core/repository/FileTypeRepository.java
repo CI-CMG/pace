@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.FileType;
 
 public class FileTypeRepository extends CRUDRepository<FileType, String> {
 
-  protected FileTypeRepository(Datastore<FileType, String> datastore) {
+  public FileTypeRepository(Datastore<FileType, String> datastore) {
     super(FileType::getUUID, FileType::getType, FileType::setUUID, datastore);
   }
 

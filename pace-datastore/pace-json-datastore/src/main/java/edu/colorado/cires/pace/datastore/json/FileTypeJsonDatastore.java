@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class FileTypeJsonDatastore extends JsonDatastore<FileType, String> {
 
-  protected FileTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
+  public FileTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
     super(workDirectory.resolve("file-types"), objectMapper, FileType.class, FileType::getUUID, FileType::getType);
   }
 }

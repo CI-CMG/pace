@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Instrument;
 
 public class InstrumentController extends CRUDController<Instrument, String> {
 
-  protected InstrumentController(CRUDService<Instrument, String> service,
+  public InstrumentController(CRUDService<Instrument, String> service,
       Validator<Instrument> validator) {
     super(service, validator);
   }
