@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Project;
 
 public class ProjectService extends CRUDService<Project, String> {
 
-  protected ProjectService(CRUDRepository<Project, String> projectRepository) {
+  public ProjectService(CRUDRepository<Project, String> projectRepository) {
     super(projectRepository);
   }
 }

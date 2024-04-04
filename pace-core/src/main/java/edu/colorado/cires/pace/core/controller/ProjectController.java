@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Project;
 
 public class ProjectController extends CRUDController<Project, String> {
 
-  protected ProjectController(CRUDService<Project, String> service,
+  public ProjectController(CRUDService<Project, String> service,
       Validator<Project> validator) {
     super(service, validator);
   }

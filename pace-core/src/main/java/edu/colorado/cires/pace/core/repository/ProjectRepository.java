@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Project;
 
 public class ProjectRepository extends CRUDRepository<Project, String> {
 
-  protected ProjectRepository(Datastore<Project, String> datastore) {
+  public ProjectRepository(Datastore<Project, String> datastore) {
     super(Project::getUUID, Project::getName, Project::setUUID, datastore);
   }
 
