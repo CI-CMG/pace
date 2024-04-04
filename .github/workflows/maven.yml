@@ -53,7 +53,7 @@ jobs:
       with:
         name: build-resources
     - name: Build Executable
-      run: cd pace-cli && mvn native:compile
+      run: mvn native:compile
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
