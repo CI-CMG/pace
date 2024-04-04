@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class DetectionTypeJsonDatastore extends JsonDatastore<DetectionType, String> {
 
-  protected DetectionTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
+  public DetectionTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
     super(workDirectory.resolve("data-types"), objectMapper, DetectionType.class, DetectionType::getUUID, DetectionType::getScienceName);
   }
 }

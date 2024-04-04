@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.DetectionType;
 
 public class DetectionTypeService extends CRUDService<DetectionType, String> {
 
-  protected DetectionTypeService(CRUDRepository<DetectionType, String> detectionTypeRepository) {
+  public DetectionTypeService(CRUDRepository<DetectionType, String> detectionTypeRepository) {
     super(detectionTypeRepository);
   }
 }

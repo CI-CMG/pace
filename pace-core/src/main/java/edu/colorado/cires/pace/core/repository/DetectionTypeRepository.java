@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.DetectionType;
 
 public class DetectionTypeRepository extends CRUDRepository<DetectionType, String> {
 
-  protected DetectionTypeRepository(Datastore<DetectionType, String> datastore) {
+  public DetectionTypeRepository(Datastore<DetectionType, String> datastore) {
     super(DetectionType::getUUID, DetectionType::getScienceName, DetectionType::setUUID, datastore);
   }
 

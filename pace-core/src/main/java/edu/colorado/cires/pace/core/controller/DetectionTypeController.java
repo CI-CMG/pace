@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.DetectionType;
 
 public class DetectionTypeController extends CRUDController<DetectionType, String> {
 
-  protected DetectionTypeController(CRUDService<DetectionType, String> service,
+  public DetectionTypeController(CRUDService<DetectionType, String> service,
       Validator<DetectionType> validator) {
     super(service, validator);
   }
