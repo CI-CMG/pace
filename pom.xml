@@ -12,8 +12,8 @@
   <modules>
     <module>pace-data</module>
     <module>pace-core</module>
-    <module>pace-cli</module>
     <module>pace-datastore</module>
+    <module>pace-cli</module>
   </modules>
 
   <properties>
