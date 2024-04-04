@@ -27,6 +27,11 @@ public abstract class CRUDRepository<O, U> {
       ));
     }
     U uniqueField = uniqueFieldProvider.getUniqueField(object);
+    if (uniqueField == null) {
+      throw new IllegalArgumentException(String.format(
+          "%s must be defined for a new %s", getUniqueFieldName(), getObjectName()
+      ));
+    }
     if (datastore.findByUniqueField(uniqueField).isPresent()) {
       throw new ConflictException(String.format(
           "%s with %s %s already exists", getObjectName(), getUniqueFieldName(), uniqueField
@@ -67,6 +72,11 @@ public abstract class CRUDRepository<O, U> {
     }
     O existingObject = getByUUID(objectUUID);
     U newUniqueField = uniqueFieldProvider.getUniqueField(object);
+    if (newUniqueField == null) {
+      throw new IllegalArgumentException(String.format(
+          "%s must be defined for updated %s", getUniqueFieldName(), getObjectName()
+      ));
+    }
     U existingUniqueField = uniqueFieldProvider.getUniqueField(existingObject);
     if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
       throw new ConflictException(String.format(

@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Ship;
 
 public class ShipRepository extends CRUDRepository<Ship, String> {
 
-  protected ShipRepository(Datastore<Ship, String> datastore) {
+  public ShipRepository(Datastore<Ship, String> datastore) {
     super(Ship::getUUID, Ship::getName, Ship::setUUID, datastore);
   }
 

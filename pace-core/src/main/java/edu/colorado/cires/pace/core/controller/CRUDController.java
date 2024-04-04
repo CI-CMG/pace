@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-abstract class CRUDController<O, U> {
+public abstract class CRUDController<O, U> {
 
   private final CRUDService<O, U> service;
   private final Validator<O> validator;

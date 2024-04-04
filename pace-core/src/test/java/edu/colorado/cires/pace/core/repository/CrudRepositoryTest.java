@@ -108,6 +108,17 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
         "uuid for new %s must not be defined", repository.getObjectName()
     ), exception.getMessage());
   }
+
+  @Test
+  void testCreateUniqueFieldNull() {
+    O object = createNewObject(1);
+    uniqueFieldSetter.setUniqueField(object, null);
+
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(object));
+    assertEquals(String.format(
+        "%s must be defined for a new %s", repository.getUniqueFieldName(), repository.getObjectName()
+    ), exception.getMessage());
+  }
   
   @Test
   void testCreateNameConflict() throws Exception {
@@ -196,6 +207,16 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
     Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
     assertEquals(String.format(
         "%s uuid does not match argument uuid", repository.getObjectName() 
+    ), exception.getMessage());
+  }
+  
+  @Test
+  void testUpdateUniqueFieldNull() throws Exception {
+    O object = repository.create(createNewObject(1));
+    uniqueFieldSetter.setUniqueField(object, null);
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(uuidProvider.getUUID(object), object));
+    assertEquals(String.format(
+        "%s must be defined for updated %s", repository.getUniqueFieldName(), repository.getObjectName()
     ), exception.getMessage());
   }
   

@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Ship;
 
 public class ShipService extends CRUDService<Ship, String> {
 
-  protected ShipService(CRUDRepository<Ship, String> shipRepository) {
+  public ShipService(CRUDRepository<Ship, String> shipRepository) {
     super(shipRepository);
   }
 }

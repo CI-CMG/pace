@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.cli;
 
+import edu.colorado.cires.pace.cli.command.base.PaceCLI;
 import picocli.CommandLine;
 
 public class Application {

@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Ship;
 
 public class ShipController extends CRUDController<Ship, String> {
 
-  protected ShipController(CRUDService<Ship, String> service,
+  public ShipController(CRUDService<Ship, String> service,
       Validator<Ship> validator) {
     super(service, validator);
   }
