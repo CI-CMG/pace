@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Sea;
 
 public class SeaController extends CRUDController<Sea, String> {
 
-  protected SeaController(CRUDService<Sea, String> service,
+  public SeaController(CRUDService<Sea, String> service,
       Validator<Sea> validator) {
     super(service, validator);
   }

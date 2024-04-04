@@ -17,7 +17,7 @@ class UpdateShipCommand extends UpdateCommand<Ship, String> {
   private File ship;
 
   @Override
-  protected ControllerFactory<Ship, String> getFactory() {
+  protected ControllerFactory<Ship, String> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

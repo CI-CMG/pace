@@ -16,7 +16,7 @@ class GetShipByUUIDCommand extends GetByUUIDCommand<Ship, String> {
   private UUID uuid;
 
   @Override
-  protected ControllerFactory<Ship, String> getFactory() {
+  protected ControllerFactory<Ship, String> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

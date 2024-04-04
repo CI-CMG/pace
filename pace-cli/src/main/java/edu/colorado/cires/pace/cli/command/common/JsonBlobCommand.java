@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

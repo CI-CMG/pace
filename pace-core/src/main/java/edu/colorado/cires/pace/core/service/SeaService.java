@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Sea;
 
 public class SeaService extends CRUDService<Sea, String> {
 
-  protected SeaService(CRUDRepository<Sea, String> seaRepository) {
+  public SeaService(CRUDRepository<Sea, String> seaRepository) {
     super(seaRepository);
   }
 }

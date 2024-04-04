@@ -11,7 +11,7 @@ class FindAllShipsCommand extends FindAllCommand<Ship, String> {
 
 
   @Override
-  protected ControllerFactory<Ship, String> getFactory() {
+  protected ControllerFactory<Ship, String> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 }

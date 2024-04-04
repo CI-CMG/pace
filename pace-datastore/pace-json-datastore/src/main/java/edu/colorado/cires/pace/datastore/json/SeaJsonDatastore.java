@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class SeaJsonDatastore extends JsonDatastore<Sea, String> {
 
-  protected SeaJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
+  public SeaJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
     super(workDirectory.resolve("seas"), objectMapper, Sea.class, Sea::getUUID, Sea::getName);
   }
 }

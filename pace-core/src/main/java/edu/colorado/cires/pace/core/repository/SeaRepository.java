@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Sea;
 
 public class SeaRepository extends CRUDRepository<Sea, String> {
 
-  protected SeaRepository(Datastore<Sea, String> datastore) {
+  public SeaRepository(Datastore<Sea, String> datastore) {
     super(Sea::getUUID, Sea::getName, Sea::setUUID, datastore);
   }
 

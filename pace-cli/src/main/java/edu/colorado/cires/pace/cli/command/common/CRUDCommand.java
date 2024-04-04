@@ -9,10 +9,10 @@ import java.nio.file.Paths;
 
 public abstract class CRUDCommand<O, U> implements Runnable {
   protected final ObjectMapper objectMapper = new ObjectMapper();
-  protected abstract ControllerFactory<O, U> getFactory(); 
+  protected abstract ControllerFactory<O, U> getControllerFactory(); 
   
   protected CRUDController<O, U> createController() throws IOException {
-    return getFactory().createController(
+    return getControllerFactory().createController(
         getDatastoreDirectory(),
         objectMapper
     );

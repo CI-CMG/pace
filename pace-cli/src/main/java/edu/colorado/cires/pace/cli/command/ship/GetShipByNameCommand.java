@@ -15,7 +15,7 @@ class GetShipByNameCommand extends GetByUniqueFieldCommand<Ship, String> {
   private String name;
 
   @Override
-  protected ControllerFactory<Ship, String> getFactory() {
+  protected ControllerFactory<Ship, String> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 
