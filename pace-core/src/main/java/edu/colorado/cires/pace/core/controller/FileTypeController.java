@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.FileType;
 
 public class FileTypeController extends CRUDController<FileType, String> {
 
-  protected FileTypeController(CRUDService<FileType, String> service,
+  public FileTypeController(CRUDService<FileType, String> service,
       Validator<FileType> validator) {
     super(service, validator);
   }

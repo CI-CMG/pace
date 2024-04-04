@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.cli.command.base;
 
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand;
@@ -22,7 +23,8 @@ import picocli.CommandLine.Command;
         PlatformCommand.class,
         PersonCommand.class,
         OrganizationCommand.class,
-        InstrumentCommand.class
+        InstrumentCommand.class,
+        FileTypeCommand.class
     }
 )
 public class PaceCLI implements Runnable {

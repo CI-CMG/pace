@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.FileType;
 
 public class FileTypeService extends CRUDService<FileType, String> {
 
-  protected FileTypeService(CRUDRepository<FileType, String> fileTypeRepository) {
+  public FileTypeService(CRUDRepository<FileType, String> fileTypeRepository) {
     super(fileTypeRepository);
   }
 }
