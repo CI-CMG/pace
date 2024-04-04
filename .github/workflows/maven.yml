@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "trunk" ]
+    branches: [ "multiple-archs" ]
 
 jobs:
   build:
@@ -40,9 +40,12 @@ jobs:
         name: reflection-config
         path: "pace-cli/target/classes/native-reflection-configuration.json"
   
-  osx-arm64:
+  native-image:
     needs: build
-    runs-on: macos-14
+    strategy:
+      matrix: 
+        os: [macos-14,macos-11,ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Set up JDK 17
       uses: graalvm/setup-graalvm@v1
@@ -59,21 +62,27 @@ jobs:
         name: reflection-config
     - name: Build Executable
       run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json
+    - name: Set env vars
+      run: |
+        echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+        echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
-        name: pace-cli-mac-arm64
+        name: pace-cli-${{ env.os }}-${{ env.arch }}
         path: "pace-cli"
         
   release:
     needs: 
       - build
-      - osx-arm64
+      - native-image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
-      - run: zip -r release/pace-cli-mac-arm64-${{ needs.build.outputs.version }}.zip pace-cli-mac-arm64
+      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
+      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
+      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64 
       - run: cp exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar release/pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Update branch release
         uses: eine/tip@master
