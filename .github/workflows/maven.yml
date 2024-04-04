@@ -65,6 +65,7 @@ jobs:
       - uses: actions/download-artifact@v4
       - run: mkdir release
       - run: zip -r release/pace-cli-mac-arm64-${{ needs.build.outputs.version }}.zip pace-cli-mac-arm64
+      - run: cp exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar release/pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Update branch release
         uses: eine/tip@master
         with:
