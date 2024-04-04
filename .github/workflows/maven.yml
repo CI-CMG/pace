@@ -26,18 +26,14 @@ jobs:
         distribution: 'graalvm'
         cache: maven
     - name: Package
-      run: mvn -B package -DskipTests
-    - name: Test
-      run: mvn -B test
-    - name: Verify
-      run: mvn -B verify -DskipTests
+      run: mvn -B package -Pdep-check
     - id: version
       run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
     - name: Upload Build Resources
       uses: actions/upload-artifact@v4
       with:
-        name: build-resources
-        path: "."
+        name: exe-jar
+        path: "pace-cli/target/*-jar-with-dependencies.jar"
   
   osx-arm64:
     needs: build
@@ -51,14 +47,14 @@ jobs:
     - name: Download Resources
       uses: actions/download-artifact@v4
       with:
-        name: build-resources
+        name: exe-jar
     - name: Build Executable
-      run: mvn native:compile
+      run: native-image -jar exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
         name: pace-cli-mac-arm64
-        path: "pace-cli/target/pace-cli"
+        path: "pace-cli"
         
   release:
     needs: 
