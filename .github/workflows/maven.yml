@@ -34,6 +34,11 @@ jobs:
       with:
         name: exe-jar
         path: "pace-cli/target/*-jar-with-dependencies.jar"
+    - name: Upload Native Reflection Configuration
+      uses: actions/upload-artifact@v4
+      with:
+        name: reflection-config
+        path: "pace-cli/target/classes/native-reflection-configuration.json"
   
   osx-arm64:
     needs: build
@@ -44,12 +49,16 @@ jobs:
       with:
         java-version: '17'
         distribution: 'graalvm'
-    - name: Download Resources
+    - name: Download Jar
       uses: actions/download-artifact@v4
       with:
         name: exe-jar
+    - name: Download Native Reflection Configuration
+      uses: actions/download-artifact@v4
+      with:
+        name: reflection-config
     - name: Build Executable
-      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli
+      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
