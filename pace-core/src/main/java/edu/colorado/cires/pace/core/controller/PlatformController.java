@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.data.Platform;
 
 public class PlatformController extends CRUDController<Platform, String> {
 
-  protected PlatformController(CRUDService<Platform, String> service,
+  public PlatformController(CRUDService<Platform, String> service,
       Validator<Platform> validator) {
     super(service, validator);
   }

@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class PlatformJsonDatastore extends JsonDatastore<Platform, String> {
 
-  protected PlatformJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
+  public PlatformJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
     super(workDirectory.resolve("platforms"), objectMapper, Platform.class, Platform::getUUID, Platform::getName);
   }
 }

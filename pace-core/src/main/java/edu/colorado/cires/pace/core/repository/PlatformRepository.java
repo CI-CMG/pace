@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.Platform;
 
 public class PlatformRepository extends CRUDRepository<Platform, String> {
 
-  protected PlatformRepository(Datastore<Platform, String> datastore) {
+  public PlatformRepository(Datastore<Platform, String> datastore) {
     super(Platform::getUUID, Platform::getName, Platform::setUUID, datastore);
   }
 

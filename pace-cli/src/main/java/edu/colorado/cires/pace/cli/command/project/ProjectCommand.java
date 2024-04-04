@@ -17,6 +17,10 @@ import picocli.CommandLine.Command;
         UpdateProjectCommand.class
     }
 )
-public class ProjectCommand {
+public class ProjectCommand implements Runnable {
 
+    @Override
+    public void run() {
+        
+    }
 }
