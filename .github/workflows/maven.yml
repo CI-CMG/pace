@@ -49,7 +49,7 @@ jobs:
       with:
         name: exe-jar
     - name: Build Executable
-      run: native-image -jar exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli
+      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
