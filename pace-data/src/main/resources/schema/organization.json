@@ -47,5 +47,5 @@
       "type": "boolean"
     }
   },
-  "required": [ "uuid", "name", "use" ]
+  "required": [ "name", "use" ]
 }

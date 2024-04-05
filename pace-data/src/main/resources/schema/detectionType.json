@@ -23,5 +23,5 @@
       "type": "boolean"
     }
   },
-  "required": ["uuid", "source", "scienceName", "use"]
+  "required": ["scienceName", "use"]
 }
