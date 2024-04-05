@@ -31,6 +31,12 @@
   </dependencies>
   
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>com.github.eirslett</groupId>
@@ -67,6 +73,16 @@
               <arguments>run generate-java</arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>generate-python-classes</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <arguments>run generate-python</arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -74,6 +90,19 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>3.5.0</version>
         <executions>
+          <execution>
+            <id>python-project-version-property</id>
+            <goals>
+              <goal>regex-property</goal>
+            </goals>
+            <configuration>
+              <name>python.project.version</name>
+              <value>${project.version}</value>
+              <regex>-SNAPSHOT</regex>
+              <replacement>.dev</replacement>
+              <failIfNoMatch>false</failIfNoMatch>
+            </configuration>
+          </execution>
           <execution>
             <phase>process-classes</phase>
             <goals>
@@ -104,6 +133,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
+        <configuration>
+          <excludes>
+            <exclude>python/**</exclude>
+            <exclude>schema/**</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <phase>prepare-package</phase>
