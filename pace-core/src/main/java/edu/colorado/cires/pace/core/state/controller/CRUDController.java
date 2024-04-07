@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.exception.ValidationException;
 import edu.colorado.cires.pace.core.validation.Validator;
@@ -15,9 +16,10 @@ public abstract class CRUDController<O, U> {
   private final CRUDService<O, U> service;
   private final Validator<O> validator;
   protected abstract Validator<O> getValidator();
+  protected abstract CRUDService<O, U> createService(Datastore<O, U> datastore, Datastore<?, ?>... additionalDataStores);
 
-  protected CRUDController(CRUDService<O, U> service) {
-    this.service = service;
+  protected CRUDController(Datastore<O, U> datastore, Datastore<?, ?>... additionalDataStores) {
+    this.service = createService(datastore, additionalDataStores);
     this.validator = getValidator();
   }
   

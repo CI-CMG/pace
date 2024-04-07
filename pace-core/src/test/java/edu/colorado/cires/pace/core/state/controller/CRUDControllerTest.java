@@ -9,13 +9,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.exception.ValidationException;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
-import edu.colorado.cires.pace.core.state.service.CRUDService;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -30,8 +31,8 @@ abstract class CRUDControllerTest<O, U> {
   }
 
   private CRUDController<O, U> controller;
-  private final CRUDService<O, U> service = mock(CRUDService.class);
-  protected abstract CRUDController<O, U> createController(CRUDService<O, U> service);
+  private final Datastore<O, U> datastore = mock(Datastore.class);
+  protected abstract CRUDController<O, U> createController(Datastore<O, U> datastore) throws Exception;
   
   protected abstract UniqueFieldProvider<O, U> getUniqueFieldProvider();
   protected abstract UUIDProvider<O> getUuidProvider();
@@ -44,19 +45,19 @@ abstract class CRUDControllerTest<O, U> {
   private final UniqueFieldSetter<O, U> uniqueFieldSetter = getUniqueFieldSetter();
   
   @BeforeEach
-  void beforeEach() {
-    reset(service);
-    controller = createController(service);
+  void beforeEach() throws Exception {
+    reset(datastore);
+    controller = createController(datastore);
   }
   
   @Test
   void testCreate() throws Exception {
-    O object = createNewObject();
-    when(service.create(object)).thenReturn(object);
+    O object = createNewObject(false);
+    when(datastore.save(object)).thenReturn(object);
     
     controller.create(object);
     
-    verify(service, times(1)).create(any());
+    verify(datastore, times(1)).save(any());
   }
   
   @Test
@@ -74,31 +75,31 @@ abstract class CRUDControllerTest<O, U> {
     assertEquals("Object validation failed", exception.getMessage());
     assertEquals(violations, exception.getViolations());
     
-    verify(service, times(0)).create(any());
+    verify(datastore, times(0)).save(any());
   }
   
   @Test
   void testGetByUniqueField() throws Exception {
     O object = createNewObject();
     
-    when(service.getByUniqueField(uniqueFieldProvider.getUniqueField(object))).thenReturn(object);
+    when(datastore.findByUniqueField(uniqueFieldProvider.getUniqueField(object))).thenReturn(Optional.of(object));
     
     O result = controller.getByUniqueField(uniqueFieldProvider.getUniqueField(object));
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
-    verify(service, times(1)).getByUniqueField(any());
+    verify(datastore, times(1)).findByUniqueField(any());
   }
   
   @Test
   void testGetByUUID() throws Exception {
     O object = createNewObject();
     
-    when(service.getByUUID(uuidProvider.getUUID(object))).thenReturn(object);
+    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
     
     O result = controller.getByUUID(uuidProvider.getUUID(object));
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
-    verify(service, times(1)).getByUUID(any());
+    verify(datastore, times(1)).findByUUID(any());
   }
   
   @Test
@@ -110,7 +111,7 @@ abstract class CRUDControllerTest<O, U> {
         object1, object2
     );
     
-    when(service.readAll(Collections.emptyList())).thenReturn(expected);
+    when(datastore.findAll()).thenReturn(expected);
     
     Stream<O> actual = controller.readAll(Collections.emptyList());
     
@@ -120,12 +121,12 @@ abstract class CRUDControllerTest<O, U> {
   @Test
   void testUpdate() throws Exception {
     O object = createNewObject();
-    when(service.update(uuidProvider.getUUID(object), object)).thenReturn(object);
-    
+    when(datastore.save(object)).thenReturn(object);
+    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
     O result = controller.update(uuidProvider.getUUID(object), object);
     assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
     
-    verify(service, times(1)).update(any(), any());
+    verify(datastore, times(1)).save(any());
   }
   
   @Test
@@ -147,8 +148,14 @@ abstract class CRUDControllerTest<O, U> {
   void testDelete() throws Exception {
     O object = createNewObject();
     
+    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
+    
     controller.delete(uuidProvider.getUUID(object));
   }
   
-  protected abstract O createNewObject();
+  protected abstract O createNewObject(boolean withUUID);
+  
+  private O createNewObject() {
+    return createNewObject(true);
+  }
 }

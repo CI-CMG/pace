@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
@@ -10,8 +11,8 @@ import java.util.function.Supplier;
 class SeaControllerTest extends CRUDControllerTest<Sea, String> {
 
   @Override
-  protected CRUDController<Sea, String> createController(CRUDService<Sea, String> service) {
-    return new SeaController(service);
+  protected CRUDController<Sea, String> createController(Datastore<Sea, String> datastore) {
+    return new SeaController(datastore);
   }
 
   @Override
@@ -35,10 +36,12 @@ class SeaControllerTest extends CRUDControllerTest<Sea, String> {
   }
 
   @Override
-  protected Sea createNewObject() {
+  protected Sea createNewObject(boolean withUUID) {
     Sea sea = new Sea();
     sea.setName(UUID.randomUUID().toString());
-    sea.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      sea.setUUID(UUID.randomUUID());
+    }
     sea.setUse(true);
     return sea;
   }

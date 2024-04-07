@@ -6,10 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.colorado.cires.pace.core.exception.NotFoundException;
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -35,10 +36,10 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
     return Instrument::setName;
   }
   
-  private static final FileTypeRepository fileTypeRepository = mock(FileTypeRepository.class);
+  private static final Datastore<FileType, String> fileTypeRepository = mock(Datastore.class);
   static {
     try {
-      when(fileTypeRepository.getByUUID(any())).thenReturn(new FileType());
+      when(fileTypeRepository.findByUUID(any())).thenReturn(Optional.of(new FileType()));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -81,8 +82,8 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
   @Test
   void testFileTypeDoesNotExist() throws Exception {
     Instrument instrument = createNewObject(1);
-    when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(0).getUUID())).thenThrow(new NotFoundException("Not found"));
-    when(fileTypeRepository.getByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(instrument.getFileTypes().get(1));
+    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(0).getUUID())).thenReturn(Optional.empty());
+    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(Optional.of(instrument.getFileTypes().get(1)));
     
     Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(instrument));
     assertEquals(String.format(

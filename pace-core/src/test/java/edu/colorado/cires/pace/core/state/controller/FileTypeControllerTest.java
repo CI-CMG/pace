@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
@@ -10,8 +11,8 @@ import java.util.function.Supplier;
 class FileTypeControllerTest extends CRUDControllerTest<FileType, String> {
 
   @Override
-  protected CRUDController<FileType, String> createController(CRUDService<FileType, String> service) {
-    return new FileTypeController(service);
+  protected CRUDController<FileType, String> createController(Datastore<FileType, String> datastore) {
+    return new FileTypeController(datastore);
   }
 
   @Override
@@ -35,9 +36,11 @@ class FileTypeControllerTest extends CRUDControllerTest<FileType, String> {
   }
 
   @Override
-  protected FileType createNewObject() {
+  protected FileType createNewObject(boolean withUUID) {
     FileType fileType = new FileType();
-    fileType.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      fileType.setUUID(UUID.randomUUID());
+    }
     fileType.setUse(true);
     fileType.setType(UUID.randomUUID().toString());
     fileType.setComment(UUID.randomUUID().toString());

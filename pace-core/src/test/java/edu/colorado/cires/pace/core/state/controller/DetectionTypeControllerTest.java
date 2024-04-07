@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
@@ -10,8 +11,8 @@ import java.util.function.Supplier;
 class DetectionTypeControllerTest extends CRUDControllerTest<DetectionType, String> {
 
   @Override
-  protected CRUDController<DetectionType, String> createController(CRUDService<DetectionType, String> service) {
-    return new DetectionTypeController(service);
+  protected CRUDController<DetectionType, String> createController(Datastore<DetectionType, String> datastore) {
+    return new DetectionTypeController(datastore);
   }
 
   @Override
@@ -35,9 +36,11 @@ class DetectionTypeControllerTest extends CRUDControllerTest<DetectionType, Stri
   }
 
   @Override
-  protected DetectionType createNewObject() {
+  protected DetectionType createNewObject(boolean withUUID) {
     DetectionType detectionType = new DetectionType();
-    detectionType.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      detectionType.setUUID(UUID.randomUUID());
+    }
     detectionType.setUse(true);
     detectionType.setSource(UUID.randomUUID().toString());
     detectionType.setScienceName(UUID.randomUUID().toString());

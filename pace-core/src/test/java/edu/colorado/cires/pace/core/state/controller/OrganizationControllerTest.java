@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
@@ -10,8 +11,8 @@ import java.util.function.Supplier;
 class OrganizationControllerTest extends CRUDControllerTest<Organization, String> {
 
   @Override
-  protected CRUDController<Organization, String> createController(CRUDService<Organization, String> service) {
-    return new OrganizationController(service);
+  protected CRUDController<Organization, String> createController(Datastore<Organization, String> datastore) {
+    return new OrganizationController(datastore);
   }
 
   @Override
@@ -35,7 +36,7 @@ class OrganizationControllerTest extends CRUDControllerTest<Organization, String
   }
 
   @Override
-  protected Organization createNewObject() {
+  protected Organization createNewObject(boolean withUUID) {
     Organization organization = new Organization();
     organization.setCity(UUID.randomUUID().toString());
     organization.setCountry(UUID.randomUUID().toString());
@@ -45,7 +46,9 @@ class OrganizationControllerTest extends CRUDControllerTest<Organization, String
     organization.setState(UUID.randomUUID().toString());
     organization.setStreet(UUID.randomUUID().toString());
     organization.setUse(true);
-    organization.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      organization.setUUID(UUID.randomUUID());
+    }
     organization.setZip(UUID.randomUUID().toString());
     return organization;
   }

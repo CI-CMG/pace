@@ -1,19 +1,26 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
-import edu.colorado.cires.pace.core.state.service.CRUDService;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 class InstrumentControllerTest extends CRUDControllerTest<Instrument, String> {
 
   @Override
-  protected CRUDController<Instrument, String> createController(CRUDService<Instrument, String> service) {
-    return new InstrumentController(service);
+  protected CRUDController<Instrument, String> createController(Datastore<Instrument, String> datastore) throws Exception {
+    Datastore<FileType, String> fileTypeDatastore = mock(Datastore.class);
+    when(fileTypeDatastore.findByUUID(any())).thenReturn(Optional.of(new FileType()));
+    return new InstrumentController(datastore, fileTypeDatastore);
   }
 
   @Override
@@ -37,9 +44,11 @@ class InstrumentControllerTest extends CRUDControllerTest<Instrument, String> {
   }
 
   @Override
-  protected Instrument createNewObject() {
+  protected Instrument createNewObject(boolean withUUID) {
     Instrument instrument = new Instrument();
-    instrument.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      instrument.setUUID(UUID.randomUUID());
+    }
     instrument.setName(UUID.randomUUID().toString());
     instrument.setUse(true);
 
@@ -55,6 +64,6 @@ class InstrumentControllerTest extends CRUDControllerTest<Instrument, String> {
         fileType1, fileType2
     ));
 
-    return instrument;
+    return instrument; 
   }
 }

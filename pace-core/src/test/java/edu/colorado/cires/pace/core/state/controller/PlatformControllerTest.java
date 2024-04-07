@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.core.state.controller;
 
+import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
@@ -10,8 +11,8 @@ import java.util.function.Supplier;
 class PlatformControllerTest extends CRUDControllerTest<Platform, String> {
 
   @Override
-  protected CRUDController<Platform, String> createController(CRUDService<Platform, String> service) {
-    return new PlatformController(service);
+  protected CRUDController<Platform, String> createController(Datastore<Platform, String> datastore) {
+    return new PlatformController(datastore);
   }
 
   @Override
@@ -35,10 +36,12 @@ class PlatformControllerTest extends CRUDControllerTest<Platform, String> {
   }
 
   @Override
-  protected Platform createNewObject() {
+  protected Platform createNewObject(boolean withUUID) {
     Platform platform = new Platform();
     platform.setName(UUID.randomUUID().toString());
-    platform.setUUID(UUID.randomUUID());
+    if (withUUID) {
+      platform.setUUID(UUID.randomUUID());
+    }
     platform.setUse(true);
     return platform;
   }

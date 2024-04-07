@@ -10,9 +10,9 @@ public class InstrumentRepository extends CRUDRepository<Instrument, String> {
   
   private final FileTypeRepository fileTypeRepository;
 
-  public InstrumentRepository(Datastore<Instrument, String> datastore, FileTypeRepository fileTypeRepository) {
+  public InstrumentRepository(Datastore<Instrument, String> datastore, Datastore<FileType, String> fileTypeDatastore) {
     super(Instrument::getUUID, Instrument::getName, Instrument::setUUID, datastore);
-    this.fileTypeRepository = fileTypeRepository;
+    this.fileTypeRepository = new FileTypeRepository(fileTypeDatastore);
   }
 
   @Override
