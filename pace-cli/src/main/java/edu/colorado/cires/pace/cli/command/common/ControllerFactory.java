@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.controller.CRUDController;
+import edu.colorado.cires.pace.core.state.controller.CRUDController;
 import java.io.IOException;
 import java.nio.file.Path;
 

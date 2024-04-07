@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.repository.UniqueFieldProvider;
+import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
+import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

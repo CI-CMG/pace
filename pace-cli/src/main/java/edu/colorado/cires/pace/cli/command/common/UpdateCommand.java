@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
+import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import java.util.UUID;
 
 public abstract class UpdateCommand<O, U> extends JsonBlobCommand<O, U> {

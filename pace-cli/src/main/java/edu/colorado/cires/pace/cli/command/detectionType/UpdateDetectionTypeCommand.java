@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.cli.command.detectionType;
 import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.core.repository.UUIDProvider;
+import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.data.DetectionType;
 import java.io.File;
 import java.util.function.Supplier;
