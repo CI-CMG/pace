@@ -34,20 +34,13 @@ public class PackingJobValidator implements Validator<PackingJob> {
     if (StringUtils.isBlank(argument)) {
       return;
     }
-    try {
-      Path path = Path.of(argument);
-      
-      if (!path.isAbsolute()) {
-        violations.add(new ConstraintViolation(
-            "argument", String.format(
-                "%s must be an absolute path", propertyName
-            )
-        ));
-      }
-    } catch (Exception e) {
+    
+    Path path = Path.of(argument);
+    
+    if (!path.isAbsolute()) {
       violations.add(new ConstraintViolation(
           propertyName, String.format(
-              "%s must be a valid path", propertyName
+              "%s must be an absolute path", propertyName
           )
       ));
     }
