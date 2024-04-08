@@ -69,7 +69,7 @@ jobs:
         name: python-package
         path: "dist/*.tar.gz"
   
-  native-image:
+  native-image-unix:
     needs: build
     strategy:
       matrix: 
@@ -90,8 +90,8 @@ jobs:
       with:
         name: reflection-config
     - name: Build Executable
-      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json
-    - name: Set env vars
+      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json -H:-CheckToolchain
+    - name: Set os/arch environment variables
       run: |
         echo "os=${RUNNER_OS}" >> $GITHUB_ENV
         echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
@@ -101,10 +101,44 @@ jobs:
         name: pace-cli-${{ env.os }}-${{ env.arch }}
         path: "pace-cli"
         
+  native-image-windows:
+    needs: build
+    strategy:
+      matrix:
+        os: [ windows-2019 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+      - name: Download Native Reflection Configuration
+        uses: actions/download-artifact@v4
+        with:
+          name: reflection-config
+      - name: Build Executable
+        run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json -H:-CheckToolchain
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=$env:RUNNER_OS" >> $env:GITHUB_ENV
+          echo "arch=$env:RUNNER_ARCH" >> $env:GITHUB_ENV
+        shell: powershell
+      - name: Upload Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-cli-${{ env.os }}-${{ env.arch }}
+          path: "pace-cli.exe"
+        
   release:
     needs: 
       - build
-      - native-image
+      - native-image-unix
+      - native-image-windows
       - package-python
     runs-on: ubuntu-latest
     steps:
@@ -112,7 +146,8 @@ jobs:
       - run: mkdir release
       - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
       - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
-      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64 
+      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
+      - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
       - run: cp python-package/*.tar.gz release/.
       - run: cp exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar release/pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Update branch release
