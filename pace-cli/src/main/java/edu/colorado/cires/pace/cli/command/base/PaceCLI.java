@@ -11,6 +11,7 @@ import edu.colorado.cires.pace.cli.command.platform.PlatformCommand;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand;
+import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -28,7 +29,8 @@ import picocli.CommandLine.Command;
         OrganizationCommand.class,
         InstrumentCommand.class,
         FileTypeCommand.class,
-        DetectionTypeCommand.class
+        DetectionTypeCommand.class,
+        TranslatorCommand.class
     }
 )
 public class PaceCLI implements Runnable {

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://colorado.edu/cires/pace/csvTranslator.schema.json",
+  "title": "CSV Translator",
+  "description": "Translator between CSV column numbers and object fields",
+  "type": "object",
+  "definitions": {
+    "CSVTranslatorField": {
+      "title": "CSV Translator Field",
+      "description": "Describes an object's property name and the CSV column number from which to receive an object's property value",
+      "type": "object",
+      "properties": {
+        "propertyName": {
+          "description": "Object property name",
+          "type": "string"
+        },
+        "columnNumber": {
+          "description": "The CSV column number mapping to an object's property value",
+          "type": "integer"
+        }
+      },
+      "required": ["propertyName", "columnNumber"]
+    }
+  },
+  "properties": {
+    "uuid": {
+      "description": "The unique identifier of a csv translator",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "description": "CSV translator name",
+      "type": "string"
+    },
+    "fields": {
+      "description": "CSV translator fields",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CSVTranslatorField"
+      },
+      "minItems": "1",
+      "uniqueItems": true
+    }
+  },
+  "required": ["name", "fields"]
+}
