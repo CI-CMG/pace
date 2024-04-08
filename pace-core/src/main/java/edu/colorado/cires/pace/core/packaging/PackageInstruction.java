@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.core.packer;
+package edu.colorado.cires.pace.core.packaging;
 
 import java.nio.file.Path;
 

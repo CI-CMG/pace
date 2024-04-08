@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.core.packer;
+package edu.colorado.cires.pace.core.packaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class PackerTest {
+public class PackagerTest {
   
   private final Path SOURCE_DIR = Paths.get("target").resolve("source").toAbsolutePath();
   private final Path TARGET_DIR = Paths.get("target").resolve("target").toAbsolutePath();
@@ -77,7 +77,7 @@ public class PackerTest {
   void testRun() throws IOException, PackingException {
     List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
     
-    Packer.run(packageInstructions.stream(), TARGET_DIR);
+    Packager.run(packageInstructions.stream(), TARGET_DIR);
     
     Path bagitFile = TARGET_DIR.resolve("bagit.txt");
     List<String> lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
@@ -155,7 +155,7 @@ public class PackerTest {
   void testMkdirDirectoryExists() throws IOException {
     FileUtils.forceMkdir(TARGET_DIR.toFile());
 
-    Exception exception = assertThrows(PackingException.class, () -> Packer.mkdir(TARGET_DIR));
+    Exception exception = assertThrows(PackingException.class, () -> Packager.mkdir(TARGET_DIR));
     assertEquals(String.format(
         "Failed to create directory: %s", TARGET_DIR
     ), exception.getMessage());
@@ -163,7 +163,7 @@ public class PackerTest {
   
   @Test
   void testWriteBagitFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackingException.class, () -> Packer.writeBagItFile(TARGET_DIR));
+    Exception exception = assertThrows(PackingException.class, () -> Packager.writeBagItFile(TARGET_DIR));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bagit.txt")
     ), exception.getMessage());
@@ -171,7 +171,7 @@ public class PackerTest {
   
   @Test
   void testWriteBagInfoFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackingException.class, () -> Packer.writeBagInfoFile(TARGET_DIR));
+    Exception exception = assertThrows(PackingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bag-info.txt")
     ), exception.getMessage());
@@ -179,8 +179,8 @@ public class PackerTest {
   
   @Test
   void testWriteTagManifestFileDoesNotExist() throws PackingException {
-    Packer.mkdir(TARGET_DIR);
-    Exception exception = assertThrows(PackingException.class, () -> Packer.writeTagManifestFile(
+    Packager.mkdir(TARGET_DIR);
+    Exception exception = assertThrows(PackingException.class, () -> Packager.writeTagManifestFile(
         TARGET_DIR.resolve("bag-info.txt"),
         TARGET_DIR.resolve("bagit.txt"),
         TARGET_DIR.resolve("manifest-sha256.txt"),
@@ -201,7 +201,7 @@ public class PackerTest {
 
       List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
 
-      Exception exception = assertThrows(PackingException.class, () -> Packer.run(packageInstructions.stream(), TARGET_DIR));
+      Exception exception = assertThrows(PackingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR));
       assertEquals("Packing failed", exception.getMessage());
       for (Throwable throwable : exception.getSuppressed()) {
         assertEquals("java.io.IOException: test file error", throwable.getMessage());
@@ -211,7 +211,7 @@ public class PackerTest {
   
   @Test
   void testWriteManifestDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackingException.class, () -> Packer.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR));
+    Exception exception = assertThrows(PackingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("manifest-sha256.txt")
     ), exception.getMessage());

@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.core.packer;
+package edu.colorado.cires.pace.core.packaging;
 
 import edu.colorado.cires.pace.core.exception.PackingException;
 import edu.colorado.cires.pace.core.util.FileUtils;
@@ -13,9 +13,9 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class Packer {
+class Packager {
   
-  private static final Logger LOGGER = LoggerFactory.getLogger(Packer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Packager.class);
   
   public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir) throws PackingException {
     mkdir(outputDir);

@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.core.packer;
+package edu.colorado.cires.pace.core.packaging;
 
 import edu.colorado.cires.pace.core.exception.PackingException;
 import edu.colorado.cires.pace.core.util.FileUtils;

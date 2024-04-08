@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.core.packer;
+package edu.colorado.cires.pace.core.packaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
