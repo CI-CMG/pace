@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: reflection-config
-        path: "pace-cli/target/classes/native-reflection-configuration.json"
+        path: "pace-cli/src/main/resources/native-reflection-configuration.json"
     - name: Prepare Python Module
       run: "touch pace-data/target/generated-sources/python/pacedata/__init__.py && cp pace-data/target/classes/python/setup.py pace-data/target/generated-sources/python/."
     - name: Upload Python Module
