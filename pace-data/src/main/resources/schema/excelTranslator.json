@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://colorado.edu/cires/pace/excelTranslator.schema.json",
+  "title": "Excel Translator",
+  "description": "Translator between Excel column numbers and object fields",
+  "type": "object",
+  "definitions": {
+    "ExcelTranslatorField": {
+      "title": "Excel Translator Field",
+      "description": "Describes an object's property name and Excel sheet/column number from which to receive an object's property value",
+      "type": "object",
+      "properties": {
+        "propertyName": {
+          "description": "Object property name",
+          "type": "string"
+        },
+        "columnNumber": {
+          "description": "The Excel column number mapping to an object's property value",
+          "type": "integer",
+          "min": 1
+        },
+        "sheetNumber": {
+          "description": "The Excel sheet number containing property values",
+          "type": "integer",
+          "min": 1
+        }
+      },
+      "required": ["propertyName", "columnNumber", "sheetNumber"]
+    }
+  },
+  "properties": {
+    "uuid": {
+      "description": "The unique identifier of an excel translator",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "description": "Excel translator name",
+      "type": "string"
+    },
+    "fields": {
+      "description": "Excel translator fields",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExcelTranslatorField"
+      },
+      "minItems": "1",
+      "uniqueItems": true
+    }
+  },
+  "required": ["name", "fields"]
+}
