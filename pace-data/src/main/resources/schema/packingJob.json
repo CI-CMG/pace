@@ -17,12 +17,12 @@
       "description": "Path to additional files",
       "type": "string"
     },
-    "documentationPath": {
-      "description": "Path to documentation files",
+    "documentsPath": {
+      "description": "Path to documents files",
       "type": "string"
     },
-    "calibrationDocsPath": {
-      "description": "Path to calibration documentation files",
+    "calibrationDocumentsPath": {
+      "description": "Path to calibration documents files",
       "type": "string"
     },
     "navigationPath": {
