@@ -39,35 +39,6 @@ jobs:
       with:
         name: reflection-config
         path: "pace-cli/src/main/resources/native-reflection-configuration.json"
-    - name: Prepare Python Module
-      run: "touch pace-data/target/generated-sources/python/pacedata/__init__.py && cp pace-data/target/classes/python/setup.py pace-data/target/generated-sources/python/."
-    - name: Upload Python Module
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-module
-        path: "pace-data/target/generated-sources/python"
-        
-  package-python:
-    needs: build
-    runs-on: ubuntu-latest  
-    steps:
-    - name: Download Python Module
-      uses: actions/download-artifact@v4
-      with:
-        name: python-module
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install Python Dependencies
-      run: python -m pip install --upgrade pip && python -m pip install setuptools
-    - name: Build Python Package
-      run: python setup.py sdist
-    - name: Upload Python Package
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package
-        path: "dist/*.tar.gz"
   
   native-image-unix:
     needs: build
@@ -139,7 +110,6 @@ jobs:
       - build
       - native-image-unix
       - native-image-windows
-      - package-python
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -148,7 +118,6 @@ jobs:
       - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
       - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
       - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
-      - run: cp python-package/*.tar.gz release/.
       - run: cp exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar release/pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Update branch release
         uses: eine/tip@master
