@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.ObjectWithName;
 import edu.colorado.cires.pace.data.ObjectWithUUID;
-import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,21 +14,32 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
+
+class JsonDatastoreTest {
+
+  record TestObject(UUID uuid, String name) implements ObjectWithName {
+
+    @Override
+    public ObjectWithUUID copyWithNewUUID(UUID uuid) {
+      return new TestObject(
+          uuid,
+          name
+      );
+    }
+  }
   
   private static final Path TEST_PATH = Paths.get("target").resolve("test-dir");
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  protected abstract Class<O> getClazz();
-  protected abstract JsonDatastore<O> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException;
-  private final JsonDatastore<O> datastore;
+  private final JsonDatastore<TestObject> datastore;
 
   {
     try {
-      datastore = createDatastore(TEST_PATH, OBJECT_MAPPER);
+      datastore = new JsonDatastore<>(TEST_PATH, OBJECT_MAPPER, TestObject.class);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -64,9 +75,9 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   @Test
   void testSave() throws IOException {
-    O object = createNewObject();
+    TestObject object = createNewObject();
     
-    O result = datastore.save(object);
+    TestObject result = datastore.save(object);
     assertObjectsEqual(object, result);
     assertSavedObjectEqualsObject(object, result);
     assertTrue(getFileForObject(result).isPresent());
@@ -74,7 +85,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   @Test
   void testDelete() throws IOException {
-    O object = createNewObject();
+    TestObject object = createNewObject();
     datastore.save(object);
     datastore.delete(object);
     
@@ -83,10 +94,10 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   @Test
   void testFindByUUID() throws IOException {
-    O object = createNewObject();
-    O result = datastore.save(object);
+    TestObject object = createNewObject();
+    TestObject result = datastore.save(object);
     
-    Optional<O> maybeResult = datastore.findByUUID(result.uuid());
+    Optional<TestObject> maybeResult = datastore.findByUUID(result.uuid());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
     
@@ -97,10 +108,10 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   @Test
   void testFindByUniqueField() throws IOException {
-    O object = createNewObject();
-    O result = datastore.save(object);
+    TestObject object = createNewObject();
+    TestObject result = datastore.save(object);
     
-    Optional<O> maybeResult = datastore.findByUniqueField(result.uniqueField());
+    Optional<TestObject> maybeResult = datastore.findByUniqueField(result.uniqueField());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
     
@@ -111,15 +122,15 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   @Test
   void testFindAll() throws IOException {
-    O object1 = createNewObject();
+    TestObject object1 = createNewObject();
     object1 = datastore.save(object1);
-    O object2 = createNewObject();
+    TestObject object2 = createNewObject();
     object2 = datastore.save(object2);
     
-    List<O> results = datastore.findAll()
+    List<TestObject> results = datastore.findAll()
         .sorted((Comparator.comparing(ObjectWithUUID::uuid)))
         .toList();
-    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUUID::uuid))
+    List<TestObject> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUUID::uuid))
         .toList();
     
     assertEquals(expected.size(), results.size());
@@ -128,11 +139,20 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
       assertObjectsEqual(expected.get(i), results.get(i));
     }
   }
+
+  private TestObject createNewObject() {
+    return new TestObject(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString()
+    );
+  }
+
+  private void assertObjectsEqual(TestObject expected, TestObject actual) {
+    assertEquals(expected.uuid(), actual.uuid());
+    assertEquals(expected.name(), actual.name());
+  }
   
-  protected abstract O createNewObject();
-  protected abstract void assertObjectsEqual(O expected, O actual);
-  
-  private void assertSavedObjectEqualsObject(O expected, O actual) throws IOException {
+  private void assertSavedObjectEqualsObject(TestObject expected, TestObject actual) throws IOException {
     try (Stream<Path> paths = Files.walk(TEST_PATH)) {
       paths.map(Path::toFile)
           .filter(File::isFile)
@@ -142,7 +162,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
                 try {
                   assertObjectsEqual(
                       expected,
-                      OBJECT_MAPPER.readValue(f, getClazz())
+                      OBJECT_MAPPER.readValue(f, TestObject.class)
                   );
                 } catch (IOException e) {
                   throw new IllegalStateException(String.format(
@@ -157,7 +177,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     }
   }
   
-  private Optional<File> getFileForObject(O object) throws IOException {
+  private Optional<File> getFileForObject(TestObject object) throws IOException {
     try (Stream<Path> paths = Files.walk(TEST_PATH)) {
       return paths.map(Path::toFile)
           .filter(File::isFile)

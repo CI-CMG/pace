@@ -16,13 +16,13 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
+public class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
   
   private final Path storageDirectory;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
 
-  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
+  public JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
     this.storageDirectory = storageDirectory;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
