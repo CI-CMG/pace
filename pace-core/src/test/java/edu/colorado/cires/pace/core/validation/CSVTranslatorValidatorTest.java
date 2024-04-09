@@ -15,7 +15,7 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testEmptyObject() {
-    CSVTranslator translation = new CSVTranslator();
+    CSVTranslator translation = new CSVTranslator(null, null, null);
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(2, violations.size());
@@ -39,15 +39,17 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testBlankName() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setName("");
-
-    CSVTranslatorField field = new CSVTranslatorField();
-    field.setPropertyName("property1");
-    field.setColumnNumber(1);
-    translation.setFields(Collections.singletonList(
-        field
-    ));
+    CSVTranslatorField field = new CSVTranslatorField(
+        "property1",
+        1
+    );
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "",
+        Collections.singletonList(
+            field
+        )
+    );
     
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -58,9 +60,11 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testEmptyFields() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setFields(Collections.emptyList());
-    translation.setName("name");
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "name",
+        Collections.emptyList()
+    );
     
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -71,12 +75,17 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testInvalidFieldColumnNumber() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setName("name");
-    CSVTranslatorField field = new CSVTranslatorField();
-    field.setColumnNumber(-1);
-    field.setPropertyName("test");
-    translation.setFields(Collections.singletonList(field));
+    CSVTranslatorField field = new CSVTranslatorField(
+        "test",
+        -1
+    );
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "name",
+        Collections.singletonList(
+            field
+        )
+    );
     
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -87,11 +96,17 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testBlankFieldName() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setName("name");
-    CSVTranslatorField field = new CSVTranslatorField();
-    field.setColumnNumber(1);
-    translation.setFields(Collections.singletonList(field));
+    CSVTranslatorField field = new CSVTranslatorField(
+        null,
+        1
+    );
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "name",
+        Collections.singletonList(
+            field
+        )
+    );
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
@@ -101,20 +116,22 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testDuplicateColumnNumber() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setName("name");
+    CSVTranslatorField field1 = new CSVTranslatorField(
+        "test1",
+        1
+    );
     
-    CSVTranslatorField field1 = new CSVTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setPropertyName("test1");
-    
-    CSVTranslatorField field2 = new CSVTranslatorField();
-    field2.setColumnNumber(1);
-    field2.setPropertyName("test2");
-    
-    translation.setFields(List.of(
-        field1, field2
-    ));
+    CSVTranslatorField field2 = new CSVTranslatorField(
+        "test2",
+        1
+    );
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "name",
+        List.of(
+            field1, field2
+        )
+    );
     
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -125,20 +142,23 @@ public class CSVTranslatorValidatorTest {
   
   @Test
   void testDuplicatePropertyName() {
-    CSVTranslator translation = new CSVTranslator();
-    translation.setName("name");
+    CSVTranslatorField field1 = new CSVTranslatorField(
+        "test1",
+        1
+    );
+    CSVTranslatorField field2 = new CSVTranslatorField(
+        "test1",
+        2
+    );
     
-    CSVTranslatorField field1 = new CSVTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setPropertyName("test1");
+    CSVTranslator translation = new CSVTranslator(
+        null,
+        "name",
+        List.of(
+            field1, field2
+        )
+    );
     
-    CSVTranslatorField field2 = new CSVTranslatorField();
-    field2.setColumnNumber(2);
-    field2.setPropertyName("test1");
-    
-    translation.setFields(List.of(
-        field1, field2
-    ));
     
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());

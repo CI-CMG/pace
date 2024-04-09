@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get project by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetProjectByUUIDCommand extends GetByUUIDCommand<Project, String> {
+class GetProjectByUUIDCommand extends GetByUUIDCommand<Project> {
   
   @Parameters(description = "project uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetProjectByUUIDCommand extends GetByUUIDCommand<Project, String> {
   }
 
   @Override
-  protected ControllerFactory<Project, String> getControllerFactory() {
+  protected ControllerFactory<Project> getControllerFactory() {
     return ProjectControllerFactory::createController;
   }
 }

@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get sea area by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetSeaByNameCommand extends GetByUniqueFieldCommand<Sea, String> {
+class GetSeaByNameCommand extends GetByUniqueFieldCommand<Sea> {
   
   @Parameters(description = "sea area name")
   private String name;
@@ -20,7 +20,7 @@ class GetSeaByNameCommand extends GetByUniqueFieldCommand<Sea, String> {
   }
 
   @Override
-  protected ControllerFactory<Sea, String> getControllerFactory() {
+  protected ControllerFactory<Sea> getControllerFactory() {
     return SeaControllerFactory::createController;
   }
 }

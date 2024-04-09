@@ -4,47 +4,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.FileType;
 
-class FileTypeRepositoryTest extends CrudRepositoryTest<FileType, String> {
+class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
 
   @Override
-  protected UUIDProvider<FileType> getUUIDPRovider() {
-    return FileType::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldProvider<FileType, String> getUniqueFieldProvider() {
-    return FileType::getType;
-  }
-
-  @Override
-  protected UUIDSetter<FileType> getUUIDSetter() {
-    return FileType::setUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<FileType, String> getUniqueFieldSetter() {
-    return FileType::setType;
-  }
-
-  @Override
-  protected CRUDRepository<FileType, String> createRepository() {
+  protected CRUDRepository<FileType> createRepository() {
     return new FileTypeRepository(createDatastore());
   }
 
   @Override
   protected FileType createNewObject(int suffix) {
-    FileType fileType = new FileType();
-    fileType.setType(String.format("type-%s", suffix));
-    fileType.setComment(String.format("comment-%s", suffix));
-    fileType.setUse(true);
-    return fileType;
+    return new FileType(
+        null,
+        String.format("type-%s", suffix),
+        String.format("comment-%s", suffix)
+    );
   }
 
   @Override
-  protected void assertObjectsEqual(FileType expected, FileType actual) {
-    assertEquals(expected.getUUID(), actual.getUUID());
-    assertEquals(expected.getType(), actual.getType());
-    assertEquals(expected.getComment(), actual.getComment());
-    assertEquals(expected.getUse(), actual.getUse());
+  protected FileType copyWithUpdatedUniqueField(FileType object, String uniqueField) {
+    return new FileType(
+        object.uuid(),
+        uniqueField,
+        object.comment()
+    );
+  }
+
+  @Override
+  protected void assertObjectsEqual(FileType expected, FileType actual, boolean checkUUID) {
+    assertEquals(expected.comment(), actual.comment());
+    assertEquals(expected.type(), actual.type());
+    if (checkUUID) {
+      assertEquals(expected.uuid(), actual.uuid());
+    }
   }
 }

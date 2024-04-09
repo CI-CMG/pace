@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "delete platform", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeletePlatformCommand extends DeleteCommand<Platform, String> {
+class DeletePlatformCommand extends DeleteCommand<Platform> {
   
   @Parameters(description = "platform uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeletePlatformCommand extends DeleteCommand<Platform, String> {
   }
 
   @Override
-  protected ControllerFactory<Platform, String> getControllerFactory() {
+  protected ControllerFactory<Platform> getControllerFactory() {
     return PlatformControllerFactory::createController;
   }
 }

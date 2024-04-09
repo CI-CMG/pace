@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get CSV translator by name",  mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetCSVTranslatorByNameCommand extends GetByUniqueFieldCommand<CSVTranslator, String> {
+class GetCSVTranslatorByNameCommand extends GetByUniqueFieldCommand<CSVTranslator> {
   
   @Parameters(description = "CSV translator name")
   private String name;
@@ -20,7 +20,7 @@ class GetCSVTranslatorByNameCommand extends GetByUniqueFieldCommand<CSVTranslato
   }
 
   @Override
-  protected ControllerFactory<CSVTranslator, String> getControllerFactory() {
+  protected ControllerFactory<CSVTranslator> getControllerFactory() {
     return CSVTranslatorControllerFactory::createController;
   }
 }

@@ -9,34 +9,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.pace.core.state.repository.CRUDRepository;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
-import edu.colorado.cires.pace.core.state.service.CRUDService;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
+abstract class CrudServiceTest<O extends ObjectWithUniqueField, R extends CRUDRepository<O>> {
   
-  private CRUDService<O, U> service;
+  private CRUDService<O> service;
   protected abstract Class<R> getRepositoryClass();
   private final R repository = mock(getRepositoryClass());
-  private UniqueFieldProvider<O, U> uniqueFieldProvider;
-  private UUIDProvider<O> uuidProvider;
-  
-  protected abstract UniqueFieldProvider<O, U> getUniqueFieldProvider();
-  protected abstract UUIDProvider<O> getUUIDProvider();
 
-  protected abstract CRUDService<O, U> createService(R repository);
+  protected abstract CRUDService<O> createService(R repository);
   
   protected abstract O createNewObject();
   
   @BeforeEach
   void beforeEach() {
-    uniqueFieldProvider = getUniqueFieldProvider();
-    uuidProvider = getUUIDProvider();
     service = createService(repository);
   }
   
@@ -65,7 +56,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
     
     when(repository.getByUniqueField(any())).thenReturn(object);
     
-    O result = service.getByUniqueField(uniqueFieldProvider.getUniqueField(object));
+    O result = service.getByUniqueField(object.uniqueField());
     assertObjectsEqual(object, result);
   }
   
@@ -75,7 +66,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.getByUniqueField(any())).thenThrow(exception);
     
-    assertThrows(IllegalArgumentException.class, () -> service.getByUniqueField(uniqueFieldProvider.getUniqueField(object)));
+    assertThrows(IllegalArgumentException.class, () -> service.getByUniqueField(object.uniqueField()));
   }
   
   @Test
@@ -83,7 +74,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
     O object = createNewObject();
     when(repository.getByUUID(any())).thenReturn(object);
     
-    O result = service.getByUUID(uuidProvider.getUUID(object));
+    O result = service.getByUUID(object.uuid());
     assertObjectsEqual(object, result);
   }
   
@@ -93,7 +84,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
     Exception exception = new IllegalArgumentException("Bad argument");
     when(repository.getByUUID(any())).thenThrow(exception);
     
-    assertThrows(IllegalArgumentException.class, () -> service.getByUUID(uuidProvider.getUUID(object)));
+    assertThrows(IllegalArgumentException.class, () -> service.getByUUID(object.uuid()));
   }
   
   @Test
@@ -123,7 +114,7 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
     assertEquals(
         Collections.emptyList(),
         service.readAll(Collections.singletonList(
-            (o) -> uuidProvider.getUUID(o).toString().equals("TEST")
+            (o) -> o.uuid().toString().equals("TEST")
         )).toList()
     );
   }
@@ -132,9 +123,9 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   void testUpdate() throws Exception {
     O object = createNewObject();
     
-    when(repository.update(uuidProvider.getUUID(object), object)).thenReturn(object);
+    when(repository.update(object.uuid(), object)).thenReturn(object);
     
-    O result = service.update(uuidProvider.getUUID(object), object);
+    O result = service.update(object.uuid(), object);
     
     assertObjectsEqual(result, object);
   }
@@ -143,26 +134,26 @@ abstract class CrudServiceTest<O, U, R extends CRUDRepository<O, U>> {
   void testUpdateError() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
-    when(repository.update(uuidProvider.getUUID(object), object)).thenThrow(exception);
+    when(repository.update(object.uuid(), object)).thenThrow(exception);
     
-    assertThrows(IllegalArgumentException.class, () -> service.update(uuidProvider.getUUID(object), object));
+    assertThrows(IllegalArgumentException.class, () -> service.update(object.uuid(), object));
   }
   
   @Test
   void testDelete() throws Exception {
     O object = createNewObject();
-    doNothing().when(repository).delete(uuidProvider.getUUID(object));
+    doNothing().when(repository).delete(object.uuid());
     
-    service.delete(uuidProvider.getUUID(object));
+    service.delete(object.uuid());
   }
   
   @Test
   void testDeleteException() throws Exception {
     O object = createNewObject();
     Exception exception = new IllegalArgumentException("Bad argument");
-    doThrow(exception).when(repository).delete(uuidProvider.getUUID(object));
+    doThrow(exception).when(repository).delete(object.uuid());
     
-    assertThrows(IllegalArgumentException.class, () -> service.delete(uuidProvider.getUUID(object)));
+    assertThrows(IllegalArgumentException.class, () -> service.delete(object.uuid()));
   }
   
   protected abstract void assertObjectsEqual(O expected, O actual);

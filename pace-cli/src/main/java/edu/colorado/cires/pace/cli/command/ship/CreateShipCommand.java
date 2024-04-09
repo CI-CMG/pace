@@ -10,13 +10,13 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create ship", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateShipCommand extends CreateCommand<Ship, String> {
+class CreateShipCommand extends CreateCommand<Ship> {
   
   @Parameters(description = "Ship from file (- for stdin)")
   private File ship;
 
   @Override
-  protected ControllerFactory<Ship, String> getControllerFactory() {
+  protected ControllerFactory<Ship> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

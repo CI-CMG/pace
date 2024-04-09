@@ -2,8 +2,7 @@ package edu.colorado.cires.pace.datastore.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,21 +16,16 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public abstract class JsonDatastore<O, U> implements Datastore<O, U> {
+public abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
   
   private final Path storageDirectory;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
-  private final UUIDProvider<O> uuidProvider;
-  private final UniqueFieldProvider<O, U> uniqueFieldProvider;
 
-  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz, UUIDProvider<O> uuidProvider,
-      UniqueFieldProvider<O, U> uniqueFieldProvider) throws IOException {
+  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
     this.storageDirectory = storageDirectory;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
-    this.uuidProvider = uuidProvider;
-    this.uniqueFieldProvider = uniqueFieldProvider;
     init();
   }
   
@@ -59,14 +53,14 @@ public abstract class JsonDatastore<O, U> implements Datastore<O, U> {
   @Override
   public Optional<O> findByUUID(UUID uuid) throws IOException {
     return getObjectStream(
-        (o) -> uuidProvider.getUUID(o).equals(uuid)
+        (o) -> o.uuid().equals(uuid)
     ).findFirst();
   }
 
   @Override
-  public Optional<O> findByUniqueField(U uniqueField) throws IOException {
+  public Optional<O> findByUniqueField(String uniqueField) throws IOException {
     return getObjectStream(
-        (o) -> uniqueFieldProvider.getUniqueField(o).equals(uniqueField)
+        (o) -> o.uniqueField().equals(uniqueField)
     ).findFirst();
   }
 
@@ -92,7 +86,7 @@ public abstract class JsonDatastore<O, U> implements Datastore<O, U> {
   
   private String getFileName(O object) {
     return String.format(
-        "%s.json", uuidProvider.getUUID(object)
+        "%s.json", object.uuid()
     );
   }
 }

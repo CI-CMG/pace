@@ -3,12 +3,10 @@ package edu.colorado.cires.pace.core.state.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.core.state.repository.ShipRepository;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.Ship;
 import java.util.UUID;
 
-class ShipServiceTest extends CrudServiceTest<Ship, String, ShipRepository> {
+class ShipServiceTest extends CrudServiceTest<Ship, ShipRepository> {
 
   @Override
   protected Class<ShipRepository> getRepositoryClass() {
@@ -16,33 +14,21 @@ class ShipServiceTest extends CrudServiceTest<Ship, String, ShipRepository> {
   }
 
   @Override
-  protected UniqueFieldProvider<Ship, String> getUniqueFieldProvider() {
-    return Ship::getName;
-  }
-
-  @Override
-  protected UUIDProvider<Ship> getUUIDProvider() {
-    return Ship::getUUID;
-  }
-
-  @Override
-  protected CRUDService<Ship, String> createService(ShipRepository repository) {
+  protected CRUDService<Ship> createService(ShipRepository repository) {
     return new ShipService(repository);
   }
 
   @Override
   protected Ship createNewObject() {
-    Ship ship = new Ship();
-    ship.setName(UUID.randomUUID().toString());
-    ship.setUse(true);
-    ship.setUUID(UUID.randomUUID());
-    return ship;
+    return new Ship(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString()
+    );
   }
 
   @Override
   protected void assertObjectsEqual(Ship expected, Ship actual) {
-    assertEquals(expected.getUUID(), actual.getUUID());
-    assertEquals(expected.getUse(), actual.getUse());
-    assertEquals(expected.getName(), actual.getName());
+    assertEquals(expected.name(), actual.name());
+    assertEquals(expected.uuid(), actual.uuid());
   }
 }

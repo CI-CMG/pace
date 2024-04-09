@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.Project;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all projects", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllProjectsCommand extends FindAllCommand<Project, String> {
+class FindAllProjectsCommand extends FindAllCommand<Project> {
 
   @Override
-  protected ControllerFactory<Project, String> getControllerFactory() {
+  protected ControllerFactory<Project> getControllerFactory() {
     return ProjectControllerFactory::createController;
   }
 

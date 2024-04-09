@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create detection type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateDetectionTypeCommand extends CreateCommand<DetectionType, String> {
+class CreateDetectionTypeCommand extends CreateCommand<DetectionType> {
   
   @Parameters(description = "File containing detection type (- for stdin)")
   private File detectionType;
@@ -26,7 +26,7 @@ class CreateDetectionTypeCommand extends CreateCommand<DetectionType, String> {
   }
 
   @Override
-  protected ControllerFactory<DetectionType, String> getControllerFactory() {
+  protected ControllerFactory<DetectionType> getControllerFactory() {
     return DetectionTypeControllerFactory::createController;
   }
 }

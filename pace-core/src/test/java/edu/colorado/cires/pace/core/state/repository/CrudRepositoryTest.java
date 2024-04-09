@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,39 +19,25 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
-  
-  @FunctionalInterface
-  protected interface UniqueFieldSetter<O, U> {
-    void setUniqueField(O object, U uniqueField);
-  } 
+abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   
   protected final Map<UUID, O> map = new HashMap<>(0);
   
-  protected CRUDRepository<O, U> repository;
-  protected UUIDProvider<O> uuidProvider;
-  protected UniqueFieldProvider<O, U> uniqueFieldProvider;
-  protected UUIDSetter<O> uuidSetter;
-  protected UniqueFieldSetter<O, U> uniqueFieldSetter;
-  
-  protected abstract UUIDProvider<O> getUUIDPRovider();
-  protected abstract UniqueFieldProvider<O, U> getUniqueFieldProvider();
-  protected abstract UUIDSetter<O> getUUIDSetter();
-  protected abstract UniqueFieldSetter<O, U> getUniqueFieldSetter();
+  protected CRUDRepository<O> repository;
 
-  protected abstract CRUDRepository<O, U> createRepository();
+  protected abstract CRUDRepository<O> createRepository();
   
-  protected Datastore<O, U> createDatastore() {
+  protected Datastore<O> createDatastore() {
     return new Datastore<>() {
       @Override
       public O save(O object) {
-        map.put(uuidProvider.getUUID(object), object);
+        map.put(object.uuid(), object);
         return object;
       }
 
       @Override
       public void delete(O object) {
-        map.remove(uuidProvider.getUUID(object));
+        map.remove(object.uuid());
       }
 
       @Override
@@ -60,9 +48,9 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
       }
 
       @Override
-      public Optional<O> findByUniqueField(U uniqueField) {
+      public Optional<O> findByUniqueField(String uniqueField) {
         return map.values().stream()
-            .filter(o -> uniqueFieldProvider.getUniqueField(o).equals(uniqueField))
+            .filter(o -> o.uniqueField().equals(uniqueField))
             .findFirst();
       }
 
@@ -75,11 +63,6 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   
   @BeforeEach
   void beforeEach() {
-    uuidProvider = getUUIDPRovider();
-    uniqueFieldProvider = getUniqueFieldProvider();
-    uuidSetter = getUUIDSetter();
-    uniqueFieldSetter = getUniqueFieldSetter();
-    
     repository = createRepository();
   } 
   
@@ -87,23 +70,24 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   void testCreate() throws Exception {
     O object = createNewObject(1);
     O created = repository.create(object);
-    assertNotNull(uuidProvider.getUUID(created));
-    assertEquals(uniqueFieldProvider.getUniqueField(object), uniqueFieldProvider.getUniqueField(created));
-    assertObjectsEqual(object, created);
+    assertNotNull(created.uuid());
+    assertEquals(object.uniqueField(), created.uniqueField());
+    assertObjectsEqual(object, created, false);
     
-    O saved = map.get(uuidProvider.getUUID(created));
+    O saved = map.get(created.uuid());
     assertNotNull(saved);
-    assertEquals(uuidProvider.getUUID(created), uuidProvider.getUUID(saved));
-    assertEquals(uniqueFieldProvider.getUniqueField(created), uniqueFieldProvider.getUniqueField(saved));
-    assertObjectsEqual(created, saved);
+    assertEquals(created.uuid(), saved.uuid());
+    assertEquals(created.uniqueField(), saved.uniqueField());
+    assertObjectsEqual(created, saved, true);
   }
   
   @Test
   void testCreateUUIDNotNull() {
     O object = createNewObject(1);
-    uuidSetter.setUUID(object, UUID.randomUUID());
-    
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(object));
+    object = (O) object.copyWithNewUUID(UUID.randomUUID());
+
+    O finalObject = object;
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
         "uuid for new %s must not be defined", repository.getObjectName()
     ), exception.getMessage());
@@ -112,9 +96,10 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   @Test
   void testCreateUniqueFieldNull() {
     O object = createNewObject(1);
-    uniqueFieldSetter.setUniqueField(object, null);
+    object = copyWithUpdatedUniqueField(object, null);
 
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(object));
+    O finalObject = object;
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
         "%s must be defined for a new %s", repository.getUniqueFieldName(), repository.getObjectName()
     ), exception.getMessage());
@@ -128,35 +113,35 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
     O two = createNewObject(1);
     Exception exception = assertThrows(ConflictException.class, () -> repository.create(two));
     assertEquals(String.format(
-        "%s with %s %s already exists", repository.getObjectName(), repository.getUniqueFieldName(), uniqueFieldProvider.getUniqueField(two) 
+        "%s with %s %s already exists", repository.getObjectName(), repository.getUniqueFieldName(), two.uniqueField() 
     ), exception.getMessage());
   }
   
   @Test
   void testGetByUniqueField() throws Exception {
     O object = repository.create(createNewObject(1));
-    O result = repository.getByUniqueField(uniqueFieldProvider.getUniqueField(object));
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
-    assertEquals(uniqueFieldProvider.getUniqueField(object), uniqueFieldProvider.getUniqueField(result));
-    assertObjectsEqual(object, result);
+    O result = repository.getByUniqueField(object.uniqueField());
+    assertEquals(object.uuid(), result.uuid());
+    assertEquals(object.uniqueField(), result.uniqueField());
+    assertObjectsEqual(object, result, true);
   }
   
   @Test
   void testGetByUniqueFieldNotFound() {
     O object = createNewObject(1);
-    Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUniqueField(uniqueFieldProvider.getUniqueField(object)));
+    Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUniqueField(object.uniqueField()));
     assertEquals(String.format(
-        "%s with %s %s not found", repository.getObjectName(), repository.getUniqueFieldName(), uniqueFieldProvider.getUniqueField(object)
+        "%s with %s %s not found", repository.getObjectName(), repository.getUniqueFieldName(), object.uniqueField()
     ), exception.getMessage());
   }
   
   @Test
   void testGetByUUID() throws Exception {
     O object = repository.create(createNewObject(1));
-    O result = repository.getByUUID(uuidProvider.getUUID(object));
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
-    assertEquals(uniqueFieldProvider.getUniqueField(object), uniqueFieldProvider.getUniqueField(result));
-    assertObjectsEqual(object, result);
+    O result = repository.getByUUID(object.uuid());
+    assertEquals(object.uuid(), result.uuid());
+    assertEquals(object.uniqueField(), result.uniqueField());
+    assertObjectsEqual(object, result, true);
   }
   
   @Test
@@ -179,7 +164,7 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
             one, two
         ),
         repository.findAll()
-            .sorted((o1, o2) -> uniqueFieldProvider.getUniqueField(o1).compareTo(uniqueFieldProvider.getUniqueField(o2)))
+            .sorted(Comparator.comparing(ObjectWithUniqueField::uniqueField))
             .toList()
     );
   }
@@ -188,17 +173,17 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   void testUpdate() throws Exception {
     O object = repository.create(createNewObject(1));
     O toUpdate = createNewObject(2);
-    uniqueFieldSetter.setUniqueField(object, uniqueFieldProvider.getUniqueField(toUpdate));
-    O updated = repository.update(uuidProvider.getUUID(object), object);
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(updated));
-    assertEquals(uniqueFieldProvider.getUniqueField(object), uniqueFieldProvider.getUniqueField(updated));
-    assertObjectsEqual(object, updated);
+    object = copyWithUpdatedUniqueField(object, toUpdate.uniqueField());
+    O updated = repository.update(object.uuid(), object);
+    assertEquals(object.uuid(), updated.uuid());
+    assertEquals(object.uniqueField(), updated.uniqueField());
+    assertObjectsEqual(object, updated, true);
     
-    O saved = map.get(uuidProvider.getUUID(updated));
+    O saved = map.get(updated.uuid());
     assertNotNull(saved);
-    assertEquals(uuidProvider.getUUID(updated), uuidProvider.getUUID(saved));
-    assertEquals(uniqueFieldProvider.getUniqueField(updated), uniqueFieldProvider.getUniqueField(saved));
-    assertObjectsEqual(updated, saved);
+    assertEquals(updated.uuid(), saved.uuid());
+    assertEquals(updated.uniqueField(), saved.uniqueField());
+    assertObjectsEqual(updated, saved, true);
   }
   
   @Test
@@ -213,8 +198,9 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   @Test
   void testUpdateUniqueFieldNull() throws Exception {
     O object = repository.create(createNewObject(1));
-    uniqueFieldSetter.setUniqueField(object, null);
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(uuidProvider.getUUID(object), object));
+    object = copyWithUpdatedUniqueField(object, null);
+    O finalObject = object;
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(finalObject.uuid(), finalObject));
     assertEquals(String.format(
         "%s must be defined for updated %s", repository.getUniqueFieldName(), repository.getObjectName()
     ), exception.getMessage());
@@ -223,11 +209,12 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   @Test
   void testUpdateNotFound() {
     O object = createNewObject(1);
-    uuidSetter.setUUID(object, UUID.randomUUID());
-    
-    Exception exception = assertThrows(NotFoundException.class, () ->  repository.update(uuidProvider.getUUID(object), object));
+    object = (O) object.copyWithNewUUID(UUID.randomUUID());
+
+    O finalObject = object;
+    Exception exception = assertThrows(NotFoundException.class, () ->  repository.update(finalObject.uuid(), finalObject));
     assertEquals(String.format(
-        "%s with uuid %s not found", repository.getObjectName(), uuidProvider.getUUID(object)
+        "%s with uuid %s not found", repository.getObjectName(), object.uuid()
     ), exception.getMessage());
   }
   
@@ -237,19 +224,20 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
     O two = repository.create(createNewObject(2));
     
     O updated = createNewObject(1);
-    uuidSetter.setUUID(updated, uuidProvider.getUUID(two));
-    
-    Exception exception = assertThrows(ConflictException.class, () -> repository.update(uuidProvider.getUUID(updated), updated));
+    updated = (O) updated.copyWithNewUUID(two.uuid());
+
+    O finalUpdated = updated;
+    Exception exception = assertThrows(ConflictException.class, () -> repository.update(finalUpdated.uuid(), finalUpdated));
     assertEquals(String.format(
-        "%s with %s %s already exists", repository.getObjectName(), repository.getUniqueFieldName(), uniqueFieldProvider.getUniqueField(updated)
+        "%s with %s %s already exists", repository.getObjectName(), repository.getUniqueFieldName(), updated.uniqueField()
     ), exception.getMessage());
   }
   
   @Test
   void testDelete() throws Exception {
     O object = repository.create(createNewObject(1));
-    repository.delete(uuidProvider.getUUID(object));
-    assertNull(map.get(uuidProvider.getUUID(object)));
+    repository.delete(object.uuid());
+    assertNull(map.get(object.uuid()));
   }
   
   @Test
@@ -263,6 +251,8 @@ abstract class CrudRepositoryTest<O, U extends Comparable<U>> {
   
   protected abstract O createNewObject(int suffix);
   
-  protected abstract void assertObjectsEqual(O expected, O actual);
+  protected abstract O copyWithUpdatedUniqueField(O object, String uniqueField);
+  
+  protected abstract void assertObjectsEqual(O expected, O actual, boolean checkUUID);
 
 }

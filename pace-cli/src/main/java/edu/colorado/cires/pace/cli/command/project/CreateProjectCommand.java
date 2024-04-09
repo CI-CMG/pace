@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create project", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateProjectCommand extends CreateCommand<Project, String> {
+class CreateProjectCommand extends CreateCommand<Project> {
   
   @Parameters(description = "File containing project (- for stdin)")
   private File project;
@@ -26,7 +26,7 @@ class CreateProjectCommand extends CreateCommand<Project, String> {
   }
 
   @Override
-  protected ControllerFactory<Project, String> getControllerFactory() {
+  protected ControllerFactory<Project> getControllerFactory() {
     return ProjectControllerFactory::createController;
   }
 }

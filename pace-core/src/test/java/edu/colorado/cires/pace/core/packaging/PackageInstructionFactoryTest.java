@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -59,34 +58,58 @@ class PackageInstructionFactoryTest {
       String temperaturePath,
       String sourcePath,
       boolean sourceContainsAudioData
-  ) throws IOException, PackingException {
-    PackingJob packingJob = new PackingJob();
-    setField(packingJob::setBiologicalPath, biologicalPath);
-    setField(packingJob::setCalibrationDocumentsPath, calibrationDocumentsPath);
-    setField(packingJob::setDocumentsPath, documentsPath);
-    setField(packingJob::setNavigationPath, navigationPath);
-    setField(packingJob::setOtherPath, otherPath);
-    setField(packingJob::setTemperaturePath, temperaturePath);
-    setField(packingJob::setSourcePath, sourcePath);
+  ) throws PackingException, IOException {
+    Path sp = sourcePath == null ? null : Path.of(sourcePath);
+    Path tp = temperaturePath == null ? null : Path.of(temperaturePath);
+    Path op = otherPath == null ? null : Path.of(otherPath);
+    Path np = navigationPath == null ? null : Path.of(navigationPath);
+    Path dp = documentsPath == null ? null : Path.of(documentsPath);
+    Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath);
+    Path bp = biologicalPath == null ? null : Path.of(biologicalPath);
+    PackingJob packingJob = new PackingJob(
+        tp,
+        bp,
+        op,
+        dp,
+        cdp,
+        np,
+        sp
+    );
+    writeFiles(bp);
+    writeFiles(cdp);
+    writeFiles(dp);
+    writeFiles(np);
+    writeFiles(op);
+    writeFiles(tp);
+    writeFiles(sp);
     
     List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, TARGET_PATH, sourceContainsAudioData)
         .toList();
     
     String baseExpectedOutputPath = "target/target/data/";
     
-    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath + "biological");
-    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath + "calibration");
-    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath + "docs");
-    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath + "nav_files");
-    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath + "other");
-    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath + "temperature");
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath + (sourceContainsAudioData ? "acoustic_files" : "data_files"));
+    checkTargetPaths(packageInstructions, packingJob::biologicalPath, baseExpectedOutputPath + "biological");
+    checkTargetPaths(packageInstructions, packingJob::calibrationDocumentsPath, baseExpectedOutputPath + "calibration");
+    checkTargetPaths(packageInstructions, packingJob::documentsPath, baseExpectedOutputPath + "docs");
+    checkTargetPaths(packageInstructions, packingJob::navigationPath, baseExpectedOutputPath + "nav_files");
+    checkTargetPaths(packageInstructions, packingJob::otherPath, baseExpectedOutputPath + "other");
+    checkTargetPaths(packageInstructions, packingJob::temperaturePath, baseExpectedOutputPath + "temperature");
+    checkTargetPaths(packageInstructions, packingJob::sourcePath, baseExpectedOutputPath + (sourceContainsAudioData ? "acoustic_files" : "data_files"));
   }
   
   @Test
   void testPathDoesNotExist() throws IOException {
-    PackingJob packingJob = new PackingJob();
-    setField(packingJob::setSourcePath, "target/source/source-files");
+    Path sourcePath = Path.of("target/source/source-files").toAbsolutePath();
+    PackingJob packingJob = new PackingJob(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        sourcePath
+    );
+    writeFiles(sourcePath);
     
     FileUtils.deleteQuietly(SOURCE_PATH.toFile());
     
@@ -96,13 +119,13 @@ class PackageInstructionFactoryTest {
     ), exception.getMessage());
   }
   
-  private void checkTargetPaths(List<PackageInstruction> packageInstructions, Supplier<String> valueGetter, String expectedOutputDirectory) {
+  private void checkTargetPaths(List<PackageInstruction> packageInstructions, Supplier<Path> valueGetter, String expectedOutputDirectory) {
     List<PackageInstruction> dataTypeSpecificInstructions = packageInstructions.stream()
         .filter(packageInstruction -> packageInstruction.target().toFile().toString().contains(expectedOutputDirectory))
         .sorted(Comparator.comparing(PackageInstruction::target))
         .toList();
     
-    String value = valueGetter.get();
+    Path value = valueGetter.get();
     if (value == null) {
       assertTrue(dataTypeSpecificInstructions.isEmpty());
       return;
@@ -113,19 +136,19 @@ class PackageInstructionFactoryTest {
     for (PackageInstruction instruction : dataTypeSpecificInstructions) {
       assertEquals(
           Paths.get(expectedOutputDirectory).resolve(
-              Paths.get(value).relativize(instruction.source())
+              value.relativize(instruction.source())
           ).toAbsolutePath(),
           instruction.target().toAbsolutePath()
       );
     }
   }
   
-  private void setField(Consumer<String> valueSetter, String value) throws IOException {
-    if (value == null || value.isEmpty()) {
+  private void writeFiles(Path value) throws IOException {
+    if (value == null) {
       return;
     }
     
-    Path path = Paths.get(value).toAbsolutePath();
+    Path path = value.toAbsolutePath();
     
     for (int i = 0; i < 10; i++) {
       Path filePath = path.resolve(String.format(
@@ -170,8 +193,6 @@ class PackageInstructionFactoryTest {
         }
       }
     }
-    
-    valueSetter.accept(path.toFile().toString());
   }
 
 }

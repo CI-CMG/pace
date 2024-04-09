@@ -9,13 +9,13 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get ship by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetShipByNameCommand extends GetByUniqueFieldCommand<Ship, String> {
+class GetShipByNameCommand extends GetByUniqueFieldCommand<Ship> {
   
   @Parameters(description = "ship name")
   private String name;
 
   @Override
-  protected ControllerFactory<Ship, String> getControllerFactory() {
+  protected ControllerFactory<Ship> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

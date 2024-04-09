@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get sea area by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetSeaByUUIDCommand extends GetByUUIDCommand<Sea, String> {
+class GetSeaByUUIDCommand extends GetByUUIDCommand<Sea> {
   
   @Parameters(description = "sea area uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetSeaByUUIDCommand extends GetByUUIDCommand<Sea, String> {
   }
 
   @Override
-  protected ControllerFactory<Sea, String> getControllerFactory() {
+  protected ControllerFactory<Sea> getControllerFactory() {
     return SeaControllerFactory::createController;
   }
 }

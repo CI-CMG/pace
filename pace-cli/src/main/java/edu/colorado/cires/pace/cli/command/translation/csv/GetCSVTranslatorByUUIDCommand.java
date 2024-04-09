@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get CSV translator by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetCSVTranslatorByUUIDCommand extends GetByUUIDCommand<CSVTranslator, String> {
+class GetCSVTranslatorByUUIDCommand extends GetByUUIDCommand<CSVTranslator> {
   
   @Parameters(description = "CSV translator uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetCSVTranslatorByUUIDCommand extends GetByUUIDCommand<CSVTranslator, Stri
   }
 
   @Override
-  protected ControllerFactory<CSVTranslator, String> getControllerFactory() {
+  protected ControllerFactory<CSVTranslator> getControllerFactory() {
     return CSVTranslatorControllerFactory::createController;
   }
 }

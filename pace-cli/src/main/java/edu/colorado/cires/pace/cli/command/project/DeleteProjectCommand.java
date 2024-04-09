@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete project", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteProjectCommand extends DeleteCommand<Project, String> {
+class DeleteProjectCommand extends DeleteCommand<Project> {
   
   @Parameters(description = "project uui")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteProjectCommand extends DeleteCommand<Project, String> {
   }
 
   @Override
-  protected ControllerFactory<Project, String> getControllerFactory() {
+  protected ControllerFactory<Project> getControllerFactory() {
     return ProjectControllerFactory::createController;
   }
 }

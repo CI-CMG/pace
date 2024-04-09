@@ -11,19 +11,19 @@ public class PersonValidator implements Validator<Person> {
   public Set<ConstraintViolation> validate(Person object) {
     Set<ConstraintViolation> constraintViolations = new HashSet<>(0);
 
-    if (StringUtils.isBlank(object.getName())) {
+    if (StringUtils.isBlank(object.name())) {
       constraintViolations.add(new ConstraintViolation(
           "name", "name must not be blank"
       ));
     }
 
-    if (StringUtils.isBlank(object.getOrganization())) {
+    if (StringUtils.isBlank(object.organization())) {
       constraintViolations.add(new ConstraintViolation(
           "organization", "organization must not be blank"
       ));
     }
 
-    if (StringUtils.isBlank(object.getPosition())) {
+    if (StringUtils.isBlank(object.position())) {
       constraintViolations.add(new ConstraintViolation(
           "position", "position must not be blank"
       ));

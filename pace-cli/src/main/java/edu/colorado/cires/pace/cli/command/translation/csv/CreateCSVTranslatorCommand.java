@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create CSV translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateCSVTranslatorCommand extends CreateCommand<CSVTranslator, String> {
+class CreateCSVTranslatorCommand extends CreateCommand<CSVTranslator> {
   
   @Parameters(description = "file containing CSV translator (- for stdin)")
   private File csvTranslator;
@@ -26,7 +26,7 @@ class CreateCSVTranslatorCommand extends CreateCommand<CSVTranslator, String> {
   }
 
   @Override
-  protected ControllerFactory<CSVTranslator, String> getControllerFactory() {
+  protected ControllerFactory<CSVTranslator> getControllerFactory() {
     return CSVTranslatorControllerFactory::createController;
   }
 }

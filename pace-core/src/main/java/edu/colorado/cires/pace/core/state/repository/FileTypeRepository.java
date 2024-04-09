@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.core.state.repository;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.data.FileType;
 
-public class FileTypeRepository extends CRUDRepository<FileType, String> {
+public class FileTypeRepository extends CRUDRepository<FileType> {
 
-  public FileTypeRepository(Datastore<FileType, String> datastore) {
-    super(FileType::getUUID, FileType::getType, FileType::setUUID, datastore);
+  public FileTypeRepository(Datastore<FileType> datastore) {
+    super(datastore);
   }
 
   @Override

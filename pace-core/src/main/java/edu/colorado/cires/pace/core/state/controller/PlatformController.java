@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.PlatformValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Platform;
 
-public class PlatformController extends CRUDController<Platform, String> {
+public class PlatformController extends CRUDController<Platform> {
 
   @Override
   protected Validator<Platform> getValidator() {
@@ -16,7 +16,7 @@ public class PlatformController extends CRUDController<Platform, String> {
   }
 
   @Override
-  protected CRUDService<Platform, String> createService(Datastore<Platform, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Platform> createService(Datastore<Platform> datastore, Datastore<?>... additionalDataStores) {
     return new PlatformService(
         new PlatformRepository(
             datastore
@@ -24,7 +24,7 @@ public class PlatformController extends CRUDController<Platform, String> {
     );
   }
 
-  public PlatformController(Datastore<Platform, String> datastore) {
+  public PlatformController(Datastore<Platform> datastore) {
     super(datastore);
   }
 }

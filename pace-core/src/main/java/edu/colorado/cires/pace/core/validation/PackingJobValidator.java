@@ -12,30 +12,37 @@ public class PackingJobValidator implements Validator<PackingJob> {
   public Set<ConstraintViolation> validate(PackingJob object) {
     Set<ConstraintViolation> violations = new HashSet<>();
     
-    String sourcePath = object.getSourcePath();
-    if (StringUtils.isBlank(sourcePath)) {
+    Path sourcePath = object.sourcePath();
+    if (sourcePath == null) {
       violations.add(new ConstraintViolation(
-          "sourcePath", "sourcePath must not be blank"
+          "sourcePath", "sourcePath must be defined"
       ));
     }
 
-    checkIsAbsolutePath("sourcePath", sourcePath, violations);
-    checkIsAbsolutePath("biologicalPath", object.getBiologicalPath(), violations);
-    checkIsAbsolutePath("calibrationDocumentsPath", object.getCalibrationDocumentsPath(), violations);
-    checkIsAbsolutePath("documentsPath", object.getDocumentsPath(), violations);
-    checkIsAbsolutePath("navigationPath", object.getNavigationPath(), violations);
-    checkIsAbsolutePath("otherPath", object.getOtherPath(), violations);
-    checkIsAbsolutePath("temperaturePath", object.getTemperaturePath(), violations);
+    checkPath("sourcePath", sourcePath, violations);
+    checkPath("biologicalPath", object.biologicalPath(), violations);
+    checkPath("calibrationDocumentsPath", object.calibrationDocumentsPath(), violations);
+    checkPath("documentsPath", object.documentsPath(), violations);
+    checkPath("navigationPath", object.navigationPath(), violations);
+    checkPath("otherPath", object.otherPath(), violations);
+    checkPath("temperaturePath", object.temperaturePath(), violations);
     
     return violations;
   }
   
-  private static void checkIsAbsolutePath(String propertyName, String argument, Set<ConstraintViolation> violations) {
-    if (StringUtils.isBlank(argument)) {
+  private static void checkPath(String propertyName, Path path, Set<ConstraintViolation> violations) {
+    if (path == null) {
       return;
     }
-    
-    Path path = Path.of(argument);
+
+    if (StringUtils.isBlank(path.toString())) {
+      violations.add(new ConstraintViolation(
+          propertyName, String.format(
+              "%s must not be blank", propertyName
+          )
+      ));
+      return;
+    }
     
     if (!path.isAbsolute()) {
       violations.add(new ConstraintViolation(

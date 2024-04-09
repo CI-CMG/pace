@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete instrument", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteInstrumentCommand extends DeleteCommand<Instrument, String> {
+class DeleteInstrumentCommand extends DeleteCommand<Instrument> {
   
   @Parameters(description = "instrument uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteInstrumentCommand extends DeleteCommand<Instrument, String> {
   }
 
   @Override
-  protected ControllerFactory<Instrument, String> getControllerFactory() {
+  protected ControllerFactory<Instrument> getControllerFactory() {
     return InstrumentControllerFactory::createController;
   }
 }

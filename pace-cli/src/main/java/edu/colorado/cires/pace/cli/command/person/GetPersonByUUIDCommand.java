@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get person by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetPersonByUUIDCommand extends GetByUUIDCommand<Person, String> {
+class GetPersonByUUIDCommand extends GetByUUIDCommand<Person> {
   
   @Parameters(description = "person uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetPersonByUUIDCommand extends GetByUUIDCommand<Person, String> {
   }
 
   @Override
-  protected ControllerFactory<Person, String> getControllerFactory() {
+  protected ControllerFactory<Person> getControllerFactory() {
     return PersonControllerFactory::createController;
   }
 }

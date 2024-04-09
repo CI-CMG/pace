@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.ExcelTranslator;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all excel translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllExcelTranslatorsCommand extends FindAllCommand<ExcelTranslator, String> {
+class FindAllExcelTranslatorsCommand extends FindAllCommand<ExcelTranslator> {
 
   @Override
-  protected ControllerFactory<ExcelTranslator, String> getControllerFactory() {
+  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
     return ExcelTranslatorControllerFactory::createController;
   }
 }

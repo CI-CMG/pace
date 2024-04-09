@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get detection type by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetDetectionTypeUUIDCommand extends GetByUUIDCommand<DetectionType, String> {
+class GetDetectionTypeUUIDCommand extends GetByUUIDCommand<DetectionType> {
   
   @Parameters(description = "detection type uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetDetectionTypeUUIDCommand extends GetByUUIDCommand<DetectionType, String
   }
 
   @Override
-  protected ControllerFactory<DetectionType, String> getControllerFactory() {
+  protected ControllerFactory<DetectionType> getControllerFactory() {
     return DetectionTypeControllerFactory::createController;
   }
 }

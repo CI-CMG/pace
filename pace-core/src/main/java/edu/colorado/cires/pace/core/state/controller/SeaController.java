@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.SeaValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Sea;
 
-public class SeaController extends CRUDController<Sea, String> {
+public class SeaController extends CRUDController<Sea> {
 
   @Override
   protected Validator<Sea> getValidator() {
@@ -16,7 +16,7 @@ public class SeaController extends CRUDController<Sea, String> {
   }
 
   @Override
-  protected CRUDService<Sea, String> createService(Datastore<Sea, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Sea> createService(Datastore<Sea> datastore, Datastore<?>... additionalDataStores) {
     return new SeaService(
         new SeaRepository(
             datastore
@@ -24,7 +24,7 @@ public class SeaController extends CRUDController<Sea, String> {
     );
   }
 
-  public SeaController(Datastore<Sea, String> datastore) {
+  public SeaController(Datastore<Sea> datastore) {
     super(datastore);
   }
 }

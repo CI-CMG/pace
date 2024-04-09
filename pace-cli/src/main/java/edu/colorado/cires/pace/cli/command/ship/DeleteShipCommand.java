@@ -10,13 +10,13 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete ship", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteShipCommand extends DeleteCommand<Ship, String> {
+class DeleteShipCommand extends DeleteCommand<Ship> {
   
   @Parameters(description = "ship uuid")
   private UUID uuid;
 
   @Override
-  protected ControllerFactory<Ship, String> getControllerFactory() {
+  protected ControllerFactory<Ship> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

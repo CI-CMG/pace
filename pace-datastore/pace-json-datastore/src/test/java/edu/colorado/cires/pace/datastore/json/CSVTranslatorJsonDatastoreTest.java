@@ -3,8 +3,6 @@ package edu.colorado.cires.pace.datastore.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.CSVTranslator;
 import edu.colorado.cires.pace.data.CSVTranslatorField;
 import java.io.IOException;
@@ -12,7 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator, String> {
+class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator> {
 
   @Override
   protected Class<CSVTranslator> getClazz() {
@@ -20,58 +18,46 @@ class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator, St
   }
 
   @Override
-  protected JsonDatastore<CSVTranslator, String> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException {
+  protected JsonDatastore<CSVTranslator> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException {
     return new CSVTranslatorJsonDatastore(storagePath, objectMapper);
   }
 
   @Override
-  protected UUIDProvider<CSVTranslator> createUUIDProvider() {
-    return CSVTranslator::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldProvider<CSVTranslator, String> createUniqueFieldProvider() {
-    return CSVTranslator::getName;
-  }
-
-  @Override
   protected CSVTranslator createNewObject() {
-    CSVTranslator translation = new CSVTranslator();
-    
-    translation.setName(UUID.randomUUID().toString());
-    translation.setUUID(UUID.randomUUID());
+    CSVTranslatorField field1 = new CSVTranslatorField(
+        "property1",
+        1
+    );
+    CSVTranslatorField field2 = new CSVTranslatorField(
+        "property2",
+        2
+    );
 
-    CSVTranslatorField field1 = new CSVTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setPropertyName("property1");
-    
-    CSVTranslatorField field2 = new CSVTranslatorField();
-    field2.setColumnNumber(2);
-    field2.setPropertyName("property2");
-    
-    translation.setFields(List.of(
-        field1, field2
-    ));
-    
-    return translation;
+    return new CSVTranslator(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        List.of(
+            field1, field2
+        )
+    );
   }
 
   @Override
   protected void assertObjectsEqual(CSVTranslator expected, CSVTranslator actual) {
-    assertEquals(expected.getName(), actual.getName());
-    assertEquals(expected.getUUID(), actual.getUUID());
-    
-    List<CSVTranslatorField> expectedFields = expected.getFields().stream()
-        .sorted((f1, f2) -> f1.getPropertyName().compareToIgnoreCase(f2.getPropertyName()))
+    assertEquals(expected.name(), actual.name());
+    assertEquals(expected.uuid(), actual.uuid());
+
+    List<CSVTranslatorField> expectedFields = expected.fields().stream()
+        .sorted((f1, f2) -> f1.propertyName().compareToIgnoreCase(f2.propertyName()))
         .toList();
-    List<CSVTranslatorField> actualFields = actual.getFields().stream()
-        .sorted((f1, f2) -> f1.getPropertyName().compareToIgnoreCase(f2.getPropertyName()))
+    List<CSVTranslatorField> actualFields = actual.fields().stream()
+        .sorted((f1, f2) -> f1.propertyName().compareToIgnoreCase(f2.propertyName()))
         .toList();
     assertEquals(expectedFields.size(), actualFields.size());
-    
-    for (int i = 0; i < expected.getFields().size(); i++) {
-      assertEquals(expectedFields.get(i).getColumnNumber(), actualFields.get(i).getColumnNumber());
-      assertEquals(expectedFields.get(i).getPropertyName(), actualFields.get(i).getPropertyName());
+
+    for (int i = 0; i < expected.fields().size(); i++) {
+      assertEquals(expectedFields.get(i).columnNumber(), actualFields.get(i).columnNumber());
+      assertEquals(expectedFields.get(i).propertyName(), actualFields.get(i).propertyName());
     }
   }
 }

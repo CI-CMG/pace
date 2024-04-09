@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.FileType;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all file types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllFileTypesCommand extends FindAllCommand<FileType, String> {
+class FindAllFileTypesCommand extends FindAllCommand<FileType> {
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

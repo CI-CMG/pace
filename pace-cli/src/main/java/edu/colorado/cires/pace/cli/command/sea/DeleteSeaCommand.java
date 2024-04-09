@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete sea area", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteSeaCommand extends DeleteCommand<Sea, String> {
+class DeleteSeaCommand extends DeleteCommand<Sea> {
   
   @Parameters(description = "sea are uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteSeaCommand extends DeleteCommand<Sea, String> {
   }
 
   @Override
-  protected ControllerFactory<Sea, String> getControllerFactory() {
+  protected ControllerFactory<Sea> getControllerFactory() {
     return SeaControllerFactory::createController;
   }
 }

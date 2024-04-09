@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create platform", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreatePlatformCommand extends CreateCommand<Platform, String> {
+class CreatePlatformCommand extends CreateCommand<Platform> {
   
   @Parameters(description = "File containing platform (- for stdin)")
   private File file;
@@ -26,7 +26,7 @@ class CreatePlatformCommand extends CreateCommand<Platform, String> {
   }
 
   @Override
-  protected ControllerFactory<Platform, String> getControllerFactory() {
+  protected ControllerFactory<Platform> getControllerFactory() {
     return PlatformControllerFactory::createController;
   }
 }

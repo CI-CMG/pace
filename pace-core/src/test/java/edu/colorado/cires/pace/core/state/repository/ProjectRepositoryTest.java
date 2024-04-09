@@ -4,46 +4,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.Project;
 
-class ProjectRepositoryTest extends CrudRepositoryTest<Project, String> {
-
-
-  @Override
-  protected UUIDProvider<Project> getUUIDPRovider() {
-    return Project::getUUID;
-  }
+class ProjectRepositoryTest extends CrudRepositoryTest<Project> {
 
   @Override
-  protected UniqueFieldProvider<Project, String> getUniqueFieldProvider() {
-    return Project::getName;
-  }
-
-  @Override
-  protected UUIDSetter<Project> getUUIDSetter() {
-    return Project::setUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<Project, String> getUniqueFieldSetter() {
-    return Project::setName;
-  }
-
-  @Override
-  protected CRUDRepository<Project, String> createRepository() {
+  protected CRUDRepository<Project> createRepository() {
     return new ProjectRepository(createDatastore());
   }
 
   @Override
   protected Project createNewObject(int suffix) {
-    Project project = new Project();
-    project.setName(String.format("name-%s", suffix));
-    project.setUse(true);
-    return project;
+    return new Project(
+        null,
+        String.format("name-%s", suffix)
+    );
   }
 
   @Override
-  protected void assertObjectsEqual(Project expected, Project actual) {
-    assertEquals(expected.getName(), actual.getName());
-    assertEquals(expected.getUse(), actual.getUse());
-    assertEquals(expected.getUUID(), actual.getUUID());
+  protected Project copyWithUpdatedUniqueField(Project object, String uniqueField) {
+    return new Project(
+        object.uuid(),
+        uniqueField
+    );
+  }
+
+  @Override
+  protected void assertObjectsEqual(Project expected, Project actual, boolean checkUUID) {
+    assertEquals(expected.name(), actual.name());
+    if (checkUUID) {
+      assertEquals(expected.uuid(), actual.uuid());
+    }
   }
 }

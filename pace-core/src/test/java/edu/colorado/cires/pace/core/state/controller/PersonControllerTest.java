@@ -1,33 +1,15 @@
 package edu.colorado.cires.pace.core.state.controller;
 
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
-import edu.colorado.cires.pace.core.state.service.CRUDService;
 import edu.colorado.cires.pace.data.Person;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-class PersonControllerTest extends CRUDControllerTest<Person, String> {
+class PersonControllerTest extends CRUDControllerTest<Person> {
 
   @Override
-  protected CRUDController<Person, String> createController(Datastore<Person, String> datastore) {
+  protected CRUDController<Person> createController(Datastore<Person> datastore) {
     return new PersonController(datastore);
-  }
-
-  @Override
-  protected UniqueFieldProvider<Person, String> getUniqueFieldProvider() {
-    return Person::getName;
-  }
-
-  @Override
-  protected UUIDProvider<Person> getUuidProvider() {
-    return Person::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<Person, String> getUniqueFieldSetter() {
-    return Person::setName;
   }
 
   @Override
@@ -37,22 +19,37 @@ class PersonControllerTest extends CRUDControllerTest<Person, String> {
 
   @Override
   protected Person createNewObject(boolean withUUID) {
-    Person person = new Person();
-    person.setCity(UUID.randomUUID().toString());
-    person.setCountry(UUID.randomUUID().toString());
-    person.setEmail(UUID.randomUUID().toString());
-    person.setName(UUID.randomUUID().toString());
-    person.setOrcid(UUID.randomUUID().toString());
-    person.setOrganization(UUID.randomUUID().toString());
-    person.setPhone(UUID.randomUUID().toString());
-    person.setPosition(UUID.randomUUID().toString());
-    person.setState(UUID.randomUUID().toString());
-    person.setStreet(UUID.randomUUID().toString());
-    person.setUse(true);
-    if (withUUID) {
-      person.setUUID(UUID.randomUUID());
-    }
-    person.setZip(UUID.randomUUID().toString());
-    return person;
+    return new Person(
+        !withUUID ? null : UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString()
+    );
+  }
+
+  @Override
+  protected Person setUniqueField(Person object, String uniqueField) {
+    return new Person(
+        object.uuid(),
+        uniqueField,
+        object.organization(),
+        object.position(),
+        object.street(),
+        object.city(),
+        object.state(),
+        object.zip(),
+        object.country(),
+        object.email(),
+        object.phone(),
+        object.orcid()
+    );
   }
 }

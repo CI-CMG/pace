@@ -4,45 +4,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.Sea;
 
-class SeaRepositoryTest extends CrudRepositoryTest<Sea, String> {
+class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
 
   @Override
-  protected UUIDProvider<Sea> getUUIDPRovider() {
-    return Sea::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldProvider<Sea, String> getUniqueFieldProvider() {
-    return Sea::getName;
-  }
-
-  @Override
-  protected UUIDSetter<Sea> getUUIDSetter() {
-    return Sea::setUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<Sea, String> getUniqueFieldSetter() {
-    return Sea::setName;
-  }
-
-  @Override
-  protected CRUDRepository<Sea, String> createRepository() {
+  protected CRUDRepository<Sea> createRepository() {
     return new SeaRepository(createDatastore());
   }
 
   @Override
   protected Sea createNewObject(int suffix) {
-    Sea sea = new Sea();
-    sea.setUse(true);
-    sea.setName(String.format("name-%s", suffix));
-    return sea;
+    return new Sea(
+        null,
+        String.format("name-%s", suffix)
+    );
   }
 
   @Override
-  protected void assertObjectsEqual(Sea expected, Sea actual) {
-    assertEquals(expected.getName(), actual.getName());
-    assertEquals(expected.getUUID(), actual.getUUID());
-    assertEquals(expected.getUse(), actual.getUse());
+  protected Sea copyWithUpdatedUniqueField(Sea object, String uniqueField) {
+    return new Sea(
+        object.uuid(),
+        uniqueField
+    );
+  }
+
+  @Override
+  protected void assertObjectsEqual(Sea expected, Sea actual, boolean checkUUID) {
+    assertEquals(expected.name(), actual.name());
+    if (checkUUID) {
+      assertEquals(expected.uuid(), actual.uuid());
+    }
   }
 }

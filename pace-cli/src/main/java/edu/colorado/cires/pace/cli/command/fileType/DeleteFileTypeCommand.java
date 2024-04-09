@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteFileTypeCommand extends DeleteCommand<FileType, String> {
+class DeleteFileTypeCommand extends DeleteCommand<FileType> {
   
   @Parameters(description = "file type uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteFileTypeCommand extends DeleteCommand<FileType, String> {
   }
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

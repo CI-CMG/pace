@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get organization by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetOrganizationByNameCommand extends GetByUniqueFieldCommand<Organization, String> {
+class GetOrganizationByNameCommand extends GetByUniqueFieldCommand<Organization> {
   
   @Parameters(description = "organization name")
   private String name;
@@ -20,7 +20,7 @@ class GetOrganizationByNameCommand extends GetByUniqueFieldCommand<Organization,
   }
 
   @Override
-  protected ControllerFactory<Organization, String> getControllerFactory() {
+  protected ControllerFactory<Organization> getControllerFactory() {
     return OrganizationControllerFactory::createController;
   }
 }

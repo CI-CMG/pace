@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get instrument by name", versionProvider = VersionProvider.class)
-class GetInstrumentByNameCommand extends GetByUniqueFieldCommand<Instrument, String> {
+class GetInstrumentByNameCommand extends GetByUniqueFieldCommand<Instrument> {
   
   @Parameters(description = "instrument name")
   private String name;
@@ -20,7 +20,7 @@ class GetInstrumentByNameCommand extends GetByUniqueFieldCommand<Instrument, Str
   }
 
   @Override
-  protected ControllerFactory<Instrument, String> getControllerFactory() {
+  protected ControllerFactory<Instrument> getControllerFactory() {
     return InstrumentControllerFactory::createController;
   }
 }

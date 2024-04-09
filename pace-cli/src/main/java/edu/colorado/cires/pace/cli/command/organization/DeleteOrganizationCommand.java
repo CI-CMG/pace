@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete organization", versionProvider = VersionProvider.class)
-class DeleteOrganizationCommand extends DeleteCommand<Organization, String> {
+class DeleteOrganizationCommand extends DeleteCommand<Organization> {
   
   @Parameters(description = "organization uui")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteOrganizationCommand extends DeleteCommand<Organization, String> {
   }
 
   @Override
-  protected ControllerFactory<Organization, String> getControllerFactory() {
+  protected ControllerFactory<Organization> getControllerFactory() {
     return OrganizationControllerFactory::createController;
   }
 }

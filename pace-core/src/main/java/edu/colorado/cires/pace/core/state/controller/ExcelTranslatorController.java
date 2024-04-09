@@ -8,9 +8,9 @@ import edu.colorado.cires.pace.core.validation.ExcelTranslatorValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.ExcelTranslator;
 
-public class ExcelTranslatorController extends CRUDController<ExcelTranslator, String> {
+public class ExcelTranslatorController extends CRUDController<ExcelTranslator> {
 
-  public ExcelTranslatorController(Datastore<ExcelTranslator, String> datastore) {
+  public ExcelTranslatorController(Datastore<ExcelTranslator> datastore) {
     super(datastore);
   }
 
@@ -20,8 +20,8 @@ public class ExcelTranslatorController extends CRUDController<ExcelTranslator, S
   }
 
   @Override
-  protected CRUDService<ExcelTranslator, String> createService(Datastore<ExcelTranslator, String> datastore,
-      Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<ExcelTranslator> createService(Datastore<ExcelTranslator> datastore,
+      Datastore<?>... additionalDataStores) {
     return new ExcelTranslatorService(
         new ExcelTranslatorRepository(datastore)
     );

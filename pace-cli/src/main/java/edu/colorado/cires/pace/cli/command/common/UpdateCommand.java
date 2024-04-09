@@ -1,15 +1,13 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.util.UUID;
 
-public abstract class UpdateCommand<O, U> extends JsonBlobCommand<O, U> {
-  
-  protected abstract UUIDProvider<O> getUUIDProvider();
+public abstract class UpdateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
 
   @Override
   protected O runCommandWithDeserializedObject(O object) throws Exception {
-    UUID uuid = getUUIDProvider().getUUID(object);
+    UUID uuid = object.uuid();
     return createController().update(uuid, object);
   }
 }

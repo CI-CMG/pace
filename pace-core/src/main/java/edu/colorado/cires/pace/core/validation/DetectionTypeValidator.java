@@ -11,7 +11,7 @@ public class DetectionTypeValidator implements Validator<DetectionType> {
   public Set<ConstraintViolation> validate(DetectionType object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
-    if (StringUtils.isBlank(object.getScienceName())) {
+    if (StringUtils.isBlank(object.scienceName())) {
       violations.add(new ConstraintViolation(
           "scienceName", "scienceName must not be blank"
       ));

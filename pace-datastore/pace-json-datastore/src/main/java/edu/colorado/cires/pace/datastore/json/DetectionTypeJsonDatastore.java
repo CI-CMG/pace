@@ -5,9 +5,9 @@ import edu.colorado.cires.pace.data.DetectionType;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class DetectionTypeJsonDatastore extends JsonDatastore<DetectionType, String> {
+public class DetectionTypeJsonDatastore extends JsonDatastore<DetectionType> {
 
   public DetectionTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("data-types"), objectMapper, DetectionType.class, DetectionType::getUUID, DetectionType::getScienceName);
+    super(workDirectory.resolve("data-types"), objectMapper, DetectionType.class);
   }
 }

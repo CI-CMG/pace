@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.CSVTranslator;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all CSV translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllCSVTranslatorsCommand extends FindAllCommand<CSVTranslator, String> {
+class FindAllCSVTranslatorsCommand extends FindAllCommand<CSVTranslator> {
 
   @Override
-  protected ControllerFactory<CSVTranslator, String> getControllerFactory() {
+  protected ControllerFactory<CSVTranslator> getControllerFactory() {
     return CSVTranslatorControllerFactory::createController;
   }
 }

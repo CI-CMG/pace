@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete CSV translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteCSVTranslatorCommand extends DeleteCommand<CSVTranslator, String> {
+class DeleteCSVTranslatorCommand extends DeleteCommand<CSVTranslator> {
   
   @Parameters(description = "CSV translator uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteCSVTranslatorCommand extends DeleteCommand<CSVTranslator, String> {
   }
 
   @Override
-  protected ControllerFactory<CSVTranslator, String> getControllerFactory() {
+  protected ControllerFactory<CSVTranslator> getControllerFactory() {
     return CSVTranslatorControllerFactory::createController;
   }
 }

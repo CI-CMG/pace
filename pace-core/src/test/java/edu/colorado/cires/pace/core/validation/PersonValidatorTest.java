@@ -20,10 +20,20 @@ class PersonValidatorTest {
       "name,org,,false",
   })
   void validate(String name, String org, String position, boolean expectedPass) {
-    Person person = new Person();
-    person.setName(name);
-    person.setOrganization(org);
-    person.setPosition(position);
+    Person person = new Person(
+        null,
+        name,
+        org,
+        position,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    );
     
     Set<ConstraintViolation> violations = validator.validate(person);
     assertEquals(expectedPass, violations.isEmpty());

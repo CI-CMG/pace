@@ -8,9 +8,9 @@ import edu.colorado.cires.pace.core.validation.CSVTranslatorValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.CSVTranslator;
 
-public class CSVTranslatorController extends CRUDController<CSVTranslator, String> {
+public class CSVTranslatorController extends CRUDController<CSVTranslator> {
 
-  public CSVTranslatorController(Datastore<CSVTranslator, String> datastore) {
+  public CSVTranslatorController(Datastore<CSVTranslator> datastore) {
     super(datastore);
   }
 
@@ -20,7 +20,7 @@ public class CSVTranslatorController extends CRUDController<CSVTranslator, Strin
   }
 
   @Override
-  protected CRUDService<CSVTranslator, String> createService(Datastore<CSVTranslator, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<CSVTranslator> createService(Datastore<CSVTranslator> datastore, Datastore<?>... additionalDataStores) {
     return new CSVTranslatorService(
         new CSVTranslatorRepository(datastore)
     );

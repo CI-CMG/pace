@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.Sea;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all sea areas", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllSeasCommand extends FindAllCommand<Sea, String> {
+class FindAllSeasCommand extends FindAllCommand<Sea> {
 
   @Override
-  protected ControllerFactory<Sea, String> getControllerFactory() {
+  protected ControllerFactory<Sea> getControllerFactory() {
     return SeaControllerFactory::createController;
   }
 }

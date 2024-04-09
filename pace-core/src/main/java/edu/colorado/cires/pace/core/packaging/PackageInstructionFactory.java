@@ -6,7 +6,6 @@ import edu.colorado.cires.pace.data.PackingJob;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -21,31 +20,31 @@ class PackageInstructionFactory {
     Path dataDirectory = outputDirectory.resolve("data");
     
     Stream<PackageInstruction> temperatureFiles = processPath(
-        packingJob::getTemperaturePath,
+        packingJob::temperaturePath,
         dataDirectory.resolve("temperature")
     );
     Stream<PackageInstruction> biologicalFiles = processPath(
-        packingJob::getBiologicalPath,
+        packingJob::biologicalPath,
         dataDirectory.resolve("biological")
     );
     Stream<PackageInstruction> otherFiles = processPath(
-        packingJob::getOtherPath,
+        packingJob::otherPath,
         dataDirectory.resolve("other")
     );
     Stream<PackageInstruction> docsFiles = processPath(
-        packingJob::getDocumentsPath, 
+        packingJob::documentsPath, 
         dataDirectory.resolve("docs")
     );
     Stream<PackageInstruction> calibrationDocsFiles = processPath(
-        packingJob::getCalibrationDocumentsPath,
+        packingJob::calibrationDocumentsPath,
         dataDirectory.resolve("calibration")
     );
     Stream<PackageInstruction> navigationFiles = processPath(
-        packingJob::getNavigationPath, 
+        packingJob::navigationPath, 
         dataDirectory.resolve("nav_files")
     );
     Stream<PackageInstruction> sourceFiles = processPath(
-        packingJob::getSourcePath, 
+        packingJob::sourcePath, 
         sourceContainsAudioFiles ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
     );
     
@@ -54,13 +53,11 @@ class PackageInstructionFactory {
     ).flatMap(stream -> stream);
   }
   
-  private static Stream<PackageInstruction> processPath(Supplier<String> pathGetter, Path outputDirectory) throws PackingException {
-    String pathArgument = pathGetter.get();
-    if (pathArgument == null) {
+  private static Stream<PackageInstruction> processPath(Supplier<Path> pathGetter, Path outputDirectory) throws PackingException {
+    Path path = pathGetter.get();
+    if (path == null) {
       return Stream.empty();
     }
-
-    Path path = Paths.get(pathArgument);
 
     try {
       return Files.walk(path)

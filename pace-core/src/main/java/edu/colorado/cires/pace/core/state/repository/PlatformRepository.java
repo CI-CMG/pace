@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.core.state.repository;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.data.Platform;
 
-public class PlatformRepository extends CRUDRepository<Platform, String> {
+public class PlatformRepository extends CRUDRepository<Platform> {
 
-  public PlatformRepository(Datastore<Platform, String> datastore) {
-    super(Platform::getUUID, Platform::getName, Platform::setUUID, datastore);
+  public PlatformRepository(Datastore<Platform> datastore) {
+    super(datastore);
   }
 
   @Override

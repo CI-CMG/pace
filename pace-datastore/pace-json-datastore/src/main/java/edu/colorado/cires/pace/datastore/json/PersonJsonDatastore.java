@@ -5,9 +5,9 @@ import edu.colorado.cires.pace.data.Person;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class PersonJsonDatastore extends JsonDatastore<Person, String> {
+public class PersonJsonDatastore extends JsonDatastore<Person> {
 
   public PersonJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("people"), objectMapper, Person.class, Person::getUUID, Person::getName);
+    super(workDirectory.resolve("people"), objectMapper, Person.class);
   }
 }

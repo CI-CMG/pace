@@ -4,26 +4,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
+import edu.colorado.cires.pace.data.ObjectWithUUID;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class JsonDatastoreTest<O, U> {
+abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   
   private static final Path TEST_PATH = Paths.get("target").resolve("test-dir");
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   protected abstract Class<O> getClazz();
-  protected abstract JsonDatastore<O, U> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException;
-  private final JsonDatastore<O, U> datastore;
+  protected abstract JsonDatastore<O> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException;
+  private final JsonDatastore<O> datastore;
 
   {
     try {
@@ -32,11 +33,6 @@ abstract class JsonDatastoreTest<O, U> {
       throw new RuntimeException(e);
     }
   }
-
-  protected abstract UUIDProvider<O> createUUIDProvider();
-  protected abstract UniqueFieldProvider<O, U> createUniqueFieldProvider();
-  private final UUIDProvider<O> uuidProvider = createUUIDProvider();
-  protected final UniqueFieldProvider<O, U> uniqueFieldProvider = createUniqueFieldProvider();
   
   @BeforeEach
   void beforeEach() throws IOException {
@@ -90,12 +86,12 @@ abstract class JsonDatastoreTest<O, U> {
     O object = createNewObject();
     O result = datastore.save(object);
     
-    Optional<O> maybeResult = datastore.findByUUID(uuidProvider.getUUID(result));
+    Optional<O> maybeResult = datastore.findByUUID(result.uuid());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
     
     object = createNewObject();
-    maybeResult = datastore.findByUUID(uuidProvider.getUUID(object));
+    maybeResult = datastore.findByUUID(object.uuid());
     assertTrue(maybeResult.isEmpty());
   }
   
@@ -104,12 +100,12 @@ abstract class JsonDatastoreTest<O, U> {
     O object = createNewObject();
     O result = datastore.save(object);
     
-    Optional<O> maybeResult = datastore.findByUniqueField(uniqueFieldProvider.getUniqueField(result));
+    Optional<O> maybeResult = datastore.findByUniqueField(result.uniqueField());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
     
     object = createNewObject();
-    maybeResult = datastore.findByUniqueField(uniqueFieldProvider.getUniqueField(object));
+    maybeResult = datastore.findByUniqueField(object.uniqueField());
     assertTrue(maybeResult.isEmpty());
   }
   
@@ -121,9 +117,9 @@ abstract class JsonDatastoreTest<O, U> {
     object2 = datastore.save(object2);
     
     List<O> results = datastore.findAll()
-        .sorted(((o1, o2) -> uuidProvider.getUUID(o1).compareTo(uuidProvider.getUUID(o2))))
+        .sorted((Comparator.comparing(ObjectWithUUID::uuid)))
         .toList();
-    List<O> expected = Stream.of(object1, object2).sorted(((o1, o2) -> uuidProvider.getUUID(o1).compareTo(uuidProvider.getUUID(o2))))
+    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUUID::uuid))
         .toList();
     
     assertEquals(expected.size(), results.size());
@@ -140,7 +136,7 @@ abstract class JsonDatastoreTest<O, U> {
     try (Stream<Path> paths = Files.walk(TEST_PATH)) {
       paths.map(Path::toFile)
           .filter(File::isFile)
-          .filter(f -> f.getName().contains(uuidProvider.getUUID(actual).toString()))
+          .filter(f -> f.getName().contains(actual.uuid().toString()))
           .findFirst().ifPresentOrElse(
               (f) -> {
                 try {
@@ -166,7 +162,7 @@ abstract class JsonDatastoreTest<O, U> {
       return paths.map(Path::toFile)
           .filter(File::isFile)
           .filter(f -> f.getName().equals(String.format(
-              "%s.json", uuidProvider.getUUID(object)
+              "%s.json", object.uuid()
           ))).findFirst();
     }
   }

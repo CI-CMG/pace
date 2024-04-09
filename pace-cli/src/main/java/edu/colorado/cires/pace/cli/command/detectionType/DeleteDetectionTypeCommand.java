@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete detection type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteDetectionTypeCommand extends DeleteCommand<DetectionType, String> {
+class DeleteDetectionTypeCommand extends DeleteCommand<DetectionType> {
   
   @Parameters(description = "detection type uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteDetectionTypeCommand extends DeleteCommand<DetectionType, String> {
   }
 
   @Override
-  protected ControllerFactory<DetectionType, String> getControllerFactory() {
+  protected ControllerFactory<DetectionType> getControllerFactory() {
     return DetectionTypeControllerFactory::createController;
   }
 }

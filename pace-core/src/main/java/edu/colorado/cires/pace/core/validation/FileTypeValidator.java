@@ -11,7 +11,7 @@ public class FileTypeValidator implements Validator<FileType> {
   public Set<ConstraintViolation> validate(FileType object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
-    if (StringUtils.isBlank(object.getType())) {
+    if (StringUtils.isBlank(object.type())) {
       violations.add(new ConstraintViolation(
           "type", "type must not be blank"
       ));

@@ -1,34 +1,17 @@
 package edu.colorado.cires.pace.core.state.controller;
 
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.ExcelTranslator;
 import edu.colorado.cires.pace.data.ExcelTranslatorField;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ExcelTranslatorControllerTest extends CRUDControllerTest<ExcelTranslator, String> {
+public class ExcelTranslatorControllerTest extends CRUDControllerTest<ExcelTranslator> {
 
   @Override
-  protected CRUDController<ExcelTranslator, String> createController(Datastore<ExcelTranslator, String> datastore) throws Exception {
+  protected CRUDController<ExcelTranslator> createController(Datastore<ExcelTranslator> datastore) throws Exception {
     return new ExcelTranslatorController(datastore);
-  }
-
-  @Override
-  protected UniqueFieldProvider<ExcelTranslator, String> getUniqueFieldProvider() {
-    return ExcelTranslator::getName;
-  }
-
-  @Override
-  protected UUIDProvider<ExcelTranslator> getUuidProvider() {
-    return ExcelTranslator::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<ExcelTranslator, String> getUniqueFieldSetter() {
-    return ExcelTranslator::setName;
   }
 
   @Override
@@ -38,28 +21,33 @@ public class ExcelTranslatorControllerTest extends CRUDControllerTest<ExcelTrans
 
   @Override
   protected ExcelTranslator createNewObject(boolean withUUID) {
-    ExcelTranslator translator = new ExcelTranslator();
+    ExcelTranslatorField field1 = new ExcelTranslatorField(
+        "property1",
+        1,
+        1
+    );
 
-    translator.setName(UUID.randomUUID().toString());
+    ExcelTranslatorField field2 = new ExcelTranslatorField(
+        "property2",
+        2,
+        2
+    );
 
-    if (withUUID) {
-      translator.setUUID(UUID.randomUUID());
-    }
+    return new ExcelTranslator(
+        !withUUID ? null : UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        List.of(
+            field1, field2
+        )
+    );
+  }
 
-    ExcelTranslatorField field1 = new ExcelTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setSheetNumber(1);
-    field1.setPropertyName("property1");
-
-    ExcelTranslatorField field2 = new ExcelTranslatorField();
-    field2.setColumnNumber(2);
-    field2.setSheetNumber(1);
-    field2.setPropertyName("property2");
-
-    translator.setFields(List.of(
-        field1, field2
-    ));
-
-    return translator;
+  @Override
+  protected ExcelTranslator setUniqueField(ExcelTranslator object, String uniqueField) {
+    return new ExcelTranslator(
+        object.uuid(),
+        uniqueField,
+        object.fields()
+    );
   }
 }

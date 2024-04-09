@@ -1,16 +1,17 @@
 package edu.colorado.cires.pace.core.state.service;
 
 import edu.colorado.cires.pace.core.state.repository.CRUDRepository;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public abstract class CRUDService<O, U> {
+public abstract class CRUDService<O extends ObjectWithUniqueField> {
   
-  private final CRUDRepository<O, U> crudRepository;
+  private final CRUDRepository<O> crudRepository;
 
-  protected CRUDService(CRUDRepository<O, U> crudRepository) {
+  protected CRUDService(CRUDRepository<O> crudRepository) {
     this.crudRepository = crudRepository;
   }
 
@@ -19,7 +20,7 @@ public abstract class CRUDService<O, U> {
     return crudRepository.create(object);
   }
   
-  public O getByUniqueField(U uniqueField) throws Exception {
+  public O getByUniqueField(String uniqueField) throws Exception {
     return crudRepository.getByUniqueField(uniqueField);
   }
   

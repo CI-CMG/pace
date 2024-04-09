@@ -11,7 +11,7 @@ public class OrganizationValidator implements Validator<Organization> {
   public Set<ConstraintViolation> validate(Organization object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
-    if (StringUtils.isBlank(object.getName())) {
+    if (StringUtils.isBlank(object.name())) {
       violations.add(new ConstraintViolation(
           "name", "name must not be blank"
       ));

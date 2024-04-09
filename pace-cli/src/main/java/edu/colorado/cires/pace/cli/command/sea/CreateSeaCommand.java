@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create sea area", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateSeaCommand extends CreateCommand<Sea, String> {
+class CreateSeaCommand extends CreateCommand<Sea> {
   
   @Parameters(description = "File containing sea area (- for stdin)")
   private File seaArea;
@@ -26,7 +26,7 @@ class CreateSeaCommand extends CreateCommand<Sea, String> {
   }
 
   @Override
-  protected ControllerFactory<Sea, String> getControllerFactory() {
+  protected ControllerFactory<Sea> getControllerFactory() {
     return SeaControllerFactory::createController;
   }
 }

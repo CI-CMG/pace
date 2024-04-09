@@ -12,8 +12,7 @@ import static org.mockito.Mockito.when;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.core.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.exception.ValidationException;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,26 +22,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class CRUDControllerTest<O, U> {
+abstract class CRUDControllerTest<O extends ObjectWithUniqueField> {
 
-  @FunctionalInterface
-  protected interface UniqueFieldSetter<O, U> {
-    void setUniqueField(O object, U uniqueField);
-  }
-
-  private CRUDController<O, U> controller;
-  private final Datastore<O, U> datastore = mock(Datastore.class);
-  protected abstract CRUDController<O, U> createController(Datastore<O, U> datastore) throws Exception;
+  private CRUDController<O> controller;
+  private final Datastore<O> datastore = mock(Datastore.class);
+  protected abstract CRUDController<O> createController(Datastore<O> datastore) throws Exception;
   
-  protected abstract UniqueFieldProvider<O, U> getUniqueFieldProvider();
-  protected abstract UUIDProvider<O> getUuidProvider();
-  protected abstract UniqueFieldSetter<O, U> getUniqueFieldSetter();
   protected abstract Supplier<String> getUniqueFieldName();
-  
-  
-  private final UniqueFieldProvider<O, U> uniqueFieldProvider = getUniqueFieldProvider();
-  private final UUIDProvider<O> uuidProvider = getUuidProvider(); 
-  private final UniqueFieldSetter<O, U> uniqueFieldSetter = getUniqueFieldSetter();
   
   @BeforeEach
   void beforeEach() throws Exception {
@@ -62,16 +48,17 @@ abstract class CRUDControllerTest<O, U> {
   
   @Test
   void testCreateValidationError() throws Exception {
-    O object = createNewObject();
-    uniqueFieldSetter.setUniqueField(object, null);
+    O object = createNewObject(false);
+    object = setUniqueField(object, null);
     
     Set<ConstraintViolation> violations = Set.of(
         new ConstraintViolation(getUniqueFieldName().get(), String.format(
             "%s must not be blank", getUniqueFieldName().get()
         ))
     );
-    
-    ValidationException exception = assertThrows(ValidationException.class, () -> controller.create(object));
+
+    O finalObject = object;
+    ValidationException exception = assertThrows(ValidationException.class, () -> controller.create(finalObject));
     assertEquals("Object validation failed", exception.getMessage());
     assertEquals(violations, exception.getViolations());
     
@@ -82,10 +69,10 @@ abstract class CRUDControllerTest<O, U> {
   void testGetByUniqueField() throws Exception {
     O object = createNewObject();
     
-    when(datastore.findByUniqueField(uniqueFieldProvider.getUniqueField(object))).thenReturn(Optional.of(object));
+    when(datastore.findByUniqueField(object.uniqueField())).thenReturn(Optional.of(object));
     
-    O result = controller.getByUniqueField(uniqueFieldProvider.getUniqueField(object));
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
+    O result = controller.getByUniqueField(object.uniqueField());
+    assertEquals(object.uuid(), result.uuid());
     
     verify(datastore, times(1)).findByUniqueField(any());
   }
@@ -94,10 +81,10 @@ abstract class CRUDControllerTest<O, U> {
   void testGetByUUID() throws Exception {
     O object = createNewObject();
     
-    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
+    when(datastore.findByUUID(object.uuid())).thenReturn(Optional.of(object));
     
-    O result = controller.getByUUID(uuidProvider.getUUID(object));
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
+    O result = controller.getByUUID(object.uuid());
+    assertEquals(object.uuid(), result.uuid());
     
     verify(datastore, times(1)).findByUUID(any());
   }
@@ -122,9 +109,9 @@ abstract class CRUDControllerTest<O, U> {
   void testUpdate() throws Exception {
     O object = createNewObject();
     when(datastore.save(object)).thenReturn(object);
-    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
-    O result = controller.update(uuidProvider.getUUID(object), object);
-    assertEquals(uuidProvider.getUUID(object), uuidProvider.getUUID(result));
+    when(datastore.findByUUID(object.uuid())).thenReturn(Optional.of(object));
+    O result = controller.update(object.uuid(), object);
+    assertEquals(object.uuid(), result.uuid());
     
     verify(datastore, times(1)).save(any());
   }
@@ -132,14 +119,15 @@ abstract class CRUDControllerTest<O, U> {
   @Test
   void testUpdateValidationErrors() {
     O object = createNewObject();
-    uniqueFieldSetter.setUniqueField(object, null);
+    object = setUniqueField(object, null);
     Set<ConstraintViolation> violations = Set.of(
         new ConstraintViolation(getUniqueFieldName().get(), String.format(
             "%s must not be blank", getUniqueFieldName().get()
         ))
     );
-    
-    ValidationException exception = assertThrows(ValidationException.class, () -> controller.update(uuidProvider.getUUID(object), object));
+
+    O finalObject = object;
+    ValidationException exception = assertThrows(ValidationException.class, () -> controller.update(finalObject.uuid(), finalObject));
     assertEquals("Object validation failed", exception.getMessage());
     assertEquals(violations, exception.getViolations());
   }
@@ -148,9 +136,9 @@ abstract class CRUDControllerTest<O, U> {
   void testDelete() throws Exception {
     O object = createNewObject();
     
-    when(datastore.findByUUID(uuidProvider.getUUID(object))).thenReturn(Optional.of(object));
+    when(datastore.findByUUID(object.uuid())).thenReturn(Optional.of(object));
     
-    controller.delete(uuidProvider.getUUID(object));
+    controller.delete(object.uuid());
   }
   
   protected abstract O createNewObject(boolean withUUID);
@@ -158,4 +146,6 @@ abstract class CRUDControllerTest<O, U> {
   private O createNewObject() {
     return createNewObject(true);
   }
+  
+  protected abstract O setUniqueField(O object, String uniqueField);
 }

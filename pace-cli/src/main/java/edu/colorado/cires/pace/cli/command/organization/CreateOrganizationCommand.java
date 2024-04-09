@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create organization", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateOrganizationCommand extends CreateCommand<Organization, String> {
+class CreateOrganizationCommand extends CreateCommand<Organization> {
   
   @Parameters(description = "File containing organization (- for stdin)")
   private File organization;
@@ -26,7 +26,7 @@ class CreateOrganizationCommand extends CreateCommand<Organization, String> {
   }
 
   @Override
-  protected ControllerFactory<Organization, String> getControllerFactory() {
+  protected ControllerFactory<Organization> getControllerFactory() {
     return OrganizationControllerFactory::createController;
   }
 }

@@ -8,9 +8,9 @@ import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
 import edu.colorado.cires.pace.data.DetectionType;
 
-public class DetectionTypeController extends CRUDController<DetectionType, String> {
+public class DetectionTypeController extends CRUDController<DetectionType> {
 
-  public DetectionTypeController(Datastore<DetectionType, String> datastore) {
+  public DetectionTypeController(Datastore<DetectionType> datastore) {
     super(datastore);
   }
 
@@ -20,7 +20,7 @@ public class DetectionTypeController extends CRUDController<DetectionType, Strin
   }
 
   @Override
-  protected CRUDService<DetectionType, String> createService(Datastore<DetectionType, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<DetectionType> createService(Datastore<DetectionType> datastore, Datastore<?>... additionalDataStores) {
     return new DetectionTypeService(
         new DetectionTypeRepository(
             datastore

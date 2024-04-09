@@ -12,27 +12,27 @@ public class CSVTranslatorValidator implements Validator<CSVTranslator> {
   public Set<ConstraintViolation> validate(CSVTranslator object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
     
-    if (StringUtils.isBlank(object.getName())) {
+    if (StringUtils.isBlank(object.name())) {
       violations.add(new ConstraintViolation(
           "name", "name must not be blank"
       ));
     }
 
-    if (object.getFields() == null || object.getFields().isEmpty()) {
+    if (object.fields() == null || object.fields().isEmpty()) {
       violations.add(new ConstraintViolation(
           "fields", "fields must not be empty"
       ));
     } else {
-      for (int i = 0; i < object.getFields().size(); i++) {
-        CSVTranslatorField field = object.getFields().get(i);
+      for (int i = 0; i < object.fields().size(); i++) {
+        CSVTranslatorField field = object.fields().get(i);
 
-        if (StringUtils.isBlank(field.getPropertyName())) {
+        if (StringUtils.isBlank(field.propertyName())) {
           violations.add(new ConstraintViolation(
               String.format("fields[%s].propertyName", i), "propertyName must not be blank"
           ));
         }
 
-        long column = field.getColumnNumber();
+        long column = field.columnNumber();
         if (column <= 0) {
           violations.add(new ConstraintViolation(
               String.format("fields[%s].columnNumber", i), "columnNumber must be greater than 0"
@@ -40,13 +40,13 @@ public class CSVTranslatorValidator implements Validator<CSVTranslator> {
         }
       }
 
-      if (object.getFields().size() != object.getFields().stream().map(CSVTranslatorField::getPropertyName).distinct().count()) {
+      if (object.fields().size() != object.fields().stream().map(CSVTranslatorField::propertyName).distinct().count()) {
         violations.add(new ConstraintViolation(
             "fields", "fields contain duplicate property names"
         ));
       }
 
-      if (object.getFields().size() != object.getFields().stream().map(CSVTranslatorField::getColumnNumber).distinct().count()) {
+      if (object.fields().size() != object.fields().stream().map(CSVTranslatorField::columnNumber).distinct().count()) {
         violations.add(new ConstraintViolation(
             "fields", "fields contain duplicate column numbers"
         ));

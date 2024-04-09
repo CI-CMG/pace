@@ -5,9 +5,9 @@ import edu.colorado.cires.pace.data.Instrument;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class InstrumentJsonDatastore extends JsonDatastore<Instrument, String> {
+public class InstrumentJsonDatastore extends JsonDatastore<Instrument> {
 
   public InstrumentJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("instruments"), objectMapper, Instrument.class, Instrument::getUUID, Instrument::getName);
+    super(workDirectory.resolve("instruments"), objectMapper, Instrument.class);
   }
 }

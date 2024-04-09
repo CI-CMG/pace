@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create instrument", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateInstrumentCommand extends CreateCommand<Instrument, String> {
+class CreateInstrumentCommand extends CreateCommand<Instrument> {
   
   @Parameters(description = "File containing instrument (- for stdin)")
   private File instrument;
@@ -26,7 +26,7 @@ class CreateInstrumentCommand extends CreateCommand<Instrument, String> {
   }
 
   @Override
-  protected ControllerFactory<Instrument, String> getControllerFactory() {
+  protected ControllerFactory<Instrument> getControllerFactory() {
     return InstrumentControllerFactory::createController;
   }
 }

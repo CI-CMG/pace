@@ -10,13 +10,13 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get ship by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetShipByUUIDCommand extends GetByUUIDCommand<Ship, String> {
+class GetShipByUUIDCommand extends GetByUUIDCommand<Ship> {
   
   @Parameters(description = "ship uuid")
   private UUID uuid;
 
   @Override
-  protected ControllerFactory<Ship, String> getControllerFactory() {
+  protected ControllerFactory<Ship> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 

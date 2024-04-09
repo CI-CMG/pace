@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-type", description = "Get file type by type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetFileTypeByTypeCommand extends GetByUniqueFieldCommand<FileType, String> {
+class GetFileTypeByTypeCommand extends GetByUniqueFieldCommand<FileType> {
   
   @Parameters(description = "file type")
   private String type;
@@ -20,7 +20,7 @@ class GetFileTypeByTypeCommand extends GetByUniqueFieldCommand<FileType, String>
   }
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

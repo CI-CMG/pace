@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.core.state.repository;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.data.Ship;
 
-public class ShipRepository extends CRUDRepository<Ship, String> {
+public class ShipRepository extends CRUDRepository<Ship> {
 
-  public ShipRepository(Datastore<Ship, String> datastore) {
-    super(Ship::getUUID, Ship::getName, Ship::setUUID, datastore);
+  public ShipRepository(Datastore<Ship> datastore) {
+    super(datastore);
   }
 
   @Override

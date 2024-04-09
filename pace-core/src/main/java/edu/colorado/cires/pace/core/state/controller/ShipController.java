@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.ShipValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Ship;
 
-public class ShipController extends CRUDController<Ship, String> {
+public class ShipController extends CRUDController<Ship> {
 
   @Override
   protected Validator<Ship> getValidator() {
@@ -16,7 +16,7 @@ public class ShipController extends CRUDController<Ship, String> {
   }
 
   @Override
-  protected CRUDService<Ship, String> createService(Datastore<Ship, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Ship> createService(Datastore<Ship> datastore, Datastore<?>... additionalDataStores) {
     return new ShipService(
         new ShipRepository(
             datastore
@@ -24,7 +24,7 @@ public class ShipController extends CRUDController<Ship, String> {
     );
   }
 
-  public ShipController(Datastore<Ship, String> datastore) {
+  public ShipController(Datastore<Ship> datastore) {
     super(datastore);
   }
 }

@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.PackingJob;
+import java.nio.file.Path;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -48,36 +50,44 @@ class PackingJobValidatorTest {
       assertEquals(expectedError, constraintViolation.message());
     }
   }
+  
+  @Test
+  void testNullSourcePath() {
+    PackingJob packingJob = new PackingJob(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    );
+
+    Set<ConstraintViolation> violations = validator.validate(packingJob);
+    assertEquals(1, violations.size());
+    
+    ConstraintViolation violation = violations.iterator().next();
+    assertEquals("sourcePath", violation.property());
+    assertEquals("sourcePath must be defined", violation.message());
+  }
 
   private static PackingJob getPackingJob(String property, String propertyPath) {
-    PackingJob packingJob = new PackingJob();
-
-    if (property.equals("sourcePath")) {
-      packingJob.setSourcePath(propertyPath);
+    return new PackingJob(
+        returnPropertyIfMatchesArgument(property, "temperaturePath", propertyPath),
+        returnPropertyIfMatchesArgument(property, "biologicalPath", propertyPath),
+        returnPropertyIfMatchesArgument(property, "otherPath", propertyPath),
+        returnPropertyIfMatchesArgument(property, "documentsPath", propertyPath),
+        returnPropertyIfMatchesArgument(property, "calibrationDocumentsPath", propertyPath),
+        returnPropertyIfMatchesArgument(property, "navigationPath", propertyPath),
+        property.equals("sourcePath") ? returnPropertyIfMatchesArgument(property, "sourcePath", propertyPath) : Path.of("/path/to/source/file")
+    );
+  }
+  
+  private static Path returnPropertyIfMatchesArgument(String property, String expectedProperty, String propertyPath) {
+    if (property.equals(expectedProperty)) {
+      return Path.of(propertyPath);
     }
-    if (property.equals("biologicalPath")) {
-      packingJob.setBiologicalPath(propertyPath);
-    }
-    if (property.equals("calibrationDocumentsPath")) {
-      packingJob.setCalibrationDocumentsPath(propertyPath);
-    }
-    if (property.equals("documentsPath")) {
-      packingJob.setDocumentsPath(propertyPath);
-    }
-    if (property.equals("navigationPath")) {
-      packingJob.setNavigationPath(propertyPath);
-    }
-    if (property.equals("otherPath")) {
-      packingJob.setOtherPath(propertyPath);
-    }
-    if (property.equals("temperaturePath")) {
-      packingJob.setTemperaturePath(propertyPath);
-    }
-
-    if (packingJob.getSourcePath() == null) {
-      packingJob.setSourcePath("/path/to/source");
-    }
-    return packingJob;
+    return null;
   }
 
 }

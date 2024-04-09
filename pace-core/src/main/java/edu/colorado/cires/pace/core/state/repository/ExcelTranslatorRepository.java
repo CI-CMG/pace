@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.core.state.repository;
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
 import edu.colorado.cires.pace.data.ExcelTranslator;
 
-public class ExcelTranslatorRepository extends CRUDRepository<ExcelTranslator, String> {
+public class ExcelTranslatorRepository extends CRUDRepository<ExcelTranslator> {
 
-  public ExcelTranslatorRepository(Datastore<ExcelTranslator, String> datastore) {
-    super(ExcelTranslator::getUUID, ExcelTranslator::getName, ExcelTranslator::setUUID, datastore);
+  public ExcelTranslatorRepository(Datastore<ExcelTranslator> datastore) {
+    super(datastore);
   }
 
   @Override

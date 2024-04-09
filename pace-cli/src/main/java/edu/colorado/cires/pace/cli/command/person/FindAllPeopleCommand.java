@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.Person;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all people", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllPeopleCommand extends FindAllCommand<Person, String> {
+class FindAllPeopleCommand extends FindAllCommand<Person> {
 
   @Override
-  protected ControllerFactory<Person, String> getControllerFactory() {
+  protected ControllerFactory<Person> getControllerFactory() {
     return PersonControllerFactory::createController;
   }
 }

@@ -6,12 +6,12 @@ import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.UUID;
 
-public class InstrumentRepository extends CRUDRepository<Instrument, String> {
+public class InstrumentRepository extends CRUDRepository<Instrument> {
   
   private final FileTypeRepository fileTypeRepository;
 
-  public InstrumentRepository(Datastore<Instrument, String> datastore, Datastore<FileType, String> fileTypeDatastore) {
-    super(Instrument::getUUID, Instrument::getName, Instrument::setUUID, datastore);
+  public InstrumentRepository(Datastore<Instrument> datastore, Datastore<FileType> fileTypeDatastore) {
+    super(datastore);
     this.fileTypeRepository = new FileTypeRepository(fileTypeDatastore);
   }
 
@@ -38,12 +38,12 @@ public class InstrumentRepository extends CRUDRepository<Instrument, String> {
   }
   
   private void checkFileTypes(Instrument instrument) throws Exception {
-    for (FileType fileType : instrument.getFileTypes()) {
+    for (FileType fileType : instrument.fileTypes()) {
       try {
-        fileTypeRepository.getByUUID(fileType.getUUID());
+        fileTypeRepository.getByUUID(fileType.uuid());
       } catch (NotFoundException e) {
         throw new IllegalArgumentException(String.format(
-            "File type does not exist: %s", fileType.getType()
+            "File type does not exist: %s", fileType.type()
         ), e);
       }
     }

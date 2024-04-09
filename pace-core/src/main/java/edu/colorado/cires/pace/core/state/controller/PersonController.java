@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.PersonValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Person;
 
-public class PersonController extends CRUDController<Person, String> {
+public class PersonController extends CRUDController<Person> {
 
   @Override
   protected Validator<Person> getValidator() {
@@ -16,13 +16,13 @@ public class PersonController extends CRUDController<Person, String> {
   }
 
   @Override
-  protected CRUDService<Person, String> createService(Datastore<Person, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Person> createService(Datastore<Person> datastore, Datastore<?>... additionalDataStores) {
     return new PersonService(
         new PersonRepository(datastore)
     );
   }
 
-  public PersonController(Datastore<Person, String> datastore) {
+  public PersonController(Datastore<Person> datastore) {
     super(datastore);
   }
 }

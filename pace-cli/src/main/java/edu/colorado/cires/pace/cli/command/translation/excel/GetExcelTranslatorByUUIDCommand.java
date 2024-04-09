@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get excel translator by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetExcelTranslatorByUUIDCommand extends GetByUUIDCommand<ExcelTranslator, String> {
+class GetExcelTranslatorByUUIDCommand extends GetByUUIDCommand<ExcelTranslator> {
   
   @Parameters(description = "excel translator uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetExcelTranslatorByUUIDCommand extends GetByUUIDCommand<ExcelTranslator, 
   }
 
   @Override
-  protected ControllerFactory<ExcelTranslator, String> getControllerFactory() {
+  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
     return ExcelTranslatorControllerFactory::createController;
   }
 }

@@ -15,7 +15,11 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testEmptyObject() {
-    ExcelTranslator translation = new ExcelTranslator();
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        null,
+        null
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(2, violations.size());
@@ -39,16 +43,18 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testBlankName() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("");
-
-    ExcelTranslatorField field = new ExcelTranslatorField();
-    field.setPropertyName("property1");
-    field.setColumnNumber(1);
-    field.setSheetNumber(1);
-    translation.setFields(Collections.singletonList(
-        field
-    ));
+    ExcelTranslatorField field = new ExcelTranslatorField(
+        "property1",
+        1,
+        1
+    );
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "",
+        Collections.singletonList(
+            field
+        )
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -59,9 +65,11 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testEmptyFields() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setFields(Collections.emptyList());
-    translation.setName("name");
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        Collections.emptyList()
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -72,13 +80,18 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testInvalidFieldColumnNumber() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("name");
-    ExcelTranslatorField field = new ExcelTranslatorField();
-    field.setColumnNumber(-1);
-    field.setPropertyName("test");
-    field.setSheetNumber(1);
-    translation.setFields(Collections.singletonList(field));
+    ExcelTranslatorField field = new ExcelTranslatorField(
+        "test",
+        -1,
+        1
+    );
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        Collections.singletonList(
+            field
+        )
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -89,13 +102,18 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testInvalidFieldSheetNumber() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("name");
-    ExcelTranslatorField field = new ExcelTranslatorField();
-    field.setColumnNumber(1);
-    field.setPropertyName("test");
-    field.setSheetNumber(-1);
-    translation.setFields(Collections.singletonList(field));
+    ExcelTranslatorField field = new ExcelTranslatorField(
+        "test",
+        1,
+        -1
+    );
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        Collections.singletonList(
+            field
+        )
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -106,12 +124,18 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testBlankFieldName() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("name");
-    ExcelTranslatorField field = new ExcelTranslatorField();
-    field.setColumnNumber(1);
-    field.setSheetNumber(1);
-    translation.setFields(Collections.singletonList(field));
+    ExcelTranslatorField field = new ExcelTranslatorField(
+        null,
+        1,
+        1
+    );
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        Collections.singletonList(
+            field
+        )
+    );
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
@@ -121,22 +145,25 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testDuplicateColumnSheetPairs() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("name");
+    ExcelTranslatorField field1 = new ExcelTranslatorField(
+        "test1",
+        1,
+        1
+    );
 
-    ExcelTranslatorField field1 = new ExcelTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setPropertyName("test1");
-    field1.setSheetNumber(1);
-
-    ExcelTranslatorField field2 = new ExcelTranslatorField();
-    field2.setColumnNumber(1);
-    field2.setPropertyName("test2");
-    field2.setSheetNumber(1);
-
-    translation.setFields(List.of(
-        field1, field2
-    ));
+    ExcelTranslatorField field2 = new ExcelTranslatorField(
+        "test2",
+        1,
+        1
+    );
+    
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        List.of(
+            field1, field2
+        )
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());
@@ -147,22 +174,25 @@ public class ExcelTranslatorValidatorTest {
 
   @Test
   void testDuplicatePropertyName() {
-    ExcelTranslator translation = new ExcelTranslator();
-    translation.setName("name");
+    ExcelTranslatorField field1 = new ExcelTranslatorField(
+        "test1",
+        1,
+        1
+    );
 
-    ExcelTranslatorField field1 = new ExcelTranslatorField();
-    field1.setColumnNumber(1);
-    field1.setSheetNumber(1);
-    field1.setPropertyName("test1");
-
-    ExcelTranslatorField field2 = new ExcelTranslatorField();
-    field2.setColumnNumber(2);
-    field2.setSheetNumber(1);
-    field2.setPropertyName("test1");
-
-    translation.setFields(List.of(
-        field1, field2
-    ));
+    ExcelTranslatorField field2 = new ExcelTranslatorField(
+        "test1",
+        2,
+        1
+    );
+    
+    ExcelTranslator translation = new ExcelTranslator(
+        null,
+        "name",
+        List.of(
+            field1, field2
+        )
+    );
 
     Set<ConstraintViolation> violations = validator.validate(translation);
     assertEquals(1, violations.size());

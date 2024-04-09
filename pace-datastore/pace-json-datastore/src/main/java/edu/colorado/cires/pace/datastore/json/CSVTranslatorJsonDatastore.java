@@ -5,9 +5,9 @@ import edu.colorado.cires.pace.data.CSVTranslator;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class CSVTranslatorJsonDatastore extends JsonDatastore<CSVTranslator, String> {
+public class CSVTranslatorJsonDatastore extends JsonDatastore<CSVTranslator> {
 
   public CSVTranslatorJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("csv-translations"), objectMapper, CSVTranslator.class, CSVTranslator::getUUID, CSVTranslator::getName);
+    super(workDirectory.resolve("csv-translations"), objectMapper, CSVTranslator.class);
   }
 }

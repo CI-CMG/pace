@@ -5,20 +5,21 @@ import edu.colorado.cires.pace.core.validation.ConstraintViolation;
 import edu.colorado.cires.pace.core.exception.ValidationException;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public abstract class CRUDController<O, U> {
+public abstract class CRUDController<O extends ObjectWithUniqueField> {
 
-  private final CRUDService<O, U> service;
+  private final CRUDService<O> service;
   private final Validator<O> validator;
   protected abstract Validator<O> getValidator();
-  protected abstract CRUDService<O, U> createService(Datastore<O, U> datastore, Datastore<?, ?>... additionalDataStores);
+  protected abstract CRUDService<O> createService(Datastore<O> datastore, Datastore<?>... additionalDataStores);
 
-  protected CRUDController(Datastore<O, U> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDController(Datastore<O> datastore, Datastore<?>... additionalDataStores) {
     this.service = createService(datastore, additionalDataStores);
     this.validator = getValidator();
   }
@@ -27,7 +28,7 @@ public abstract class CRUDController<O, U> {
     return service.create(validate(object));
   }
   
-  public O getByUniqueField(U uniqueField) throws Exception {
+  public O getByUniqueField(String uniqueField) throws Exception {
     return service.getByUniqueField(uniqueField);
   }
   

@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-uuid", description = "Get file type by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetFileTypeByUUIDCommand extends GetByUUIDCommand<FileType, String> {
+class GetFileTypeByUUIDCommand extends GetByUUIDCommand<FileType> {
   
   @Parameters(description = "file type uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class GetFileTypeByUUIDCommand extends GetByUUIDCommand<FileType, String> {
   }
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

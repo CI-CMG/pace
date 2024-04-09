@@ -1,6 +1,8 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-public abstract class VoidCommand<O, U> extends CRUDCommand<O, U> {
+import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+
+public abstract class VoidCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
 
   protected abstract void runVoidCommand() throws Exception;
   

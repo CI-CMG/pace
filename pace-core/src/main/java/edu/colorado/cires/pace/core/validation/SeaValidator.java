@@ -11,7 +11,7 @@ public class SeaValidator implements Validator<Sea> {
   public Set<ConstraintViolation> validate(Sea object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
-    if (StringUtils.isBlank(object.getName())) {
+    if (StringUtils.isBlank(object.name())) {
       violations.add(new ConstraintViolation(
           "name", "name must not be blank"
       ));

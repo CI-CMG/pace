@@ -5,8 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.pace.core.state.datastore.Datastore;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 import java.util.List;
@@ -14,28 +12,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-class InstrumentControllerTest extends CRUDControllerTest<Instrument, String> {
+class InstrumentControllerTest extends CRUDControllerTest<Instrument> {
 
   @Override
-  protected CRUDController<Instrument, String> createController(Datastore<Instrument, String> datastore) throws Exception {
-    Datastore<FileType, String> fileTypeDatastore = mock(Datastore.class);
-    when(fileTypeDatastore.findByUUID(any())).thenReturn(Optional.of(new FileType()));
+  protected CRUDController<Instrument> createController(Datastore<Instrument> datastore) throws Exception {
+    Datastore<FileType> fileTypeDatastore = mock(Datastore.class);
+    when(fileTypeDatastore.findByUUID(any())).thenReturn(Optional.of(new FileType(UUID.randomUUID(), UUID.randomUUID().toString(), UUID.randomUUID().toString())));
     return new InstrumentController(datastore, fileTypeDatastore);
-  }
-
-  @Override
-  protected UniqueFieldProvider<Instrument, String> getUniqueFieldProvider() {
-    return Instrument::getName;
-  }
-
-  @Override
-  protected UUIDProvider<Instrument> getUuidProvider() {
-    return Instrument::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<Instrument, String> getUniqueFieldSetter() {
-    return Instrument::setName;
   }
 
   @Override
@@ -45,25 +28,33 @@ class InstrumentControllerTest extends CRUDControllerTest<Instrument, String> {
 
   @Override
   protected Instrument createNewObject(boolean withUUID) {
-    Instrument instrument = new Instrument();
-    if (withUUID) {
-      instrument.setUUID(UUID.randomUUID());
-    }
-    instrument.setName(UUID.randomUUID().toString());
-    instrument.setUse(true);
+    FileType fileType1 = new FileType(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        "comment"
+    );
 
-    FileType fileType1 = new FileType();
-    fileType1.setUUID(UUID.randomUUID());
-    fileType1.setType(UUID.randomUUID().toString());
+    FileType fileType2 = new FileType(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        "comment"
+    );
 
-    FileType fileType2 = new FileType();
-    fileType2.setUUID(UUID.randomUUID());
-    fileType2.setType(UUID.randomUUID().toString());
+    return new Instrument(
+        !withUUID ? null : UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        List.of(
+            fileType1, fileType2
+        )
+    );
+  }
 
-    instrument.setFileTypes(List.of(
-        fileType1, fileType2
-    ));
-
-    return instrument; 
+  @Override
+  protected Instrument setUniqueField(Instrument object, String uniqueField) {
+    return new Instrument(
+        object.uuid(),
+        uniqueField,
+        object.fileTypes()
+    );
   }
 }

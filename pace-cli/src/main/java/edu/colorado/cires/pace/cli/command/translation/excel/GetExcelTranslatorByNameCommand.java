@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-name", description = "Get excel translator by name",  mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetExcelTranslatorByNameCommand extends GetByUniqueFieldCommand<ExcelTranslator, String> {
+class GetExcelTranslatorByNameCommand extends GetByUniqueFieldCommand<ExcelTranslator> {
   
   @Parameters(description = "excel translator name")
   private String name;
@@ -20,7 +20,7 @@ class GetExcelTranslatorByNameCommand extends GetByUniqueFieldCommand<ExcelTrans
   }
 
   @Override
-  protected ControllerFactory<ExcelTranslator, String> getControllerFactory() {
+  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
     return ExcelTranslatorControllerFactory::createController;
   }
 }

@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateFileTypeCommand extends CreateCommand<FileType, String> {
+class CreateFileTypeCommand extends CreateCommand<FileType> {
   
   @Parameters(description = "File containing file type (- for stdin)")
   private File fileType;
@@ -26,7 +26,7 @@ class CreateFileTypeCommand extends CreateCommand<FileType, String> {
   }
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

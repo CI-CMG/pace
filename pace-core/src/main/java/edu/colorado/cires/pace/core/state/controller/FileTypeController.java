@@ -8,9 +8,9 @@ import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.core.state.service.CRUDService;
 import edu.colorado.cires.pace.data.FileType;
 
-public class FileTypeController extends CRUDController<FileType, String> {
+public class FileTypeController extends CRUDController<FileType> {
 
-  public FileTypeController(Datastore<FileType, String> datastore) {
+  public FileTypeController(Datastore<FileType> datastore) {
     super(datastore);
   }
 
@@ -20,7 +20,7 @@ public class FileTypeController extends CRUDController<FileType, String> {
   }
 
   @Override
-  protected CRUDService<FileType, String> createService(Datastore<FileType, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<FileType> createService(Datastore<FileType> datastore, Datastore<?>... additionalDataStores) {
     return new FileTypeService(
         new FileTypeRepository(
             datastore

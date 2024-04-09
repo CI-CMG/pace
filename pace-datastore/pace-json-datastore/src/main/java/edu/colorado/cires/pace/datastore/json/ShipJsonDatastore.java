@@ -5,9 +5,9 @@ import edu.colorado.cires.pace.data.Ship;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class ShipJsonDatastore extends JsonDatastore<Ship, String> {
+public class ShipJsonDatastore extends JsonDatastore<Ship> {
 
   public ShipJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory, objectMapper, Ship.class, Ship::getUUID, Ship::getName);
+    super(workDirectory, objectMapper, Ship.class);
   }
 }

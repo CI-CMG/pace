@@ -14,80 +14,77 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument, String> {
-
-  @Override
-  protected UUIDProvider<Instrument> getUUIDPRovider() {
-    return Instrument::getUUID;
-  }
-
-  @Override
-  protected UniqueFieldProvider<Instrument, String> getUniqueFieldProvider() {
-    return Instrument::getName;
-  }
-
-  @Override
-  protected UUIDSetter<Instrument> getUUIDSetter() {
-    return Instrument::setUUID;
-  }
-
-  @Override
-  protected UniqueFieldSetter<Instrument, String> getUniqueFieldSetter() {
-    return Instrument::setName;
-  }
+class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   
-  private static final Datastore<FileType, String> fileTypeRepository = mock(Datastore.class);
+  private static final Datastore<FileType> fileTypeRepository = mock(Datastore.class);
   static {
     try {
-      when(fileTypeRepository.findByUUID(any())).thenReturn(Optional.of(new FileType()));
+      when(fileTypeRepository.findByUUID(any())).thenReturn(Optional.of(new FileType(
+          UUID.randomUUID(),
+          UUID.randomUUID().toString(),
+          "comment"
+      )));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  protected CRUDRepository<Instrument, String> createRepository() {
+  protected CRUDRepository<Instrument> createRepository() {
     return new InstrumentRepository(createDatastore(), fileTypeRepository);
   }
 
   @Override
   protected Instrument createNewObject(int suffix) {
-    Instrument instrument = new Instrument();
-    instrument.setName(String.format("name-%s", suffix));
-    instrument.setUse(true);
     
-    FileType fileType1 = new FileType();
-    fileType1.setUUID(UUID.randomUUID());
-    fileType1.setType(String.format("file-type-%s", suffix));
+    FileType fileType1 = new FileType(
+        UUID.randomUUID(),
+        String.format("file-type-1-%s", suffix),
+        "comment"
+    );
     
-    FileType fileType2 = new FileType();
-    fileType2.setUUID(UUID.randomUUID());
-    fileType2.setType(String.format("file-type-%s", suffix));
+    FileType fileType2 = new FileType(
+        UUID.randomUUID(),
+        String.format("file-type-2-%s", suffix),
+        "comment"
+    );
     
-    instrument.setFileTypes(List.of(
-        fileType1, fileType2
-    ));
-    
-    return instrument;
+    return new Instrument(
+        null,
+        String.format("name-%s", suffix),
+        List.of(
+            fileType1, fileType2
+        )
+    );
   }
 
   @Override
-  protected void assertObjectsEqual(Instrument expected, Instrument actual) {
-    assertEquals(expected.getName(), actual.getName());
-    assertEquals(expected.getUUID(), actual.getUUID());
-    assertEquals(expected.getUse(), actual.getUse());
-    assertEquals(expected.getFileTypes(), actual.getFileTypes());
+  protected Instrument copyWithUpdatedUniqueField(Instrument object, String uniqueField) {
+    return new Instrument(
+        object.uuid(),
+        uniqueField,
+        object.fileTypes()
+    );
+  }
+
+  @Override
+  protected void assertObjectsEqual(Instrument expected, Instrument actual, boolean checkUUID) {
+    assertEquals(expected.name(), actual. name());
+    if (checkUUID) {
+      assertEquals(expected.uuid(), actual.uuid());
+    }
+    assertEquals(expected.fileTypes(), actual.fileTypes());
   }
   
   @Test
   void testFileTypeDoesNotExist() throws Exception {
     Instrument instrument = createNewObject(1);
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(0).getUUID())).thenReturn(Optional.empty());
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(1).getUUID())).thenReturn(Optional.of(instrument.getFileTypes().get(1)));
+    when(fileTypeRepository.findByUUID(instrument.fileTypes().get(0).uuid())).thenReturn(Optional.empty());
+    when(fileTypeRepository.findByUUID(instrument.fileTypes().get(1).uuid())).thenReturn(Optional.of(instrument.fileTypes().get(1)));
     
     Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(instrument));
     assertEquals(String.format(
-        "File type does not exist: %s", instrument.getFileTypes().get(0).getType()
+        "File type does not exist: %s", instrument.fileTypes().get(0).type()
     ), exception.getMessage());
   }
 }

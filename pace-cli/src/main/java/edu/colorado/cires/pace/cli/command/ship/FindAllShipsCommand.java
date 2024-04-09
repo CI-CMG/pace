@@ -7,11 +7,11 @@ import edu.colorado.cires.pace.data.Ship;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all ships", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllShipsCommand extends FindAllCommand<Ship, String> {
+class FindAllShipsCommand extends FindAllCommand<Ship> {
 
 
   @Override
-  protected ControllerFactory<Ship, String> getControllerFactory() {
+  protected ControllerFactory<Ship> getControllerFactory() {
     return ShipControllerFactory::createController;
   }
 }

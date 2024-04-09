@@ -1,12 +1,12 @@
 package edu.colorado.cires.pace.core.state.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import edu.colorado.cires.pace.core.state.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
-import edu.colorado.cires.pace.core.state.repository.UniqueFieldProvider;
 import edu.colorado.cires.pace.data.DetectionType;
 import java.util.UUID;
 
-class DetectionTypeServiceTest extends CrudServiceTest<DetectionType, String, DetectionTypeRepository> {
+class DetectionTypeServiceTest extends CrudServiceTest<DetectionType, DetectionTypeRepository> {
 
   @Override
   protected Class<DetectionTypeRepository> getRepositoryClass() {
@@ -14,32 +14,23 @@ class DetectionTypeServiceTest extends CrudServiceTest<DetectionType, String, De
   }
 
   @Override
-  protected UniqueFieldProvider<DetectionType, String> getUniqueFieldProvider() {
-    return DetectionType::getScienceName;
-  }
-
-  @Override
-  protected UUIDProvider<DetectionType> getUUIDProvider() {
-    return DetectionType::getUUID;
-  }
-
-  @Override
-  protected CRUDService<DetectionType, String> createService(DetectionTypeRepository repository) {
+  protected CRUDService<DetectionType> createService(DetectionTypeRepository repository) {
     return new DetectionTypeService(repository);
   }
 
   @Override
   protected DetectionType createNewObject() {
-    DetectionType detectionType = new DetectionType();
-    detectionType.setUUID(UUID.randomUUID());
-    detectionType.setUse(true);
-    detectionType.setSource(UUID.randomUUID().toString());
-    detectionType.setScienceName(UUID.randomUUID().toString());
-    return detectionType;
+    return new DetectionType(
+        UUID.randomUUID(),
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString()
+    );
   }
 
   @Override
   protected void assertObjectsEqual(DetectionType expected, DetectionType actual) {
-
+    assertEquals(expected.uuid(), actual.uuid());
+    assertEquals(expected.scienceName(), actual.scienceName());
+    assertEquals(expected.scienceName(), actual.scienceName());
   }
 }

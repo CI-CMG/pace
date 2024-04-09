@@ -9,9 +9,9 @@ import edu.colorado.cires.pace.core.state.service.CRUDService;
 import edu.colorado.cires.pace.data.FileType;
 import edu.colorado.cires.pace.data.Instrument;
 
-public class InstrumentController extends CRUDController<Instrument, String> {
+public class InstrumentController extends CRUDController<Instrument> {
 
-  public InstrumentController(Datastore<Instrument, String> datastore, Datastore<FileType, String> fileTypeDatastore) {
+  public InstrumentController(Datastore<Instrument> datastore, Datastore<FileType> fileTypeDatastore) {
     super(datastore, fileTypeDatastore);
   }
 
@@ -21,11 +21,11 @@ public class InstrumentController extends CRUDController<Instrument, String> {
   }
 
   @Override
-  protected CRUDService<Instrument, String> createService(Datastore<Instrument, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Instrument> createService(Datastore<Instrument> datastore, Datastore<?>... additionalDataStores) {
     return new InstrumentService(
         new InstrumentRepository(
             datastore,
-            (Datastore<FileType, String>) additionalDataStores[0]
+            (Datastore<FileType>) additionalDataStores[0]
         )
     );
   }

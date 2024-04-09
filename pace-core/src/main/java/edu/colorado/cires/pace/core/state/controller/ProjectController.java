@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.ProjectValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Project;
 
-public class ProjectController extends CRUDController<Project, String> {
+public class ProjectController extends CRUDController<Project> {
 
   @Override
   protected Validator<Project> getValidator() {
@@ -16,7 +16,7 @@ public class ProjectController extends CRUDController<Project, String> {
   }
 
   @Override
-  protected CRUDService<Project, String> createService(Datastore<Project, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Project> createService(Datastore<Project> datastore, Datastore<?>... additionalDataStores) {
     return new ProjectService(
         new ProjectRepository(
             datastore
@@ -24,7 +24,7 @@ public class ProjectController extends CRUDController<Project, String> {
     );
   }
 
-  public ProjectController(Datastore<Project, String> datastore) {
+  public ProjectController(Datastore<Project> datastore) {
     super(datastore);
   }
 }

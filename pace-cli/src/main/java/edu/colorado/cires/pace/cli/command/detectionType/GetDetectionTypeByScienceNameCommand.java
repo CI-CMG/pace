@@ -9,7 +9,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "get-by-science-name", description = "Get detection type by science name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class GetDetectionTypeByScienceNameCommand extends GetByUniqueFieldCommand<DetectionType, String> {
+class GetDetectionTypeByScienceNameCommand extends GetByUniqueFieldCommand<DetectionType> {
   
   @Parameters(description = "detection type science name")
   private String scienceName;
@@ -20,7 +20,7 @@ class GetDetectionTypeByScienceNameCommand extends GetByUniqueFieldCommand<Detec
   }
 
   @Override
-  protected ControllerFactory<DetectionType, String> getControllerFactory() {
+  protected ControllerFactory<DetectionType> getControllerFactory() {
     return DetectionTypeControllerFactory::createController;
   }
 }

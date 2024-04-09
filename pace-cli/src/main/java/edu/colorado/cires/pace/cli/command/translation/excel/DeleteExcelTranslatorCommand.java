@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "delete", description = "Delete excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class DeleteExcelTranslatorCommand extends DeleteCommand<ExcelTranslator, String> {
+class DeleteExcelTranslatorCommand extends DeleteCommand<ExcelTranslator> {
   
   @Parameters(description = "excel translator uuid")
   private UUID uuid;
@@ -21,7 +21,7 @@ class DeleteExcelTranslatorCommand extends DeleteCommand<ExcelTranslator, String
   }
 
   @Override
-  protected ControllerFactory<ExcelTranslator, String> getControllerFactory() {
+  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
     return ExcelTranslatorControllerFactory::createController;
   }
 }

@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.DetectionType;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all detection types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllDetectionTypesCommand extends FindAllCommand<DetectionType, String> {
+class FindAllDetectionTypesCommand extends FindAllCommand<DetectionType> {
 
   @Override
-  protected ControllerFactory<DetectionType, String> getControllerFactory() {
+  protected ControllerFactory<DetectionType> getControllerFactory() {
     return DetectionTypeControllerFactory::createController;
   }
 }

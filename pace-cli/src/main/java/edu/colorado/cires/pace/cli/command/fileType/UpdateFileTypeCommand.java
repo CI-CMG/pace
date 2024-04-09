@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.cli.command.fileType;
 import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.core.state.repository.UUIDProvider;
 import edu.colorado.cires.pace.data.FileType;
 import java.io.File;
 import java.util.function.Supplier;
@@ -11,15 +10,10 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "update", description = "Update file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class UpdateFileTypeCommand extends UpdateCommand<FileType, String> {
+class UpdateFileTypeCommand extends UpdateCommand<FileType> {
   
   @Parameters(description = "File containing file type (- for stdin)")
   private File fileType;
-
-  @Override
-  protected UUIDProvider<FileType> getUUIDProvider() {
-    return FileType::getUUID;
-  }
 
   @Override
   protected Supplier<File> getJsonBlobProvider() {
@@ -32,7 +26,7 @@ class UpdateFileTypeCommand extends UpdateCommand<FileType, String> {
   }
 
   @Override
-  protected ControllerFactory<FileType, String> getControllerFactory() {
+  protected ControllerFactory<FileType> getControllerFactory() {
     return FileTypeControllerFactory::createController;
   }
 }

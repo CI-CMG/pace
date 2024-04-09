@@ -10,7 +10,7 @@ public class ShipValidator implements Validator<Ship> {
   @Override
   public Set<ConstraintViolation> validate(Ship object) {
     Set<ConstraintViolation> constraintViolations = new HashSet<>(0);
-    if (StringUtils.isBlank(object.getName())) {
+    if (StringUtils.isBlank(object.name())) {
       constraintViolations.add(new ConstraintViolation(
           "name", "name must not be blank"
       ));

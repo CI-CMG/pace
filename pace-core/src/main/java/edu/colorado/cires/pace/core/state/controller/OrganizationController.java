@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.core.validation.OrganizationValidator;
 import edu.colorado.cires.pace.core.validation.Validator;
 import edu.colorado.cires.pace.data.Organization;
 
-public class OrganizationController extends CRUDController<Organization, String> {
+public class OrganizationController extends CRUDController<Organization> {
 
   @Override
   protected Validator<Organization> getValidator() {
@@ -16,7 +16,7 @@ public class OrganizationController extends CRUDController<Organization, String>
   }
 
   @Override
-  protected CRUDService<Organization, String> createService(Datastore<Organization, String> datastore, Datastore<?, ?>... additionalDataStores) {
+  protected CRUDService<Organization> createService(Datastore<Organization> datastore, Datastore<?>... additionalDataStores) {
     return new OrganizationService(
         new OrganizationRepository(
             datastore
@@ -24,7 +24,7 @@ public class OrganizationController extends CRUDController<Organization, String>
     );
   }
 
-  public OrganizationController(Datastore<Organization, String> datastore) {
+  public OrganizationController(Datastore<Organization> datastore) {
     super(datastore);
   }
 }

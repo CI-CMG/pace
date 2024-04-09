@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "create", description = "Create excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class CreateExcelTranslatorCommand extends CreateCommand<ExcelTranslator, String> {
+class CreateExcelTranslatorCommand extends CreateCommand<ExcelTranslator> {
   
   @Parameters(description = "file containing excel translator (- for stdin)")
   private File excelTranslator;
@@ -26,7 +26,7 @@ class CreateExcelTranslatorCommand extends CreateCommand<ExcelTranslator, String
   }
 
   @Override
-  protected ControllerFactory<ExcelTranslator, String> getControllerFactory() {
+  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
     return ExcelTranslatorControllerFactory::createController;
   }
 }

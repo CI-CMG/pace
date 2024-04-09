@@ -7,10 +7,10 @@ import edu.colorado.cires.pace.data.Platform;
 import picocli.CommandLine.Command;
 
 @Command(name = "list", description = "List all platforms", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-class FindAllPlatformsCommand extends FindAllCommand<Platform, String> {
+class FindAllPlatformsCommand extends FindAllCommand<Platform> {
 
   @Override
-  protected ControllerFactory<Platform, String> getControllerFactory() {
+  protected ControllerFactory<Platform> getControllerFactory() {
     return PlatformControllerFactory::createController;
   }
 }
