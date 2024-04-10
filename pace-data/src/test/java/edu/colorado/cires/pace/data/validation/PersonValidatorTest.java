@@ -37,14 +37,14 @@ class PersonValidatorTest {
     ConstraintViolation violation = violations.iterator().next();
     
     if (StringUtils.isBlank(name)) {
-      assertEquals("name", violation.property());
-      assertEquals("name must not be blank", violation.message());
+      assertEquals("name", violation.getProperty());
+      assertEquals("name must not be blank", violation.getMessage());
     } else if (StringUtils.isBlank(org)) {
-      assertEquals("organization", violation.property());
-      assertEquals("organization must not be blank", violation.message());
+      assertEquals("organization", violation.getProperty());
+      assertEquals("organization must not be blank", violation.getMessage());
     } else if (StringUtils.isBlank(position)) {
-      assertEquals("position", violation.property());
-      assertEquals("position must not be blank", violation.message());
+      assertEquals("position", violation.getProperty());
+      assertEquals("position must not be blank", violation.getMessage());
     }
   }
 }

@@ -42,12 +42,12 @@ class PackingJobValidatorTest {
     } else {
       assertFalse(violations.isEmpty());
       
-      ConstraintViolation constraintViolation = violations.stream().filter(cv -> cv.property().equals(property))
+      ConstraintViolation constraintViolation = violations.stream().filter(cv -> cv.getProperty().equals(property))
           .findFirst().orElseThrow(
               () -> new IllegalStateException("No constraint violation found for property " + property)
           );
-      assertEquals(property, constraintViolation.property());
-      assertEquals(expectedError, constraintViolation.message());
+      assertEquals(property, constraintViolation.getProperty());
+      assertEquals(expectedError, constraintViolation.getMessage());
     }
   }
   
@@ -67,8 +67,8 @@ class PackingJobValidatorTest {
     assertEquals(1, violations.size());
     
     ConstraintViolation violation = violations.iterator().next();
-    assertEquals("sourcePath", violation.property());
-    assertEquals("sourcePath must be defined", violation.message());
+    assertEquals("sourcePath", violation.getProperty());
+    assertEquals("sourcePath must be defined", violation.getMessage());
   }
 
   private static PackingJob getPackingJob(String property, String propertyPath) {

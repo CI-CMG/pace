@@ -21,20 +21,20 @@ class ExcelTranslatorValidatorTest {
     assertEquals(2, violations.size());
 
     ConstraintViolation nameViolation = violations.stream()
-        .filter(cv -> cv.property().equals("name"))
+        .filter(cv -> cv.getProperty().equals("name"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("name violation not found")
         );
-    assertEquals("name", nameViolation.property());
-    assertEquals("name must not be blank", nameViolation.message());
+    assertEquals("name", nameViolation.getProperty());
+    assertEquals("name must not be blank", nameViolation.getMessage());
 
     ConstraintViolation fieldsViolation = violations.stream()
-        .filter(cv -> cv.property().equals("fields"))
+        .filter(cv -> cv.getProperty().equals("fields"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("fields violation not found")
         );
-    assertEquals("fields", fieldsViolation.property());
-    assertEquals("fields must not be empty", fieldsViolation.message());
+    assertEquals("fields", fieldsViolation.getProperty());
+    assertEquals("fields must not be empty", fieldsViolation.getMessage());
   }
 
   @Test
@@ -54,8 +54,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("name", constraintViolation.property());
-    assertEquals("name must not be blank", constraintViolation.message());
+    assertEquals("name", constraintViolation.getProperty());
+    assertEquals("name must not be blank", constraintViolation.getMessage());
   }
 
   @Test
@@ -68,8 +68,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields", constraintViolation.property());
-    assertEquals("fields must not be empty", constraintViolation.message());
+    assertEquals("fields", constraintViolation.getProperty());
+    assertEquals("fields must not be empty", constraintViolation.getMessage());
   }
 
   @Test
@@ -88,8 +88,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields[0].columnNumber", constraintViolation.property());
-    assertEquals("columnNumber must be greater than 0", constraintViolation.message());
+    assertEquals("fields[0].columnNumber", constraintViolation.getProperty());
+    assertEquals("columnNumber must be greater than 0", constraintViolation.getMessage());
   }
 
   @Test
@@ -108,8 +108,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields[0].sheetNumber", constraintViolation.property());
-    assertEquals("sheetNumber must be greater than 0", constraintViolation.message());
+    assertEquals("fields[0].sheetNumber", constraintViolation.getProperty());
+    assertEquals("sheetNumber must be greater than 0", constraintViolation.getMessage());
   }
 
   @Test
@@ -126,8 +126,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields[0].propertyName", constraintViolation.property());
-    assertEquals("propertyName must not be blank", constraintViolation.message());
+    assertEquals("fields[0].propertyName", constraintViolation.getProperty());
+    assertEquals("propertyName must not be blank", constraintViolation.getMessage());
   }
 
   @Test
@@ -154,8 +154,8 @@ class ExcelTranslatorValidatorTest {
     Set<ConstraintViolation> violations = validator.runValidation(translation);
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields", constraintViolation.property());
-    assertEquals("fields contain duplicate column/sheet number pairs", constraintViolation.message());
+    assertEquals("fields", constraintViolation.getProperty());
+    assertEquals("fields contain duplicate column/sheet number pairs", constraintViolation.getMessage());
   }
 
   @Test
@@ -182,8 +182,8 @@ class ExcelTranslatorValidatorTest {
     assertEquals(1, violations.size());
 
     ConstraintViolation constraintViolation = violations.iterator().next();
-    assertEquals("fields", constraintViolation.property());
-    assertEquals("fields contain duplicate property names", constraintViolation.message());
+    assertEquals("fields", constraintViolation.getProperty());
+    assertEquals("fields contain duplicate property names", constraintViolation.getMessage());
   }
 
 }

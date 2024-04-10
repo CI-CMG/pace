@@ -1,3 +1,13 @@
 package edu.colorado.cires.pace.data.validation;
 
-public record ConstraintViolation(String property, String message) {}
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
+
+@Data
+@Builder
+@Jacksonized
+public class ConstraintViolation {
+  private final String property;
+  private final String message;
+}

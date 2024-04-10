@@ -1,7 +1,9 @@
 package edu.colorado.cires.pace.data.validation;
 
 import java.util.Set;
+import lombok.Getter;
 
+@Getter
 public class ValidationException extends Exception {
   
   private final Set<ConstraintViolation> violations;
@@ -13,7 +15,4 @@ public class ValidationException extends Exception {
     this.violations = violations;
   }
 
-  public Set<ConstraintViolation> getViolations() {
-    return violations;
-  }
 }
