@@ -10,7 +10,7 @@ public class DetectionTypeValidatorTest extends SingularRequiredFieldValidatorTe
   }
 
   @Override
-  protected DetectionType createObject(String uniqueField) {
+  protected DetectionType createObject(String uniqueField) throws ValidationException {
     return DetectionType.builder()
         .scienceName(uniqueField)
         .build();

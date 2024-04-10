@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.validation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
@@ -11,13 +12,11 @@ import org.junit.jupiter.api.Test;
 
 class ExcelTranslatorValidatorTest {
 
-  private final BaseValidator<ExcelTranslator> validator = new ExcelTranslatorValidator();
-
   @Test
   void testEmptyObject() {
-    ExcelTranslator translation = ExcelTranslator.builder().build();
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder().build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(2, violations.size());
 
     ConstraintViolation nameViolation = violations.stream()
@@ -45,13 +44,13 @@ class ExcelTranslatorValidatorTest {
         .sheetNumber(1)
         .build();
     
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("")
         .fields(Collections.singletonList(
             field
-        )).build();
+        )).build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("name", constraintViolation.getProperty());
@@ -60,12 +59,12 @@ class ExcelTranslatorValidatorTest {
 
   @Test
   void testEmptyFields() {
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(Collections.emptyList())
-        .build();
+        .build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields", constraintViolation.getProperty());
@@ -79,13 +78,13 @@ class ExcelTranslatorValidatorTest {
         .columnNumber(-1)
         .sheetNumber(1)
         .build();
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(Collections.singletonList(
             field
-        )).build();
+        )).build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields[0].columnNumber", constraintViolation.getProperty());
@@ -99,13 +98,13 @@ class ExcelTranslatorValidatorTest {
         .columnNumber(1)
         .sheetNumber(-1)
         .build();
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(Collections.singletonList(
             field
-        )).build();
+        )).build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields[0].sheetNumber", constraintViolation.getProperty());
@@ -118,12 +117,12 @@ class ExcelTranslatorValidatorTest {
         .columnNumber(1)
         .sheetNumber(1)
         .build();
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(Collections.singletonList(
             field
-        )).build();
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+        )).build());
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields[0].propertyName", constraintViolation.getProperty());
@@ -144,14 +143,14 @@ class ExcelTranslatorValidatorTest {
         .sheetNumber(1)
         .build();
     
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(List.of(
             field1, field2
         ))
-        .build();
+        .build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields", constraintViolation.getProperty());
@@ -172,13 +171,13 @@ class ExcelTranslatorValidatorTest {
         .sheetNumber(1)
         .build();
     
-    ExcelTranslator translation = ExcelTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> ExcelTranslator.builder()
         .name("name")
         .fields(List.of(
             field1, field2
-        )).build();
+        )).build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
 
     ConstraintViolation constraintViolation = violations.iterator().next();

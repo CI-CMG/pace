@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.core.state;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 
 class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
 
@@ -12,14 +13,14 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
   }
 
   @Override
-  protected Platform createNewObject(int suffix) {
+  protected Platform createNewObject(int suffix) throws ValidationException {
     return Platform.builder()
         .name(String.format("name-%s", suffix))
         .build();
   }
 
   @Override
-  protected Platform copyWithUpdatedUniqueField(Platform object, String uniqueField) {
+  protected Platform copyWithUpdatedUniqueField(Platform object, String uniqueField) throws ValidationException {
     return Platform.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUUID;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,9 +47,9 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testSave() throws IOException {
+  void testSave() throws IOException, ValidationException {
     O object = createNewObject();
-    
+
     O result = datastore.save(object);
     assertObjectsEqual(object, result);
     assertSavedObjectEqualsObject(object, result);
@@ -56,7 +57,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testDelete() throws IOException {
+  void testDelete() throws IOException, ValidationException {
     O object = createNewObject();
     datastore.save(object);
     datastore.delete(object);
@@ -65,35 +66,35 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUUID() throws IOException {
+  void testFindByUUID() throws IOException, ValidationException {
     O object = createNewObject();
     O result = datastore.save(object);
     
     Optional<O> maybeResult = datastore.findByUUID(result.getUuid());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
-    
+
     object = createNewObject();
     maybeResult = datastore.findByUUID(object.getUuid());
     assertTrue(maybeResult.isEmpty());
   }
   
   @Test
-  void testFindByUniqueField() throws IOException {
+  void testFindByUniqueField() throws IOException, ValidationException {
     O object = createNewObject();
     O result = datastore.save(object);
     
     Optional<O> maybeResult = datastore.findByUniqueField(result.getUniqueField());
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
-    
+
     object = createNewObject();
     maybeResult = datastore.findByUniqueField(object.getUniqueField());
     assertTrue(maybeResult.isEmpty());
   }
   
   @Test
-  void testFindAll() throws IOException {
+  void testFindAll() throws IOException, ValidationException {
     O object1 = createNewObject();
     object1 = datastore.save(object1);
     O object2 = createNewObject();
@@ -112,7 +113,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     }
   }
   
-  protected abstract O createNewObject();
+  protected abstract O createNewObject() throws ValidationException;
   protected abstract void assertObjectsEqual(O expected, O actual);
   
   private void assertSavedObjectEqualsObject(O expected, O actual) throws IOException {

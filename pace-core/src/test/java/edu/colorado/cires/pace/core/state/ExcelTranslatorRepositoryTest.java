@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.List;
 
 class ExcelTranslatorRepositoryTest extends CrudRepositoryTest<ExcelTranslator> {
@@ -14,7 +15,7 @@ class ExcelTranslatorRepositoryTest extends CrudRepositoryTest<ExcelTranslator> 
   }
 
   @Override
-  protected ExcelTranslator createNewObject(int suffix) {
+  protected ExcelTranslator createNewObject(int suffix) throws ValidationException {
     ExcelTranslatorField field1 = ExcelTranslatorField.builder()
         .propertyName("property1")
         .columnNumber(1)
@@ -35,7 +36,7 @@ class ExcelTranslatorRepositoryTest extends CrudRepositoryTest<ExcelTranslator> 
   }
 
   @Override
-  protected ExcelTranslator copyWithUpdatedUniqueField(ExcelTranslator object, String uniqueField) {
+  protected ExcelTranslator copyWithUpdatedUniqueField(ExcelTranslator object, String uniqueField) throws ValidationException {
     return ExcelTranslator.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.data.validation;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.PackingJob;
 import java.nio.file.Path;
@@ -12,9 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class PackingJobValidatorTest {
-  
-  private final BaseValidator<PackingJob> validator = new PackingJobValidator();
-  
+
   @ParameterizedTest
   @CsvSource(value = {
       "sourcePath,/path/to/files,true,",
@@ -34,14 +32,11 @@ class PackingJobValidatorTest {
       "temperaturePath,path/to/files,false,temperaturePath must be an absolute path",
   })
   void test(String property, String propertyPath, boolean expectedValid, String expectedError) {
-    PackingJob packingJob = getPackingJob(property, propertyPath);
-
-    Set<ConstraintViolation> violations = validator.runValidation(packingJob);
     if (expectedValid) {
-      assertTrue(violations.isEmpty());
+      assertDoesNotThrow(() -> getPackingJob(property, propertyPath));
     } else {
-      assertFalse(violations.isEmpty());
-      
+      ValidationException exception = assertThrows(ValidationException.class, () -> getPackingJob(property, propertyPath));
+      Set<ConstraintViolation> violations = exception.getViolations();
       ConstraintViolation constraintViolation = violations.stream().filter(cv -> cv.getProperty().equals(property))
           .findFirst().orElseThrow(
               () -> new IllegalStateException("No constraint violation found for property " + property)
@@ -53,17 +48,9 @@ class PackingJobValidatorTest {
   
   @Test
   void testNullSourcePath() {
-    PackingJob packingJob = new PackingJob(
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-    );
+    ValidationException exception = assertThrows(ValidationException.class, () -> PackingJob.builder().build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(packingJob);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     
     ConstraintViolation violation = violations.iterator().next();
@@ -71,16 +58,16 @@ class PackingJobValidatorTest {
     assertEquals("sourcePath must be defined", violation.getMessage());
   }
 
-  private static PackingJob getPackingJob(String property, String propertyPath) {
-    return new PackingJob(
-        returnPropertyIfMatchesArgument(property, "temperaturePath", propertyPath),
-        returnPropertyIfMatchesArgument(property, "biologicalPath", propertyPath),
-        returnPropertyIfMatchesArgument(property, "otherPath", propertyPath),
-        returnPropertyIfMatchesArgument(property, "documentsPath", propertyPath),
-        returnPropertyIfMatchesArgument(property, "calibrationDocumentsPath", propertyPath),
-        returnPropertyIfMatchesArgument(property, "navigationPath", propertyPath),
-        property.equals("sourcePath") ? returnPropertyIfMatchesArgument(property, "sourcePath", propertyPath) : Path.of("/path/to/source/file")
-    );
+  private static PackingJob getPackingJob(String property, String propertyPath) throws ValidationException {
+    return PackingJob.builder()
+        .temperaturePath(returnPropertyIfMatchesArgument(property, "temperaturePath", propertyPath))
+        .biologicalPath(returnPropertyIfMatchesArgument(property, "biologicalPath", propertyPath))
+        .otherPath(returnPropertyIfMatchesArgument(property, "otherPath", propertyPath))
+        .documentsPath(returnPropertyIfMatchesArgument(property, "documentsPath", propertyPath))
+        .calibrationDocumentsPath(returnPropertyIfMatchesArgument(property, "calibrationDocumentsPath", propertyPath))
+        .navigationPath(returnPropertyIfMatchesArgument(property, "navigationPath", propertyPath))
+        .sourcePath(property.equals("sourcePath") ? returnPropertyIfMatchesArgument(property, "sourcePath", propertyPath) : Path.of("/path/to/source/file"))
+        .build();
   }
   
   private static Path returnPropertyIfMatchesArgument(String property, String expectedProperty, String propertyPath) {

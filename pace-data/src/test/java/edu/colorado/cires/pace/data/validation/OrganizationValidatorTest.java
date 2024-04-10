@@ -10,7 +10,7 @@ public class OrganizationValidatorTest extends SingularRequiredFieldValidatorTes
   }
 
   @Override
-  protected Organization createObject(String uniqueField) {
+  protected Organization createObject(String uniqueField) throws ValidationException {
     return Organization.builder()
         .name(uniqueField)
         .build();

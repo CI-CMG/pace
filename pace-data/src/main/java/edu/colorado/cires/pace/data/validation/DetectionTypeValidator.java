@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DetectionTypeValidator extends BaseValidator<DetectionType> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(DetectionType object) {
+  protected Set<ConstraintViolation> runValidation(DetectionType object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getScienceName())) {

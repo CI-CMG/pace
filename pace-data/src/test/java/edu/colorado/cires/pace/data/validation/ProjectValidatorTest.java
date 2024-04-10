@@ -10,7 +10,7 @@ public class ProjectValidatorTest extends SingularRequiredFieldValidatorTest<Pro
   }
 
   @Override
-  protected Project createObject(String uniqueField) {
+  protected Project createObject(String uniqueField) throws ValidationException {
     return Project.builder()
         .name(uniqueField)
         .build();

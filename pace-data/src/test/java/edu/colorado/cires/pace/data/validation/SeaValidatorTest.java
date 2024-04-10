@@ -10,7 +10,7 @@ class SeaValidatorTest extends SingularRequiredFieldValidatorTest<Sea> {
   }
 
   @Override
-  protected Sea createObject(String uniqueField) {
+  protected Sea createObject(String uniqueField) throws ValidationException {
     return Sea.builder()
         .name(uniqueField)
         .build();

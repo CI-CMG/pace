@@ -10,7 +10,7 @@ public class FileTypeValidatorTest extends SingularRequiredFieldValidatorTest<Fi
   }
 
   @Override
-  protected FileType createObject(String uniqueField) {
+  protected FileType createObject(String uniqueField) throws ValidationException {
     return FileType.builder()
         .type(uniqueField)
         .build();

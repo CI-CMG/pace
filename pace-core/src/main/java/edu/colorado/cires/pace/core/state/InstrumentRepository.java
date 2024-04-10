@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.core.state;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.UUID;
 
 public class InstrumentRepository extends CRUDRepository<Instrument> {
@@ -15,7 +16,7 @@ public class InstrumentRepository extends CRUDRepository<Instrument> {
   }
 
   @Override
-  protected Instrument setUUID(Instrument object, UUID uuid) {
+  protected Instrument setUUID(Instrument object, UUID uuid) throws ValidationException {
     return object.toBuilder()
         .uuid(uuid)
         .build();

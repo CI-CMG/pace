@@ -9,10 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 public class PackingJobValidator extends BaseValidator<PackingJob> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(PackingJob object) {
+  protected Set<ConstraintViolation> runValidation(PackingJob object) {
     Set<ConstraintViolation> violations = new HashSet<>();
     
-    Path sourcePath = object.sourcePath();
+    Path sourcePath = object.getSourcePath();
     if (sourcePath == null) {
       violations.add(new ConstraintViolation(
           "sourcePath", "sourcePath must be defined"
@@ -20,12 +20,12 @@ public class PackingJobValidator extends BaseValidator<PackingJob> {
     }
 
     checkPath("sourcePath", sourcePath, violations);
-    checkPath("biologicalPath", object.biologicalPath(), violations);
-    checkPath("calibrationDocumentsPath", object.calibrationDocumentsPath(), violations);
-    checkPath("documentsPath", object.documentsPath(), violations);
-    checkPath("navigationPath", object.navigationPath(), violations);
-    checkPath("otherPath", object.otherPath(), violations);
-    checkPath("temperaturePath", object.temperaturePath(), violations);
+    checkPath("biologicalPath", object.getBiologicalPath(), violations);
+    checkPath("calibrationDocumentsPath", object.getCalibrationDocumentsPath(), violations);
+    checkPath("documentsPath", object.getDocumentsPath(), violations);
+    checkPath("navigationPath", object.getNavigationPath(), violations);
+    checkPath("otherPath", object.getOtherPath(), violations);
+    checkPath("temperaturePath", object.getTemperaturePath(), violations);
     
     return violations;
   }

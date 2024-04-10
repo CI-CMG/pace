@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.core.state;
 
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.UUID;
 
 public class ShipRepository extends CRUDRepository<Ship> {
@@ -10,7 +11,7 @@ public class ShipRepository extends CRUDRepository<Ship> {
   }
 
   @Override
-  protected Ship setUUID(Ship object, UUID uuid) {
+  protected Ship setUUID(Ship object, UUID uuid) throws ValidationException {
     return object.toBuilder()
         .uuid(uuid)
         .build();

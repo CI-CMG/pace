@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class InstrumentValidator extends BaseValidator<Instrument> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(Instrument object) {
+  protected Set<ConstraintViolation> runValidation(Instrument object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getName())) {

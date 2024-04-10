@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -26,7 +27,7 @@ class SeaJsonDatastoreTest extends JsonDatastoreTest<Sea> {
   }
 
   @Override
-  protected Sea createNewObject() {
+  protected Sea createNewObject() throws ValidationException {
     return Sea.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

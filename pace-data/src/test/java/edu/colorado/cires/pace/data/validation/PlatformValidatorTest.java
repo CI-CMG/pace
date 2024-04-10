@@ -10,7 +10,7 @@ public class PlatformValidatorTest extends SingularRequiredFieldValidatorTest<Pl
   }
 
   @Override
-  protected Platform createObject(String uniqueField) {
+  protected Platform createObject(String uniqueField) throws ValidationException {
     return Platform.builder()
         .name(uniqueField)
         .build();

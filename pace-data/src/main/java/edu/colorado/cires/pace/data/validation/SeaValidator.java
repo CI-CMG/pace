@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class SeaValidator extends BaseValidator<Sea> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(Sea object) {
+  protected Set<ConstraintViolation> runValidation(Sea object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getName())) {

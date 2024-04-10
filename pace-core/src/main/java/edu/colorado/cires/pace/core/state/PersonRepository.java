@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.core.state;
 
 import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.UUID;
 
 public class PersonRepository extends CRUDRepository<Person> {
@@ -10,7 +11,7 @@ public class PersonRepository extends CRUDRepository<Person> {
   }
 
   @Override
-  protected Person setUUID(Person object, UUID uuid) {
+  protected Person setUUID(Person object, UUID uuid) throws ValidationException {
     return object.toBuilder()
         .uuid(uuid)
         .build();

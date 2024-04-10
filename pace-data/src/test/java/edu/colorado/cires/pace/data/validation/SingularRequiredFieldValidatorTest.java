@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 abstract class SingularRequiredFieldValidatorTest<O extends ObjectWithUniqueField> {
   
   protected abstract BaseValidator<O> createValidator();
-  protected abstract O createObject(String uniqueField);
+  protected abstract O createObject(String uniqueField) throws ValidationException;
   protected abstract String getUniqueFieldName();
   protected abstract String getClassName();
   

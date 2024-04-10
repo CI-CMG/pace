@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ExcelTranslatorValidator extends BaseValidator<ExcelTranslator> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(ExcelTranslator object) {
+  protected Set<ConstraintViolation> runValidation(ExcelTranslator object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getName())) {

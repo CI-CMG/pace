@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.core.exception.PackingException;
 import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +47,6 @@ class PackageInstructionFactoryTest {
       "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files,false",
       "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files,false",
       "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,,false",
       "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,true",
   })
   void testGetPackageInstructions(
@@ -58,23 +58,23 @@ class PackageInstructionFactoryTest {
       String temperaturePath,
       String sourcePath,
       boolean sourceContainsAudioData
-  ) throws PackingException, IOException {
-    Path sp = sourcePath == null ? null : Path.of(sourcePath);
-    Path tp = temperaturePath == null ? null : Path.of(temperaturePath);
-    Path op = otherPath == null ? null : Path.of(otherPath);
-    Path np = navigationPath == null ? null : Path.of(navigationPath);
-    Path dp = documentsPath == null ? null : Path.of(documentsPath);
-    Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath);
-    Path bp = biologicalPath == null ? null : Path.of(biologicalPath);
-    PackingJob packingJob = new PackingJob(
-        tp,
-        bp,
-        op,
-        dp,
-        cdp,
-        np,
-        sp
-    );
+  ) throws PackingException, IOException, ValidationException {
+    Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
+    Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
+    Path op = otherPath == null ? null : Path.of(otherPath).toAbsolutePath();
+    Path np = navigationPath == null ? null : Path.of(navigationPath).toAbsolutePath();
+    Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
+    Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
+    Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
+    PackingJob packingJob = PackingJob.builder()
+        .temperaturePath(tp)
+        .biologicalPath(bp)
+        .otherPath(op)
+        .documentsPath(dp)
+        .calibrationDocumentsPath(cdp)
+        .navigationPath(np)
+        .sourcePath(sp)
+        .build();
     writeFiles(bp);
     writeFiles(cdp);
     writeFiles(dp);
@@ -88,27 +88,21 @@ class PackageInstructionFactoryTest {
     
     String baseExpectedOutputPath = "target/target/data/";
     
-    checkTargetPaths(packageInstructions, packingJob::biologicalPath, baseExpectedOutputPath + "biological");
-    checkTargetPaths(packageInstructions, packingJob::calibrationDocumentsPath, baseExpectedOutputPath + "calibration");
-    checkTargetPaths(packageInstructions, packingJob::documentsPath, baseExpectedOutputPath + "docs");
-    checkTargetPaths(packageInstructions, packingJob::navigationPath, baseExpectedOutputPath + "nav_files");
-    checkTargetPaths(packageInstructions, packingJob::otherPath, baseExpectedOutputPath + "other");
-    checkTargetPaths(packageInstructions, packingJob::temperaturePath, baseExpectedOutputPath + "temperature");
-    checkTargetPaths(packageInstructions, packingJob::sourcePath, baseExpectedOutputPath + (sourceContainsAudioData ? "acoustic_files" : "data_files"));
+    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath + "biological");
+    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath + "calibration");
+    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath + "docs");
+    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath + "nav_files");
+    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath + "other");
+    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath + "temperature");
+    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath + (sourceContainsAudioData ? "acoustic_files" : "data_files"));
   }
   
   @Test
-  void testPathDoesNotExist() throws IOException {
+  void testPathDoesNotExist() throws IOException, ValidationException {
     Path sourcePath = Path.of("target/source/source-files").toAbsolutePath();
-    PackingJob packingJob = new PackingJob(
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        sourcePath
-    );
+    PackingJob packingJob = PackingJob.builder()
+        .sourcePath(sourcePath)
+        .build();
     writeFiles(sourcePath);
     
     FileUtils.deleteQuietly(SOURCE_PATH.toFile());

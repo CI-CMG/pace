@@ -10,7 +10,7 @@ public class InstrumentValidatorTest extends SingularRequiredFieldValidatorTest<
   }
 
   @Override
-  protected Instrument createObject(String uniqueField) {
+  protected Instrument createObject(String uniqueField) throws ValidationException {
     return Instrument.builder()
         .name(uniqueField)
         .build();

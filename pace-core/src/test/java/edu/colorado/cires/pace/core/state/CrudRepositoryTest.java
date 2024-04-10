@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testCreateUUIDNotNull() {
+  void testCreateUUIDNotNull() throws ValidationException {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 
@@ -99,18 +100,6 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
         "uuid for new %s must not be defined", repository.getClassName()
-    ), exception.getMessage());
-  }
-
-  @Test
-  void testCreateUniqueFieldNull() {
-    O object = createNewObject(1);
-    object = copyWithUpdatedUniqueField(object, null);
-
-    O finalObject = object;
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(finalObject));
-    assertEquals(String.format(
-        "%s must be defined for a new %s", repository.getUniqueFieldName(), repository.getClassName()
     ), exception.getMessage());
   }
   
@@ -136,7 +125,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testGetByUniqueFieldNotFound() {
+  void testGetByUniqueFieldNotFound() throws ValidationException {
     O object = createNewObject(1);
     Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUniqueField(object.getUniqueField()));
     assertEquals(String.format(
@@ -205,18 +194,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testUpdateUniqueFieldNull() throws Exception {
-    O object = repository.create(createNewObject(1));
-    object = copyWithUpdatedUniqueField(object, null);
-    O finalObject = object;
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(finalObject.getUuid(), finalObject));
-    assertEquals(String.format(
-        "%s must be defined for updated %s", repository.getUniqueFieldName(), repository.getClassName()
-    ), exception.getMessage());
-  }
-  
-  @Test
-  void testUpdateNotFound() {
+  void testUpdateNotFound() throws ValidationException {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 
@@ -258,9 +236,9 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     ), exception.getMessage());
   }
   
-  protected abstract O createNewObject(int suffix);
+  protected abstract O createNewObject(int suffix) throws ValidationException;
   
-  protected abstract O copyWithUpdatedUniqueField(O object, String uniqueField);
+  protected abstract O copyWithUpdatedUniqueField(O object, String uniqueField) throws ValidationException;
   
   protected abstract void assertObjectsEqual(O expected, O actual, boolean checkUUID);
 

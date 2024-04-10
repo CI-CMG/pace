@@ -19,31 +19,31 @@ class PackageInstructionFactory {
     Path dataDirectory = outputDirectory.resolve("data");
     
     Stream<PackageInstruction> temperatureFiles = processPath(
-        packingJob::temperaturePath,
+        packingJob::getTemperaturePath,
         dataDirectory.resolve("temperature")
     );
     Stream<PackageInstruction> biologicalFiles = processPath(
-        packingJob::biologicalPath,
+        packingJob::getBiologicalPath,
         dataDirectory.resolve("biological")
     );
     Stream<PackageInstruction> otherFiles = processPath(
-        packingJob::otherPath,
+        packingJob::getOtherPath,
         dataDirectory.resolve("other")
     );
     Stream<PackageInstruction> docsFiles = processPath(
-        packingJob::documentsPath, 
+        packingJob::getDocumentsPath, 
         dataDirectory.resolve("docs")
     );
     Stream<PackageInstruction> calibrationDocsFiles = processPath(
-        packingJob::calibrationDocumentsPath,
+        packingJob::getCalibrationDocumentsPath,
         dataDirectory.resolve("calibration")
     );
     Stream<PackageInstruction> navigationFiles = processPath(
-        packingJob::navigationPath, 
+        packingJob::getNavigationPath, 
         dataDirectory.resolve("nav_files")
     );
     Stream<PackageInstruction> sourceFiles = processPath(
-        packingJob::sourcePath, 
+        packingJob::getSourcePath, 
         sourceContainsAudioFiles ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
     );
     

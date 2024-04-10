@@ -10,7 +10,7 @@ public class ShipValidatorTest extends SingularRequiredFieldValidatorTest<Ship> 
   }
 
   @Override
-  protected Ship createObject(String uniqueField) {
+  protected Ship createObject(String uniqueField) throws ValidationException {
     return Ship.builder()
         .name(uniqueField)
         .build();

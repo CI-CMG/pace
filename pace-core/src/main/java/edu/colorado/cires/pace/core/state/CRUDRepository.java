@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.core.state;
 import edu.colorado.cires.pace.core.exception.ConflictException;
 import edu.colorado.cires.pace.core.exception.NotFoundException;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -10,12 +11,12 @@ import java.util.stream.Stream;
 
 public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   private final Datastore<O> datastore;
-
+  
   public CRUDRepository(Datastore<O> datastore) {
     this.datastore = datastore;
   }
   
-  protected abstract O setUUID(O object, UUID uuid);
+  protected abstract O setUUID(O object, UUID uuid) throws ValidationException;
   
   public O create(O object) throws Exception {
     if (object.getUuid() != null) {
@@ -24,11 +25,6 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       ));
     }
     String uniqueField = object.getUniqueField();
-    if (uniqueField == null) {
-      throw new IllegalArgumentException(String.format(
-          "%s must be defined for a new %s", getUniqueFieldName(), getClassName()
-      ));
-    }
     if (datastore.findByUniqueField(uniqueField).isPresent()) {
       throw new ConflictException(String.format(
           "%s with %s %s already exists", getClassName(), getUniqueFieldName(), uniqueField
@@ -78,11 +74,6 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     }
     O existingObject = getByUUID(objectUUID);
     String newUniqueField = object.getUniqueField();
-    if (newUniqueField == null) {
-      throw new IllegalArgumentException(String.format(
-          "%s must be defined for updated %s", getUniqueFieldName(), getClassName()
-      ));
-    }
     String existingUniqueField = existingObject.getUniqueField();
     if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
       throw new ConflictException(String.format(

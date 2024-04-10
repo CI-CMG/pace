@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.DetectionType;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -26,7 +27,7 @@ class DetectionTypeJsonDatastoreTest extends JsonDatastoreTest<DetectionType> {
   }
 
   @Override
-  protected DetectionType createNewObject() {
+  protected DetectionType createNewObject() throws ValidationException {
     return DetectionType.builder()
         .uuid(UUID.randomUUID())
         .source(UUID.randomUUID().toString())

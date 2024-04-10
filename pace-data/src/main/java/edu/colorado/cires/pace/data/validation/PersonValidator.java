@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class PersonValidator extends BaseValidator<Person> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(Person object) {
+  protected Set<ConstraintViolation> runValidation(Person object) {
     Set<ConstraintViolation> constraintViolations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getName())) {

@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.validation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
@@ -10,14 +11,12 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class CSVTranslatorValidatorTest {
-  
-  private final BaseValidator<CSVTranslator> validator = new CSVTranslatorValidator();
-  
+
   @Test
   void testEmptyObject() {
-    CSVTranslator translation = CSVTranslator.builder().build();
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder().build());
 
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(2, violations.size());
     
     ConstraintViolation nameViolation = violations.stream()
@@ -43,13 +42,12 @@ class CSVTranslatorValidatorTest {
         .propertyName("property1")
         .columnNumber(1)
         .build();
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("")
         .fields(Collections.singletonList(
             field
-        )).build();
-    
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+        )).build());
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("name", constraintViolation.getProperty());
@@ -58,12 +56,12 @@ class CSVTranslatorValidatorTest {
   
   @Test
   void testEmptyFields() {
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("name")
         .fields(Collections.emptyList())
-        .build();
+        .build());
     
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields", constraintViolation.getProperty());
@@ -77,13 +75,13 @@ class CSVTranslatorValidatorTest {
         .columnNumber(-1)
         .build();
     
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("name")
         .fields(Collections.singletonList(
             field
-        )).build();
+        )).build());
     
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields[0].columnNumber", constraintViolation.getProperty());
@@ -96,13 +94,13 @@ class CSVTranslatorValidatorTest {
         .columnNumber(1)
         .build(); 
     
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("name")
         .fields(Collections.singletonList(
             field
-        )).build();
+        )).build());
     
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields[0].propertyName", constraintViolation.getProperty());
@@ -121,13 +119,13 @@ class CSVTranslatorValidatorTest {
         .columnNumber(1)
         .build();
     
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("name")
         .fields(List.of(
             field1, field2
-        )).build();
+        )).build());
     
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     ConstraintViolation constraintViolation = violations.iterator().next();
     assertEquals("fields", constraintViolation.getProperty());
@@ -146,14 +144,14 @@ class CSVTranslatorValidatorTest {
         .columnNumber(2)
         .build();
     
-    CSVTranslator translation = CSVTranslator.builder()
+    ValidationException exception = assertThrows(ValidationException.class, () -> CSVTranslator.builder()
         .name("name")
         .fields(List.of(
             field1, field2
-        )).build();
+        )).build());
     
     
-    Set<ConstraintViolation> violations = validator.runValidation(translation);
+    Set<ConstraintViolation> violations = exception.getViolations();
     assertEquals(1, violations.size());
     
     ConstraintViolation constraintViolation = violations.iterator().next();

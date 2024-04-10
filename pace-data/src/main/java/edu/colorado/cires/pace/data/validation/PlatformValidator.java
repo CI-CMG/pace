@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class PlatformValidator extends BaseValidator<Platform> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(Platform object) {
+  protected Set<ConstraintViolation> runValidation(Platform object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
 
     if (StringUtils.isBlank(object.getName())) {

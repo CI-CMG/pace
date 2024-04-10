@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +35,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   }
 
   @Override
-  protected Instrument createNewObject(int suffix) {
+  protected Instrument createNewObject(int suffix) throws ValidationException {
     FileType fileType1 = FileType.builder()
         .uuid(UUID.randomUUID())
         .type(String.format("file-type-1-%s", suffix))
@@ -55,7 +56,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   }
 
   @Override
-  protected Instrument copyWithUpdatedUniqueField(Instrument object, String uniqueField) {
+  protected Instrument copyWithUpdatedUniqueField(Instrument object, String uniqueField) throws ValidationException {
     return Instrument.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

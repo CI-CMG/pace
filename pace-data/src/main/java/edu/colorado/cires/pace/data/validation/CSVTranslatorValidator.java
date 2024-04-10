@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public class CSVTranslatorValidator extends BaseValidator<CSVTranslator> {
 
   @Override
-  public Set<ConstraintViolation> runValidation(CSVTranslator object) {
+  protected Set<ConstraintViolation> runValidation(CSVTranslator object) {
     Set<ConstraintViolation> violations = new HashSet<>(0);
     
     if (StringUtils.isBlank(object.getName())) {
