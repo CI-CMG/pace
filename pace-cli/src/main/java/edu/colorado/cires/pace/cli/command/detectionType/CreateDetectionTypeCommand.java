@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.detectionType;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.DetectionType;
+import edu.colorado.cires.pace.data.object.DetectionType;
 import java.io.File;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -26,7 +26,7 @@ class CreateDetectionTypeCommand extends CreateCommand<DetectionType> {
   }
 
   @Override
-  protected ControllerFactory<DetectionType> getControllerFactory() {
-    return DetectionTypeControllerFactory::createController;
+  protected RepositoryFactory<DetectionType> getRepositoryFactory() {
+    return DetectionTypeRepositoryFactory::createRepository;
   }
 }

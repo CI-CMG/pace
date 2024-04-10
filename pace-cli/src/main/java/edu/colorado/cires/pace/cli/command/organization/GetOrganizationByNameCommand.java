@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.organization;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Organization;
+import edu.colorado.cires.pace.data.object.Organization;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -20,7 +20,7 @@ class GetOrganizationByNameCommand extends GetByUniqueFieldCommand<Organization>
   }
 
   @Override
-  protected ControllerFactory<Organization> getControllerFactory() {
-    return OrganizationControllerFactory::createController;
+  protected RepositoryFactory<Organization> getRepositoryFactory() {
+    return OrganizationRepositoryFactory::createRepository;
   }
 }

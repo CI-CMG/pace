@@ -2,18 +2,18 @@ package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
-import edu.colorado.cires.pace.core.state.controller.CRUDController;
-import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+import edu.colorado.cires.pace.core.state.CRUDRepository;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable {
   protected final ObjectMapper objectMapper = new ObjectMapper();
-  protected abstract ControllerFactory<O> getControllerFactory(); 
+  protected abstract RepositoryFactory<O> getRepositoryFactory(); 
   
-  protected CRUDController<O> createController() throws IOException {
-    return getControllerFactory().createController(
+  protected CRUDRepository<O> createRepository() throws IOException {
+    return getRepositoryFactory().createRepository(
         getDatastoreDirectory(),
         objectMapper
     );

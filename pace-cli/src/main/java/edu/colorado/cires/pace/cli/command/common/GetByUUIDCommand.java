@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -10,7 +10,7 @@ public abstract class GetByUUIDCommand<O extends ObjectWithUniqueField> extends 
 
   @Override
   protected O runCommand() throws Exception {
-    return createController().getByUUID(
+    return createRepository().getByUUID(
         getUUIDProvider().get()
     );
   }

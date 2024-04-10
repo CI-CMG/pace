@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.ship;
 
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
-import edu.colorado.cires.pace.data.Ship;
+import edu.colorado.cires.pace.data.object.Ship;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -15,8 +15,8 @@ class GetShipByNameCommand extends GetByUniqueFieldCommand<Ship> {
   private String name;
 
   @Override
-  protected ControllerFactory<Ship> getControllerFactory() {
-    return ShipControllerFactory::createController;
+  protected RepositoryFactory<Ship> getRepositoryFactory() {
+    return ShipRepositoryFactory::createRepository;
   }
 
   @Override

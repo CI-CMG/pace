@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.datastore.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.datastore.Datastore;
-import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+import edu.colorado.cires.pace.core.state.Datastore;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,13 +16,13 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
+abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
   
   private final Path storageDirectory;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
 
-  public JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
+  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
     this.storageDirectory = storageDirectory;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
@@ -53,14 +53,14 @@ public class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore
   @Override
   public Optional<O> findByUUID(UUID uuid) throws IOException {
     return getObjectStream(
-        (o) -> o.uuid().equals(uuid)
+        (o) -> o.getUuid().equals(uuid)
     ).findFirst();
   }
 
   @Override
   public Optional<O> findByUniqueField(String uniqueField) throws IOException {
     return getObjectStream(
-        (o) -> o.uniqueField().equals(uniqueField)
+        (o) -> o.getUniqueField().equals(uniqueField)
     ).findFirst();
   }
 
@@ -86,7 +86,12 @@ public class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore
   
   private String getFileName(O object) {
     return String.format(
-        "%s.json", object.uuid()
+        "%s.json", object.getUuid()
     );
+  }
+
+  @Override
+  public String getClassName() {
+    return clazz.getSimpleName();
   }
 }

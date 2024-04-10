@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.translation.csv;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.CSVTranslator;
+import edu.colorado.cires.pace.data.object.CSVTranslator;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -21,7 +21,7 @@ class DeleteCSVTranslatorCommand extends DeleteCommand<CSVTranslator> {
   }
 
   @Override
-  protected ControllerFactory<CSVTranslator> getControllerFactory() {
-    return CSVTranslatorControllerFactory::createController;
+  protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
+    return CSVTranslatorRepositoryFactory::createRepository;
   }
 }

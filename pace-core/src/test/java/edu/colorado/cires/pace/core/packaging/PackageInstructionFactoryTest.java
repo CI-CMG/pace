@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.core.exception.PackingException;
-import edu.colorado.cires.pace.data.PackingJob;
+import edu.colorado.cires.pace.data.object.PackingJob;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

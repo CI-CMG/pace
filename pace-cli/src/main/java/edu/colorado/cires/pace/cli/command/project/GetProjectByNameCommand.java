@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.project;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Project;
+import edu.colorado.cires.pace.data.object.Project;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -20,7 +20,7 @@ class GetProjectByNameCommand extends GetByUniqueFieldCommand<Project> {
   }
 
   @Override
-  protected ControllerFactory<Project> getControllerFactory() {
-    return ProjectControllerFactory::createController;
+  protected RepositoryFactory<Project> getRepositoryFactory() {
+    return ProjectRepositoryFactory::createRepository;
   }
 }

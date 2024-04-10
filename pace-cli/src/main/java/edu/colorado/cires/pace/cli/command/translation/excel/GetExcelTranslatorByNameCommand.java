@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.translation.excel;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -20,7 +20,7 @@ class GetExcelTranslatorByNameCommand extends GetByUniqueFieldCommand<ExcelTrans
   }
 
   @Override
-  protected ControllerFactory<ExcelTranslator> getControllerFactory() {
-    return ExcelTranslatorControllerFactory::createController;
+  protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
+    return ExcelTranslatorRepositoryFactory::createRepository;
   }
 }

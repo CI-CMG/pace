@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.person;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Person;
+import edu.colorado.cires.pace.data.object.Person;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -20,7 +20,7 @@ class GetPersonByNameCommand extends GetByUniqueFieldCommand<Person> {
   }
 
   @Override
-  protected ControllerFactory<Person> getControllerFactory() {
-    return PersonControllerFactory::createController;
+  protected RepositoryFactory<Person> getRepositoryFactory() {
+    return PersonRepositoryFactory::createRepository;
   }
 }

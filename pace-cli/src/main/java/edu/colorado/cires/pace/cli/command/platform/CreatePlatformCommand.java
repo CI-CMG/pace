@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.platform;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Platform;
+import edu.colorado.cires.pace.data.object.Platform;
 import java.io.File;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -26,7 +26,7 @@ class CreatePlatformCommand extends CreateCommand<Platform> {
   }
 
   @Override
-  protected ControllerFactory<Platform> getControllerFactory() {
-    return PlatformControllerFactory::createController;
+  protected RepositoryFactory<Platform> getRepositoryFactory() {
+    return PlatformRepositoryFactory::createRepository;
   }
 }

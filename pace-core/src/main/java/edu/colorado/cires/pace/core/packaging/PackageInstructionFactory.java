@@ -1,8 +1,7 @@
 package edu.colorado.cires.pace.core.packaging;
 
 import edu.colorado.cires.pace.core.exception.PackingException;
-import edu.colorado.cires.pace.core.util.FileUtils;
-import edu.colorado.cires.pace.data.PackingJob;
+import edu.colorado.cires.pace.data.object.PackingJob;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

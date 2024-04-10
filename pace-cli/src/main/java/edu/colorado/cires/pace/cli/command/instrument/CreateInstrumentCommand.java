@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.instrument;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Instrument;
+import edu.colorado.cires.pace.data.object.Instrument;
 import java.io.File;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -26,7 +26,7 @@ class CreateInstrumentCommand extends CreateCommand<Instrument> {
   }
 
   @Override
-  protected ControllerFactory<Instrument> getControllerFactory() {
-    return InstrumentControllerFactory::createController;
+  protected RepositoryFactory<Instrument> getRepositoryFactory() {
+    return InstrumentRepositoryFactory::createRepository;
   }
 }

@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.cli.command.sea;
 
-import edu.colorado.cires.pace.cli.command.common.ControllerFactory;
+import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.data.Sea;
+import edu.colorado.cires.pace.data.object.Sea;
 import java.io.File;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -26,7 +26,7 @@ class UpdateSeaCommand extends UpdateCommand<Sea> {
   }
 
   @Override
-  protected ControllerFactory<Sea> getControllerFactory() {
-    return SeaControllerFactory::createController;
+  protected RepositoryFactory<Sea> getRepositoryFactory() {
+    return SeaRepositoryFactory::createRepository;
   }
 }

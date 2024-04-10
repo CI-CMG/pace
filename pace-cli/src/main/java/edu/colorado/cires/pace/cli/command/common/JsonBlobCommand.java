@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import edu.colorado.cires.pace.cli.util.SerializationUtils;
-import edu.colorado.cires.pace.data.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.File;
 import java.util.function.Supplier;
 

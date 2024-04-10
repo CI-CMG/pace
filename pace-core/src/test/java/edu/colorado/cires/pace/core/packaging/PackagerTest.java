@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class PackagerTest {
+class PackagerTest {
   
   private final Path SOURCE_DIR = Paths.get("target").resolve("source").toAbsolutePath();
   private final Path TARGET_DIR = Paths.get("target").resolve("target").toAbsolutePath();
@@ -193,11 +193,12 @@ public class PackagerTest {
   
   @Test
   void testFileProcessingFailure() throws IOException {
-    try (MockedStatic<edu.colorado.cires.pace.core.util.FileUtils> mockedStatic = Mockito.mockStatic(edu.colorado.cires.pace.core.util.FileUtils.class)) {
-      mockedStatic.when(() -> edu.colorado.cires.pace.core.util.FileUtils.appendChecksumToManifest(any(), any(), any())).thenThrow(
+    try (MockedStatic<edu.colorado.cires.pace.core.packaging.FileUtils> mockedStatic = Mockito.mockStatic(
+        edu.colorado.cires.pace.core.packaging.FileUtils.class)) {
+      mockedStatic.when(() -> edu.colorado.cires.pace.core.packaging.FileUtils.appendChecksumToManifest(any(), any(), any())).thenThrow(
           new IOException("test file error")
       );
-      mockedStatic.when(() -> edu.colorado.cires.pace.core.util.FileUtils.mkdir(any())).thenCallRealMethod();
+      mockedStatic.when(() -> edu.colorado.cires.pace.core.packaging.FileUtils.mkdir(any())).thenCallRealMethod();
 
       List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
 
