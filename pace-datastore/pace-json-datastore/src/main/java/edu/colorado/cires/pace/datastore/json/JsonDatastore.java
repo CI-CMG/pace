@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.datastore.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.Datastore;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.datastore.Datastore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

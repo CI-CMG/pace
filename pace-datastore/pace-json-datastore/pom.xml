@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-core</artifactId>
+      <artifactId>pace-common-datastore</artifactId>
     </dependency>
 
     <dependency>

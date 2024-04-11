@@ -31,12 +31,17 @@
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-core</artifactId>
+      <artifactId>pace-repository</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
       <artifactId>pace-json-datastore</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.ci-cmg</groupId>
+      <artifactId>pace-packaging</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

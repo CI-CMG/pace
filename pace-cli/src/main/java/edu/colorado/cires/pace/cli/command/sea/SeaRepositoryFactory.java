@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.sea;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.SeaRepository;
+import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.datastore.json.SeaJsonDatastore;
 import java.io.IOException;
 import java.nio.file.Path;

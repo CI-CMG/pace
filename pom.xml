@@ -11,8 +11,9 @@
   <description>Passive Acoustic Packager</description>
   <modules>
     <module>pace-data</module>
-    <module>pace-core</module>
+    <module>pace-packaging</module>
     <module>pace-datastore</module>
+    <module>pace-repository</module>
     <module>pace-cli</module>
   </modules>
 

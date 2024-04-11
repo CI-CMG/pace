@@ -12,6 +12,7 @@
   <artifactId>pace-datastore</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>pace-common-datastore</module>
     <module>pace-json-datastore</module>
   </modules>
 
@@ -25,7 +26,7 @@
     <dependencies>
       <dependency>
         <groupId>io.github.ci-cmg</groupId>
-        <artifactId>pace-core</artifactId>
+        <artifactId>pace-common-datastore</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

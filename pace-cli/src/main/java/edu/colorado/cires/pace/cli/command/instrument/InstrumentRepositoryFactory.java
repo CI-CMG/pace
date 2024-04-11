@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.instrument;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.core.state.InstrumentRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.datastore.json.FileTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.InstrumentJsonDatastore;
 import java.io.IOException;

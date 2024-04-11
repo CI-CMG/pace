@@ -1,0 +1,21 @@
+package edu.colorado.cires.pace.repository;
+
+import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.validation.ValidationException;
+import edu.colorado.cires.pace.datastore.Datastore;
+import java.util.UUID;
+
+public class PersonRepository extends CRUDRepository<Person> {
+
+  public PersonRepository(Datastore<Person> datastore) {
+    super(datastore);
+  }
+
+  @Override
+  protected Person setUUID(Person object, UUID uuid) throws ValidationException {
+    return object.toBuilder()
+        .uuid(uuid)
+        .build();
+  }
+
+}

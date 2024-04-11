@@ -6,10 +6,9 @@ import static edu.colorado.cires.pace.cli.util.SerializationUtils.deserializeBlo
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
-import edu.colorado.cires.pace.core.exception.PackingException;
-import edu.colorado.cires.pace.data.validation.ValidationException;
-import edu.colorado.cires.pace.core.packaging.PackageController;
 import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.packaging.PackageProcessor;
+import edu.colorado.cires.pace.packaging.PackagingException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -33,12 +32,12 @@ public class PackageCommand implements Runnable {
       PackingJob packingJob = deserializeBlob(objectMapper, packageJob, PackingJob.class);
       String workDir = new ApplicationPropertyResolver().getPropertyValue("pace-cli.work-dir");
 
-      new PackageController().process(
+      PackageProcessor.process(
           packingJob,
           Path.of(workDir).resolve("output"),
           sourceContainsAudioData
       );
-    } catch (IOException | ValidationException | PackingException e) {
+    } catch (IOException | PackagingException e) {
       throw new IllegalStateException("Packaging failed", e);
     }
   }
