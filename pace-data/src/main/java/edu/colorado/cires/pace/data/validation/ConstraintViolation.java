@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @Jacksonized
 public class ConstraintViolation {
   private final String property;
