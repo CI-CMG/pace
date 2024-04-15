@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.datastore.json.FileTypeJsonDatastore;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class FileTypeRepositoryFactory {
+final class FileTypeRepositoryFactory {
   
   public static FileTypeJsonDatastore createDatastore(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new FileTypeJsonDatastore(

@@ -1,24 +1,18 @@
 package edu.colorado.cires.pace.cli.command.sea;
 
-import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand;
+import edu.colorado.cires.pace.data.object.Sea;
 import picocli.CommandLine.Command;
 
-@Command(
-    name = "sea-area",
-    description = "Manage sea areas",
-    mixinStandardHelpOptions = true,
-    versionProvider = VersionProvider.class,
-    subcommands = { 
-        CreateSeaCommand.class,
-        DeleteSeaCommand.class,
-        FindAllSeasCommand.class,
-        GetSeaByNameCommand.class,
-        GetSeaByUUIDCommand.class,
-        UpdateSeaCommand.class
-    }
-)
-public class SeaCommand implements Runnable {
+@Command(name = "sea", description = "Manage seas")
+public class SeaCommand extends BaseCommand<Sea> {
+
+  SeaCommand() {
+    super(Sea.class, SeaRepositoryFactory::createRepository);
+  }
 
   @Override
-  public void run() {}
+  public void run() {
+    
+  }
 }

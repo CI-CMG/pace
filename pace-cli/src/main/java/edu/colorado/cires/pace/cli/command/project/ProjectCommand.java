@@ -1,26 +1,18 @@
 package edu.colorado.cires.pace.cli.command.project;
 
-import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand;
+import edu.colorado.cires.pace.data.object.Project;
 import picocli.CommandLine.Command;
 
-@Command(
-    name = "project",
-    description = "Manage projects",
-    mixinStandardHelpOptions = true,
-    versionProvider = VersionProvider.class,
-    subcommands = {
-        CreateProjectCommand.class,
-        DeleteProjectCommand.class,
-        FindAllProjectsCommand.class,
-        GetProjectByNameCommand.class,
-        GetProjectByUUIDCommand.class,
-        UpdateProjectCommand.class
-    }
-)
-public class ProjectCommand implements Runnable {
+@Command(name = "project", description = "Manage projects")
+public class ProjectCommand extends BaseCommand<Project> {
 
-    @Override
-    public void run() {
-        
-    }
+  ProjectCommand() {
+    super(Project.class, ProjectRepositoryFactory::createRepository);
+  }
+
+  @Override
+  public void run() {
+    
+  }
 }

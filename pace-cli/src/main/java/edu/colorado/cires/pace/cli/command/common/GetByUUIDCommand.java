@@ -4,7 +4,7 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public abstract class GetByUUIDCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+abstract class GetByUUIDCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
   
   protected abstract Supplier<UUID> getUUIDProvider();
 

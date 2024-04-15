@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable {
+abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable {
   protected final ObjectMapper objectMapper = new ObjectMapper();
   protected abstract RepositoryFactory<O> getRepositoryFactory(); 
   

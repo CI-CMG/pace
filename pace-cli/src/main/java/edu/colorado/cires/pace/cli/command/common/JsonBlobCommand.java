@@ -5,7 +5,7 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.File;
 import java.util.function.Supplier;
 
-public abstract class JsonBlobCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+abstract class JsonBlobCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
   
   protected abstract Supplier<File> getJsonBlobProvider();
   protected abstract Class<O> getJsonClass();

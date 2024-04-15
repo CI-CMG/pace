@@ -1,0 +1,167 @@
+package edu.colorado.cires.pace.cli.command.common;
+
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.Create;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.Delete;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUUID;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.List;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.Update;
+import edu.colorado.cires.pace.cli.command.base.PaceCLI;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import java.io.File;
+import java.util.UUID;
+import java.util.function.Supplier;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.ParentCommand;
+
+@Command(name = "crud-command", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class, subcommands = {
+    Create.class,
+    Delete.class,
+    List.class,
+    GetByUUID.class,
+    Update.class
+})
+public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Runnable {
+  
+  private final Class<O> clazz;
+  private final RepositoryFactory<O> repositoryFactory;
+  
+  @ParentCommand
+  private PaceCLI paceCLI;
+
+  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory) {
+    this.clazz = clazz;
+    this.repositoryFactory = repositoryFactory;
+  }
+
+  public Class<O> getClazz() {
+    return clazz;
+  }
+
+  public RepositoryFactory<O> getRepositoryFactory() {
+    return repositoryFactory;
+  }
+
+  @Command(name = "create")
+  static class Create<O extends ObjectWithUniqueField> extends CreateCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+
+    @Parameters(description = "File containing object (- for stdin)")
+    private File file;
+
+    @Override
+    protected Supplier<File> getJsonBlobProvider() {
+      return () -> file;
+    }
+
+    @Override
+    protected Class<O> getJsonClass() {
+      return baseCommand.getClazz();
+    }
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "delete")
+  static class Delete<O extends ObjectWithUniqueField> extends DeleteCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+
+    @Parameters(description = "object uuid")
+    private UUID uuid;
+
+    @Override
+    protected Supplier<UUID> getUUIDProvider() {
+      return () -> uuid;
+    }
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "list")
+  static class List<O extends ObjectWithUniqueField> extends FindAllCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "get-by-uuid")
+  static class GetByUUID<O extends ObjectWithUniqueField> extends GetByUUIDCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+
+    @Parameters(description = "object uuid")
+    private UUID uuid;
+
+    @Override
+    protected Supplier<UUID> getUUIDProvider() {
+      return () -> uuid;
+    }
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "get-by-name")
+  static class GetByUniqueField<O extends ObjectWithUniqueField> extends GetByUniqueFieldCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+
+    @Parameters(description = "object name")
+    private String name;
+
+    @Override
+    protected Supplier<String> getUniqueFieldProvider() {
+      return () -> name;
+    }
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "update")
+  static class Update<O extends ObjectWithUniqueField> extends UpdateCommand<O> {
+
+    @Parameters(description = "File containing object (- for stdin)")
+    private File file;
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+    
+    @Override
+    protected Supplier<File> getJsonBlobProvider() {
+      return () -> file;
+    }
+
+    @Override
+    protected Class<O> getJsonClass() {
+      return baseCommand.getClazz();
+    }
+
+    @Override
+    protected RepositoryFactory<O> getRepositoryFactory() {
+      return baseCommand.getRepositoryFactory();
+    }
+  }
+
+}
