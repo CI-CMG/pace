@@ -11,7 +11,8 @@ import edu.colorado.cires.pace.cli.command.platform.PlatformCommand;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand;
+import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand;
+import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -30,7 +31,8 @@ import picocli.CommandLine.Command;
         ProjectCommand.class,
         SeaCommand.class,
         ShipCommand.class,
-        TranslatorCommand.class
+        CSVTranslatorCommand.class,
+        ExcelTranslatorCommand.class
     }
 )
 public class PaceCLI implements Runnable {

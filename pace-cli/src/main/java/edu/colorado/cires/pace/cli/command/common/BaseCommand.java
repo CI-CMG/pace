@@ -3,7 +3,9 @@ package edu.colorado.cires.pace.cli.command.common;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Create;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Delete;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUUID;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUniqueField;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.List;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.Translate;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Update;
 import edu.colorado.cires.pace.cli.command.base.PaceCLI;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
@@ -11,6 +13,7 @@ import java.io.File;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
@@ -19,7 +22,9 @@ import picocli.CommandLine.ParentCommand;
     Delete.class,
     List.class,
     GetByUUID.class,
-    Update.class
+    GetByUniqueField.class,
+    Update.class,
+    Translate.class
 })
 public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Runnable {
   
@@ -161,6 +166,42 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected RepositoryFactory<O> getRepositoryFactory() {
       return baseCommand.getRepositoryFactory();
+    }
+  }
+  
+  @Command(name = "translate")
+  static class Translate<O extends ObjectWithUniqueField> extends TranslateCommand<O> {
+    
+    @ParentCommand
+    private BaseCommand baseCommand;
+    
+    @Parameters(description = "File to translate from")
+    private File file;
+    
+    @Option(names = {"--translate-from", "-tf"}, description = "File format to translate from", required = true)
+    private TranslationType translationType;
+    
+    @Option(names = {"--translator-name", "-tn"}, description = "Translator name", required = true)
+    private String translatorName;
+
+    @Override
+    protected Supplier<TranslationType> getTranslationTypeSupplier() {
+      return () -> translationType;
+    }
+
+    @Override
+    protected Supplier<String> getTranslatorNameSupplier() {
+      return () -> translatorName;
+    }
+
+    @Override
+    protected Supplier<File> getInputSupplier() {
+      return () -> file;
+    }
+
+    @Override
+    protected <T> Class<T> getJsonClass() {
+      return baseCommand.getClazz();
     }
   }
 

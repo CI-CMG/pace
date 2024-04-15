@@ -22,9 +22,7 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
   protected abstract Object runCommand() throws Exception;
 
   private Path getDatastoreDirectory() {
-    return Paths.get(
-        new ApplicationPropertyResolver().getPropertyValue("pace-cli.work-dir")
-    ).toAbsolutePath();
+    return new ApplicationPropertyResolver().getWorkDir();
   }
   
   @Override

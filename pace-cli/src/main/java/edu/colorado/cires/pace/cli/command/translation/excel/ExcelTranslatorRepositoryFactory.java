@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class ExcelTranslatorRepositoryFactory {
+public class ExcelTranslatorRepositoryFactory {
   
   public static ExcelTranslatorRepository createRepository(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new ExcelTranslatorRepository(

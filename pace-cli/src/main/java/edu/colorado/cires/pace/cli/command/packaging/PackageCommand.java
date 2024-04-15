@@ -11,7 +11,6 @@ import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -30,11 +29,10 @@ public class PackageCommand implements Runnable {
     try {
       ObjectMapper objectMapper = createObjectMapper();
       PackingJob packingJob = deserializeBlob(objectMapper, packageJob, PackingJob.class);
-      String workDir = new ApplicationPropertyResolver().getPropertyValue("pace-cli.work-dir");
 
       PackageProcessor.process(
           packingJob,
-          Path.of(workDir).resolve("output"),
+          new ApplicationPropertyResolver().getWorkDir().resolve("output"),
           sourceContainsAudioData
       );
     } catch (IOException | PackagingException e) {

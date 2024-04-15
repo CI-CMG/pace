@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 
 final class TranslatorUtils {
 
@@ -51,7 +52,7 @@ final class TranslatorUtils {
   }
   
   private static UUID uuidFromString(String uuidString) throws ValidationException {
-    if (uuidString == null) {
+    if (uuidString == null || StringUtils.isBlank(uuidString)) {
       return null;
     }
     

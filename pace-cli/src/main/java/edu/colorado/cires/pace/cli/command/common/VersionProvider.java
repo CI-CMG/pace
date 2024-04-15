@@ -10,7 +10,7 @@ public class VersionProvider implements IVersionProvider {
   @Override
   public String[] getVersion() {
     return new String[] {
-        propertyResolver.getPropertyValue("pace-cli.version")
+        propertyResolver.getVersion()
     };
   }
 

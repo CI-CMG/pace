@@ -4,7 +4,7 @@ import edu.colorado.cires.pace.cli.command.common.BaseCommand;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import picocli.CommandLine.Command;
 
-@Command(name = "excel", description = "Manage excel translators")
+@Command(name = "excel-translator", description = "Manage excel translators")
 public class ExcelTranslatorCommand extends BaseCommand<ExcelTranslator> {
 
   protected ExcelTranslatorCommand() {

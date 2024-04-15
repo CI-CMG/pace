@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class CSVTranslatorRepositoryFactory {
+public class CSVTranslatorRepositoryFactory {
   
   public static CSVTranslatorRepository createRepository(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new CSVTranslatorRepository(
