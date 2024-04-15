@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.ObjectWithName;
+import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.validation.ConstraintViolation;
 import edu.colorado.cires.pace.data.validation.ValidationException;
@@ -11,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class TranslatorUtilsTest {
   
@@ -26,59 +32,83 @@ public class TranslatorUtilsTest {
     ), exception.getMessage());
   }
   
-  @Test
-  void testConvertShip() throws ValidationException, TranslationException {
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Project.class,
+      Sea.class,
+      Platform.class
+  })
+  void testConvert(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
         "name", Optional.of("test-name")
     );
     
-    Ship ship = TranslatorUtils.convertMapToObject(propertyMap, Ship.class);
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
     assertEquals(propertyMap.get("uuid").orElseThrow(
         () -> new IllegalStateException("uuid not found in propertyMap")
-    ), ship.getUuid().toString());
+    ), object.getUuid().toString());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
-    ), ship.getName());
+    ), object.getName());
   }
 
-  @Test
-  void testConvertShipMissingProperty() throws ValidationException, TranslationException {
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Sea.class,
+      Project.class,
+      Platform.class
+  })
+  void testConvertMissingProperty(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "name", Optional.of("test-name")
     );
 
-    Ship ship = TranslatorUtils.convertMapToObject(propertyMap, Ship.class);
-    assertNull(ship.getUuid());
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
+    assertNull(object.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
-    ), ship.getName());
+    ), object.getName());
   }
 
-  @Test
-  void testConvertShipNullUUID() throws ValidationException, TranslationException {
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Project.class,
+      Sea.class,
+      Platform.class
+  })
+  void testConvertNullUUID(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name")
     );
 
-    Ship ship = TranslatorUtils.convertMapToObject(propertyMap, Ship.class);
-    assertNull(ship.getUuid());
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
+    assertNull(object.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
-    ), ship.getName());
+    ), object.getName());
   }
-  
-  @Test
-  void testConvertShipBadUUIDAndName() {
+
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Project.class,
+      Sea.class,
+      Platform.class
+  })
+  void testConvertBadUUIDAndName(Class<? extends ObjectWithName> clazz) {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of("test-uuid"),
         "name", Optional.empty()
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Ship.class));
+    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
     assertEquals(String.format(
-        "%s validation failed", Ship.class.getSimpleName()
+        "%s validation failed", clazz.getSimpleName()
     ), exception.getMessage());
     
     assertEquals(2, exception.getViolations().size());
@@ -98,16 +128,22 @@ public class TranslatorUtilsTest {
     assertEquals("name must not be blank", violation.getMessage());
   }
 
-  @Test
-  void testConvertShipBadUUID() {
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Project.class,
+      Sea.class,
+      Platform.class
+  })
+  void testConvertShipBadUUID(Class<? extends ObjectWithName> clazz) {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of("test-uuid"),
         "name", Optional.of("test-name")
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Ship.class));
+    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
     assertEquals(String.format(
-        "%s validation failed", Ship.class.getSimpleName()
+        "%s validation failed", clazz.getSimpleName()
     ), exception.getMessage());
 
     assertEquals(1, exception.getViolations().size());
