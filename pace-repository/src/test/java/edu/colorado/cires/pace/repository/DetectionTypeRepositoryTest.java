@@ -4,12 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.validation.ValidationException;
+import java.util.function.Function;
 
 class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
 
   @Override
   protected CRUDRepository<DetectionType> createRepository() {
     return new DetectionTypeRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<DetectionType, String> uniqueFieldGetter() {
+    return DetectionType::getScienceName;
   }
 
   @Override

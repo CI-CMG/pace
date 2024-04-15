@@ -9,7 +9,7 @@ public class SensorJsonDatastore extends JsonDatastore<Sensor> {
 
   public SensorJsonDatastore(Path storageDirectory, ObjectMapper objectMapper)
       throws IOException {
-    super(storageDirectory.resolve("sensors"), objectMapper, Sensor.class);
+    super(storageDirectory.resolve("sensors"), objectMapper, Sensor.class, Sensor::getName);
   }
 
   @Override

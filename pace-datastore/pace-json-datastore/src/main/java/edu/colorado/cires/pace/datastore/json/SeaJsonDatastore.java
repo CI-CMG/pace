@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class SeaJsonDatastore extends JsonDatastore<Sea> {
 
   public SeaJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("seas"), objectMapper, Sea.class);
+    super(workDirectory.resolve("seas"), objectMapper, Sea.class, Sea::getName);
   }
 
   @Override

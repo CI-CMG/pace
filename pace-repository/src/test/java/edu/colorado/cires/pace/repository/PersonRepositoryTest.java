@@ -4,12 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.validation.ValidationException;
+import java.util.function.Function;
 
 class PersonRepositoryTest extends CrudRepositoryTest<Person> {
 
   @Override
   protected CRUDRepository<Person> createRepository() {
     return new PersonRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<Person, String> uniqueFieldGetter() {
+    return Person::getName;
   }
 
   @Override

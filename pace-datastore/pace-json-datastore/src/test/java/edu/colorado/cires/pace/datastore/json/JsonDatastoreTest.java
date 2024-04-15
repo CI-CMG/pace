@@ -84,12 +84,12 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     O object = createNewObject();
     O result = datastore.save(object);
     
-    Optional<O> maybeResult = datastore.findByUniqueField(result.getUniqueField());
+    Optional<O> maybeResult = datastore.findByUniqueField(datastore.getUniqueFieldGetter().apply(result));
     assertTrue(maybeResult.isPresent());
     assertObjectsEqual(maybeResult.get(), result);
 
     object = createNewObject();
-    maybeResult = datastore.findByUniqueField(object.getUniqueField());
+    maybeResult = datastore.findByUniqueField(datastore.getUniqueFieldGetter().apply(object));
     assertTrue(maybeResult.isEmpty());
   }
   

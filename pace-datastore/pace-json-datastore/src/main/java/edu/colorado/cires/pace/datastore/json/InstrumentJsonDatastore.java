@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class InstrumentJsonDatastore extends JsonDatastore<Instrument> {
 
   public InstrumentJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("instruments"), objectMapper, Instrument.class);
+    super(workDirectory.resolve("instruments"), objectMapper, Instrument.class, Instrument::getName);
   }
 
   @Override

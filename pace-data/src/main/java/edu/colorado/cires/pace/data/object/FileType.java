@@ -23,9 +23,4 @@ public class FileType implements ObjectWithUniqueField {
     
     new FileTypeValidator().validate(this);
   }
-
-  @Override
-  public String getUniqueField() {
-    return type;
-  }
 }

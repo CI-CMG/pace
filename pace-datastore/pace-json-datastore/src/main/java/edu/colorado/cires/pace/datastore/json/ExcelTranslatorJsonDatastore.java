@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class ExcelTranslatorJsonDatastore extends JsonDatastore<ExcelTranslator> {
 
   public ExcelTranslatorJsonDatastore(Path storageDirectory, ObjectMapper objectMapper) throws IOException {
-    super(storageDirectory, objectMapper, ExcelTranslator.class);
+    super(storageDirectory, objectMapper, ExcelTranslator.class, ExcelTranslator::getName);
   }
 
   @Override

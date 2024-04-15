@@ -6,12 +6,18 @@ import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.List;
+import java.util.function.Function;
 
 class ExcelTranslatorRepositoryTest extends CrudRepositoryTest<ExcelTranslator> {
 
   @Override
   protected CRUDRepository<ExcelTranslator> createRepository() {
     return new ExcelTranslatorRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<ExcelTranslator, String> uniqueFieldGetter() {
+    return ExcelTranslator::getName;
   }
 
   @Override

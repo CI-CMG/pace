@@ -4,12 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.validation.ValidationException;
+import java.util.function.Function;
 
 class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
 
   @Override
   protected CRUDRepository<FileType> createRepository() {
     return new FileTypeRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<FileType, String> uniqueFieldGetter() {
+    return FileType::getType;
   }
 
   @Override

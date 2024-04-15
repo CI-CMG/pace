@@ -24,9 +24,4 @@ public class DetectionType implements ObjectWithUniqueField {
     new DetectionTypeValidator().validate(this);
   }
 
-  @Override
-  public String getUniqueField() {
-    return scienceName;
-  }
-
 }

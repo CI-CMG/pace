@@ -6,12 +6,18 @@ import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.List;
+import java.util.function.Function;
 
 class CSVTranslatorRepositoryTest extends CrudRepositoryTest<CSVTranslator> {
 
   @Override
   protected CRUDRepository<CSVTranslator> createRepository() {
     return new CSVTranslatorRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<CSVTranslator, String> uniqueFieldGetter() {
+    return CSVTranslator::getName;
   }
 
   @Override

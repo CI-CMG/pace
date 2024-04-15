@@ -4,12 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.validation.ValidationException;
+import java.util.function.Function;
 
 class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
 
   @Override
   protected CRUDRepository<Sea> createRepository() {
     return new SeaRepository(createDatastore());
+  }
+
+  @Override
+  protected Function<Sea, String> uniqueFieldGetter() {
+    return Sea::getName;
   }
 
   @Override

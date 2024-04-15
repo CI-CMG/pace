@@ -4,9 +4,4 @@ public interface ObjectWithName extends ObjectWithUniqueField {
   
   String getName();
 
-  
-  @Override
-  default String getUniqueField() {
-    return getName();
-  }
 }

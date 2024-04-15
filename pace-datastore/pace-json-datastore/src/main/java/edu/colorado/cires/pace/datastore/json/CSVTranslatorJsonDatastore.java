@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class CSVTranslatorJsonDatastore extends JsonDatastore<CSVTranslator> {
 
   public CSVTranslatorJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("csv-translations"), objectMapper, CSVTranslator.class);
+    super(workDirectory.resolve("csv-translations"), objectMapper, CSVTranslator.class, CSVTranslator::getName);
   }
 
   @Override

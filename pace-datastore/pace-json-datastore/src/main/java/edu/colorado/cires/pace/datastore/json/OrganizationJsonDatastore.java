@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class OrganizationJsonDatastore extends JsonDatastore<Organization> {
 
   public OrganizationJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("organizations"), objectMapper, Organization.class);
+    super(workDirectory.resolve("organizations"), objectMapper, Organization.class, Organization::getName);
   }
 
   @Override

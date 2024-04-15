@@ -21,11 +21,13 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   private final Path storageDirectory;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
+  private final Function<O, String> uniqueFieldGetter;
 
-  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz) throws IOException {
+  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter) throws IOException {
     this.storageDirectory = storageDirectory;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
+    this.uniqueFieldGetter = uniqueFieldGetter;
     init();
   }
   
@@ -60,7 +62,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   @Override
   public Optional<O> findByUniqueField(String uniqueField) throws IOException {
     return getObjectStream(
-        (o) -> o.getUniqueField().equals(uniqueField)
+        (o) -> uniqueFieldGetter.apply(o).equals(uniqueField)
     ).findFirst();
   }
 
@@ -93,5 +95,9 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   @Override
   public String getClassName() {
     return clazz.getSimpleName();
+  }
+
+  public Function<O, String> getUniqueFieldGetter() {
+    return uniqueFieldGetter;
   }
 }
