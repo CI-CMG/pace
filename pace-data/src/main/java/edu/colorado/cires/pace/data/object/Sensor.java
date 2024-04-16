@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = OtherSensor.class, name = "other")
 })
 public interface Sensor extends ObjectWithName {
-  String getName();
   Position getPosition();
   String getDescription();
 }
