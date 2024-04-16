@@ -24,7 +24,9 @@ public final class ApplicationPropertyResolver {
   public Path getWorkDir() {
     String dirString = getPropertyValue("pace-cli.work-dir");
     if (StringUtils.isBlank(dirString)) {
-      throw new IllegalStateException("Application work directory not set");
+      return Path.of(
+          System.getProperty("user.home")
+      ).resolve(".pace-cli").resolve("data").toAbsolutePath();
     }
     
     return Paths.get(dirString).toAbsolutePath();
