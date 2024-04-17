@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -99,7 +98,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testCreateUUIDNotNull() throws ValidationException {
+  void testCreateUUIDNotNull() {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 
@@ -132,7 +131,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testGetByUniqueFieldNotFound() throws ValidationException {
+  void testGetByUniqueFieldNotFound() {
     O object = createNewObject(1);
     Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUniqueField(uniqueFieldGetter().apply(object)));
     assertEquals(String.format(
@@ -201,7 +200,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testUpdateNotFound() throws ValidationException {
+  void testUpdateNotFound() {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 
@@ -243,9 +242,9 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     ), exception.getMessage());
   }
   
-  protected abstract O createNewObject(int suffix) throws ValidationException;
+  protected abstract O createNewObject(int suffix);
   
-  protected abstract O copyWithUpdatedUniqueField(O object, String uniqueField) throws ValidationException;
+  protected abstract O copyWithUpdatedUniqueField(O object, String uniqueField);
   
   protected abstract void assertObjectsEqual(O expected, O actual, boolean checkUUID);
 

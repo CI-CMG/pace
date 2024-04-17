@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 class ProjectRepositoryTest extends CrudRepositoryTest<Project> {
@@ -19,14 +18,14 @@ class ProjectRepositoryTest extends CrudRepositoryTest<Project> {
   }
 
   @Override
-  protected Project createNewObject(int suffix) throws ValidationException {
+  protected Project createNewObject(int suffix) {
     return Project.builder()
         .name(String.format("name-%s", suffix))
         .build();
   }
 
   @Override
-  protected Project copyWithUpdatedUniqueField(Project object, String uniqueField) throws ValidationException {
+  protected Project copyWithUpdatedUniqueField(Project object, String uniqueField) {
     return Project.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

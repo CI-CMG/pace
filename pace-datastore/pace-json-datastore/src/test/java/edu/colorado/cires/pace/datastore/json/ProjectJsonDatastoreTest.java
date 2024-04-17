@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -27,7 +26,7 @@ class ProjectJsonDatastoreTest extends JsonDatastoreTest<Project> {
   }
 
   @Override
-  protected Project createNewObject() throws ValidationException {
+  protected Project createNewObject() {
     return Project.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

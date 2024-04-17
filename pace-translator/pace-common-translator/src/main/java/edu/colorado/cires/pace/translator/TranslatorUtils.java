@@ -12,12 +12,11 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
-import edu.colorado.cires.pace.data.validation.ConstraintViolation;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +31,7 @@ final class TranslatorUtils {
   }
 
   public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz)
-      throws ValidationException, TranslationException {
+      throws TranslationException {
     if (clazz.isAssignableFrom(Ship.class)) {
       return (O) shipFromMap(propertyMap);
     } else if (clazz.isAssignableFrom(Sea.class)) {
@@ -108,14 +107,14 @@ final class TranslatorUtils {
   }
   
   private static Sensor sensorFromMap(Map<String, Optional<String>> propertyMap)
-      throws ValidationException {
-    Map<String, ConstraintViolation> violations = new HashMap<>(0);
+      throws TranslationException {
+    List<FormatException> exceptions = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.put("uuid", e.getViolations().iterator().next());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
     
     String name = getProperty(propertyMap, "name");
@@ -124,22 +123,22 @@ final class TranslatorUtils {
     Float x = null;
     try {
       x = getPropertyAsFloat(propertyMap, "position.x");
-    } catch (ValidationException e) {
-      violations.put("position.x", e.getViolations().iterator().next());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
 
     Float y = null;
     try {
       y = getPropertyAsFloat(propertyMap, "position.y");
-    } catch (ValidationException e) {
-      violations.put("position.y", e.getViolations().iterator().next());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
 
     Float z = null;
     try {
       z = getPropertyAsFloat(propertyMap, "position.z");
-    } catch (ValidationException e) {
-      violations.put("position.z", e.getViolations().iterator().next());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
     
     Position position = Position.builder()
@@ -151,194 +150,152 @@ final class TranslatorUtils {
     SensorType type = null;
     try {
       type = getSensorType(propertyMap);
-    } catch (ValidationException e) {
-      violations.put("type", e.getViolations().iterator().next());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
     
     Sensor sensor = null;
-    try {
-      if (SensorType.depth.equals(type)) {
-        sensor = DepthSensor.builder()
-            .uuid(uuid)
-            .name(name)
-            .position(position)
-            .description(description)
-            .build();
-      } else if (SensorType.audio.equals(type)) {
-        sensor = AudioSensor.builder()
-            .uuid(uuid)
-            .name(name)
-            .position(position)
-            .description(description)
-            .hydrophoneId(getProperty(propertyMap, "hydrophoneId"))
-            .preampId(getProperty(propertyMap, "preampId"))
-            .build();
-      } else if (SensorType.other.equals(type)) {
-        sensor = OtherSensor.builder()
-            .uuid(uuid)
-            .name(name)
-            .position(position)
-            .description(description)
-            .properties(getProperty(propertyMap, "properties"))
-            .sensorType(getProperty(propertyMap, "sensorType"))
-            .build();
-      }
-    } catch (ValidationException e) {
-      e.getViolations().forEach(
-          v -> violations.putIfAbsent(v.getProperty(), v)
-      );
-      throw new ValidationException(Sensor.class, new HashSet<>(violations.values()));
+    if (SensorType.depth.equals(type)) {
+      sensor = DepthSensor.builder()
+          .uuid(uuid)
+          .name(name)
+          .position(position)
+          .description(description)
+          .build();
+    } else if (SensorType.audio.equals(type)) {
+      sensor = AudioSensor.builder()
+          .uuid(uuid)
+          .name(name)
+          .position(position)
+          .description(description)
+          .hydrophoneId(getProperty(propertyMap, "hydrophoneId"))
+          .preampId(getProperty(propertyMap, "preampId"))
+          .build();
+    } else if (SensorType.other.equals(type)) {
+      sensor = OtherSensor.builder()
+          .uuid(uuid)
+          .name(name)
+          .position(position)
+          .description(description)
+          .properties(getProperty(propertyMap, "properties"))
+          .sensorType(getProperty(propertyMap, "sensorType"))
+          .build();
     }
     
-    if (!violations.isEmpty()) {
-      throw new ValidationException(Sensor.class, new HashSet<>(violations.values()));
+    if (!exceptions.isEmpty()) {
+      throw new TranslationException("Translation failed", exceptions);
     }
     
     return sensor;
   }
 
-  private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+  private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    Set<ConstraintViolation> violations = new HashSet<>(0);
+    List<FormatException> exceptions = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
+    } catch (FormatException e) {
+      exceptions.add(e);
     }
 
-    try {
-      SoundSource soundSource = SoundSource.builder()
-          .uuid(uuid)
-          .name(getProperty(propertyMap, "name"))
-          .scientificName(getProperty(propertyMap, "scientificName"))
-          .build();
-
-      if (!violations.isEmpty()) {
-        throw new ValidationException(SoundSource.class, violations);
-      }
-
-      return soundSource;
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
-      throw new ValidationException(SoundSource.class, violations);
+    if (!exceptions.isEmpty()) {
+      throw new TranslationException("Translation failed", exceptions);
     }
+    
+    return SoundSource.builder()
+        .uuid(uuid)
+        .name(getProperty(propertyMap, "name"))
+        .scientificName(getProperty(propertyMap, "scientificName"))
+        .build();
   }
   
-  private static Ship shipFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+  private static Ship shipFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
     
-    Set<ConstraintViolation> violations = new HashSet<>(0);
+    List<FormatException> exceptions = new ArrayList<>(0);
     
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
+    } catch (FormatException e) {
+      exceptions.add(e);
+    }
+
+    if (!exceptions.isEmpty()) {
+      throw new TranslationException("Translation failed", exceptions);
     }
     
-    try {
-      Ship ship = Ship.builder()
-          .uuid(uuid)
-          .name(getProperty(propertyMap, "name"))
-          .build();
-      
-      if (!violations.isEmpty()) {
-        throw new ValidationException(Ship.class, violations);
-      }
-      
-      return ship;
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
-      throw new ValidationException(Ship.class, violations);
-    }
+    return Ship.builder()
+        .uuid(uuid)
+        .name(getProperty(propertyMap, "name"))
+        .build();
   }
 
-  private static Sea seaFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+  private static Sea seaFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    Set<ConstraintViolation> violations = new HashSet<>(0);
+    List<FormatException> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
+    } catch (FormatException e) {
+      violations.add(e);
     }
 
-    try {
-      Sea sea = Sea.builder()
-          .uuid(uuid)
-          .name(getProperty(propertyMap, "name"))
-          .build();
-
-      if (!violations.isEmpty()) {
-        throw new ValidationException(Sea.class, violations);
-      }
-
-      return sea;
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
-      throw new ValidationException(Sea.class, violations);
+    if (!violations.isEmpty()) {
+      throw new TranslationException("Translation failed", violations);
     }
+
+    return Sea.builder()
+        .uuid(uuid)
+        .name(getProperty(propertyMap, "name"))
+        .build();
   }
 
-  private static Project projectFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+  private static Project projectFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    Set<ConstraintViolation> violations = new HashSet<>(0);
+    List<FormatException> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
+    } catch (FormatException e) {
+      violations.add(e);
+    }
+    
+    if (!violations.isEmpty()) {
+      throw new TranslationException("Translation failed", violations);
     }
 
-    try {
-      Project project = Project.builder()
-          .uuid(uuid)
-          .name(getProperty(propertyMap, "name"))
-          .build();
-
-      if (!violations.isEmpty()) {
-        throw new ValidationException(Project.class, violations);
-      }
-
-      return project;
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
-      throw new ValidationException(Project.class, violations);
-    }
+    return Project.builder()
+        .uuid(uuid)
+        .name(getProperty(propertyMap, "name"))
+        .build();
   }
 
-  private static Platform platformFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+  private static Platform platformFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    Set<ConstraintViolation> violations = new HashSet<>(0);
+    List<FormatException> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
       uuid = uuidFromString(getProperty(propertyMap, "uuid"));
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
+    } catch (FormatException e) {
+      violations.add(e);
     }
 
-    try {
-      Platform platform = Platform.builder()
-          .uuid(uuid)
-          .name(getProperty(propertyMap, "name"))
-          .build();
-
-      if (!violations.isEmpty()) {
-        throw new ValidationException(Platform.class, violations);
-      }
-
-      return platform;
-    } catch (ValidationException e) {
-      violations.addAll(e.getViolations());
-      throw new ValidationException(Platform.class, violations);
+    if (!violations.isEmpty()) {
+      throw new TranslationException("Translation failed", violations);
     }
+
+    return Platform.builder()
+        .uuid(uuid)
+        .name(getProperty(propertyMap, "name"))
+        .build();
   }
   
-  private static UUID uuidFromString(String uuidString) throws ValidationException {
+  private static UUID uuidFromString(String uuidString) throws FormatException {
     if (uuidString == null || StringUtils.isBlank(uuidString)) {
       return null;
     }
@@ -346,16 +303,11 @@ final class TranslatorUtils {
     try {
       return UUID.fromString(uuidString);
     } catch (IllegalArgumentException e) {
-      throw new ValidationException(UUID.class, Set.of(
-          ConstraintViolation.builder()
-              .property("uuid")
-              .message("invalid uuid format")
-              .build()
-      ));
+      throw new FormatException("uuid", "invalid uuid format", e);
     }
   }
   
-  private static SensorType getSensorType(Map<String, Optional<String>> map) throws ValidationException {
+  private static SensorType getSensorType(Map<String, Optional<String>> map) throws FormatException {
     String typeString = getProperty(map, "type");
     if (typeString == null || StringUtils.isBlank(typeString)) {
       return null;
@@ -364,16 +316,11 @@ final class TranslatorUtils {
     try {
       return SensorType.valueOf(typeString);
     } catch (Exception e) {
-      throw new ValidationException(SensorType.class, Set.of(
-          ConstraintViolation.builder()
-              .property("type")
-              .message(String.format(
-                  "Invalid sensor type. Was not one of %s", Arrays.stream(SensorType.values())
-                      .map(Enum::name)
-                      .collect(Collectors.joining(", "))
-              ))
-              .build()
-      ));
+      throw new FormatException("type", String.format(
+          "Invalid sensor type. Was not one of %s", Arrays.stream(SensorType.values())
+              .map(Enum::name)
+              .collect(Collectors.joining(", "))
+      ), e);
     }
   }
   
@@ -386,7 +333,7 @@ final class TranslatorUtils {
     return value.orElse(null);
   }
   
-  private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property) throws ValidationException {
+  private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property) throws FormatException {
     String propertyStringValue = getProperty(map, property);
     
     if (propertyStringValue == null) {
@@ -396,12 +343,7 @@ final class TranslatorUtils {
     try {
       return Float.parseFloat(propertyStringValue);
     } catch (NumberFormatException e) {
-      throw new ValidationException(Float.class, Set.of(
-          ConstraintViolation.builder()
-              .property(property)
-              .message("invalid number format")
-              .build()
-      ));
+      throw new FormatException(property, "invalid number format", e);
     }
   }
 }

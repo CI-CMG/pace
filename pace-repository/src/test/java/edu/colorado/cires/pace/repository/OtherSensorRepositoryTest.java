@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +47,7 @@ class OtherSensorRepositoryTest extends SensorRepositoryTest {
   }
 
   @Override
-  protected Sensor createNewObject(int suffix) throws ValidationException {
+  protected Sensor createNewObject(int suffix) {
     
     return OtherSensor.builder()
         .description(String.format("description-%s", suffix))
@@ -64,7 +63,7 @@ class OtherSensorRepositoryTest extends SensorRepositoryTest {
   }
 
   @Override
-  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) throws ValidationException {
+  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) {
     return ((OtherSensor) object).toBuilder()
         .name(uniqueField)
         .build();

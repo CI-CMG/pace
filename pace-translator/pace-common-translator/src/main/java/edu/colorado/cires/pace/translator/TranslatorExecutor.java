@@ -2,7 +2,6 @@ package edu.colorado.cires.pace.translator;
 
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
@@ -33,7 +32,7 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
   private O convertMapToObject(Map<String, Optional<String>> propertyMap) {
     try {
       return TranslatorUtils.convertMapToObject(propertyMap, clazz);
-    } catch (ValidationException | TranslationException e) {
+    } catch (TranslationException e) {
       throw new RuntimeException(e);
     }
   }

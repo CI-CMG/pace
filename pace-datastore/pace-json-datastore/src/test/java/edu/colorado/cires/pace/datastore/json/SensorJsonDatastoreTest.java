@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -29,7 +28,7 @@ class SensorJsonDatastoreTest extends JsonDatastoreTest<Sensor> {
   }
 
   @Override
-  protected Sensor createNewObject() throws ValidationException {
+  protected Sensor createNewObject() {
     return AudioSensor.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

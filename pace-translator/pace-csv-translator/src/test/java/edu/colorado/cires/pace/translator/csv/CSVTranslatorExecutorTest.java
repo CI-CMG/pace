@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,7 +54,7 @@ public class CSVTranslatorExecutorTest {
   }
   
   @Test
-  void testTranslate() throws ValidationException, IOException {
+  void testTranslate() throws IOException {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -97,7 +96,7 @@ public class CSVTranslatorExecutorTest {
   }
   
   @Test
-  void testTranslateFromInputStreamNotImplemented() throws ValidationException {
+  void testTranslateFromInputStreamNotImplemented() {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -117,7 +116,7 @@ public class CSVTranslatorExecutorTest {
   }
   
   @Test
-  void testStreamClosed() throws ValidationException, IOException {
+  void testStreamClosed() throws IOException {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(

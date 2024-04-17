@@ -5,12 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 
 class AudioSensorRepositoryTest extends SensorRepositoryTest {
 
   @Override
-  protected Sensor createNewObject(int suffix) throws ValidationException {
+  protected Sensor createNewObject(int suffix) {
     return AudioSensor.builder()
         .description(String.format("description-%s", suffix))
         .position(Position.builder()
@@ -25,7 +24,7 @@ class AudioSensorRepositoryTest extends SensorRepositoryTest {
   }
 
   @Override
-  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) throws ValidationException {
+  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) {
     return ((AudioSensor) object).toBuilder()
         .name(uniqueField)
         .build();

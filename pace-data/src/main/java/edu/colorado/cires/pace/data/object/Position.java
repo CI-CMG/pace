@@ -1,20 +1,20 @@
 package edu.colorado.cires.pace.data.object;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
+@Builder(toBuilder = true)
+@Jacksonized
 public class Position {
+  
+  @NotNull
   private final Float x;
+  @NotNull
   private final Float y;
+  @NotNull
   private final Float z;
-
-  @Builder(toBuilder = true)
-  @Jacksonized
-  public Position(Float x, Float y, Float z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
+  
 }

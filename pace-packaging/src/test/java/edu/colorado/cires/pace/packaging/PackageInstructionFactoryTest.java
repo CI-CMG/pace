@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.object.PackingJob;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -57,7 +56,7 @@ class PackageInstructionFactoryTest {
       String temperaturePath,
       String sourcePath,
       boolean sourceContainsAudioData
-  ) throws IOException, ValidationException, PackagingException {
+  ) throws IOException, PackagingException {
     Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
     Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
     Path op = otherPath == null ? null : Path.of(otherPath).toAbsolutePath();
@@ -97,7 +96,7 @@ class PackageInstructionFactoryTest {
   }
   
   @Test
-  void testPathDoesNotExist() throws IOException, ValidationException {
+  void testPathDoesNotExist() throws IOException {
     Path sourcePath = Path.of("target/source/source-files").toAbsolutePath();
     PackingJob packingJob = PackingJob.builder()
         .sourcePath(sourcePath)

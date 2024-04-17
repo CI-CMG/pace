@@ -1,8 +1,20 @@
 package edu.colorado.cires.pace.data.object;
 
-public interface StationaryMarineLocation extends MarineLocation {
-  
-  MarineInstrumentLocation getDeploymentLocation();
-  MarineInstrumentLocation getRecoveryLocation();
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
+@Data
+@Builder
+@Jacksonized
+public class StationaryMarineLocation implements MarineLocation {
+  
+  private final Sea seaArea;
+  @NotNull @Valid
+  private final MarineInstrumentLocation deploymentLocation;
+  @NotNull @Valid
+  private final MarineInstrumentLocation recoveryLocation;
+  
 }

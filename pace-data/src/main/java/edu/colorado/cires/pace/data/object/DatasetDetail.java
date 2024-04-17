@@ -1,9 +1,13 @@
 package edu.colorado.cires.pace.data.object;
 
-public interface DatasetDetail {
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+public interface DatasetDetail extends TimeRange {
   
+  @NotNull @Valid
   Platform getPlatform();
+  @NotNull @Valid
   Instrument getInstrument();
-  TimeRange getTimeRange();
 
 }

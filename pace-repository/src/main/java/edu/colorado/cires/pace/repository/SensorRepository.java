@@ -4,7 +4,6 @@ import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ public class SensorRepository extends CRUDRepository<Sensor> {
   }
 
   @Override
-  protected Sensor setUUID(Sensor object, UUID uuid) throws ValidationException {
+  protected Sensor setUUID(Sensor object, UUID uuid) {
     if (object instanceof DepthSensor) {
       return ((DepthSensor) object).toBuilder()
           .uuid(uuid)

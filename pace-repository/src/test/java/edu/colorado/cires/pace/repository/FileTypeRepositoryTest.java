@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.FileType;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
@@ -19,7 +18,7 @@ class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
   }
 
   @Override
-  protected FileType createNewObject(int suffix) throws ValidationException {
+  protected FileType createNewObject(int suffix) {
     return FileType.builder()
         .type(String.format("type-%s", suffix))
         .comment(String.format("comment-%s", suffix))
@@ -27,7 +26,7 @@ class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
   }
 
   @Override
-  protected FileType copyWithUpdatedUniqueField(FileType object, String uniqueField) throws ValidationException {
+  protected FileType copyWithUpdatedUniqueField(FileType object, String uniqueField) {
     return FileType.builder()
         .uuid(object.getUuid())
         .type(uniqueField)

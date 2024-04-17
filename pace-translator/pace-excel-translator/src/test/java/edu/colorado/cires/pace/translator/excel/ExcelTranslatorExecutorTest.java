@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +51,7 @@ public class ExcelTranslatorExecutorTest {
   }
 
   @Test
-  void testTranslate() throws ValidationException, IOException {
+  void testTranslate() throws IOException {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -95,7 +94,7 @@ public class ExcelTranslatorExecutorTest {
   }
 
   @Test
-  void testTranslateFromInputStreamNotImplemented() throws ValidationException {
+  void testTranslateFromInputStreamNotImplemented() {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -117,7 +116,7 @@ public class ExcelTranslatorExecutorTest {
   }
 
   @Test
-  void testStreamClosed() throws ValidationException, IOException {
+  void testStreamClosed() throws IOException {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(

@@ -6,19 +6,13 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-public class DutyCycle {
+@Builder
+@Jacksonized
+public class DutyCycle implements TimeRange {
   
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
   private final Float duration;
   private final Float interval;
-
-  @Builder
-  @Jacksonized
-  private DutyCycle(LocalDateTime startTime, LocalDateTime endTime, Float duration, Float interval) {
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.duration = duration;
-    this.interval = interval;
-  }
+  
 }

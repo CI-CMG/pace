@@ -5,12 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 
 class DepthSensorRepositoryTest extends SensorRepositoryTest {
 
   @Override
-  protected Sensor createNewObject(int suffix) throws ValidationException {
+  protected Sensor createNewObject(int suffix) {
     return DepthSensor.builder()
         .description(String.format("description-%s", suffix))
         .position(Position.builder()
@@ -23,7 +22,7 @@ class DepthSensorRepositoryTest extends SensorRepositoryTest {
   }
 
   @Override
-  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) throws ValidationException {
+  protected Sensor copyWithUpdatedUniqueField(Sensor object, String uniqueField) {
     return ((DepthSensor) object).toBuilder()
         .name(uniqueField)
         .build();

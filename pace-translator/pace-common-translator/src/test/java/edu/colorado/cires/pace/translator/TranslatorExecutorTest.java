@@ -15,8 +15,6 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
-import edu.colorado.cires.pace.data.validation.ConstraintViolation;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -263,14 +260,12 @@ class TranslatorExecutorTest {
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null).toList());
     Throwable cause = exception.getCause();
-    assertInstanceOf(ValidationException.class, cause);
-    ValidationException validationException = (ValidationException) cause;
-    assertEquals(String.format(
-        "%s validation failed", clazz.getSimpleName()
-    ), validationException.getMessage());
-    Set<ConstraintViolation> violations = validationException.getViolations();
+    assertInstanceOf(TranslationException.class, cause);
+    TranslationException validationException = (TranslationException) cause;
+    assertEquals("Translation failed", validationException.getMessage());
+    List<FormatException> violations = validationException.getFormatExceptions();
     assertEquals(1, violations.size());
-    ConstraintViolation violation = violations.iterator().next();
+    FormatException violation = violations.iterator().next();
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
   }
@@ -296,76 +291,14 @@ class TranslatorExecutorTest {
         new TestTranslatorField("scientificName", 3)
     )), maps, SoundSource.class).translate((InputStream) null).toList());
     Throwable cause = exception.getCause();
-    assertInstanceOf(ValidationException.class, cause);
-    ValidationException validationException = (ValidationException) cause;
-    assertEquals(String.format(
-        "%s validation failed", SoundSource.class.getSimpleName()
-    ), validationException.getMessage());
-    Set<ConstraintViolation> violations = validationException.getViolations();
+    assertInstanceOf(TranslationException.class, cause);
+    TranslationException validationException = (TranslationException) cause;
+    assertEquals("Translation failed", validationException.getMessage());
+    List<FormatException> violations = validationException.getFormatExceptions();
     assertEquals(1, violations.size());
-    ConstraintViolation violation = violations.iterator().next();
+    FormatException violation = violations.iterator().next();
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
-  }
-  
-  @ParameterizedTest
-  @ValueSource(strings = {
-      "other",
-      "audio",
-      "depth"
-  })
-  void translateInvalidSensor(String type) {
-    List<Map<String, Optional<String>>> maps = List.of(
-        Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-1"),
-            "description", Optional.of("test-description-1"),
-            "hydrophoneId", Optional.of("test-hydrophoneId-1"),
-            "preampId", Optional.of("test-preampId-1"),
-            "properties", Optional.of("test-properties-1"),
-            "sensorType", Optional.of("test-sensor-type-1"),
-            "type", Optional.of(type)
-        )
-    );
-
-    List<TabularTranslationField> fields = new ArrayList<>(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2),
-        new TestTranslatorField("description", 3),
-        new TestTranslatorField("position.x", 4),
-        new TestTranslatorField("position.y", 5),
-        new TestTranslatorField("position.z", 6),
-        new TestTranslatorField("type", 7),
-        new TestTranslatorField("hydrophoneId", 8),
-        new TestTranslatorField("preampId", 9),
-        new TestTranslatorField("properties", 10),
-        new TestTranslatorField("sensorType", 11)
-    ));
-    
-    RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList());
-    assertInstanceOf(ValidationException.class, runtimeException.getCause());
-    ValidationException exception = (ValidationException) runtimeException.getCause(); 
-    assertEquals(String.format(
-        "%s validation failed", Sensor.class.getSimpleName()
-    ), exception.getMessage());
-    assertEquals(3, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("position.x"))
-        .findFirst().orElseThrow();
-    assertEquals("position.x", violation.getProperty());
-    assertEquals("x must be defined", violation.getMessage());
-
-    violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("position.y"))
-        .findFirst().orElseThrow();
-    assertEquals("position.y", violation.getProperty());
-    assertEquals("y must be defined", violation.getMessage());
-
-    violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("position.z"))
-        .findFirst().orElseThrow();
-    assertEquals("position.z", violation.getProperty());
-    assertEquals("z must be defined", violation.getMessage());
   }
   
   @ParameterizedTest

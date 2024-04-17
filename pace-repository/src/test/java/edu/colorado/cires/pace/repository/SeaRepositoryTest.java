@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Sea;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
@@ -19,14 +18,14 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
   }
 
   @Override
-  protected Sea createNewObject(int suffix) throws ValidationException {
+  protected Sea createNewObject(int suffix) {
     return Sea.builder()
         .name(String.format("name-%s", suffix))
         .build();
   }
 
   @Override
-  protected Sea copyWithUpdatedUniqueField(Sea object, String uniqueField) throws ValidationException {
+  protected Sea copyWithUpdatedUniqueField(Sea object, String uniqueField) {
     return Sea.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

@@ -1,21 +1,28 @@
 package edu.colorado.cires.pace.repository;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import edu.colorado.cires.pace.datastore.Datastore;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   private final Datastore<O> datastore;
+  private final Validator validator;
   
   public CRUDRepository(Datastore<O> datastore) {
     this.datastore = datastore;
+    this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
   
-  protected abstract O setUUID(O object, UUID uuid) throws ValidationException;
+  protected abstract O setUUID(O object, UUID uuid);
   
   public O create(O object) throws Exception {
+    validate(object);
     if (object.getUuid() != null) {
       throw new IllegalArgumentException(String.format(
           "uuid for new %s must not be defined", getClassName()
@@ -52,6 +59,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   }
 
   public O update(UUID uuid, O object) throws Exception {
+    validate(object);
     UUID objectUUID = object.getUuid();
     if (!objectUUID.equals(uuid)) {
       throw new IllegalArgumentException(String.format(
@@ -82,5 +90,14 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
 
   public String getUniqueFieldName() {
     return datastore.getUniqueFieldName();
+  }
+  
+  private void validate(O object) throws ConstraintViolationException {
+    Set<ConstraintViolation<O>> violations = validator.validate(object);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(String.format(
+          "%s validation failed", datastore.getClassName() 
+      ), violations);
+    }
   }
 }

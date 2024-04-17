@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
@@ -19,7 +18,7 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
   }
 
   @Override
-  protected DetectionType createNewObject(int suffix) throws ValidationException {
+  protected DetectionType createNewObject(int suffix) {
     return DetectionType.builder()
         .scienceName(String.format("science-name-%s", suffix))
         .source(String.format("source-%s", suffix))
@@ -27,7 +26,7 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
   }
 
   @Override
-  protected DetectionType copyWithUpdatedUniqueField(DetectionType object, String uniqueField) throws ValidationException {
+  protected DetectionType copyWithUpdatedUniqueField(DetectionType object, String uniqueField) {
     return DetectionType.builder()
         .uuid(object.getUuid())
         .source(object.getSource())

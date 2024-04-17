@@ -14,8 +14,6 @@ import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundSource;
-import edu.colorado.cires.pace.data.validation.ConstraintViolation;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +43,7 @@ public class TranslatorUtilsTest {
       Sea.class,
       Platform.class
   })
-  void testConvert(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
+  void testConvert(Class<? extends ObjectWithName> clazz) throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
         "name", Optional.of("test-name")
@@ -61,7 +59,7 @@ public class TranslatorUtilsTest {
   }
 
   @Test
-  void testConvertSoundSource() throws ValidationException, TranslationException {
+  void testConvertSoundSource() throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
         "name", Optional.of("test-name"),
@@ -86,7 +84,7 @@ public class TranslatorUtilsTest {
       "depth",
       "other"
   })
-  void testConvertSensor(String type) throws ValidationException, TranslationException {
+  void testConvertSensor(String type) throws TranslationException {
     Map<String, Optional<String>> propertyMap = new java.util.HashMap<>(Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
         "name", Optional.of("test-name"),
@@ -137,7 +135,7 @@ public class TranslatorUtilsTest {
       Project.class,
       Platform.class
   })
-  void testConvertMissingProperty(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
+  void testConvertMissingProperty(Class<? extends ObjectWithName> clazz) throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "name", Optional.of("test-name")
     );
@@ -150,7 +148,7 @@ public class TranslatorUtilsTest {
   }
 
   @Test
-  void testConvertSoundSourceMissingProperty() throws ValidationException, TranslationException {
+  void testConvertSoundSourceMissingProperty() throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
         "name", Optional.of("test-name")
@@ -172,7 +170,7 @@ public class TranslatorUtilsTest {
       "depth",
       "other"
   })
-  void testConvertMissingSensorProperty(String type) throws ValidationException, TranslationException {
+  void testConvertMissingSensorProperty(String type) throws TranslationException {
     Map<String, Optional<String>> propertyMap = new java.util.HashMap<>(Map.of(
         "name", Optional.of("test-name"),
         "description", Optional.of("test-description"),
@@ -222,7 +220,7 @@ public class TranslatorUtilsTest {
       Sea.class,
       Platform.class
   })
-  void testConvertNullUUID(Class<? extends ObjectWithName> clazz) throws ValidationException, TranslationException {
+  void testConvertNullUUID(Class<? extends ObjectWithName> clazz) throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name")
@@ -236,7 +234,7 @@ public class TranslatorUtilsTest {
   }
 
   @Test
-  void testConvertSoundSourceNullUUID() throws ValidationException, TranslationException {
+  void testConvertSoundSourceNullUUID() throws TranslationException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name")
@@ -256,7 +254,7 @@ public class TranslatorUtilsTest {
       "audio",
       "depth"
   })
-  void testConvertNullSensorUUID(String type) throws ValidationException, TranslationException {
+  void testConvertNullSensorUUID(String type) throws TranslationException {
     Map<String, Optional<String>> propertyMap = new java.util.HashMap<>(Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
@@ -313,26 +311,17 @@ public class TranslatorUtilsTest {
         "name", Optional.empty()
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
-    assertEquals(String.format(
-        "%s validation failed", clazz.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
+    assertEquals("Translation failed", exception.getMessage());
     
-    assertEquals(2, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
         );
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
-    violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("name"))
-        .findFirst().orElseThrow(
-            () -> new IllegalStateException("name violation not found")
-        );
-    assertEquals("name", violation.getProperty());
-    assertEquals("name must not be blank", violation.getMessage());
   }
 
   @Test
@@ -342,26 +331,17 @@ public class TranslatorUtilsTest {
         "name", Optional.empty()
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
-    assertEquals(String.format(
-        "%s validation failed", SoundSource.class.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(2, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
         );
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
-    violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("name"))
-        .findFirst().orElseThrow(
-            () -> new IllegalStateException("name violation not found")
-        );
-    assertEquals("name", violation.getProperty());
-    assertEquals("name must not be blank", violation.getMessage());
   }
 
   @ParameterizedTest
@@ -397,26 +377,17 @@ public class TranslatorUtilsTest {
       );
     }
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
-    assertEquals(String.format(
-        "%s validation failed", Sensor.class.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(2, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
         );
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
-    violation = exception.getViolations().stream()
-        .filter(v -> v.getProperty().equals("name"))
-        .findFirst().orElseThrow(
-            () -> new IllegalStateException("name violation not found")
-        );
-    assertEquals("name", violation.getProperty());
-    assertEquals("name must not be blank", violation.getMessage());
   }
 
   @ParameterizedTest
@@ -432,13 +403,11 @@ public class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
-    assertEquals(String.format(
-        "%s validation failed", clazz.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
@@ -454,13 +423,11 @@ public class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
-    assertEquals(String.format(
-        "%s validation failed", SoundSource.class.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
@@ -502,13 +469,11 @@ public class TranslatorUtilsTest {
       );
     }
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
-    assertEquals(String.format(
-        "%s validation failed", Sensor.class.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(1, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
             () -> new IllegalStateException("uuid violation not found")
@@ -550,25 +515,23 @@ public class TranslatorUtilsTest {
       );
     }
 
-    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
-    assertEquals(String.format(
-        "%s validation failed", Sensor.class.getSimpleName()
-    ), exception.getMessage());
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(3, exception.getViolations().size());
-    ConstraintViolation violation = exception.getViolations().stream()
+    assertEquals(3, exception.getFormatExceptions().size());
+    FormatException violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("position.x"))
         .findFirst().orElseThrow();
     assertEquals("position.x", violation.getProperty());
     assertEquals("invalid number format", violation.getMessage());
 
-    violation = exception.getViolations().stream()
+    violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("position.y"))
         .findFirst().orElseThrow();
     assertEquals("position.y", violation.getProperty());
     assertEquals("invalid number format", violation.getMessage());
 
-    violation = exception.getViolations().stream()
+    violation = exception.getFormatExceptions().stream()
         .filter(v -> v.getProperty().equals("position.z"))
         .findFirst().orElseThrow();
     assertEquals("position.z", violation.getProperty());

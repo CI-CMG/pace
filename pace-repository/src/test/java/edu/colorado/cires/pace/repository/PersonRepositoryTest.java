@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 class PersonRepositoryTest extends CrudRepositoryTest<Person> {
@@ -19,7 +18,7 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
   }
 
   @Override
-  protected Person createNewObject(int suffix) throws ValidationException {
+  protected Person createNewObject(int suffix) {
     return Person.builder()
         .name(String.format("name-%s", suffix))
         .organization(String.format("organization-%s", suffix))
@@ -36,7 +35,7 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
   }
 
   @Override
-  protected Person copyWithUpdatedUniqueField(Person object, String uniqueField) throws ValidationException {
+  protected Person copyWithUpdatedUniqueField(Person object, String uniqueField) {
     return Person.builder()
         .uuid(object.getUuid())
         .name(uniqueField)

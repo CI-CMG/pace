@@ -1,7 +1,10 @@
 package edu.colorado.cires.pace.data.object;
 
+import java.time.LocalDateTime;
+
 public interface AudioTimeRange {
   
-  TimeRange getAudioTimeRange();
+  LocalDateTime getAudioStartTime();
+  LocalDateTime getAudioEndTime();
   
 }

@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.SoundSource;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.function.Function;
 
 public class SoundSourceRepositoryTest extends CrudRepositoryTest<SoundSource> {
@@ -19,7 +18,7 @@ public class SoundSourceRepositoryTest extends CrudRepositoryTest<SoundSource> {
   }
 
   @Override
-  protected SoundSource createNewObject(int suffix) throws ValidationException {
+  protected SoundSource createNewObject(int suffix) {
     return SoundSource.builder()
         .name(String.format("name-%s", suffix))
         .scientificName(String.format("scientific-name-%s", suffix))
@@ -27,7 +26,7 @@ public class SoundSourceRepositoryTest extends CrudRepositoryTest<SoundSource> {
   }
 
   @Override
-  protected SoundSource copyWithUpdatedUniqueField(SoundSource object, String uniqueField) throws ValidationException {
+  protected SoundSource copyWithUpdatedUniqueField(SoundSource object, String uniqueField) {
     return object.toBuilder()
         .name(uniqueField)
         .build();

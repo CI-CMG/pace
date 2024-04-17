@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUUID;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,7 +46,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testSave() throws IOException, ValidationException {
+  void testSave() throws IOException {
     O object = createNewObject();
 
     O result = datastore.save(object);
@@ -57,7 +56,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testDelete() throws IOException, ValidationException {
+  void testDelete() throws IOException {
     O object = createNewObject();
     datastore.save(object);
     datastore.delete(object);
@@ -66,7 +65,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUUID() throws IOException, ValidationException {
+  void testFindByUUID() throws IOException {
     O object = createNewObject();
     O result = datastore.save(object);
     
@@ -80,7 +79,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUniqueField() throws IOException, ValidationException {
+  void testFindByUniqueField() throws IOException {
     O object = createNewObject();
     O result = datastore.save(object);
     
@@ -94,7 +93,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindAll() throws IOException, ValidationException {
+  void testFindAll() throws IOException {
     O object1 = createNewObject();
     object1 = datastore.save(object1);
     O object2 = createNewObject();
@@ -113,7 +112,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     }
   }
   
-  protected abstract O createNewObject() throws ValidationException;
+  protected abstract O createNewObject();
   protected abstract void assertObjectsEqual(O expected, O actual);
   
   private void assertSavedObjectEqualsObject(O expected, O actual) throws IOException {
