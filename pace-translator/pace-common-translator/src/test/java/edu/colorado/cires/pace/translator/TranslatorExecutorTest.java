@@ -12,6 +12,7 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.data.validation.ConstraintViolation;
@@ -122,6 +123,35 @@ class TranslatorExecutorTest {
     assertEquals(maps.get(0).get("name").orElseThrow(), ships.get(0).getName());
     assertEquals(maps.get(1).get("uuid").orElseThrow(), ships.get(1).getUuid().toString());
     assertEquals(maps.get(1).get("name").orElseThrow(), ships.get(1).getName());
+  }
+
+  @Test
+  void translateSoundSource() throws TranslationException {
+    List<Map<String, Optional<String>>> maps = List.of(
+        Map.of(
+            "uuid", Optional.of(UUID.randomUUID().toString()),
+            "name", Optional.of("test-name-1"),
+            "scientificName", Optional.of("test-scientific-name-1")
+        ),
+        Map.of(
+            "uuid", Optional.of(UUID.randomUUID().toString()),
+            "name", Optional.of("test-name-2"),
+            "scientificName", Optional.of("test-scientific-name-2")
+        )
+    );
+
+    List<SoundSource> ships = createExecutor(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1),
+        new TestTranslatorField("name", 2),
+        new TestTranslatorField("scientificName", 3)
+    )), maps, SoundSource.class).translate((InputStream) null).toList();
+    assertEquals(2, ships.size());
+    assertEquals(maps.get(0).get("uuid").orElseThrow(), ships.get(0).getUuid().toString());
+    assertEquals(maps.get(0).get("name").orElseThrow(), ships.get(0).getName());
+    assertEquals(maps.get(0).get("scientificName").orElseThrow(), ships.get(0).getScientificName());
+    assertEquals(maps.get(1).get("uuid").orElseThrow(), ships.get(1).getUuid().toString());
+    assertEquals(maps.get(1).get("name").orElseThrow(), ships.get(1).getName());
+    assertEquals(maps.get(1).get("scientificName").orElseThrow(), ships.get(1).getScientificName());
   }
 
   @Test
@@ -244,6 +274,39 @@ class TranslatorExecutorTest {
     assertEquals("uuid", violation.getProperty());
     assertEquals("invalid uuid format", violation.getMessage());
   }
+
+  @Test
+  void translateSoundSourceInvalidObject() {
+    List<Map<String, Optional<String>>> maps = List.of(
+        Map.of(
+            "uuid", Optional.of("test-uuid"),
+            "name", Optional.of("test-name-1"),
+            "scientificName", Optional.of("test-scientific-name-1")
+        ),
+        Map.of(
+            "uuid", Optional.of(UUID.randomUUID().toString()),
+            "name", Optional.of("test-name-2"),
+            "scientificName", Optional.of("test-scientific-name-2")
+        )
+    );
+
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> createExecutor(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1),
+        new TestTranslatorField("name", 2),
+        new TestTranslatorField("scientificName", 3)
+    )), maps, SoundSource.class).translate((InputStream) null).toList());
+    Throwable cause = exception.getCause();
+    assertInstanceOf(ValidationException.class, cause);
+    ValidationException validationException = (ValidationException) cause;
+    assertEquals(String.format(
+        "%s validation failed", SoundSource.class.getSimpleName()
+    ), validationException.getMessage());
+    Set<ConstraintViolation> violations = validationException.getViolations();
+    assertEquals(1, violations.size());
+    ConstraintViolation violation = violations.iterator().next();
+    assertEquals("uuid", violation.getProperty());
+    assertEquals("invalid uuid format", violation.getMessage());
+  }
   
   @ParameterizedTest
   @ValueSource(strings = {
@@ -322,13 +385,19 @@ class TranslatorExecutorTest {
     ), exception.getMessage());
   }
 
-  @ParameterizedTest
-  @ValueSource(strings = {
-      "other",
-      "depth",
-      "audio"
-  })
-  void testInvalidSensorTranslatorDefinition(String type) {
+  @Test
+  void testInvalidSoundSourceTranslatorDefinition() {
+    TranslationException exception = assertThrows(TranslationException.class, () -> createExecutor(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1),
+        new TestTranslatorField("name", 2)
+    )), Collections.emptyList(), SoundSource.class));
+    assertEquals(String.format(
+        "Translator does not fully describe %s. Missing fields: [scientificName]", SoundSource.class.getSimpleName()
+    ), exception.getMessage());
+  }
+
+  @Test
+  void testInvalidSensorTranslatorDefinition() {
     List<TabularTranslationField> fields = new ArrayList<>(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2),

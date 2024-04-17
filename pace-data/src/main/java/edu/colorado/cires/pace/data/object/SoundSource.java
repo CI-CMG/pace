@@ -14,7 +14,7 @@ public class SoundSource implements ObjectWithName {
   private final String name;
   private final String scientificName;
 
-  @Builder
+  @Builder(toBuilder = true)
   @Jacksonized
   private SoundSource(UUID uuid, String name, String scientificName) throws ValidationException {
     this.uuid = uuid;

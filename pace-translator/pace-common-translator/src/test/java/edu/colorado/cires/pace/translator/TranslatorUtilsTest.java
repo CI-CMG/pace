@@ -13,6 +13,7 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.validation.ConstraintViolation;
 import edu.colorado.cires.pace.data.validation.ValidationException;
 import java.util.Collections;
@@ -57,6 +58,26 @@ public class TranslatorUtilsTest {
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
     ), object.getName());
+  }
+
+  @Test
+  void testConvertSoundSource() throws ValidationException, TranslationException {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of(UUID.randomUUID().toString()),
+        "name", Optional.of("test-name"),
+        "scientificName", Optional.of("test-scientific-name")
+    );
+
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    assertEquals(propertyMap.get("uuid").orElseThrow(
+        () -> new IllegalStateException("uuid not found in propertyMap")
+    ), object.getUuid().toString());
+    assertEquals(propertyMap.get("name").orElseThrow(
+        () -> new IllegalStateException("name not found in propertyMap")
+    ), object.getName());
+    assertEquals(propertyMap.get("scientificName").orElseThrow(
+        () -> new IllegalStateException("scientificName not found in propertyMap")
+    ), object.getScientificName());
   }
   
   @ParameterizedTest
@@ -127,6 +148,23 @@ public class TranslatorUtilsTest {
         () -> new IllegalStateException("name not found in propertyMap")
     ), object.getName());
   }
+
+  @Test
+  void testConvertSoundSourceMissingProperty() throws ValidationException, TranslationException {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of(UUID.randomUUID().toString()),
+        "name", Optional.of("test-name")
+    );
+
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    assertEquals(propertyMap.get("uuid").orElseThrow(
+        () -> new IllegalStateException("name not found in propertyMap")
+    ), object.getUuid().toString());
+    assertEquals(propertyMap.get("name").orElseThrow(
+        () -> new IllegalStateException("name not found in propertyMap")
+    ), object.getName());
+    assertNull(object.getScientificName());
+  }
   
   @ParameterizedTest
   @ValueSource(strings = {
@@ -192,6 +230,21 @@ public class TranslatorUtilsTest {
 
     ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
     assertNull(object.getUuid());
+    assertEquals(propertyMap.get("name").orElseThrow(
+        () -> new IllegalStateException("name not found in propertyMap")
+    ), object.getName());
+  }
+
+  @Test
+  void testConvertSoundSourceNullUUID() throws ValidationException, TranslationException {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.empty(),
+        "name", Optional.of("test-name")
+    );
+
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    assertNull(object.getUuid());
+    assertNull(object.getScientificName());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
     ), object.getName());
@@ -282,6 +335,35 @@ public class TranslatorUtilsTest {
     assertEquals("name must not be blank", violation.getMessage());
   }
 
+  @Test
+  void testConvertSoundSourceBadUUIDAndName() {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of("test-uuid"),
+        "name", Optional.empty()
+    );
+
+    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    assertEquals(String.format(
+        "%s validation failed", SoundSource.class.getSimpleName()
+    ), exception.getMessage());
+
+    assertEquals(2, exception.getViolations().size());
+    ConstraintViolation violation = exception.getViolations().stream()
+        .filter(v -> v.getProperty().equals("uuid"))
+        .findFirst().orElseThrow(
+            () -> new IllegalStateException("uuid violation not found")
+        );
+    assertEquals("uuid", violation.getProperty());
+    assertEquals("invalid uuid format", violation.getMessage());
+    violation = exception.getViolations().stream()
+        .filter(v -> v.getProperty().equals("name"))
+        .findFirst().orElseThrow(
+            () -> new IllegalStateException("name violation not found")
+        );
+    assertEquals("name", violation.getProperty());
+    assertEquals("name must not be blank", violation.getMessage());
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {
       "other",
@@ -353,6 +435,28 @@ public class TranslatorUtilsTest {
     ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
     assertEquals(String.format(
         "%s validation failed", clazz.getSimpleName()
+    ), exception.getMessage());
+
+    assertEquals(1, exception.getViolations().size());
+    ConstraintViolation violation = exception.getViolations().stream()
+        .filter(v -> v.getProperty().equals("uuid"))
+        .findFirst().orElseThrow(
+            () -> new IllegalStateException("uuid violation not found")
+        );
+    assertEquals("uuid", violation.getProperty());
+    assertEquals("invalid uuid format", violation.getMessage());
+  }
+
+  @Test
+  void testConvertSoundSourceBadUUID() {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of("test-uuid"),
+        "name", Optional.of("test-name")
+    );
+
+    ValidationException exception = assertThrows(ValidationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    assertEquals(String.format(
+        "%s validation failed", SoundSource.class.getSimpleName()
     ), exception.getMessage());
 
     assertEquals(1, exception.getViolations().size());

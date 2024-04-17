@@ -9,6 +9,7 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.data.validation.ConstraintViolation;
@@ -42,6 +43,8 @@ final class TranslatorUtils {
       return (O) platformFromMap(propertyMap);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       return (O) sensorFromMap(propertyMap);
+    } else if (clazz.isAssignableFrom(SoundSource.class)) {
+      return (O) soundSourceFromMap(propertyMap);
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -62,6 +65,8 @@ final class TranslatorUtils {
       validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Project.class);
     } else if (clazz.isAssignableFrom(Platform.class)) {
       validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Platform.class);
+    } else if (clazz.isAssignableFrom(SoundSource.class)) {
+      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, SoundSource.class);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       validateSensorTranslator(translatorFields);
     } else {
@@ -190,6 +195,35 @@ final class TranslatorUtils {
     }
     
     return sensor;
+  }
+
+  private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {
+
+    Set<ConstraintViolation> violations = new HashSet<>(0);
+
+    UUID uuid = null;
+    try {
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+    } catch (ValidationException e) {
+      violations.addAll(e.getViolations());
+    }
+
+    try {
+      SoundSource soundSource = SoundSource.builder()
+          .uuid(uuid)
+          .name(getProperty(propertyMap, "name"))
+          .scientificName(getProperty(propertyMap, "scientificName"))
+          .build();
+
+      if (!violations.isEmpty()) {
+        throw new ValidationException(SoundSource.class, violations);
+      }
+
+      return soundSource;
+    } catch (ValidationException e) {
+      violations.addAll(e.getViolations());
+      throw new ValidationException(SoundSource.class, violations);
+    }
   }
   
   private static Ship shipFromMap(Map<String, Optional<String>> propertyMap) throws ValidationException {

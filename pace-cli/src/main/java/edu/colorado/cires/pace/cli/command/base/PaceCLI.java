@@ -12,6 +12,7 @@ import edu.colorado.cires.pace.cli.command.project.ProjectCommand;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand;
+import edu.colorado.cires.pace.cli.command.soundSource.SoundSourceCommand;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand;
 import picocli.CommandLine.Command;
@@ -33,6 +34,7 @@ import picocli.CommandLine.Command;
         SeaCommand.class,
         ShipCommand.class,
         SensorCommand.class,
+        SoundSourceCommand.class,
         CSVTranslatorCommand.class,
         ExcelTranslatorCommand.class
     }
