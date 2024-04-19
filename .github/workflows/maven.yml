@@ -31,7 +31,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'graalvm'
-        cache: maven
     - id: version
       run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
     - name: Package
