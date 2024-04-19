@@ -13,112 +13,45 @@ on:
     branches: [ "trunk" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-unix:
+    strategy:
+      matrix:
+        os: [ macos-14,macos-11,ubuntu-20.04 ]
+    runs-on: ${{ matrix.os }}
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
     - uses: actions/checkout@v3
+    - name: Set os/arch environment variables
+      run: |
+        echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+        echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
     - name: Set up JDK 17
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: '17'
         distribution: 'graalvm'
         cache: maven
-    - name: Package
-      run: mvn -B package -Pdep-check
     - id: version
       run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
-    - name: Upload Build Resources
-      uses: actions/upload-artifact@v4
-      with:
-        name: exe-jar
-        path: "pace-cli/target/*-jar-with-dependencies.jar"
-    - name: Upload Native Reflection Configuration
-      uses: actions/upload-artifact@v4
-      with:
-        name: reflection-config
-        path: "pace-cli/src/main/resources/native-reflection-configuration.json"
-  
-  native-image-unix:
-    needs: build
-    strategy:
-      matrix: 
-        os: [macos-14,macos-11,ubuntu-20.04]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Set up JDK 17
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: '17'
-        distribution: 'graalvm'
-    - name: Download Jar
-      uses: actions/download-artifact@v4
-      with:
-        name: exe-jar
-    - name: Download Native Reflection Configuration
-      uses: actions/download-artifact@v4
-      with:
-        name: reflection-config
-    - name: Build Executable
-      run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json -H:-CheckToolchain
-    - name: Set os/arch environment variables
-      run: |
-        echo "os=${RUNNER_OS}" >> $GITHUB_ENV
-        echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
+    - name: Package
+      run: mvn -B package -Pnative -Pdep-check
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
         name: pace-cli-${{ env.os }}-${{ env.arch }}
         path: "pace-cli"
-        
-  native-image-windows:
-    needs: build
-    strategy:
-      matrix:
-        os: [ windows-2019 ]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Set up JDK 17
-        uses: graalvm/setup-graalvm@v1
-        with:
-          java-version: '17'
-          distribution: 'graalvm'
-      - name: Download Jar
-        uses: actions/download-artifact@v4
-        with:
-          name: exe-jar
-      - name: Download Native Reflection Configuration
-        uses: actions/download-artifact@v4
-        with:
-          name: reflection-config
-      - name: Build Executable
-        run: native-image -jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar -H:Name=pace-cli -H:ReflectionConfigurationFiles=native-reflection-configuration.json -H:-CheckToolchain
-      - name: Set os/arch environment variables
-        run: |
-          echo "os=$env:RUNNER_OS" >> $env:GITHUB_ENV
-          echo "arch=$env:RUNNER_ARCH" >> $env:GITHUB_ENV
-        shell: powershell
-      - name: Upload Executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: pace-cli-${{ env.os }}-${{ env.arch }}
-          path: "pace-cli.exe"
-        
+
   release:
     needs: 
-      - build
-      - native-image-unix
-      - native-image-windows
+      - build-unix
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
-      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
-      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
-      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
-      - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
-      - run: cp exe-jar/pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar release/pace-cli-${{ needs.build.outputs.version }}.jar
+      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build-unix.outputs.version }}.zip pace-cli-Linux-X64 
+      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build-unix.outputs.version }}.zip pace-cli-macOS-ARM64 
+      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build-unix.outputs.version }}.zip pace-cli-macOS-X64
       - name: Update branch release
         uses: eine/tip@master
         with:

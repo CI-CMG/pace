@@ -8,6 +8,8 @@ import edu.colorado.cires.pace.data.object.PackingJob;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -84,15 +86,17 @@ class PackageInstructionFactoryTest {
     List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, TARGET_PATH, sourceContainsAudioData)
         .toList();
     
-    String baseExpectedOutputPath = "target/target/data/";
+    Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
     
-    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath + "biological");
-    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath + "calibration");
-    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath + "docs");
-    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath + "nav_files");
-    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath + "other");
-    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath + "temperature");
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath + (sourceContainsAudioData ? "acoustic_files" : "data_files"));
+    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
+    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
+    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
+    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
+    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
+    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve(
+        sourceContainsAudioData ? "acoustic_files" : "data_files"
+    ));
   }
   
   @Test
@@ -111,9 +115,9 @@ class PackageInstructionFactoryTest {
     ), exception.getMessage());
   }
   
-  private void checkTargetPaths(List<PackageInstruction> packageInstructions, Supplier<Path> valueGetter, String expectedOutputDirectory) {
+  private void checkTargetPaths(List<PackageInstruction> packageInstructions, Supplier<Path> valueGetter, Path expectedOutputDirectory) {
     List<PackageInstruction> dataTypeSpecificInstructions = packageInstructions.stream()
-        .filter(packageInstruction -> packageInstruction.target().toFile().toString().contains(expectedOutputDirectory))
+        .filter(packageInstruction -> packageInstruction.target().toFile().toString().contains(expectedOutputDirectory.toFile().toString()))
         .sorted(Comparator.comparing(PackageInstruction::target))
         .toList();
     
@@ -127,7 +131,7 @@ class PackageInstructionFactoryTest {
 
     for (PackageInstruction instruction : dataTypeSpecificInstructions) {
       assertEquals(
-          Paths.get(expectedOutputDirectory).resolve(
+          expectedOutputDirectory.resolve(
               value.relativize(instruction.source())
           ).toAbsolutePath(),
           instruction.target().toAbsolutePath()
@@ -163,6 +167,9 @@ class PackageInstructionFactoryTest {
           ));
         }
       }
+      try {
+        Files.setAttribute(hiddenFilePath, "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+      } catch (UnsupportedOperationException ignored) {} // not running on Windows OS
       
       Path fileDirectoryPath = path.resolve("subdir").resolve(String.format(
           "test-%s.txt", i
@@ -184,6 +191,9 @@ class PackageInstructionFactoryTest {
           ));
         }
       }
+      try {
+        Files.setAttribute(hiddenFileDirectoryPath, "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+      } catch (UnsupportedOperationException ignored) {} // not running on Windows OS
     }
   }
 

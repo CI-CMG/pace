@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +23,7 @@ class FileUtilTest {
   }
   
   @AfterEach
-  void afterEach() throws IOException {
+  void afterEach() {
     org.apache.commons.io.FileUtils.deleteQuietly(TEST_PATH.toFile());
   }
   
@@ -38,6 +39,9 @@ class FileUtilTest {
     path = TEST_PATH.resolve(".hidden").resolve(".test.txt"); // hidden file = fail
     org.apache.commons.io.FileUtils.createParentDirectories(path.toFile());
     Files.createFile(path);
+    try {
+      Files.setAttribute(path, "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+    } catch (UnsupportedOperationException ignored) {} // not running on Windows OS
     assertFalse(FileUtils.filterHidden(path));
   }
   
