@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.datastore.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
+import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,37 +39,63 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   }
 
   @Override
-  public O save(O object) throws IOException {
+  public O save(O object) throws DatastoreException {
     String fileName = getFileName(object);
-    try (OutputStream outputStream = new FileOutputStream(storageDirectory.resolve(fileName).toFile())) {
+    Path filePath = storageDirectory.resolve(fileName);
+    try (OutputStream outputStream = new FileOutputStream(filePath.toFile())) {
       objectMapper.writeValue(outputStream, object);
       return object;
+    } catch (Exception e) {
+      throw new DatastoreException(String.format(
+          "%s save failed", filePath
+      ), e);
     }
   }
 
   @Override
-  public void delete(O object) throws IOException {
+  public void delete(O object) throws DatastoreException {
     String fileName = getFileName(object);
-    Files.delete(storageDirectory.resolve(fileName));
+    Path filePath = storageDirectory.resolve(fileName);
+    try {
+      Files.delete(filePath);
+    } catch (IOException e) {
+      throw new DatastoreException(String.format(
+          "%s delete failed", filePath
+      ), e);
+    }
   }
 
   @Override
-  public Optional<O> findByUUID(UUID uuid) throws IOException {
-    return getObjectStream(
-        (o) -> o.getUuid().equals(uuid)
-    ).findFirst();
+  public Optional<O> findByUUID(UUID uuid) throws DatastoreException {
+    try {
+      return getObjectStream(
+          (o) -> o.getUuid().equals(uuid)
+      ).findFirst();
+    } catch (IOException e) {
+      throw new DatastoreException("Failed to find object by uuid", e);
+    }
   }
 
   @Override
-  public Optional<O> findByUniqueField(String uniqueField) throws IOException {
-    return getObjectStream(
-        (o) -> uniqueFieldGetter.apply(o).equals(uniqueField)
-    ).findFirst();
+  public Optional<O> findByUniqueField(String uniqueField) throws DatastoreException {
+    try {
+      return getObjectStream(
+          (o) -> uniqueFieldGetter.apply(o).equals(uniqueField)
+      ).findFirst();
+    } catch (IOException e) {
+      throw new DatastoreException(String.format(
+          "Failed to find object by %s", getUniqueFieldName()
+      ), e);
+    }
   }
 
   @Override
-  public Stream<O> findAll() throws IOException {
-    return getObjectStream((o) -> true);
+  public Stream<O> findAll() throws DatastoreException {
+    try {
+      return getObjectStream((o) -> true);
+    } catch (IOException e) {
+      throw new DatastoreException("Failed to list objects", e);
+    }
   }
   
   private Stream<O> getObjectStream(Function<O, Boolean> filter) throws IOException {

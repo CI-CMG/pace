@@ -1,11 +1,13 @@
 package edu.colorado.cires.pace.datastore.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUUID;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,7 +48,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testSave() throws IOException {
+  void testSave() throws IOException, DatastoreException {
     O object = createNewObject();
 
     O result = datastore.save(object);
@@ -56,7 +58,19 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testDelete() throws IOException {
+  void testSaveFailed() {
+    O object = createNewObject();
+    
+    FileUtils.deleteQuietly(TEST_PATH.toFile());
+    
+    Exception exception = assertThrows(DatastoreException.class, () -> datastore.save(object));
+    assertTrue(exception.getMessage().endsWith(String.format(
+        "%s.json save failed", object.getUuid()
+    )));
+  }
+  
+  @Test
+  void testDelete() throws IOException, DatastoreException {
     O object = createNewObject();
     datastore.save(object);
     datastore.delete(object);
@@ -65,7 +79,20 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUUID() throws IOException {
+  public void testDeleteFailed() throws DatastoreException {
+    O object = createNewObject();
+    datastore.save(object);
+    
+    FileUtils.deleteQuietly(TEST_PATH.toFile());
+    
+    Exception exception = assertThrows(DatastoreException.class, () -> datastore.delete(object));
+    assertTrue(exception.getMessage().endsWith(String.format(
+        "%s.json delete failed", object.getUuid()
+    )));
+  }
+  
+  @Test
+  void testFindByUUID() throws DatastoreException {
     O object = createNewObject();
     O result = datastore.save(object);
     
@@ -79,7 +106,19 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUniqueField() throws IOException {
+  void testFindByUUIDFailed() throws DatastoreException {
+    O object = createNewObject();
+    object = datastore.save(object);
+    
+    FileUtils.deleteQuietly(TEST_PATH.toFile());
+
+    O finalObject = object;
+    Exception exception = assertThrows(DatastoreException.class, () -> datastore.findByUUID(finalObject.getUuid()));
+    assertEquals("Failed to find object by uuid", exception.getMessage());
+  }
+  
+  @Test
+  void testFindByUniqueField() throws DatastoreException {
     O object = createNewObject();
     O result = datastore.save(object);
     
@@ -93,7 +132,17 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindAll() throws IOException {
+  void testFindByUniqueFieldFailed() {
+    FileUtils.deleteQuietly(TEST_PATH.toFile());
+    
+    Exception exception = assertThrows(DatastoreException.class, () -> datastore.findByUniqueField("test"));
+    assertEquals(String.format(
+       "Failed to find object by %s", datastore.getUniqueFieldName() 
+    ), exception.getMessage());
+  }
+  
+  @Test
+  void testFindAll() throws DatastoreException {
     O object1 = createNewObject();
     object1 = datastore.save(object1);
     O object2 = createNewObject();
@@ -110,6 +159,14 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     for (int i = 0; i < expected.size(); i++) {
       assertObjectsEqual(expected.get(i), results.get(i));
     }
+  }
+  
+  @Test
+  void testFindAllFailed() {
+    FileUtils.deleteQuietly(TEST_PATH.toFile());
+    
+    DatastoreException exception = assertThrows(DatastoreException.class, () -> datastore.findAll());
+    assertEquals("Failed to list objects", exception.getMessage());
   }
   
   protected abstract O createNewObject();

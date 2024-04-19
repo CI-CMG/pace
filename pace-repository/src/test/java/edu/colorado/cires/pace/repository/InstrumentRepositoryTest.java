@@ -85,7 +85,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
     when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(0).getUuid())).thenReturn(Optional.empty());
     when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(1).getUuid())).thenReturn(Optional.of(instrument.getFileTypes().get(1)));
     
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(instrument));
+    Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(instrument));
     assertEquals(String.format(
         "File type does not exist: %s", instrument.getFileTypes().get(0).getType()
     ), exception.getMessage());

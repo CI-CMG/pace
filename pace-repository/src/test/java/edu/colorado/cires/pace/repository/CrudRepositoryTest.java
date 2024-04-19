@@ -103,7 +103,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     object = repository.setUUID(object, UUID.randomUUID());
 
     O finalObject = object;
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(finalObject));
+    Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
         "uuid for new %s must not be defined", repository.getClassName()
     ), exception.getMessage());
@@ -193,7 +193,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   @Test
   void testUpdateUUIDsNotEqual() throws Exception {
     O object = repository.create(createNewObject(1));
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
+    Exception exception = assertThrows(BadArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
     assertEquals(String.format(
         "%s uuid does not match argument uuid", repository.getClassName() 
     ), exception.getMessage());
