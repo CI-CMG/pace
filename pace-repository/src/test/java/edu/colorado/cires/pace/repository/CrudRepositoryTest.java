@@ -189,6 +189,15 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(uniqueFieldGetter().apply(updated), uniqueFieldGetter().apply(saved));
     assertObjectsEqual(updated, saved, true);
   }
+
+  @Test
+  void testUpdateNullUUID() throws Exception {
+    O object = createNewObject(1);
+    Exception exception = assertThrows(BadArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
+    assertEquals(String.format(
+        "%s uuid must be defined", repository.getClassName()
+    ), exception.getMessage());
+  }
   
   @Test
   void testUpdateUUIDsNotEqual() throws Exception {

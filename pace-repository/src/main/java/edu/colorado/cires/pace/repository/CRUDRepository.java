@@ -62,6 +62,11 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     validate(object);
     UUID objectUUID = object.getUuid();
+    if (objectUUID == null) {
+      throw new BadArgumentException(String.format(
+          "%s uuid must be defined", getClassName()
+      ));
+    }
     if (!objectUUID.equals(uuid)) {
       throw new BadArgumentException(String.format(
           "%s uuid does not match argument uuid", getClassName()
