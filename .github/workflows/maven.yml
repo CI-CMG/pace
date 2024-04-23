@@ -13,44 +13,155 @@ on:
     branches: [ "trunk" ]
 
 jobs:
-  build-unix:
-    strategy:
-      matrix:
-        os: [ macos-14,macos-11,ubuntu-20.04 ]
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Set os/arch environment variables
-      run: |
-        echo "os=${RUNNER_OS}" >> $GITHUB_ENV
-        echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
-    - name: Set up JDK 17
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: '17'
-        distribution: 'graalvm'
-    - id: version
-      run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
-    - name: Package
-      run: mvn -B package -Pnative -Pdep-check
-    - name: Upload Executable
-      uses: actions/upload-artifact@v4
-      with:
-        name: pace-cli-${{ env.os }}-${{ env.arch }}
-        path: "pace-cli"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B clean package -Pdep-check -Pcoverage
+      - id: version
+        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+      - name: Upload Jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-with-dependencies
+          path: "pace-cli/target/*-jar-with-dependencies.jar"
+          
+  package-osx:
+    needs: build
+    strategy:
+      matrix: 
+        os: [ macos-14, macos-11 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+          echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-with-dependencies
+          path: jars
+      - name: Package jar as app-image
+        run: >
+          jpackage
+          --type app-image
+          --verbose
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace-cli'
+          -i jars
+          --main-class edu.colorado.cire.pace.cli.Application
+          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
+      - name: Upload app image
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-cli-${{ env.os }}-${{ env.arch }}
+          path: "*.app"
+  
+  package-linux:
+    needs: build
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+          echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-with-dependencies
+          path: jars
+      - name: Package jar as app-image
+        run: >
+          jpackage
+          --type app-image
+          --verbose
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace-cli'
+          -i jars
+          --main-class edu.colorado.cire.pace.cli.Application
+          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
+      - name: Upload app image
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-cli-${{ env.os }}-${{ env.arch }}
+          path: "pace-cli"
+          
+  package-windows:
+    needs: build
+    strategy:
+      matrix:
+        os: [ windows-2019 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=$env:RUNNER_OS" >> $env:GITHUB_ENV
+          echo "arch=$env:RUNNER_ARCH" >> $env:GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-with-dependencies
+          path: jars
+      - name: Package jar as app-image
+        run: >
+          jpackage
+          --type app-image
+          --verbose
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace-cli'
+          -i jars
+          --dest application
+          --main-class edu.colorado.cire.pace.cli.Application
+          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
+      - name: Upload app image
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-cli-${{ env.os }}-${{ env.arch }}
+          path: application
 
   release:
     needs: 
-      - build-unix
+      - build
+      - package-osx
+      - package-linux
+      - package-windows
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
-      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build-unix.outputs.version }}.zip pace-cli-Linux-X64 
-      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build-unix.outputs.version }}.zip pace-cli-macOS-ARM64 
-      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build-unix.outputs.version }}.zip pace-cli-macOS-X64
+      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
+      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
+      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
+      - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
       - name: Update branch release
         uses: eine/tip@master
         with:
