@@ -9,6 +9,5 @@ public interface TabularTranslationField {
   String getPropertyName();
   @Positive
   int getColumnNumber();
-  boolean isMultiValued();
 
 }

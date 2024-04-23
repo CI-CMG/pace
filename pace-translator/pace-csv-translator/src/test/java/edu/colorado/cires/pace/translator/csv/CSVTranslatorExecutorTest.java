@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
-import edu.colorado.cires.pace.data.object.CSVTranslatorFieldImpl;
+import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.translator.TranslationException;
 import java.io.File;
@@ -58,11 +58,11 @@ public class CSVTranslatorExecutorTest {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .build(),
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .build()
@@ -100,11 +100,11 @@ public class CSVTranslatorExecutorTest {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .build(),
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .build()
@@ -120,11 +120,11 @@ public class CSVTranslatorExecutorTest {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .build(),
-            CSVTranslatorFieldImpl.builder()
+            CSVTranslatorField.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .build()

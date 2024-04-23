@@ -30,6 +30,11 @@
         <artifactId>pace-common-translator</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.github.ci-cmg</groupId>
+        <artifactId>pace-repository</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

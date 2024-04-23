@@ -33,12 +33,10 @@ class TranslatorExecutorTest {
   static class TestTranslatorField implements TabularTranslationField {
     private final String propertyName;
     private final int columnNumber;
-    private final boolean multiValued;
 
     TestTranslatorField(String propertyName, int columnNumber) {
       this.propertyName = propertyName;
       this.columnNumber = columnNumber;
-      this.multiValued = false;
     }
 
     @Override
@@ -51,10 +49,6 @@ class TranslatorExecutorTest {
       return columnNumber;
     }
 
-    @Override
-    public boolean isMultiValued() {
-      return multiValued;
-    }
   }
   
   static class TestTranslator implements TabularTranslator<TabularTranslationField> {
@@ -270,11 +264,13 @@ class TranslatorExecutorTest {
     assertInstanceOf(TranslationException.class, cause);
     TranslationException validationException = (TranslationException) cause;
     assertEquals("Translation failed", validationException.getMessage());
-    List<FormatException> violations = validationException.getFormatExceptions();
+    List<Throwable> violations = validationException.getExceptions();
     assertEquals(1, violations.size());
-    FormatException violation = violations.iterator().next();
-    assertEquals("uuid", violation.getProperty());
-    assertEquals("invalid uuid format", violation.getMessage());
+    Throwable violation = violations.iterator().next();
+    assertInstanceOf(FormatException.class, violation);
+    FormatException formatException = (FormatException) violation; 
+    assertEquals("uuid", formatException.getProperty());
+    assertEquals("invalid uuid format", formatException.getMessage());
   }
 
   @Test
@@ -301,11 +297,13 @@ class TranslatorExecutorTest {
     assertInstanceOf(TranslationException.class, cause);
     TranslationException validationException = (TranslationException) cause;
     assertEquals("Translation failed", validationException.getMessage());
-    List<FormatException> violations = validationException.getFormatExceptions();
+    List<Throwable> violations = validationException.getExceptions();
     assertEquals(1, violations.size());
-    FormatException violation = violations.iterator().next();
-    assertEquals("uuid", violation.getProperty());
-    assertEquals("invalid uuid format", violation.getMessage());
+    Throwable violation = violations.iterator().next();
+    assertInstanceOf(FormatException.class, violation);
+    FormatException formatException = (FormatException) violation; 
+    assertEquals("uuid", formatException.getProperty());
+    assertEquals("invalid uuid format", formatException.getMessage());
   }
   
   @ParameterizedTest

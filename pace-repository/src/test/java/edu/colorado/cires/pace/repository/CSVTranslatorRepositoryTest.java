@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
-import edu.colorado.cires.pace.data.object.CSVTranslatorFieldImpl;
 import java.util.List;
 import java.util.function.Function;
 
@@ -22,11 +21,11 @@ class CSVTranslatorRepositoryTest extends CrudRepositoryTest<CSVTranslator> {
 
   @Override
   protected CSVTranslator createNewObject(int suffix) {
-    CSVTranslatorField field1 = CSVTranslatorFieldImpl.builder()
+    CSVTranslatorField field1 = CSVTranslatorField.builder()
         .propertyName("property1")
         .columnNumber(1)
         .build();
-    CSVTranslatorField field2 = CSVTranslatorFieldImpl.builder()
+    CSVTranslatorField field2 = CSVTranslatorField.builder()
         .propertyName("property2")
         .columnNumber(2)
         .build();

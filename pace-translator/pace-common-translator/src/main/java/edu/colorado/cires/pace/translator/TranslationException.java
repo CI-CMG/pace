@@ -6,24 +6,24 @@ import java.util.List;
 
 public class TranslationException extends IOException {
   
-  private final List<FormatException> formatExceptions;
+  private final List<Throwable> exceptions;
 
   public TranslationException(String message, Throwable throwable) {
     super(message, throwable);
-    this.formatExceptions = Collections.emptyList();
+    this.exceptions = Collections.emptyList();
   }
 
   public TranslationException(String message) {
     super(message);
-    this.formatExceptions = Collections.emptyList();
+    this.exceptions = Collections.emptyList();
   }
 
-  public TranslationException(String message, List<FormatException> formatExceptions) {
+  public TranslationException(String message, List<Throwable> exceptions) {
     super(message);
-    this.formatExceptions = formatExceptions;
+    this.exceptions = exceptions;
   }
 
-  public List<FormatException> getFormatExceptions() {
-    return formatExceptions;
+  public List<Throwable> getExceptions() {
+    return exceptions;
   }
 }

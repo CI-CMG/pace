@@ -27,6 +27,10 @@
       <groupId>io.github.ci-cmg</groupId>
       <artifactId>pace-common-translator</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.ci-cmg</groupId>
+      <artifactId>pace-repository</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>

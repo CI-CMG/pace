@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.translator;
 
-public class FormatException extends Exception {
+class FormatException extends Exception {
   
   private final String propertyName;
 

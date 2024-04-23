@@ -2,6 +2,8 @@ package edu.colorado.cires.pace.translator;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.DepthSensor;
+import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
@@ -12,9 +14,14 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.FileTypeRepository;
+import edu.colorado.cires.pace.repository.NotFoundException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +32,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 final class TranslatorUtils {
-  
-  private enum SensorType {
-    audio, depth, other
-  }
 
-  public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz)
+  public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
       throws TranslationException {
     if (clazz.isAssignableFrom(Ship.class)) {
       return (O) shipFromMap(propertyMap);
@@ -44,6 +47,13 @@ final class TranslatorUtils {
       return (O) sensorFromMap(propertyMap);
     } else if (clazz.isAssignableFrom(SoundSource.class)) {
       return (O) soundSourceFromMap(propertyMap);
+    } else if (clazz.isAssignableFrom(Instrument.class)) {
+      CRUDRepository<?> repository = Arrays.stream(dependencyRepositories)
+          .filter(r -> r instanceof FileTypeRepository)
+          .findFirst().orElseThrow(
+              () -> new TranslationException("Instrument translation missing fileType repository")
+          );
+      return (O) instrumentFromMap(propertyMap, (FileTypeRepository) repository);
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -68,9 +78,31 @@ final class TranslatorUtils {
       validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, SoundSource.class);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       validateSensorTranslator(translatorFields);
+    } else if (clazz.isAssignableFrom(Instrument.class)) {
+      validateInstrumentTranslator(translator);
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
+      ));
+    }
+  }
+  
+  private static void validateInstrumentTranslator(TabularTranslator<? extends TabularTranslationField> translator) throws TranslationException {
+    Set<String> baseRequiredFields = new HashSet<>(Set.of(
+        "uuid", "name", "fileTypes" 
+    ));
+    
+    Set<String> fieldNames = translator.getFields().stream()
+        .map(TabularTranslationField::getPropertyName)
+        .collect(Collectors.toSet());
+
+    Set<String> missingFields = baseRequiredFields.stream()
+        .filter(v -> !fieldNames.contains(v))
+        .collect(Collectors.toSet());
+
+    if (!missingFields.isEmpty()) {
+      throw new TranslationException(String.format(
+          "Translator does not fully describe %s. Missing fields: %s", Instrument.class.getSimpleName(), missingFields
       ));
     }
   }
@@ -106,9 +138,49 @@ final class TranslatorUtils {
     }
   }
   
+  private static Instrument instrumentFromMap(Map<String, Optional<String>> propertyMap, FileTypeRepository fileTypeRepository)
+      throws TranslationException {
+    RuntimeException runtimeException = new RuntimeException();
+    UUID uuid = null;
+    try {
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+    } catch (FormatException e) {
+      runtimeException.addSuppressed(e);
+    }
+
+    String name = getProperty(propertyMap, "name");
+
+    String fileTypeNames = getProperty(propertyMap, "fileType");
+    
+    List<FileType> fileTypes;
+    if (fileTypeNames != null) {
+      fileTypes = Arrays.stream(fileTypeNames.split(";"))
+        .map(ft -> {
+        try {
+          return fileTypeRepository.getByUniqueField(ft);
+        } catch (DatastoreException | NotFoundException e) {
+          runtimeException.addSuppressed(e);
+          return null;
+        }
+      }).toList();
+    } else {
+      fileTypes = Collections.emptyList();
+    }
+    
+    if (runtimeException.getSuppressed().length > 0) {
+      throw new TranslationException("Translation failed", runtimeException);
+    }
+    
+    return Instrument.builder()
+        .uuid(uuid)
+        .name(name)
+        .fileTypes(fileTypes)
+        .build();
+  }
+  
   private static Sensor sensorFromMap(Map<String, Optional<String>> propertyMap)
       throws TranslationException {
-    List<FormatException> exceptions = new ArrayList<>(0);
+    List<Throwable> exceptions = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
@@ -191,7 +263,7 @@ final class TranslatorUtils {
 
   private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    List<FormatException> exceptions = new ArrayList<>(0);
+    List<Throwable> exceptions = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
@@ -213,7 +285,7 @@ final class TranslatorUtils {
   
   private static Ship shipFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
     
-    List<FormatException> exceptions = new ArrayList<>(0);
+    List<Throwable> exceptions = new ArrayList<>(0);
     
     UUID uuid = null;
     try {
@@ -234,7 +306,7 @@ final class TranslatorUtils {
 
   private static Sea seaFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    List<FormatException> violations = new ArrayList<>(0);
+    List<Throwable> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
@@ -255,7 +327,7 @@ final class TranslatorUtils {
 
   private static Project projectFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    List<FormatException> violations = new ArrayList<>(0);
+    List<Throwable> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
@@ -276,7 +348,7 @@ final class TranslatorUtils {
 
   private static Platform platformFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
 
-    List<FormatException> violations = new ArrayList<>(0);
+    List<Throwable> violations = new ArrayList<>(0);
 
     UUID uuid = null;
     try {
