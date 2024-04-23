@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorFieldImpl;
 import java.util.List;
 import java.util.function.Function;
 
@@ -21,13 +22,13 @@ class ExcelTranslatorRepositoryTest extends CrudRepositoryTest<ExcelTranslator> 
 
   @Override
   protected ExcelTranslator createNewObject(int suffix) {
-    ExcelTranslatorField field1 = ExcelTranslatorField.builder()
+    ExcelTranslatorFieldImpl field1 = ExcelTranslatorFieldImpl.builder()
         .propertyName("property1")
         .columnNumber(1)
         .sheetNumber(1)
         .build();
 
-    ExcelTranslatorField field2 = ExcelTranslatorField.builder()
+    ExcelTranslatorFieldImpl field2 = ExcelTranslatorFieldImpl.builder()
         .propertyName("property2")
         .columnNumber(2)
         .sheetNumber(2)

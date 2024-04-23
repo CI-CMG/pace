@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.ExcelResourceTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorFieldImpl;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.translator.TranslationException;
 import java.io.File;
@@ -55,15 +56,20 @@ public class ExcelTranslatorExecutorTest {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .sheetNumber(1)
                 .build(),
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .sheetNumber(2)
+                .build(),
+            ExcelResourceTranslatorField.builder()
+                .propertyName("other")
+                .columnNumber(3)
+                .sheetNumber(3)
                 .build()
         ))
         .build();
@@ -98,12 +104,12 @@ public class ExcelTranslatorExecutorTest {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .sheetNumber(1)
                 .build(),
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .sheetNumber(2)
@@ -120,12 +126,12 @@ public class ExcelTranslatorExecutorTest {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("uuid")
                 .columnNumber(1)
                 .sheetNumber(1)
                 .build(),
-            ExcelTranslatorField.builder()
+            ExcelTranslatorFieldImpl.builder()
                 .propertyName("name")
                 .columnNumber(2)
                 .sheetNumber(2)

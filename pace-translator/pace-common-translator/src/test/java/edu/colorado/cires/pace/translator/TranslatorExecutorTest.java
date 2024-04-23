@@ -33,10 +33,12 @@ class TranslatorExecutorTest {
   static class TestTranslatorField implements TabularTranslationField {
     private final String propertyName;
     private final int columnNumber;
+    private final boolean multiValued;
 
     TestTranslatorField(String propertyName, int columnNumber) {
       this.propertyName = propertyName;
       this.columnNumber = columnNumber;
+      this.multiValued = false;
     }
 
     @Override
@@ -47,6 +49,11 @@ class TranslatorExecutorTest {
     @Override
     public int getColumnNumber() {
       return columnNumber;
+    }
+
+    @Override
+    public boolean isMultiValued() {
+      return multiValued;
     }
   }
   

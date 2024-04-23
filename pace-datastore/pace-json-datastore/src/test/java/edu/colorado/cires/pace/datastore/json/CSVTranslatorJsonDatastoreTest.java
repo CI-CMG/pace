@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.data.object.CSVTranslatorFieldImpl;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -29,11 +30,11 @@ class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator> {
 
   @Override
   protected CSVTranslator createNewObject() {
-    CSVTranslatorField field1 = CSVTranslatorField.builder()
+    CSVTranslatorField field1 = CSVTranslatorFieldImpl.builder()
         .propertyName("property1")
         .columnNumber(1)
         .build();
-    CSVTranslatorField field2 = CSVTranslatorField.builder()
+    CSVTranslatorField field2 = CSVTranslatorFieldImpl.builder()
         .propertyName("property2")
         .columnNumber(2)
         .build();

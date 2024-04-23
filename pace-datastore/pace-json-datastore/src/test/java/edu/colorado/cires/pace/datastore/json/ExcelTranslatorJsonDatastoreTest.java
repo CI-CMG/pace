@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorFieldImpl;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -29,13 +30,13 @@ class ExcelTranslatorJsonDatastoreTest extends JsonDatastoreTest<ExcelTranslator
 
   @Override
   protected ExcelTranslator createNewObject() {
-    ExcelTranslatorField field1 = ExcelTranslatorField.builder()
+    ExcelTranslatorFieldImpl field1 = ExcelTranslatorFieldImpl.builder()
         .propertyName("property1")
         .columnNumber(1)
         .sheetNumber(1)
         .build();
 
-    ExcelTranslatorField field2 = ExcelTranslatorField.builder()
+    ExcelTranslatorFieldImpl field2 = ExcelTranslatorFieldImpl.builder()
         .propertyName("property2")
         .columnNumber(2)
         .sheetNumber(2)

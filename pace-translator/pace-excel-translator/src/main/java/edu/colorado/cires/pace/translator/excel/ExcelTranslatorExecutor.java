@@ -1,7 +1,9 @@
 package edu.colorado.cires.pace.translator.excel;
 
+import edu.colorado.cires.pace.data.object.ExcelResourceTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorFieldImpl;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
 import java.io.IOException;
@@ -28,10 +30,22 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
       throws TranslationException {
     try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(inputStream)) {
       Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings = translatorDefinition.getFields().stream()
-          .map(f -> f.toBuilder()
-              .sheetNumber(f.getSheetNumber() - 1)
-              .columnNumber(f.getColumnNumber() - 1)
-              .build())
+          .map(f -> {
+            int sheetNumber = f.getSheetNumber() - 1;
+            int columnNumber = f.getColumnNumber() - 1;
+            
+            if (f instanceof ExcelResourceTranslatorField) {
+              return ((ExcelResourceTranslatorField) f).toBuilder()
+                  .sheetNumber(sheetNumber)
+                  .columnNumber(columnNumber)
+                  .build();
+            } else {
+              return ((ExcelTranslatorFieldImpl) f).toBuilder()
+                  .sheetNumber(sheetNumber)
+                  .columnNumber(columnNumber)
+                  .build();
+            }
+          })
           .collect(Collectors.groupingBy(ExcelTranslatorField::getSheetNumber));
 
       return readableWorkbook.getSheets()
