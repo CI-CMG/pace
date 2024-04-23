@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class SoundSourceJsonDatastore extends JsonDatastore<SoundSource> {
 
   public SoundSourceJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("source-sources"), objectMapper, SoundSource.class, SoundSource::getName);
+    super(workDirectory.resolve("sound-sources"), objectMapper, SoundSource.class, SoundSource::getName);
   }
 
   @Override
