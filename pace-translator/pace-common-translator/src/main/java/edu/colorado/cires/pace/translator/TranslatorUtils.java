@@ -46,6 +46,8 @@ final class TranslatorUtils {
       return (O) sensorFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(SoundSource.class)) {
       return (O) soundSourceFromMap(propertyMap, row);
+    } else if (clazz.isAssignableFrom(FileType.class)) {
+      return (O) fileTypeFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Instrument.class)) {
       CRUDRepository<?> repository = Arrays.stream(dependencyRepositories)
           .filter(r -> r instanceof FileTypeRepository)
@@ -66,19 +68,21 @@ final class TranslatorUtils {
         .collect(Collectors.toSet());
     
     if (clazz.isAssignableFrom(Ship.class)) {
-      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Ship.class);
+      validateTranslatorWithFlatFields(translatorFields, Ship.class);
     } else if (clazz.isAssignableFrom(Sea.class)) {
-      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Sea.class);
+      validateTranslatorWithFlatFields(translatorFields, Sea.class);
     } else if (clazz.isAssignableFrom(Project.class)) {
-      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Project.class);
+      validateTranslatorWithFlatFields(translatorFields, Project.class);
     } else if (clazz.isAssignableFrom(Platform.class)) {
-      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, Platform.class);
+      validateTranslatorWithFlatFields(translatorFields, Platform.class);
     } else if (clazz.isAssignableFrom(SoundSource.class)) {
-      validateObjectWithUUIDAndUniqueFieldTranslator(translatorFields, SoundSource.class);
+      validateTranslatorWithFlatFields(translatorFields, SoundSource.class);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       validateSensorTranslator(translatorFields);
     } else if (clazz.isAssignableFrom(Instrument.class)) {
       validateInstrumentTranslator(translator);
+    } else if (clazz.isAssignableFrom(FileType.class)) {
+      validateTranslatorWithFlatFields(translatorFields, FileType.class);
     } else {
       throw new TranslatorValidationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -122,7 +126,7 @@ final class TranslatorUtils {
     }
   }
   
-  private static void validateObjectWithUUIDAndUniqueFieldTranslator(Set<String> propertyNames, Class<?> clazz) throws TranslatorValidationException {
+  private static void validateTranslatorWithFlatFields(Set<String> propertyNames, Class<?> clazz) throws TranslatorValidationException {
     Set<String> missingFieldNames = Arrays.stream(clazz.getDeclaredFields())
         .map(Field::getName)
         .filter(name -> !propertyNames.contains(name))
@@ -137,6 +141,33 @@ final class TranslatorUtils {
     }
   }
   
+  private static FileType fileTypeFromMap(Map<String, Optional<String>> propertyMap, int row) throws RowConversionException {
+    RuntimeException runtimeException = new RuntimeException();
+    UUID uuid = null;
+    try {
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+    } catch (FieldException e) {
+      runtimeException.addSuppressed(e);
+    }
+
+    String type = getProperty(propertyMap, "type");
+    String comment = getProperty(propertyMap, "comment");
+    
+    if (runtimeException.getSuppressed().length > 0) {
+      RowConversionException exception = new RowConversionException("Translation failed", row);
+      for (Throwable throwable : runtimeException.getSuppressed()) {
+        exception.addSuppressed(throwable);
+      }
+      throw exception;
+    }
+    
+    return FileType.builder()
+        .uuid(uuid)
+        .type(type)
+        .comment(comment)
+        .build();
+  }
+  
   private static Instrument instrumentFromMap(Map<String, Optional<String>> propertyMap, FileTypeRepository fileTypeRepository, int row)
       throws RowConversionException {
     RuntimeException runtimeException = new RuntimeException();
@@ -149,7 +180,7 @@ final class TranslatorUtils {
 
     String name = getProperty(propertyMap, "name");
 
-    String fileTypeNames = getProperty(propertyMap, "fileType");
+    String fileTypeNames = getProperty(propertyMap, "fileTypes");
     
     List<FileType> fileTypes;
     if (fileTypeNames != null) {
@@ -159,7 +190,7 @@ final class TranslatorUtils {
           return fileTypeRepository.getByUniqueField(ft);
         } catch (DatastoreException | NotFoundException e) {
           runtimeException.addSuppressed(new FieldException(
-              "fileType", e.getMessage()
+              "fileTypes", e.getMessage()
           ));
           return null;
         }

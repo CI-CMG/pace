@@ -72,6 +72,48 @@ class TranslatorUtilsTest {
         () -> new IllegalStateException("name not found in propertyMap")
     ), object.getName());
   }
+  
+  @Test
+  void testConvertFileType() throws RowConversionException {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of(UUID.randomUUID().toString()),
+        "type", Optional.of("test-type"),
+        "comment", Optional.of("test-comment")
+    );
+
+    FileType object = TranslatorUtils.convertMapToObject(propertyMap, FileType.class, 1);
+    assertEquals(propertyMap.get("uuid").orElseThrow(
+        () -> new IllegalStateException("uuid not found in propertyMap")
+    ), object.getUuid().toString());
+    assertEquals(propertyMap.get("type").orElseThrow(
+        () -> new IllegalStateException("type not found in propertyMap")
+    ), object.getType());
+    assertEquals(propertyMap.get("comment").orElseThrow(
+        () -> new IllegalStateException("comment not found in propertyMap")
+    ), object.getComment());
+  }
+
+  @Test
+  void testConvertFileTypeBadUUID() {
+    Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of("TEST"),
+        "type", Optional.of("test-type"),
+        "comment", Optional.of("test-comment")
+    );
+
+    Exception exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, FileType.class, 1));
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    FieldException violation = Arrays.stream(exception.getSuppressed())
+        .map(v -> (FieldException) v)
+        .filter(v -> (v).getProperty().equals("uuid"))
+        .findFirst().orElseThrow(
+            () -> new IllegalStateException("uuid violation not found")
+        );
+    assertEquals("uuid", violation.getProperty());
+    assertEquals("invalid uuid format", violation.getMessage());
+  }
 
   @Test
   void testConvertSoundSource() throws RowConversionException {
@@ -650,7 +692,7 @@ class TranslatorUtilsTest {
     Instrument instrument = TranslatorUtils.convertMapToObject(Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
-        "fileType", Optional.of(String.format(
+        "fileTypes", Optional.of(String.format(
             "%s;%s", fileType1, fileType2
         ))
     ), Instrument.class, 1, fileTypeRepository);
@@ -724,7 +766,7 @@ class TranslatorUtilsTest {
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
-        "fileType", Optional.of(String.format(
+        "fileTypes", Optional.of(String.format(
             "%s;%s", fileType1, fileType2
         ))
     ), Instrument.class, 1, fileTypeRepository));
@@ -760,7 +802,7 @@ class TranslatorUtilsTest {
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
-        "fileType", Optional.of(String.format(
+        "fileTypes", Optional.of(String.format(
             "%s;%s", fileType1, fileType2
         ))
     ), Instrument.class, 1, fileTypeRepository));
@@ -773,6 +815,27 @@ class TranslatorUtilsTest {
     assertEquals(String.format(
         "failed to retrieve file type with type %s", fileType2
     ), notFoundException.getMessage());
+  }
+  
+  @Test
+  void testInvalidFileTypeTranslator() {
+    TestTranslator translator = new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1)
+    ));
+    
+    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(translator, FileType.class));
+    assertEquals("Translator does not fully describe FileType. Missing fields: [comment, type]", exception.getMessage());
+  }
+
+  @Test
+  void testValidFileTypeTranslator() {
+    TestTranslator translator = new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1),
+        new TestTranslatorField("type", 2),
+        new TestTranslatorField("comment", 3)
+    ));
+
+    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(translator, FileType.class));
   }
 
 }
