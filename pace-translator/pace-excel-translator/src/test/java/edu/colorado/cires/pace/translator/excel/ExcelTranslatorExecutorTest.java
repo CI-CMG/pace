@@ -8,8 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.translator.ObjectWithRuntimeException;
+import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
 import edu.colorado.cires.pace.translator.TranslationException;
+import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,12 +49,12 @@ public class ExcelTranslatorExecutorTest {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
   }
 
-  private ExcelTranslatorExecutor<Ship> createExecutor(ExcelTranslator translator) throws TranslationException {
+  private ExcelTranslatorExecutor<Ship> createExecutor(ExcelTranslator translator) throws TranslatorValidationException {
     return new ExcelTranslatorExecutor<>(translator, Ship.class);
   }
 
   @Test
-  void testTranslate() throws IOException {
+  void testTranslate() throws IOException, TranslatorValidationException {
     ExcelTranslator translator = ExcelTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -87,16 +88,16 @@ public class ExcelTranslatorExecutorTest {
     try (
         InputStream inputStream = new FileInputStream(prepareExcelFile(recordsMap))
     ) {
-      Map<String, ObjectWithRuntimeException<Ship>> result = createExecutor(translator).translate(inputStream).collect(Collectors.toMap(
+      Map<String, ObjectWithRowConversionException<Ship>> result = createExecutor(translator).translate(inputStream).collect(Collectors.toMap(
           ship -> ship.object().getUuid().toString(),
           ship -> ship
       ));
 
       for (Entry<String, String> entry : recordsMap.entrySet()) {
-        ObjectWithRuntimeException<Ship> actual = result.get(entry.getKey());
+        ObjectWithRowConversionException<Ship> actual = result.get(entry.getKey());
         assertEquals(entry.getKey(), actual.object().getUuid().toString());
         assertEquals(entry.getValue(), actual.object().getName());
-        assertNull(actual.runtimeException());
+        assertNull(actual.rowConversionException());
       }
     }
   }
@@ -149,9 +150,8 @@ public class ExcelTranslatorExecutorTest {
       inputStream = stream;
     }
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> createExecutor(translator).translate(inputStream).toList());
-    assertEquals("Translation failed", exception.getMessage());
-    assertInstanceOf(IOException.class, exception.getCause());
+    IOException exception = assertThrows(IOException.class, () -> createExecutor(translator).translate(inputStream).toList());
+    assertEquals("Stream Closed", exception.getMessage());
   }
 
   private File prepareExcelFile(Map<String, String> recordsMap) throws IOException {

@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.translator;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Map;
@@ -15,41 +16,38 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
   private final Class<O> clazz;
   private final CRUDRepository<?>[] dependencyRepositories;
 
-  protected TranslatorExecutor(T translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) throws TranslationException {
+  protected TranslatorExecutor(T translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
+      throws TranslatorValidationException {
     this.translatorDefinition = translatorDefinition;
     this.clazz = clazz;
     this.dependencyRepositories = dependencyRepositories;
     TranslatorUtils.validateTranslator(translatorDefinition, clazz);
   }
 
-  public Stream<ObjectWithRuntimeException<O>> translate(InputStream inputStream) throws TranslationException {
+  public Stream<ObjectWithRowConversionException<O>> translate(InputStream inputStream) throws IOException {
     return translate(getPropertyStream(inputStream, translatorDefinition));
   }
   
-  public Stream<ObjectWithRuntimeException<O>> translate(Reader reader) throws TranslationException {
+  public Stream<ObjectWithRowConversionException<O>> translate(Reader reader) throws IOException {
     return translate(getPropertyStream(reader, translatorDefinition));
   }
   
-  private Stream<ObjectWithRuntimeException<O>> translate(Stream<MapWithRowNumber> propertyStream) {
+  private Stream<ObjectWithRowConversionException<O>> translate(Stream<MapWithRowNumber> propertyStream) {
     return propertyStream
         .map(m -> {
           try {
             O object = TranslatorUtils.convertMapToObject(m.map(), clazz, m.row(), dependencyRepositories);
-            return new ObjectWithRuntimeException<>(object, null);
-          } catch (TranslationException e) {
-            RuntimeException runtimeException = new RuntimeException();
-            for (Throwable throwable : e.getCause().getSuppressed()) {
-              runtimeException.addSuppressed(throwable);
-            }
-            return new ObjectWithRuntimeException<>(null, runtimeException);
+            return new ObjectWithRowConversionException<>(object, null);
+          } catch (RowConversionException e) {
+            return new ObjectWithRowConversionException<>(null, e);
           }
         });
   }
 
   protected abstract Stream<MapWithRowNumber> getPropertyStream(InputStream inputStream, T translatorDefinition)
-      throws TranslationException;
+      throws IOException;
   
-  protected abstract Stream<MapWithRowNumber> getPropertyStream(Reader reader, T translatorDefinition) throws TranslationException;
+  protected abstract Stream<MapWithRowNumber> getPropertyStream(Reader reader, T translatorDefinition) throws IOException;
   
   public record MapWithRowNumber(Map<String, Optional<String>> map, Integer row) {}
 

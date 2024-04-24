@@ -5,5 +5,4 @@ public class DatastoreException extends Exception {
   public DatastoreException(String message, Throwable cause) {
     super(message, cause);
   }
-
 }

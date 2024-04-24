@@ -4,6 +4,7 @@ import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
+import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -16,7 +17,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 public class CSVTranslatorExecutor<O> extends TranslatorExecutor<O, CSVTranslator> {
 
-  public CSVTranslatorExecutor(CSVTranslator translatorDefinition, Class<O> clazz) throws TranslationException {
+  public CSVTranslatorExecutor(CSVTranslator translatorDefinition, Class<O> clazz) throws TranslatorValidationException {
     super(translatorDefinition, clazz);
   }
 
@@ -26,17 +27,14 @@ public class CSVTranslatorExecutor<O> extends TranslatorExecutor<O, CSVTranslato
   }
 
   @Override
-  protected Stream<MapWithRowNumber> getPropertyStream(Reader reader, CSVTranslator translatorDefinition) throws TranslationException {
+  protected Stream<MapWithRowNumber> getPropertyStream(Reader reader, CSVTranslator translatorDefinition) throws IOException {
     CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
         .setHeader()
         .setSkipHeaderRecord(true)
         .build();
-    try {
-      return csvFormat.parse(reader).stream()
-          .map(r -> convertRowToPropertyMap(r, translatorDefinition));
-    } catch (IOException e) {
-      throw new TranslationException("Translation failed", e);
-    }
+
+    return csvFormat.parse(reader).stream()
+        .map(r -> convertRowToPropertyMap(r, translatorDefinition));
   }
 
   private static MapWithRowNumber convertRowToPropertyMap(CSVRecord record, CSVTranslator translator) {

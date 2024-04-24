@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.translator.ObjectWithRuntimeException;
-import edu.colorado.cires.pace.translator.TranslationException;
+import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
+import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,12 +51,12 @@ public class CSVTranslatorExecutorTest {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
   }
   
-  private CSVTranslatorExecutor<Ship> createExecutor(CSVTranslator translator) throws TranslationException {
+  private CSVTranslatorExecutor<Ship> createExecutor(CSVTranslator translator) throws TranslatorValidationException {
     return new CSVTranslatorExecutor<>(translator, Ship.class);
   }
   
   @Test
-  void testTranslate() throws IOException {
+  void testTranslate() throws IOException, TranslatorValidationException {
     CSVTranslator translator = CSVTranslator.builder()
         .name("test")
         .fields(List.of(
@@ -84,16 +84,16 @@ public class CSVTranslatorExecutorTest {
         InputStream inputStream = new FileInputStream(prepareCSVFile(recordsMap));
         Reader reader = new InputStreamReader(inputStream)
     ) {
-      Map<String, ObjectWithRuntimeException<Ship>> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
+      Map<String, ObjectWithRowConversionException<Ship>> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
           ship -> ship.object().getUuid().toString(),
           ship -> ship
       ));
       
       for (Entry<String, String> entry : recordsMap.entrySet()) {
-        ObjectWithRuntimeException<Ship> actual = result.get(entry.getKey());
+        ObjectWithRowConversionException<Ship> actual = result.get(entry.getKey());
         assertEquals(entry.getKey(), actual.object().getUuid().toString());
         assertEquals(entry.getValue(), actual.object().getName());
-        assertNull(actual.runtimeException());
+        assertNull(actual.rowConversionException());
       }
     }
   }
@@ -145,9 +145,8 @@ public class CSVTranslatorExecutorTest {
     try (
         Reader reader = new InputStreamReader(inputStream)
     ) {
-      TranslationException exception = assertThrows(TranslationException.class, () -> createExecutor(translator).translate(reader).toList());
-      assertEquals("Translation failed", exception.getMessage());
-      assertInstanceOf(IOException.class, exception.getCause());
+      IOException exception = assertThrows(IOException.class, () -> createExecutor(translator).translate(reader).toList());
+      assertEquals("Stream Closed", exception.getMessage());
     }
   }
   

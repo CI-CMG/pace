@@ -4,6 +4,7 @@ import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
+import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -19,13 +20,13 @@ import org.dhatim.fastexcel.reader.Row;
 
 public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTranslator> {
 
-  public ExcelTranslatorExecutor(ExcelTranslator translatorDefinition, Class<O> clazz) throws TranslationException {
+  public ExcelTranslatorExecutor(ExcelTranslator translatorDefinition, Class<O> clazz) throws TranslatorValidationException {
     super(translatorDefinition, clazz);
   }
 
   @Override
   protected Stream<MapWithRowNumber> getPropertyStream(InputStream inputStream, ExcelTranslator translatorDefinition)
-      throws TranslationException {
+      throws IOException {
     try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(inputStream)) {
       Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings = translatorDefinition.getFields().stream()
           .map(f -> f.toBuilder()
@@ -48,8 +49,6 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
               rowWithSheetIndex -> rowWithSheetIndex.row().getRowNum()
           )).values().stream()
           .map(rows -> convertRowsToPropertyMap(rows, sheetTranslatorMappings));
-    } catch (IOException e) {
-      throw new TranslationException("Translation failed", e);
     }
   }
 
