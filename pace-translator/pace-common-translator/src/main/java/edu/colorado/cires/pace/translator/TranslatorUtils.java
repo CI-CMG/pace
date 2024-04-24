@@ -145,7 +145,7 @@ final class TranslatorUtils {
     RuntimeException runtimeException = new RuntimeException();
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -173,7 +173,7 @@ final class TranslatorUtils {
     RuntimeException runtimeException = new RuntimeException();
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -220,7 +220,7 @@ final class TranslatorUtils {
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -307,7 +307,7 @@ final class TranslatorUtils {
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -333,7 +333,7 @@ final class TranslatorUtils {
     
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -358,7 +358,7 @@ final class TranslatorUtils {
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -383,7 +383,7 @@ final class TranslatorUtils {
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -408,7 +408,7 @@ final class TranslatorUtils {
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
     } catch (FieldException e) {
       runtimeException.addSuppressed(e);
     }
@@ -427,7 +427,7 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static UUID uuidFromString(String uuidString, int row) throws FieldException {
+  private static UUID uuidFromString(String uuidString) throws FieldException {
     if (uuidString == null || StringUtils.isBlank(uuidString)) {
       return null;
     }

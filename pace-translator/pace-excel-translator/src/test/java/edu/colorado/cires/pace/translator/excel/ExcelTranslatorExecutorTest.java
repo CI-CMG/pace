@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.translator.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -9,7 +8,6 @@ import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
-import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.File;
 import java.io.FileInputStream;

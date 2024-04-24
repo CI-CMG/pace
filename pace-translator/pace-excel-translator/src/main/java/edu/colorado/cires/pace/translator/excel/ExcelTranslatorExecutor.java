@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.translator.excel;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.IOException;
