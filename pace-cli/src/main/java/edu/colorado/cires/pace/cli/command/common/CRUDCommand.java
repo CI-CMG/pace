@@ -24,7 +24,8 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
     );
   }
 
-  protected abstract Object runCommand() throws IOException, DatastoreException, NotFoundException, ConflictException, BadArgumentException;
+  protected abstract Object runCommand()
+      throws IOException, DatastoreException, NotFoundException, ConflictException, BadArgumentException, BatchWriteException;
 
   private Path getDatastoreDirectory() {
     return new ApplicationPropertyResolver().getWorkDir();
@@ -49,6 +50,8 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
     } catch (DatastoreException e) {
       throw new RuntimeException(e);
     } catch (BadArgumentException e) {
+      throw new RuntimeException(e);
+    } catch (BatchWriteException e) {
       throw new RuntimeException(e);
     }
   }

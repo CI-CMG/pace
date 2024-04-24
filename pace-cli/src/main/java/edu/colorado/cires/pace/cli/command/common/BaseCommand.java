@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.cli.command.common;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Create;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Delete;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUUID;
@@ -31,19 +32,22 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
   private final Class<O> clazz;
   private final RepositoryFactory<O> repositoryFactory;
   private final RepositoryFactory[] dependencyRepositoryFactories;
+  private final TypeReference<java.util.List<O>> typeReference;
   
   @ParentCommand
   private PaceCLI paceCLI;
 
-  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory) {
+  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory, TypeReference<java.util.List<O>> typeReference) {
     this.clazz = clazz;
     this.repositoryFactory = repositoryFactory;
+    this.typeReference = typeReference;
     this.dependencyRepositoryFactories = new RepositoryFactory<?>[]{};
   }
 
-  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory, RepositoryFactory... dependencyRepositoryFactories) {
+  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory, TypeReference<java.util.List<O>> typeReference, RepositoryFactory... dependencyRepositoryFactories) {
     this.clazz = clazz;
     this.repositoryFactory = repositoryFactory;
+    this.typeReference = typeReference;
     this.dependencyRepositoryFactories = dependencyRepositoryFactories;
   }
 
@@ -59,6 +63,10 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     return dependencyRepositoryFactories;
   }
 
+  public TypeReference<java.util.List<O>> getTypeReference() {
+    return typeReference;
+  }
+
   @Command(name = "create")
   static class Create<O extends ObjectWithUniqueField> extends CreateCommand<O> {
     
@@ -67,6 +75,9 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
 
     @Parameters(description = "File containing object (- for stdin)")
     private File file;
+    
+    @Option(names = {"--multiple","-m"}, description = "create multiple records")
+    private boolean multivalued = false;
 
     @Override
     protected Supplier<File> getJsonBlobProvider() {
@@ -76,6 +87,16 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected Class<O> getJsonClass() {
       return baseCommand.getClazz();
+    }
+
+    @Override
+    protected Supplier<Boolean> isMultivalued() {
+      return () -> multivalued;
+    }
+
+    @Override
+    public TypeReference<java.util.List<O>> getTypeReference() {
+      return baseCommand.getTypeReference();
     }
 
     @Override
@@ -161,6 +182,9 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
 
     @Parameters(description = "File containing object (- for stdin)")
     private File file;
+
+    @Option(names = {"--multiple","-m"}, description = "update multiple records")
+    private boolean multivalued = false;
     
     @ParentCommand
     private BaseCommand baseCommand;
@@ -173,6 +197,16 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected Class<O> getJsonClass() {
       return baseCommand.getClazz();
+    }
+
+    @Override
+    protected Supplier<Boolean> isMultivalued() {
+      return () -> multivalued;
+    }
+
+    @Override
+    public TypeReference<java.util.List<O>> getTypeReference() {
+      return baseCommand.getTypeReference();
     }
 
     @Override

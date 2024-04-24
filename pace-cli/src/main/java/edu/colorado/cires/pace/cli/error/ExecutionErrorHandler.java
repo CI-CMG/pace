@@ -2,6 +2,8 @@ package edu.colorado.cires.pace.cli.error;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import edu.colorado.cires.pace.cli.command.common.BatchWriteException;
 import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.RowConversionException;
@@ -25,9 +27,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
   public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) throws Exception {
     Throwable reportedException = e.getCause() == null ? e : e.getCause();
     
-    commandLine.getErr().println(commandLine.getColorScheme().errorText(String.format(
-        "%s: %s", reportedException.getClass().getSimpleName(), reportedException.getMessage()
-    )));
+    commandLine.getErr().println(commandLine.getColorScheme().errorText(getExceptionText(reportedException)));
     String errorDetail = getErrorDetail(reportedException);
     if (errorDetail != null) {
       commandLine.getErr().println(commandLine.getColorScheme().errorText(errorDetail));
@@ -39,8 +39,10 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
   }
   
   private String getErrorDetail(Throwable e) throws JsonProcessingException {
+    ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+    
     if (e instanceof ConstraintViolationException) {
-      return objectMapper.writerWithDefaultPrettyPrinter()
+      return objectWriter
           .writeValueAsString(toViolations(((ConstraintViolationException) e).getConstraintViolations()));
     } else if (e instanceof TranslationException) {
       Map<Integer, List<RowConversionException>> exceptions = Arrays.stream(e.getSuppressed())
@@ -49,7 +51,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
               RowConversionException::getRow
           ));
       
-      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+      return objectWriter.writeValueAsString(
           exceptions.entrySet().stream()
               .map(entry ->
                   new TranslateRowException(
@@ -63,8 +65,14 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
                   )
               ).toList()
       );
+    } else if (e instanceof BatchWriteException) {
+      return objectWriter.writeValueAsString(
+          Arrays.stream(e.getSuppressed())
+              .map(ExecutionErrorHandler::getExceptionText)
+              .toList()
+      );
     }
-    
+
     return null;
   }
   
@@ -76,5 +84,11 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
     return violations.stream()
         .map(v -> new Violation(v.getPropertyPath().toString(), v.getMessage()))
         .collect(Collectors.toSet());
+  }
+  
+  private static String getExceptionText(Throwable throwable) {
+    return String.format(
+        "%s: %s", throwable.getClass().getSimpleName(), throwable.getMessage()
+    );
   }
 }
