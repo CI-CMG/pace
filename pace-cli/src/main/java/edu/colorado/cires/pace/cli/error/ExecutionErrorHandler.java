@@ -3,8 +3,11 @@ package edu.colorado.cires.pace.cli.error;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.util.SerializationUtils;
+import edu.colorado.cires.pace.translator.FormatException;
+import edu.colorado.cires.pace.translator.TranslationException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import picocli.CommandLine;
@@ -36,12 +39,22 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
     if (e instanceof ConstraintViolationException) {
       return objectMapper.writerWithDefaultPrettyPrinter()
           .writeValueAsString(toViolations(((ConstraintViolationException) e).getConstraintViolations()));
+    } else if (e instanceof TranslationException) {
+      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+          Arrays.stream(e.getSuppressed())
+              .filter(ex -> ex instanceof FormatException)
+              .map(ex -> (FormatException) ex)
+              .map(ex -> new TranslateException(ex.getProperty(), ex.getMessage(), ex.getRow()))
+              .toList()
+      );
     }
     
     return null;
   }
   
   private record Violation(String property, String message) {}
+  
+  private record TranslateException(String field, String message, int row) {}
   
   private Set<Violation> toViolations(Set<ConstraintViolation<?>> violations) {
     return violations.stream()

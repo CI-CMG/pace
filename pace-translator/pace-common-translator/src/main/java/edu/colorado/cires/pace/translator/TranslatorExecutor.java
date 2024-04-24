@@ -22,27 +22,35 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
     TranslatorUtils.validateTranslator(translatorDefinition, clazz);
   }
 
-  public Stream<O> translate(InputStream inputStream) throws TranslationException {
-    return getPropertyStream(inputStream, translatorDefinition)
-        .map(this::convertMapToObject);
+  public Stream<ObjectWithRuntimeException<O>> translate(InputStream inputStream) throws TranslationException {
+    return translate(getPropertyStream(inputStream, translatorDefinition));
   }
   
-  public Stream<O> translate(Reader reader) throws TranslationException {
-    return getPropertyStream(reader, translatorDefinition)
-        .map(this::convertMapToObject);
+  public Stream<ObjectWithRuntimeException<O>> translate(Reader reader) throws TranslationException {
+    return translate(getPropertyStream(reader, translatorDefinition));
   }
   
-  private O convertMapToObject(Map<String, Optional<String>> propertyMap) {
-    try {
-      return TranslatorUtils.convertMapToObject(propertyMap, clazz, dependencyRepositories);
-    } catch (TranslationException e) {
-      throw new RuntimeException(e);
-    }
+  private Stream<ObjectWithRuntimeException<O>> translate(Stream<MapWithRowNumber> propertyStream) throws TranslationException {
+    return propertyStream
+        .map(m -> {
+          try {
+            O object = TranslatorUtils.convertMapToObject(m.map(), clazz, m.row(), dependencyRepositories);
+            return new ObjectWithRuntimeException<>(object, null);
+          } catch (TranslationException e) {
+            RuntimeException runtimeException = new RuntimeException();
+            for (Throwable throwable : e.getCause().getSuppressed()) {
+              runtimeException.addSuppressed(throwable);
+            }
+            return new ObjectWithRuntimeException<>(null, runtimeException);
+          }
+        });
   }
 
-  protected abstract Stream<Map<String, Optional<String>>> getPropertyStream(InputStream inputStream, T translatorDefinition)
+  protected abstract Stream<MapWithRowNumber> getPropertyStream(InputStream inputStream, T translatorDefinition)
       throws TranslationException;
   
-  protected abstract Stream<Map<String, Optional<String>>> getPropertyStream(Reader reader, T translatorDefinition) throws TranslationException;
+  protected abstract Stream<MapWithRowNumber> getPropertyStream(Reader reader, T translatorDefinition) throws TranslationException;
+  
+  public record MapWithRowNumber(Map<String, Optional<String>> map, Integer row) {}
 
 }

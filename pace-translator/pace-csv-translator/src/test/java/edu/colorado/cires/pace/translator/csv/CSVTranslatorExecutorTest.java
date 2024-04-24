@@ -2,11 +2,13 @@ package edu.colorado.cires.pace.translator.csv;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.translator.ObjectWithRuntimeException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,15 +84,16 @@ public class CSVTranslatorExecutorTest {
         InputStream inputStream = new FileInputStream(prepareCSVFile(recordsMap));
         Reader reader = new InputStreamReader(inputStream)
     ) {
-      Map<String, Ship> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
-          ship -> ship.getUuid().toString(),
+      Map<String, ObjectWithRuntimeException<Ship>> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
+          ship -> ship.object().getUuid().toString(),
           ship -> ship
       ));
       
       for (Entry<String, String> entry : recordsMap.entrySet()) {
-        Ship actual = result.get(entry.getKey());
-        assertEquals(entry.getKey(), actual.getUuid().toString());
-        assertEquals(entry.getValue(), actual.getName());
+        ObjectWithRuntimeException<Ship> actual = result.get(entry.getKey());
+        assertEquals(entry.getKey(), actual.object().getUuid().toString());
+        assertEquals(entry.getValue(), actual.object().getName());
+        assertNull(actual.runtimeException());
       }
     }
   }

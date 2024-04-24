@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -80,15 +81,17 @@ class TranslatorExecutorTest {
     return new TranslatorExecutor<>(translator, clazz) {
 
       @Override
-      protected Stream<Map<String, Optional<String>>> getPropertyStream(InputStream inputStream,
+      protected Stream<MapWithRowNumber> getPropertyStream(InputStream inputStream,
           TabularTranslator<TabularTranslationField> translatorDefinition) {
-        return maps.stream();
+        return maps.stream()
+            .map(m -> new MapWithRowNumber(m, 1));
       }
 
       @Override
-      protected Stream<Map<String, Optional<String>>> getPropertyStream(Reader reader,
+      protected Stream<MapWithRowNumber> getPropertyStream(Reader reader,
           TabularTranslator<TabularTranslationField> translatorDefinition) {
-        return maps.stream();
+        return maps.stream()
+            .map(m -> new MapWithRowNumber(m, 1));
       }
     };
   }
@@ -112,15 +115,17 @@ class TranslatorExecutorTest {
         )
     );
     
-    List<ObjectWithName> ships = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRuntimeException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null).toList();
-    assertEquals(2, ships.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), ships.get(0).getUuid().toString());
-    assertEquals(maps.get(0).get("name").orElseThrow(), ships.get(0).getName());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), ships.get(1).getUuid().toString());
-    assertEquals(maps.get(1).get("name").orElseThrow(), ships.get(1).getName());
+    assertEquals(2, results.size());
+    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertNull(results.get(0).runtimeException());
+    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertNull(results.get(1).runtimeException());
+    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
   }
 
   @Test
@@ -138,18 +143,20 @@ class TranslatorExecutorTest {
         )
     );
 
-    List<SoundSource> ships = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRuntimeException<SoundSource>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2),
         new TestTranslatorField("scientificName", 3)
     )), maps, SoundSource.class).translate((InputStream) null).toList();
-    assertEquals(2, ships.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), ships.get(0).getUuid().toString());
-    assertEquals(maps.get(0).get("name").orElseThrow(), ships.get(0).getName());
-    assertEquals(maps.get(0).get("scientificName").orElseThrow(), ships.get(0).getScientificName());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), ships.get(1).getUuid().toString());
-    assertEquals(maps.get(1).get("name").orElseThrow(), ships.get(1).getName());
-    assertEquals(maps.get(1).get("scientificName").orElseThrow(), ships.get(1).getScientificName());
+    assertEquals(2, results.size());
+    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertNull(results.get(0).runtimeException());
+    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(0).get("scientificName").orElseThrow(), results.get(0).object().getScientificName());
+    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertNull(results.get(1).runtimeException());
+    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
+    assertEquals(maps.get(1).get("scientificName").orElseThrow(), results.get(1).object().getScientificName());
   }
 
   @Test
@@ -202,38 +209,41 @@ class TranslatorExecutorTest {
         new TestTranslatorField("sensorType", 11)
     ));
 
-    List<Sensor> sensors = createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList();
-    assertEquals(3, sensors.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), sensors.get(0).getUuid().toString());
-    assertEquals(maps.get(0).get("name").orElseThrow(), sensors.get(0).getName());
-    assertEquals(maps.get(0).get("description").orElseThrow(), sensors.get(0).getDescription());
-    assertEquals(maps.get(0).get("position.x").orElseThrow(), sensors.get(0).getPosition().getX().toString());
-    assertEquals(maps.get(0).get("position.y").orElseThrow(), sensors.get(0).getPosition().getY().toString());
-    assertEquals(maps.get(0).get("position.z").orElseThrow(), sensors.get(0).getPosition().getZ().toString());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), sensors.get(1).getUuid().toString());
-    assertEquals(maps.get(1).get("name").orElseThrow(), sensors.get(1).getName());
-    assertEquals(maps.get(1).get("description").orElseThrow(), sensors.get(1).getDescription());
-    assertEquals(maps.get(1).get("position.x").orElseThrow(), sensors.get(1).getPosition().getX().toString());
-    assertEquals(maps.get(1).get("position.y").orElseThrow(), sensors.get(1).getPosition().getY().toString());
-    assertEquals(maps.get(1).get("position.z").orElseThrow(), sensors.get(1).getPosition().getZ().toString());
-    assertEquals(maps.get(2).get("uuid").orElseThrow(), sensors.get(2).getUuid().toString());
-    assertEquals(maps.get(2).get("name").orElseThrow(), sensors.get(2).getName());
-    assertEquals(maps.get(2).get("description").orElseThrow(), sensors.get(2).getDescription());
-    assertEquals(maps.get(2).get("position.x").orElseThrow(), sensors.get(2).getPosition().getX().toString());
-    assertEquals(maps.get(2).get("position.y").orElseThrow(), sensors.get(2).getPosition().getY().toString());
-    assertEquals(maps.get(2).get("position.z").orElseThrow(), sensors.get(2).getPosition().getZ().toString());
+    List<ObjectWithRuntimeException<Sensor>> results = createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList();
+    assertEquals(3, results.size());
+    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertNull(results.get(0).runtimeException());
+    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(0).get("description").orElseThrow(), results.get(0).object().getDescription());
+    assertEquals(maps.get(0).get("position.x").orElseThrow(), results.get(0).object().getPosition().getX().toString());
+    assertEquals(maps.get(0).get("position.y").orElseThrow(), results.get(0).object().getPosition().getY().toString());
+    assertEquals(maps.get(0).get("position.z").orElseThrow(), results.get(0).object().getPosition().getZ().toString());
+    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertNull(results.get(1).runtimeException());
+    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
+    assertEquals(maps.get(1).get("description").orElseThrow(), results.get(1).object().getDescription());
+    assertEquals(maps.get(1).get("position.x").orElseThrow(), results.get(1).object().getPosition().getX().toString());
+    assertEquals(maps.get(1).get("position.y").orElseThrow(), results.get(1).object().getPosition().getY().toString());
+    assertEquals(maps.get(1).get("position.z").orElseThrow(), results.get(1).object().getPosition().getZ().toString());
+    assertEquals(maps.get(2).get("uuid").orElseThrow(), results.get(2).object().getUuid().toString());
+    assertNull(results.get(2).runtimeException());
+    assertEquals(maps.get(2).get("name").orElseThrow(), results.get(2).object().getName());
+    assertEquals(maps.get(2).get("description").orElseThrow(), results.get(2).object().getDescription());
+    assertEquals(maps.get(2).get("position.x").orElseThrow(), results.get(2).object().getPosition().getX().toString());
+    assertEquals(maps.get(2).get("position.y").orElseThrow(), results.get(2).object().getPosition().getY().toString());
+    assertEquals(maps.get(2).get("position.z").orElseThrow(), results.get(2).object().getPosition().getZ().toString());
     
-    Sensor sensor = sensors.get(0);
+    Sensor sensor = results.get(0).object();
     assertInstanceOf(OtherSensor.class, sensor);
     assertEquals(maps.get(0).get("properties").orElseThrow(), ((OtherSensor) sensor).getProperties());
     assertEquals(maps.get(0).get("sensorType").orElseThrow(), ((OtherSensor) sensor).getSensorType());
     
-    sensor = sensors.get(1);
+    sensor = results.get(1).object();
     assertInstanceOf(AudioSensor.class, sensor);
     assertEquals(maps.get(1).get("hydrophoneId").orElseThrow(), ((AudioSensor) sensor).getHydrophoneId());
     assertEquals(maps.get(1).get("preampId").orElseThrow(), ((AudioSensor) sensor).getPreampId());
     
-    sensor = sensors.get(2);
+    sensor = results.get(2).object();
     assertInstanceOf(DepthSensor.class, sensor);
   }
 
@@ -244,7 +254,7 @@ class TranslatorExecutorTest {
       Project.class,
       Platform.class
   })
-  void translateInvalidObject(Class<ObjectWithName> clazz) {
+  void translateInvalidObject(Class<ObjectWithName> clazz) throws TranslationException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of("test-uuid"),
@@ -256,25 +266,29 @@ class TranslatorExecutorTest {
         )
     );
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () -> createExecutor(new TestTranslator(List.of(
+    RuntimeException result = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
-    )), maps, clazz).translate((InputStream) null).toList());
-    Throwable cause = exception.getCause();
-    assertInstanceOf(TranslationException.class, cause);
-    TranslationException validationException = (TranslationException) cause;
-    assertEquals("Translation failed", validationException.getMessage());
-    List<Throwable> violations = validationException.getExceptions();
-    assertEquals(1, violations.size());
-    Throwable violation = violations.iterator().next();
-    assertInstanceOf(FormatException.class, violation);
-    FormatException formatException = (FormatException) violation; 
-    assertEquals("uuid", formatException.getProperty());
+    )), maps, clazz).translate((InputStream) null)
+        .map(ObjectWithRuntimeException::runtimeException)
+        .filter(Objects::nonNull)
+        .reduce(new RuntimeException("Object conversions failed"), (o1, o2) -> {
+          for (Throwable throwable : o2.getSuppressed()) {
+            o1.addSuppressed(throwable);
+          }
+          return o1;
+        });
+    
+    assertEquals(1, result.getSuppressed().length);
+    Throwable cause = result.getSuppressed()[0];
+    assertInstanceOf(FormatException.class, cause);
+    FormatException formatException = (FormatException) cause;
     assertEquals("invalid uuid format", formatException.getMessage());
+    assertEquals("uuid", formatException.getProperty());
   }
 
   @Test
-  void translateSoundSourceInvalidObject() {
+  void translateSoundSourceInvalidObject() throws TranslationException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of("test-uuid"),
@@ -288,22 +302,25 @@ class TranslatorExecutorTest {
         )
     );
 
-    RuntimeException exception = assertThrows(RuntimeException.class, () -> createExecutor(new TestTranslator(List.of(
+    RuntimeException result = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2),
         new TestTranslatorField("scientificName", 3)
-    )), maps, SoundSource.class).translate((InputStream) null).toList());
-    Throwable cause = exception.getCause();
-    assertInstanceOf(TranslationException.class, cause);
-    TranslationException validationException = (TranslationException) cause;
-    assertEquals("Translation failed", validationException.getMessage());
-    List<Throwable> violations = validationException.getExceptions();
-    assertEquals(1, violations.size());
-    Throwable violation = violations.iterator().next();
-    assertInstanceOf(FormatException.class, violation);
-    FormatException formatException = (FormatException) violation; 
-    assertEquals("uuid", formatException.getProperty());
+    )), maps, SoundSource.class).translate((InputStream) null)
+        .map(ObjectWithRuntimeException::runtimeException)
+        .filter(Objects::nonNull)
+        .reduce(new RuntimeException("Object conversions failed"), (o1, o2) -> {
+          for (Throwable throwable : o2.getSuppressed()) {
+            o1.addSuppressed(throwable);
+          }
+          return o1;
+        });
+    assertEquals(1, result.getSuppressed().length);
+    Throwable cause = result.getSuppressed()[0];
+    assertInstanceOf(FormatException.class, cause);
+    FormatException formatException = (FormatException) cause;
     assertEquals("invalid uuid format", formatException.getMessage());
+    assertEquals("uuid", formatException.getProperty());
   }
   
   @ParameterizedTest

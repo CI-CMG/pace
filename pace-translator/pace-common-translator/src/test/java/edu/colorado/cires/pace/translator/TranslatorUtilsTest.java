@@ -27,6 +27,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslator;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslatorField;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ class TranslatorUtilsTest {
     
     TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Map.of(
         "p1", Optional.of("2")
-    ), TestObject.class));
+    ), TestObject.class, 1));
     assertEquals(String.format(
         "Translation not supported for %s", TestObject.class.getSimpleName()
     ), exception.getMessage());
@@ -63,7 +64,7 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
     
-    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz, 1);
     assertEquals(propertyMap.get("uuid").orElseThrow(
         () -> new IllegalStateException("uuid not found in propertyMap")
     ), object.getUuid().toString());
@@ -80,7 +81,7 @@ class TranslatorUtilsTest {
         "scientificName", Optional.of("test-scientific-name")
     );
 
-    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class, 1);
     assertEquals(propertyMap.get("uuid").orElseThrow(
         () -> new IllegalStateException("uuid not found in propertyMap")
     ), object.getUuid().toString());
@@ -125,7 +126,7 @@ class TranslatorUtilsTest {
       );
     }
     
-    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class);
+    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1);
     assertEquals(propertyMap.get("uuid").orElseThrow(), sensor.getUuid().toString());
     assertEquals(propertyMap.get("name").orElseThrow(), sensor.getName());
     assertEquals(propertyMap.get("description").orElseThrow(), sensor.getDescription());
@@ -154,7 +155,7 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz, 1);
     assertNull(object.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
@@ -168,7 +169,7 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class, 1);
     assertEquals(propertyMap.get("uuid").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
     ), object.getUuid().toString());
@@ -210,7 +211,7 @@ class TranslatorUtilsTest {
       );
     }
 
-    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class);
+    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1);
     assertNull(sensor.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(), sensor.getName());
     assertEquals(propertyMap.get("description").orElseThrow(), sensor.getDescription());
@@ -240,7 +241,7 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz);
+    ObjectWithName object = TranslatorUtils.convertMapToObject(propertyMap, clazz, 1);
     assertNull(object.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(
         () -> new IllegalStateException("name not found in propertyMap")
@@ -254,7 +255,7 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class);
+    SoundSource object = TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class, 1);
     assertNull(object.getUuid());
     assertNull(object.getScientificName());
     assertEquals(propertyMap.get("name").orElseThrow(
@@ -295,7 +296,7 @@ class TranslatorUtilsTest {
       );
     }
 
-    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class);
+    Sensor sensor = TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1);
     assertNull(sensor.getUuid());
     assertEquals(propertyMap.get("name").orElseThrow(), sensor.getName());
     assertEquals(propertyMap.get("description").orElseThrow(), sensor.getDescription());
@@ -325,11 +326,11 @@ class TranslatorUtilsTest {
         "name", Optional.empty()
     );
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz, 1));
     assertEquals("Translation failed", exception.getMessage());
     
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -346,11 +347,11 @@ class TranslatorUtilsTest {
         "name", Optional.empty()
     );
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> (v).getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -393,11 +394,11 @@ class TranslatorUtilsTest {
       );
     }
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -420,11 +421,11 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, clazz, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -441,11 +442,11 @@ class TranslatorUtilsTest {
         "name", Optional.of("test-name")
     );
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, SoundSource.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -488,11 +489,11 @@ class TranslatorUtilsTest {
       );
     }
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(1, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(1, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("uuid"))
         .findFirst().orElseThrow(
@@ -535,25 +536,25 @@ class TranslatorUtilsTest {
       );
     }
 
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
-    assertEquals(3, exception.getExceptions().size());
-    FormatException violation = exception.getExceptions().stream()
+    assertEquals(3, exception.getCause().getSuppressed().length);
+    FormatException violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("position.x"))
         .findFirst().orElseThrow();
     assertEquals("position.x", violation.getProperty());
     assertEquals("invalid number format", violation.getMessage());
 
-    violation = exception.getExceptions().stream()
+    violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("position.y"))
         .findFirst().orElseThrow();
     assertEquals("position.y", violation.getProperty());
     assertEquals("invalid number format", violation.getMessage());
 
-    violation = exception.getExceptions().stream()
+    violation = Arrays.stream(exception.getCause().getSuppressed())
         .map(v -> (FormatException) v)
         .filter(v -> v.getProperty().equals("position.z"))
         .findFirst().orElseThrow();
@@ -589,7 +590,7 @@ class TranslatorUtilsTest {
       }
     }
     
-    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), TestSensor.class));
+    TranslationException exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), TestSensor.class, 1));
     assertEquals(String.format(
         "Translation not supported for %s", TestSensor.class.getSimpleName()
     ), exception.getMessage());
@@ -620,10 +621,10 @@ class TranslatorUtilsTest {
   
   @Test
   void testTranslateInstrumentMissingRepository() {
-    Exception exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class, mock(PersonRepository.class)));
+    Exception exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class, 1, mock(PersonRepository.class)));
     assertEquals("Instrument translation missing fileType repository", exception.getMessage());
 
-    exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class));
+    exception = assertThrows(TranslationException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class, 1));
     assertEquals("Instrument translation missing fileType repository", exception.getMessage());
   }
   
@@ -652,7 +653,7 @@ class TranslatorUtilsTest {
         "fileType", Optional.of(String.format(
             "%s;%s", fileType1, fileType2
         ))
-    ), Instrument.class, fileTypeRepository);
+    ), Instrument.class, 1, fileTypeRepository);
     
     assertNull(instrument.getUuid());
     assertEquals("test-name", instrument.getName());
@@ -675,7 +676,7 @@ class TranslatorUtilsTest {
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
         "fileType", Optional.empty()
-    ), Instrument.class, fileTypeRepository);
+    ), Instrument.class, 1, fileTypeRepository);
 
     assertNull(instrument.getUuid());
     assertEquals("test-name", instrument.getName());
@@ -690,7 +691,7 @@ class TranslatorUtilsTest {
         "uuid", Optional.of("TEST-UUID"),
         "name", Optional.of("test-name"),
         "fileType", Optional.empty()
-    ), Instrument.class, fileTypeRepository));
+    ), Instrument.class, 1, fileTypeRepository));
     
     assertEquals("Translation failed", exception.getMessage());
     Throwable cause = exception.getCause();
@@ -728,7 +729,7 @@ class TranslatorUtilsTest {
         "fileType", Optional.of(String.format(
             "%s;%s", fileType1, fileType2
         ))
-    ), Instrument.class, fileTypeRepository));
+    ), Instrument.class, 1, fileTypeRepository));
     assertEquals("Translation failed", exception.getMessage());
     Throwable cause = exception.getCause();
     assertInstanceOf(RuntimeException.class, cause);

@@ -33,27 +33,27 @@ import org.apache.commons.lang3.StringUtils;
 
 final class TranslatorUtils {
 
-  public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
+  public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz, int row, CRUDRepository<?>... dependencyRepositories)
       throws TranslationException {
     if (clazz.isAssignableFrom(Ship.class)) {
-      return (O) shipFromMap(propertyMap);
+      return (O) shipFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Sea.class)) {
-      return (O) seaFromMap(propertyMap);
+      return (O) seaFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Project.class)) {
-      return (O) projectFromMap(propertyMap);
+      return (O) projectFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Platform.class)) {
-      return (O) platformFromMap(propertyMap);
+      return (O) platformFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
-      return (O) sensorFromMap(propertyMap);
+      return (O) sensorFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(SoundSource.class)) {
-      return (O) soundSourceFromMap(propertyMap);
+      return (O) soundSourceFromMap(propertyMap, row);
     } else if (clazz.isAssignableFrom(Instrument.class)) {
       CRUDRepository<?> repository = Arrays.stream(dependencyRepositories)
           .filter(r -> r instanceof FileTypeRepository)
           .findFirst().orElseThrow(
               () -> new TranslationException("Instrument translation missing fileType repository")
           );
-      return (O) instrumentFromMap(propertyMap, (FileTypeRepository) repository);
+      return (O) instrumentFromMap(propertyMap, (FileTypeRepository) repository, row);
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -138,12 +138,12 @@ final class TranslatorUtils {
     }
   }
   
-  private static Instrument instrumentFromMap(Map<String, Optional<String>> propertyMap, FileTypeRepository fileTypeRepository)
+  private static Instrument instrumentFromMap(Map<String, Optional<String>> propertyMap, FileTypeRepository fileTypeRepository, int row)
       throws TranslationException {
     RuntimeException runtimeException = new RuntimeException();
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
       runtimeException.addSuppressed(e);
     }
@@ -178,15 +178,15 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static Sensor sensorFromMap(Map<String, Optional<String>> propertyMap)
+  private static Sensor sensorFromMap(Map<String, Optional<String>> propertyMap, int row)
       throws TranslationException {
-    List<Throwable> exceptions = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
     
     String name = getProperty(propertyMap, "name");
@@ -194,23 +194,23 @@ final class TranslatorUtils {
 
     Float x = null;
     try {
-      x = getPropertyAsFloat(propertyMap, "position.x");
+      x = getPropertyAsFloat(propertyMap, "position.x", row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
 
     Float y = null;
     try {
-      y = getPropertyAsFloat(propertyMap, "position.y");
+      y = getPropertyAsFloat(propertyMap, "position.y", row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
 
     Float z = null;
     try {
-      z = getPropertyAsFloat(propertyMap, "position.z");
+      z = getPropertyAsFloat(propertyMap, "position.z", row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
     
     Position position = Position.builder()
@@ -221,9 +221,9 @@ final class TranslatorUtils {
     
     SensorType type = null;
     try {
-      type = getSensorType(propertyMap);
+      type = getSensorType(propertyMap, row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
     
     Sensor sensor = null;
@@ -254,26 +254,26 @@ final class TranslatorUtils {
           .build();
     }
     
-    if (!exceptions.isEmpty()) {
-      throw new TranslationException("Translation failed", exceptions);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
     
     return sensor;
   }
 
-  private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
+  private static SoundSource soundSourceFromMap(Map<String, Optional<String>> propertyMap, int row) throws TranslationException {
 
-    List<Throwable> exceptions = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
 
-    if (!exceptions.isEmpty()) {
-      throw new TranslationException("Translation failed", exceptions);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
     
     return SoundSource.builder()
@@ -283,19 +283,19 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static Ship shipFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
+  private static Ship shipFromMap(Map<String, Optional<String>> propertyMap, int row) throws TranslationException {
     
-    List<Throwable> exceptions = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
     
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      exceptions.add(e);
+      runtimeException.addSuppressed(e);
     }
 
-    if (!exceptions.isEmpty()) {
-      throw new TranslationException("Translation failed", exceptions);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
     
     return Ship.builder()
@@ -304,19 +304,19 @@ final class TranslatorUtils {
         .build();
   }
 
-  private static Sea seaFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
+  private static Sea seaFromMap(Map<String, Optional<String>> propertyMap, int row) throws TranslationException {
 
-    List<Throwable> violations = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      violations.add(e);
+      runtimeException.addSuppressed(e);
     }
 
-    if (!violations.isEmpty()) {
-      throw new TranslationException("Translation failed", violations);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
 
     return Sea.builder()
@@ -325,19 +325,19 @@ final class TranslatorUtils {
         .build();
   }
 
-  private static Project projectFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
+  private static Project projectFromMap(Map<String, Optional<String>> propertyMap, int row) throws TranslationException {
 
-    List<Throwable> violations = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      violations.add(e);
+      runtimeException.addSuppressed(e);
     }
     
-    if (!violations.isEmpty()) {
-      throw new TranslationException("Translation failed", violations);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
 
     return Project.builder()
@@ -346,19 +346,19 @@ final class TranslatorUtils {
         .build();
   }
 
-  private static Platform platformFromMap(Map<String, Optional<String>> propertyMap) throws TranslationException {
+  private static Platform platformFromMap(Map<String, Optional<String>> propertyMap, int row) throws TranslationException {
 
-    List<Throwable> violations = new ArrayList<>(0);
+    RuntimeException runtimeException = new RuntimeException();
 
     UUID uuid = null;
     try {
-      uuid = uuidFromString(getProperty(propertyMap, "uuid"));
+      uuid = uuidFromString(getProperty(propertyMap, "uuid"), row);
     } catch (FormatException e) {
-      violations.add(e);
+      runtimeException.addSuppressed(e);
     }
 
-    if (!violations.isEmpty()) {
-      throw new TranslationException("Translation failed", violations);
+    if (runtimeException.getSuppressed().length != 0) {
+      throw new TranslationException("Translation failed", runtimeException);
     }
 
     return Platform.builder()
@@ -367,7 +367,7 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static UUID uuidFromString(String uuidString) throws FormatException {
+  private static UUID uuidFromString(String uuidString, int row) throws FormatException {
     if (uuidString == null || StringUtils.isBlank(uuidString)) {
       return null;
     }
@@ -375,11 +375,11 @@ final class TranslatorUtils {
     try {
       return UUID.fromString(uuidString);
     } catch (IllegalArgumentException e) {
-      throw new FormatException("uuid", "invalid uuid format", e);
+      throw new FormatException("uuid", "invalid uuid format", e, row);
     }
   }
   
-  private static SensorType getSensorType(Map<String, Optional<String>> map) throws FormatException {
+  private static SensorType getSensorType(Map<String, Optional<String>> map, int row) throws FormatException {
     String typeString = getProperty(map, "type");
     if (typeString == null || StringUtils.isBlank(typeString)) {
       return null;
@@ -392,7 +392,7 @@ final class TranslatorUtils {
           "Invalid sensor type. Was not one of %s", Arrays.stream(SensorType.values())
               .map(Enum::name)
               .collect(Collectors.joining(", "))
-      ), e);
+      ), e, row);
     }
   }
   
@@ -405,7 +405,7 @@ final class TranslatorUtils {
     return value.orElse(null);
   }
   
-  private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property) throws FormatException {
+  private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property, int row) throws FormatException {
     String propertyStringValue = getProperty(map, property);
     
     if (propertyStringValue == null) {
@@ -415,7 +415,7 @@ final class TranslatorUtils {
     try {
       return Float.parseFloat(propertyStringValue);
     } catch (NumberFormatException e) {
-      throw new FormatException(property, "invalid number format", e);
+      throw new FormatException(property, "invalid number format", e, row);
     }
   }
 }

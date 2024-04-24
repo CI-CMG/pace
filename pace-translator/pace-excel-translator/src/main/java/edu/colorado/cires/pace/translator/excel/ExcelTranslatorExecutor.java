@@ -24,7 +24,7 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
   }
 
   @Override
-  protected Stream<Map<String, Optional<String>>> getPropertyStream(InputStream inputStream, ExcelTranslator translatorDefinition)
+  protected Stream<MapWithRowNumber> getPropertyStream(InputStream inputStream, ExcelTranslator translatorDefinition)
       throws TranslationException {
     try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(inputStream)) {
       Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings = translatorDefinition.getFields().stream()
@@ -54,14 +54,16 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
   }
 
   @Override
-  protected Stream<Map<String, Optional<String>>> getPropertyStream(Reader reader, ExcelTranslator translatorDefinition) {
+  protected Stream<MapWithRowNumber> getPropertyStream(Reader reader, ExcelTranslator translatorDefinition) {
     throw new NotImplementedException("Reading excel sheets from Reader not implemented");
   }
 
-  private static Map<String, Optional<String>> convertRowsToPropertyMap(List<RowWithSheetIndex> rows, Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings) {
+  private MapWithRowNumber convertRowsToPropertyMap(List<RowWithSheetIndex> rows, Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings) {
     HashMap<String, Optional<String>> objectMap = new HashMap<>(0);
     
+    Integer rowNumber = null;
     for (RowWithSheetIndex row : rows) {
+      rowNumber = row.row().getRowNum();
       List<ExcelTranslatorField> fields = sheetTranslatorMappings.get(row.sheetIndex);
       for (ExcelTranslatorField field : fields) {
         objectMap.put(
@@ -71,7 +73,10 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
       }
     }
     
-    return objectMap;
+    return new MapWithRowNumber(
+        objectMap,
+        rowNumber
+    );
   } 
 
   public record RowWithSheetIndex(int sheetIndex, Row row) {}

@@ -1,15 +1,21 @@
 package edu.colorado.cires.pace.translator;
 
-class FormatException extends Exception {
+public class FormatException extends Exception {
   
-  private final String propertyName;
+  private final String property;
+  private final int row;
 
-  public FormatException(String propertyName, String message, Throwable cause) {
+  public FormatException(String property, String message, Throwable cause, int row) {
     super(message, cause);
-    this.propertyName = propertyName;
+    this.property = property;
+    this.row = row;
   }
 
   public String getProperty() {
-    return propertyName;
+    return property;
+  }
+
+  public int getRow() {
+    return row;
   }
 }
