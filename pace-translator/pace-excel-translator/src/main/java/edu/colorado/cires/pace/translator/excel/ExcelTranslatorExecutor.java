@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.translator.excel;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
@@ -20,8 +21,8 @@ import org.dhatim.fastexcel.reader.Row;
 
 public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTranslator> {
 
-  public ExcelTranslatorExecutor(ExcelTranslator translatorDefinition, Class<O> clazz) throws TranslatorValidationException {
-    super(translatorDefinition, clazz);
+  public ExcelTranslatorExecutor(ExcelTranslator translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) throws TranslatorValidationException {
+    super(translatorDefinition, clazz, dependencyRepositories);
   }
 
   @Override

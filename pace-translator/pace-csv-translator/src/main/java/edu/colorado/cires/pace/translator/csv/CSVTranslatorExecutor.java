@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.translator.csv;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
@@ -17,8 +18,8 @@ import org.apache.commons.lang3.NotImplementedException;
 
 public class CSVTranslatorExecutor<O> extends TranslatorExecutor<O, CSVTranslator> {
 
-  public CSVTranslatorExecutor(CSVTranslator translatorDefinition, Class<O> clazz) throws TranslatorValidationException {
-    super(translatorDefinition, clazz);
+  public CSVTranslatorExecutor(CSVTranslator translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) throws TranslatorValidationException {
+    super(translatorDefinition, clazz, dependencyRepositories);
   }
 
   @Override

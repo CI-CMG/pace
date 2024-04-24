@@ -30,6 +30,7 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
   
   private final Class<O> clazz;
   private final RepositoryFactory<O> repositoryFactory;
+  private final RepositoryFactory[] dependencyRepositoryFactories;
   
   @ParentCommand
   private PaceCLI paceCLI;
@@ -37,6 +38,13 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
   protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory) {
     this.clazz = clazz;
     this.repositoryFactory = repositoryFactory;
+    this.dependencyRepositoryFactories = new RepositoryFactory<?>[]{};
+  }
+
+  protected BaseCommand(Class<O> clazz, RepositoryFactory<O> repositoryFactory, RepositoryFactory... dependencyRepositoryFactories) {
+    this.clazz = clazz;
+    this.repositoryFactory = repositoryFactory;
+    this.dependencyRepositoryFactories = dependencyRepositoryFactories;
   }
 
   public Class<O> getClazz() {
@@ -45,6 +53,10 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
 
   public RepositoryFactory<O> getRepositoryFactory() {
     return repositoryFactory;
+  }
+
+  public RepositoryFactory[] getDependencyRepositoryFactories() {
+    return dependencyRepositoryFactories;
   }
 
   @Command(name = "create")
@@ -202,6 +214,11 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected <T> Class<T> getJsonClass() {
       return baseCommand.getClazz();
+    }
+
+    @Override
+    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+      return baseCommand.getDependencyRepositoryFactories();
     }
   }
 

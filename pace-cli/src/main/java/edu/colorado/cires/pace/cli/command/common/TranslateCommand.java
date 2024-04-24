@@ -10,6 +10,7 @@ import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
 import edu.colorado.cires.pace.translator.RowConversionException;
@@ -25,15 +26,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 abstract class TranslateCommand<O extends ObjectWithUniqueField> implements Runnable {
-  
+
   protected abstract Supplier<TranslationType> getTranslationTypeSupplier();
   protected abstract Supplier<String> getTranslatorNameSupplier();
   protected abstract Supplier<File> getInputSupplier();
@@ -41,6 +41,19 @@ abstract class TranslateCommand<O extends ObjectWithUniqueField> implements Runn
   
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   private final Path workDir = new ApplicationPropertyResolver().getWorkDir();
+  
+  protected abstract RepositoryFactory[] getDependencyRepositoryFactories();
+  
+  private CRUDRepository<?>[] getDependencyRepositories() {
+    return Arrays.stream(getDependencyRepositoryFactories())
+        .map(f -> {
+          try {
+            return f.createRepository(workDir, objectMapper);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }).toArray(CRUDRepository<?>[]::new);
+  }
 
   @Override
   public void run() {
@@ -81,7 +94,8 @@ abstract class TranslateCommand<O extends ObjectWithUniqueField> implements Runn
     ) {
       Stream<ObjectWithRowConversionException<Object>> translated = new CSVTranslatorExecutor<>(
           getCSVTranslator(translatorName),
-          getJsonClass()
+          getJsonClass(),
+          getDependencyRepositories()
       ).translate(reader);
       
       return postProcessTranslation(translated);
@@ -93,7 +107,8 @@ abstract class TranslateCommand<O extends ObjectWithUniqueField> implements Runn
     try (InputStream inputStream = new FileInputStream(inputFile)) {
       Stream<ObjectWithRowConversionException<Object>> translated = new ExcelTranslatorExecutor<>(
           getExcelTranslator(translatorName),
-          getJsonClass()
+          getJsonClass(),
+          getDependencyRepositories()
       ).translate(inputStream);
       
       return postProcessTranslation(translated);
