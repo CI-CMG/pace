@@ -30,7 +30,7 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
     return translate(getPropertyStream(reader, translatorDefinition));
   }
   
-  private Stream<ObjectWithRuntimeException<O>> translate(Stream<MapWithRowNumber> propertyStream) throws TranslationException {
+  private Stream<ObjectWithRuntimeException<O>> translate(Stream<MapWithRowNumber> propertyStream) {
     return propertyStream
         .map(m -> {
           try {
