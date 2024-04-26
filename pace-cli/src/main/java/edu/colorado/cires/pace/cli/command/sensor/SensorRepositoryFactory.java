@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.repository.SensorRepository;
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class SensorRepositoryFactory {
+public final class SensorRepositoryFactory {
   
   public static SensorRepository createRepository(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new SensorRepository(

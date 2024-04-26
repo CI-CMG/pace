@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class SoundSourceRepositoryFactory {
+public final class SoundSourceRepositoryFactory {
   
   public static SoundSourceRepository createRepository(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new SoundSourceRepository(

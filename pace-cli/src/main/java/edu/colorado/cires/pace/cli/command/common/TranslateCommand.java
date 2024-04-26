@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-abstract class TranslateCommand<O extends ObjectWithUniqueField> implements Runnable {
+public abstract class TranslateCommand<O> implements Runnable {
 
   protected abstract Supplier<TranslationType> getTranslationTypeSupplier();
   protected abstract Supplier<String> getTranslatorNameSupplier();

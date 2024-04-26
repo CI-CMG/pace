@@ -587,21 +587,21 @@ class TranslatorUtilsTest {
         .filter(v -> v.getProperty().equals("position.x"))
         .findFirst().orElseThrow();
     assertEquals("position.x", violation.getProperty());
-    assertEquals("invalid number format", violation.getMessage());
+    assertEquals("invalid decimal format", violation.getMessage());
 
     violation = Arrays.stream(exception.getSuppressed())
         .map(v -> (FieldException) v)
         .filter(v -> v.getProperty().equals("position.y"))
         .findFirst().orElseThrow();
     assertEquals("position.y", violation.getProperty());
-    assertEquals("invalid number format", violation.getMessage());
+    assertEquals("invalid decimal format", violation.getMessage());
 
     violation = Arrays.stream(exception.getSuppressed())
         .map(v -> (FieldException) v)
         .filter(v -> v.getProperty().equals("position.z"))
         .findFirst().orElseThrow();
     assertEquals("position.z", violation.getProperty());
-    assertEquals("invalid number format", violation.getMessage());
+    assertEquals("invalid decimal format", violation.getMessage());
   }
   
   @Test

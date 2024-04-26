@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
 import java.io.IOException;
 import java.nio.file.Path;
 
-final class OrganizationRepositoryFactory {
+public final class OrganizationRepositoryFactory {
 
   public static OrganizationRepository createRepository(Path datastoreDirectory, ObjectMapper objectMapper) throws IOException {
     return new OrganizationRepository(

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +21,7 @@ public final class SerializationUtils {
     
     return new ObjectMapper()
         .setSerializationInclusion(Include.NON_NULL)
+        .registerModule(new JavaTimeModule())
         .setDefaultPrettyPrinter(prettyPrinter);
   }
 

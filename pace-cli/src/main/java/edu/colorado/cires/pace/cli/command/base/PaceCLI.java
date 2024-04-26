@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.cli.command.base;
 
+import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand;
@@ -24,6 +25,7 @@ import picocli.CommandLine.Command;
     versionProvider = VersionProvider.class,
     subcommands = {
         PackageCommand.class,
+        DatasetCommand.class,
         DetectionTypeCommand.class,
         FileTypeCommand.class,
         InstrumentCommand.class,
