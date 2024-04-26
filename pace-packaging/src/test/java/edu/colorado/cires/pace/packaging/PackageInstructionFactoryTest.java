@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,7 +67,7 @@ class PackageInstructionFactoryTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
-    PackingJob packingJob = PackingJob.builder()
+    PackingJob packingJob = AudioPackingJob.builder()
         .temperaturePath(tp)
         .biologicalPath(bp)
         .otherPath(op)
@@ -111,7 +112,7 @@ class PackageInstructionFactoryTest {
   @Test
   void testPathDoesNotExist() throws IOException {
     Path sourcePath = Path.of("target/source/source-files").toAbsolutePath();
-    PackingJob packingJob = PackingJob.builder()
+    PackingJob packingJob = AudioPackingJob.builder()
         .sourcePath(sourcePath)
         .build();
     writeFiles(sourcePath);

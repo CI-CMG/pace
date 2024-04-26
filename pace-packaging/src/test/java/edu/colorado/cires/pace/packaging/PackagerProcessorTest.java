@@ -2,12 +2,12 @@ package edu.colorado.cires.pace.packaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.colorado.cires.pace.data.object.AudioDataset;
+import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
@@ -28,8 +28,6 @@ import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +43,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -67,23 +64,6 @@ class PackagerProcessorTest {
   void afterEach() {
     FileUtils.deleteQuietly(testOutputPath.toFile());
     FileUtils.deleteQuietly(testSourcePath.toFile());
-  }
-  
-  @Test
-  void testProcessNoMetadata() {
-    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(
-        PackingJob.builder()
-            .sourcePath(Path.of("TEST"))
-            .build(),
-        testOutputPath,
-        true
-    ));
-    assertEquals("PackingJob validation failed", exception.getMessage());
-    assertEquals(1, exception.getConstraintViolations().size());
-    
-    ConstraintViolation<?> constraintViolation = exception.getConstraintViolations().iterator().next();
-    assertEquals("dataset", constraintViolation.getPropertyPath().toString());
-    assertEquals("must not be null", constraintViolation.getMessage());
   }
 
   @ParameterizedTest
@@ -115,7 +95,15 @@ class PackagerProcessorTest {
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
     
-    Dataset dataset = createDataset();
+    PackingJob packingJob = createPackingJob(
+        sp,
+        tp,
+        op,
+        np,
+        dp,
+        cdp,
+        bp
+    );
     
     writeFiles(bp);
     writeFiles(cdp);
@@ -124,23 +112,12 @@ class PackagerProcessorTest {
     writeFiles(op);
     writeFiles(tp);
     writeFiles(sp);
-
-    PackingJob packingJob = PackingJob.builder()
-        .temperaturePath(tp)
-        .biologicalPath(bp)
-        .otherPath(op)
-        .documentsPath(dp)
-        .calibrationDocumentsPath(cdp)
-        .navigationPath(np)
-        .sourcePath(sp)
-        .dataset(dataset)
-        .build();
     
     packingJob = objectMapper.readValue(
         objectMapper.writeValueAsString(packingJob), PackingJob.class
     );
 
-    String expectedMetadata = objectMapper.writeValueAsString(dataset);
+    String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
     
     processor.process(packingJob, testOutputPath, sourceContainsAudioData);
 
@@ -157,14 +134,32 @@ class PackagerProcessorTest {
     ));
     
     String actualMetadata = FileUtils.readFileToString(testOutputPath.resolve("data").resolve(String.format(
-        "%s.json", dataset.getPackageId()
+        "%s.json", ((Dataset) packingJob).getPackageId()
     )).toFile(), StandardCharsets.UTF_8);
     
     assertEquals(expectedMetadata, actualMetadata);
+    
+    Dataset dataset = objectMapper.readValue(actualMetadata, Dataset.class);
+    assertInstanceOf(AudioDataset.class, dataset);
   }
 
-  private Dataset createDataset() {
-    return AudioDataset.builder()
+  private PackingJob createPackingJob(
+      Path sourcePath,
+      Path temperaturePath,
+      Path otherPath,
+      Path navigationPath,
+      Path documentsPath,
+      Path calibrationDocumentsPath,
+      Path biologicalPath
+  ) {
+    return AudioPackingJob.builder()
+        .sourcePath(sourcePath)
+        .temperaturePath(temperaturePath)
+        .otherPath(otherPath)
+        .navigationPath(navigationPath)
+        .documentsPath(documentsPath)
+        .calibrationDocumentsPath(calibrationDocumentsPath)
+        .biologicalPath(biologicalPath)
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()

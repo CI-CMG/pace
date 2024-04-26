@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.packaging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Dataset;
 import java.io.FileInputStream;
@@ -61,7 +60,7 @@ final class FileUtils {
   }
   
   public static Path writeMetadata(Dataset dataset, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
-    String metadata = objectMapper.writeValueAsString(dataset);
+    String metadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(dataset);
     
     mkdir(targetDirectory);
     

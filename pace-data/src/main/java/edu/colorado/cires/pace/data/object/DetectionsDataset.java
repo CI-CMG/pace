@@ -3,12 +3,12 @@ package edu.colorado.cires.pace.data.object;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder
+@SuperBuilder
 @Jacksonized
 public class DetectionsDataset implements Dataset, DetectionsDatasetDetail {
   

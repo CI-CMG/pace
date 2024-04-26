@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -29,7 +30,7 @@ public class PackageProcessor {
     Packager.run(
         PackageInstructionFactory.getPackageInstructions(
             packingJob,
-            FileUtils.writeMetadata(packingJob.getDataset(), objectMapper, outputDir.resolve("data")),
+            FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
             outputDir,
             sourceDataContainsAudioFiles
         ),
