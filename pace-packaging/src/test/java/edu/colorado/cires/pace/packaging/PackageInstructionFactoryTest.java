@@ -83,7 +83,9 @@ class PackageInstructionFactoryTest {
     writeFiles(tp);
     writeFiles(sp);
     
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, TARGET_PATH, sourceContainsAudioData)
+    Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH, sourceContainsAudioData)
         .toList();
     
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -97,6 +99,13 @@ class PackageInstructionFactoryTest {
     checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve(
         sourceContainsAudioData ? "acoustic_files" : "data_files"
     ));
+    assertTrue(
+        packageInstructions.stream()
+            .anyMatch(packageInstruction -> 
+                packageInstruction.source().equals(metadataPath) &&
+                packageInstruction.target().equals(metadataPath)
+            )
+    );
   }
   
   @Test
@@ -109,7 +118,9 @@ class PackageInstructionFactoryTest {
     
     FileUtils.deleteQuietly(SOURCE_PATH.toFile());
     
-    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, TARGET_PATH, false));
+    Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    
+    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH, false));
     assertEquals(String.format(
         "Failed to compute packaging destinations for %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
     ), exception.getMessage());

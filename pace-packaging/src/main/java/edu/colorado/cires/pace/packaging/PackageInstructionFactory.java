@@ -13,7 +13,7 @@ class PackageInstructionFactory {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
   
-  public static Stream<PackageInstruction> getPackageInstructions(PackingJob packingJob, Path outputDirectory, boolean sourceContainsAudioFiles)
+  public static Stream<PackageInstruction> getPackageInstructions(PackingJob packingJob, Path metadataPath, Path outputDirectory, boolean sourceContainsAudioFiles)
       throws PackagingException {
     Path dataDirectory = outputDirectory.resolve("data");
     
@@ -46,8 +46,19 @@ class PackageInstructionFactory {
         sourceContainsAudioFiles ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
     );
     
+    Stream<PackageInstruction> metadataFiles = Stream.<PackageInstruction>builder()
+        .add(new PackageInstruction(metadataPath, metadataPath))
+        .build();
+    
     return Stream.of(
-      temperatureFiles, biologicalFiles, otherFiles, docsFiles, calibrationDocsFiles, navigationFiles, sourceFiles
+      temperatureFiles,
+      biologicalFiles,
+      otherFiles,
+      docsFiles,
+      calibrationDocsFiles,
+      navigationFiles,
+      sourceFiles,
+      metadataFiles
     ).flatMap(stream -> stream);
   }
   

@@ -23,27 +23,12 @@ class ValidMarineInstrumentLocationValidatorTest {
       "-5.0,-10.0,must be less than or equal to instrumentDepth,must be greater than or equal to seaFloorDepth"
   })
   void testValidMarineInstrumentLocation(Float seaFloorDepth, Float instrumentDepth, String expectedSeaFloorDepthMessage, String expectedInstrumentDepthMessage) {
-    MarineInstrumentLocation marineInstrumentLocation = new MarineInstrumentLocation() {
-      @Override
-      public Float getSeaFloorDepth() {
-        return seaFloorDepth;
-      }
-
-      @Override
-      public Float getInstrumentDepth() {
-        return instrumentDepth;
-      }
-
-      @Override
-      public Float getLatitude() {
-        return 0f;
-      }
-
-      @Override
-      public Float getLongitude() {
-        return 0f;
-      }
-    };
+    MarineInstrumentLocation marineInstrumentLocation = MarineInstrumentLocation.builder()
+        .instrumentDepth(instrumentDepth)
+        .seaFloorDepth(seaFloorDepth)
+        .latitude(10f)
+        .longitude(10f)
+        .build();
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     Set<ConstraintViolation<MarineInstrumentLocation>> violations = validator.validate(marineInstrumentLocation);

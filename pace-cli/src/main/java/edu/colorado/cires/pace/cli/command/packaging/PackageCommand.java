@@ -30,7 +30,7 @@ public class PackageCommand implements Runnable {
       ObjectMapper objectMapper = createObjectMapper();
       PackingJob packingJob = deserializeBlob(objectMapper, packageJob, PackingJob.class);
 
-      PackageProcessor.process(
+      new PackageProcessor(new ObjectMapper()).process(
           packingJob,
           new ApplicationPropertyResolver().getWorkDir().resolve("output"),
           sourceContainsAudioData

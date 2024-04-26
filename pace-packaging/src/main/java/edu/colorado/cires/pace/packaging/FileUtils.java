@@ -1,9 +1,13 @@
 package edu.colorado.cires.pace.packaging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.Dataset;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -38,7 +42,9 @@ final class FileUtils {
   }
   
   public static void mkdir(Path path) throws IOException {
-    Files.createDirectory(path);
+    if (!path.toFile().exists()) {
+      Files.createDirectory(path);
+    }
   }
 
   public static boolean filterHidden(Path path) throws IOException {
@@ -52,6 +58,20 @@ final class FileUtils {
         Files.size(source) != Files.size(target);
     logIfFiltered(source, !isProcessableFile);
     return isProcessableFile;
+  }
+  
+  public static Path writeMetadata(Dataset dataset, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
+    String metadata = objectMapper.writeValueAsString(dataset);
+    
+    mkdir(targetDirectory);
+    
+    Path targetPath = targetDirectory.resolve(String.format(
+        "%s.json", dataset.getPackageId()
+    ));
+    
+    Files.writeString(targetPath, metadata, StandardCharsets.UTF_8);
+    
+    return targetPath;
   }
   
   private static void logIfFiltered(Path path, boolean filtered) {

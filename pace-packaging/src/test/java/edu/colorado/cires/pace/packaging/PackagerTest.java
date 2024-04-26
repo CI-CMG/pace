@@ -151,16 +151,6 @@ class PackagerTest {
   }
   
   @Test
-  void testMkdirDirectoryExists() throws IOException {
-    FileUtils.forceMkdir(TARGET_DIR.toFile());
-
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.mkdir(TARGET_DIR));
-    assertEquals(String.format(
-        "Failed to create directory: %s", TARGET_DIR
-    ), exception.getMessage());
-  }
-  
-  @Test
   void testWriteBagitFileDirectoryDoesNotExist() {
     Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagItFile(TARGET_DIR));
     assertEquals(String.format(
