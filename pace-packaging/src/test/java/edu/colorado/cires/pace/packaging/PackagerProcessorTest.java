@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.colorado.cires.pace.data.object.AudioDataset;
 import edu.colorado.cires.pace.data.object.AudioSensor;
@@ -134,6 +135,10 @@ class PackagerProcessorTest {
         .sourcePath(sp)
         .dataset(dataset)
         .build();
+    
+    packingJob = objectMapper.readValue(
+        objectMapper.writeValueAsString(packingJob), PackingJob.class
+    );
 
     String expectedMetadata = objectMapper.writeValueAsString(dataset);
     
@@ -163,7 +168,7 @@ class PackagerProcessorTest {
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
-            .name("package-name")
+            .name("packager-name")
             .position("packer-position")
             .organization("packer-organization")
             .build())
