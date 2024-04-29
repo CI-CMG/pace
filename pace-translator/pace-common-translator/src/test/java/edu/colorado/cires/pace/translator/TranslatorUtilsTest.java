@@ -8,27 +8,46 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
+import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.AudioSensor;
+import edu.colorado.cires.pace.data.object.CPODPackingJob;
+import edu.colorado.cires.pace.data.object.DepthSensor;
+import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.OtherSensor;
+import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.PlatformRepository;
+import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SensorRepository;
+import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslator;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslatorField;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -836,6 +855,1084 @@ class TranslatorUtilsTest {
     ));
 
     assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(translator, FileType.class));
+  }
+  
+  @Test
+  void testTranslateAudioDataset() throws RowConversionException, NotFoundException, DatastoreException {
+    
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("audio"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("instrumentId", Optional.of("instrumentId"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("hydrophoneSensitivity", Optional.of("10.0"));
+    values.put("frequencyRange", Optional.of("5.0"));
+    values.put("gain", Optional.of("1.0"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("qualityAnalyst", Optional.of("quality-analyst"));
+    values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
+    values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
+    values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
+    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("deploymentTime", Optional.of(LocalDateTime.now().minusDays(10).toString()));
+    values.put("recoveryTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("comments", Optional.of("deployment-comments"));
+    values.put("sensors", Optional.of("sensor-1;sensor-2"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+            .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+            .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+            .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+            .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+            .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+            .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+            .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+            .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+            .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+            .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+            .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+            .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+            .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+            .name("sensor-2")
+        .build());
+    
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+          sensorRepository, soundSourceRepository
+    );
+    
+    assertInstanceOf(AudioPackingJob.class, packingJob);
+    
+    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), audioPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), audioPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), audioPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), audioPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), audioPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), audioPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), audioPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), audioPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), audioPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), audioPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", audioPackingJob.getProjects().get(0).getName(), audioPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), audioPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", audioPackingJob.getScientists().get(0).getName(), audioPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", audioPackingJob.getSponsors().get(0).getName(), audioPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", audioPackingJob.getFunders().get(0).getName(), audioPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), audioPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), audioPackingJob.getInstrument().getName());
+    assertEquals(values.get("instrumentId").orElseThrow(), audioPackingJob.getInstrumentId());
+    assertEquals(values.get("startTime").orElseThrow(), audioPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), audioPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), audioPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), audioPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), audioPackingJob.getCalibrationDescription());
+    assertEquals(values.get("hydrophoneSensitivity").orElseThrow(), audioPackingJob.getHydrophoneSensitivity().toString());
+    assertEquals(values.get("frequencyRange").orElseThrow(), audioPackingJob.getFrequencyRange().toString());
+    assertEquals(values.get("gain").orElseThrow(), audioPackingJob.getGain().toString());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), audioPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), audioPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), audioPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), audioPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), audioPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("qualityAnalyst").orElseThrow(), audioPackingJob.getQualityAnalyst().getName());
+    assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), audioPackingJob.getQualityAnalysisObjectives());
+    assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), audioPackingJob.getQualityAnalysisMethod());
+    assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), audioPackingJob.getQualityAssessmentDescription());
+    assertEquals(values.get("qualityEntries.startTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries.endTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries.minFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries.maxFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries.qualityLevel").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries.comments").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("deploymentTime").orElseThrow(), audioPackingJob.getDeploymentTime().toString());
+    assertEquals(values.get("recoveryTime").orElseThrow(), audioPackingJob.getRecoveryTime().toString());
+    assertEquals(values.get("comments").orElseThrow(), audioPackingJob.getComments());
+    assertEquals(values.get("sensors").orElseThrow(), String.format(
+        "%s;%s", audioPackingJob.getSensors().get(0).getName(), audioPackingJob.getSensors().get(1).getName()
+    ));
+  }
+
+  @Test
+  void testTranslateCPODDataset() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("CPOD"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("instrumentId", Optional.of("instrumentId"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("hydrophoneSensitivity", Optional.of("10.0"));
+    values.put("frequencyRange", Optional.of("5.0"));
+    values.put("gain", Optional.of("1.0"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("qualityAnalyst", Optional.of("quality-analyst"));
+    values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
+    values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
+    values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
+    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("deploymentTime", Optional.of(LocalDateTime.now().minusDays(10).toString()));
+    values.put("recoveryTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("comments", Optional.of("deployment-comments"));
+    values.put("sensors", Optional.of("sensor-1;sensor-2"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+        .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+        .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+        .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+        .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+        .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+        .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+        .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+        .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+        .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+        .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+        .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+        .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+        .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+        .name("sensor-2")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    );
+
+    assertInstanceOf(CPODPackingJob.class, packingJob);
+
+    CPODPackingJob cpodPackingJob = (CPODPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), cpodPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), cpodPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), cpodPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), cpodPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), cpodPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), cpodPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), cpodPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), cpodPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), cpodPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), cpodPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", cpodPackingJob.getProjects().get(0).getName(), cpodPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), cpodPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", cpodPackingJob.getScientists().get(0).getName(), cpodPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", cpodPackingJob.getSponsors().get(0).getName(), cpodPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", cpodPackingJob.getFunders().get(0).getName(), cpodPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), cpodPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), cpodPackingJob.getInstrument().getName());
+    assertEquals(values.get("instrumentId").orElseThrow(), cpodPackingJob.getInstrumentId());
+    assertEquals(values.get("startTime").orElseThrow(), cpodPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), cpodPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), cpodPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), cpodPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), cpodPackingJob.getCalibrationDescription());
+    assertEquals(values.get("hydrophoneSensitivity").orElseThrow(), cpodPackingJob.getHydrophoneSensitivity().toString());
+    assertEquals(values.get("frequencyRange").orElseThrow(), cpodPackingJob.getFrequencyRange().toString());
+    assertEquals(values.get("gain").orElseThrow(), cpodPackingJob.getGain().toString());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), cpodPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), cpodPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), cpodPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), cpodPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), cpodPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("qualityAnalyst").orElseThrow(), cpodPackingJob.getQualityAnalyst().getName());
+    assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), cpodPackingJob.getQualityAnalysisObjectives());
+    assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), cpodPackingJob.getQualityAnalysisMethod());
+    assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), cpodPackingJob.getQualityAssessmentDescription());
+    assertEquals(values.get("qualityEntries.startTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries.endTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries.minFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries.maxFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries.qualityLevel").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries.comments").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("deploymentTime").orElseThrow(), cpodPackingJob.getDeploymentTime().toString());
+    assertEquals(values.get("recoveryTime").orElseThrow(), cpodPackingJob.getRecoveryTime().toString());
+    assertEquals(values.get("comments").orElseThrow(), cpodPackingJob.getComments());
+    assertEquals(values.get("sensors").orElseThrow(), String.format(
+        "%s;%s", cpodPackingJob.getSensors().get(0).getName(), cpodPackingJob.getSensors().get(1).getName()
+    ));
+  }
+
+  @Test
+  void testTranslateSoundClipsDataset() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("sound clips"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("softwareNames", Optional.of("software-names"));
+    values.put("softwareVersions", Optional.of("software-versions"));
+    values.put("softwareProtocolCitation", Optional.of("software-protocol-citation"));
+    values.put("softwareDescription", Optional.of("software-description"));
+    values.put("softwareProcessingDescription", Optional.of("software-processing-description"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+        .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+        .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+        .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+        .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+        .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+        .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+        .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+        .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+        .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+        .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+        .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+        .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+        .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+        .name("sensor-2")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    );
+
+    assertInstanceOf(SoundClipsPackingJob.class, packingJob);
+
+    SoundClipsPackingJob soundClipsPackingJob = (SoundClipsPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), soundClipsPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), soundClipsPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), soundClipsPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), soundClipsPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), soundClipsPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), soundClipsPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), soundClipsPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), soundClipsPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), soundClipsPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), soundClipsPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", soundClipsPackingJob.getProjects().get(0).getName(), soundClipsPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), soundClipsPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", soundClipsPackingJob.getScientists().get(0).getName(), soundClipsPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", soundClipsPackingJob.getSponsors().get(0).getName(), soundClipsPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", soundClipsPackingJob.getFunders().get(0).getName(), soundClipsPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), soundClipsPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), soundClipsPackingJob.getInstrument().getName());
+    assertEquals(values.get("startTime").orElseThrow(), soundClipsPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), soundClipsPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), soundClipsPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), soundClipsPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), soundClipsPackingJob.getCalibrationDescription());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), soundClipsPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), soundClipsPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), soundClipsPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), soundClipsPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), soundClipsPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("softwareNames").orElseThrow(), soundClipsPackingJob.getSoftwareNames());
+    assertEquals(values.get("softwareVersions").orElseThrow(), soundClipsPackingJob.getSoftwareVersions());
+    assertEquals(values.get("softwareProtocolCitation").orElseThrow(), soundClipsPackingJob.getSoftwareProtocolCitation());
+    assertEquals(values.get("softwareDescription").orElseThrow(), soundClipsPackingJob.getSoftwareDescription());
+    assertEquals(values.get("softwareProcessingDescription").orElseThrow(), soundClipsPackingJob.getSoftwareProcessingDescription());
+  }
+
+  @Test
+  void testTranslateDetections() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("detections"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("softwareNames", Optional.of("software-names"));
+    values.put("softwareVersions", Optional.of("software-versions"));
+    values.put("softwareProtocolCitation", Optional.of("software-protocol-citation"));
+    values.put("softwareDescription", Optional.of("software-description"));
+    values.put("softwareProcessingDescription", Optional.of("software-processing-description"));
+    values.put("qualityAnalyst", Optional.of("quality-analyst"));
+    values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
+    values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
+    values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
+    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("soundSource", Optional.of("sound-source"));
+    values.put("analysisTimeZone", Optional.of("1"));
+    values.put("analysisEffort", Optional.of("2"));
+    values.put("sampleRate", Optional.of("3.0"));
+    values.put("minFrequency", Optional.of("4.0"));
+    values.put("maxFrequency", Optional.of("5.0"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+        .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+        .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+        .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+        .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+        .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+        .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+        .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+        .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+        .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+        .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+        .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+        .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+        .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+        .name("sensor-2")
+        .build());
+    when(soundSourceRepository.getByUniqueField("sound-source")).thenReturn(SoundSource.builder()
+            .name("sound-source")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    );
+
+    assertInstanceOf(DetectionsPackingJob.class, packingJob);
+
+    DetectionsPackingJob detectionsPackingJob = (DetectionsPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), detectionsPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), detectionsPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), detectionsPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), detectionsPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), detectionsPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), detectionsPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), detectionsPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), detectionsPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), detectionsPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), detectionsPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", detectionsPackingJob.getProjects().get(0).getName(), detectionsPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), detectionsPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", detectionsPackingJob.getScientists().get(0).getName(), detectionsPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", detectionsPackingJob.getSponsors().get(0).getName(), detectionsPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", detectionsPackingJob.getFunders().get(0).getName(), detectionsPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), detectionsPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), detectionsPackingJob.getInstrument().getName());
+    assertEquals(values.get("startTime").orElseThrow(), detectionsPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), detectionsPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), detectionsPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), detectionsPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), detectionsPackingJob.getCalibrationDescription());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), detectionsPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), detectionsPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), detectionsPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), detectionsPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), detectionsPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("softwareNames").orElseThrow(), detectionsPackingJob.getSoftwareNames());
+    assertEquals(values.get("softwareVersions").orElseThrow(), detectionsPackingJob.getSoftwareVersions());
+    assertEquals(values.get("softwareProtocolCitation").orElseThrow(), detectionsPackingJob.getSoftwareProtocolCitation());
+    assertEquals(values.get("softwareDescription").orElseThrow(), detectionsPackingJob.getSoftwareDescription());
+    assertEquals(values.get("softwareProcessingDescription").orElseThrow(), detectionsPackingJob.getSoftwareProcessingDescription());
+    assertEquals(values.get("soundSource").orElseThrow(), detectionsPackingJob.getSoundSource().getName());
+    assertEquals(values.get("analysisTimeZone").orElseThrow(), detectionsPackingJob.getAnalysisTimeZone().toString());
+    assertEquals(values.get("analysisEffort").orElseThrow(), detectionsPackingJob.getAnalysisEffort().toString());
+    assertEquals(values.get("sampleRate").orElseThrow(), detectionsPackingJob.getSampleRate().toString());
+    assertEquals(values.get("minFrequency").orElseThrow(), detectionsPackingJob.getMinFrequency().toString());
+    assertEquals(values.get("maxFrequency").orElseThrow(), detectionsPackingJob.getMaxFrequency().toString());
+  }
+
+  @Test
+  void testTranslateSoundLevelMetrics() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("sound level metrics"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("softwareNames", Optional.of("software-names"));
+    values.put("softwareVersions", Optional.of("software-versions"));
+    values.put("softwareProtocolCitation", Optional.of("software-protocol-citation"));
+    values.put("softwareDescription", Optional.of("software-description"));
+    values.put("softwareProcessingDescription", Optional.of("software-processing-description"));
+    values.put("qualityAnalyst", Optional.of("quality-analyst"));
+    values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
+    values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
+    values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
+    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("analysisTimeZone", Optional.of("1"));
+    values.put("analysisEffort", Optional.of("2"));
+    values.put("sampleRate", Optional.of("3.0"));
+    values.put("minFrequency", Optional.of("4.0"));
+    values.put("maxFrequency", Optional.of("5.0"));
+    values.put("audioStartTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("audioEndTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+        .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+        .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+        .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+        .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+        .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+        .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+        .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+        .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+        .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+        .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+        .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+        .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+        .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+        .name("sensor-2")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    );
+
+    assertInstanceOf(SoundLevelMetricsPackingJob.class, packingJob);
+
+    SoundLevelMetricsPackingJob soundLevelMetricsPackingJob = (SoundLevelMetricsPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), soundLevelMetricsPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), soundLevelMetricsPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), soundLevelMetricsPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), soundLevelMetricsPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), soundLevelMetricsPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), soundLevelMetricsPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), soundLevelMetricsPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), soundLevelMetricsPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), soundLevelMetricsPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), soundLevelMetricsPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", soundLevelMetricsPackingJob.getProjects().get(0).getName(), soundLevelMetricsPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), soundLevelMetricsPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", soundLevelMetricsPackingJob.getScientists().get(0).getName(), soundLevelMetricsPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", soundLevelMetricsPackingJob.getSponsors().get(0).getName(), soundLevelMetricsPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", soundLevelMetricsPackingJob.getFunders().get(0).getName(), soundLevelMetricsPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), soundLevelMetricsPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), soundLevelMetricsPackingJob.getInstrument().getName());
+    assertEquals(values.get("startTime").orElseThrow(), soundLevelMetricsPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), soundLevelMetricsPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), soundLevelMetricsPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), soundLevelMetricsPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), soundLevelMetricsPackingJob.getCalibrationDescription());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), soundLevelMetricsPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), soundLevelMetricsPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), soundLevelMetricsPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), soundLevelMetricsPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), soundLevelMetricsPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("softwareNames").orElseThrow(), soundLevelMetricsPackingJob.getSoftwareNames());
+    assertEquals(values.get("softwareVersions").orElseThrow(), soundLevelMetricsPackingJob.getSoftwareVersions());
+    assertEquals(values.get("softwareProtocolCitation").orElseThrow(), soundLevelMetricsPackingJob.getSoftwareProtocolCitation());
+    assertEquals(values.get("softwareDescription").orElseThrow(), soundLevelMetricsPackingJob.getSoftwareDescription());
+    assertEquals(values.get("softwareProcessingDescription").orElseThrow(), soundLevelMetricsPackingJob.getSoftwareProcessingDescription());
+    assertEquals(values.get("analysisTimeZone").orElseThrow(), soundLevelMetricsPackingJob.getAnalysisTimeZone().toString());
+    assertEquals(values.get("analysisEffort").orElseThrow(), soundLevelMetricsPackingJob.getAnalysisEffort().toString());
+    assertEquals(values.get("sampleRate").orElseThrow(), soundLevelMetricsPackingJob.getSampleRate().toString());
+    assertEquals(values.get("minFrequency").orElseThrow(), soundLevelMetricsPackingJob.getMinFrequency().toString());
+    assertEquals(values.get("maxFrequency").orElseThrow(), soundLevelMetricsPackingJob.getMaxFrequency().toString());
+    assertEquals(values.get("audioStartTime").orElseThrow(), soundLevelMetricsPackingJob.getAudioStartTime().toString());
+    assertEquals(values.get("audioEndTime").orElseThrow(), soundLevelMetricsPackingJob.getAudioEndTime().toString());
+  }
+
+  @Test
+  void testTranslateSoundPropagationModels() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("temperaturePath", Optional.of("temperaturePath"));
+    values.put("documentsPath", Optional.of("documentsPath"));
+    values.put("otherPath", Optional.of("otherPath"));
+    values.put("navigationPath", Optional.of("navigationPath"));
+    values.put("calibrationDocumentsPath", Optional.of("calibrationDocumentsPath"));
+    values.put("sourcePath", Optional.of("sourcePath"));
+    values.put("biologicalPath", Optional.of("biologicalPath"));
+    values.put("datasetType", Optional.of("sound propagation models"));
+    values.put("siteOrCruiseName", Optional.of("site-or-cruise-name"));
+    values.put("deploymentId", Optional.of("deployment-id"));
+    values.put("datasetPackager", Optional.of("dataset-packager"));
+    values.put("projects", Optional.of("project-1;project-2"));
+    values.put("publicReleaseDate", Optional.of(LocalDate.now().toString()));
+    values.put("scientists", Optional.of("scientist-1;scientist-2"));
+    values.put("sponsors", Optional.of("sponsor-1;sponsor-2"));
+    values.put("funders", Optional.of("funder-1;funder-2"));
+    values.put("platform", Optional.of("platform"));
+    values.put("instrument", Optional.of("instrument"));
+    values.put("startTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("preDeploymentCalibrationDate", Optional.of(LocalDate.now().minusDays(14).toString()));
+    values.put("postDeploymentCalibrationDate", Optional.of(LocalDate.now().toString()));
+    values.put("calibrationDescription", Optional.of("calibration-description"));
+    values.put("deploymentTitle", Optional.of("deployment-title"));
+    values.put("deploymentPurpose", Optional.of("deployment-purpose"));
+    values.put("deploymentDescription", Optional.of("deployment-description"));
+    values.put("alternateSiteName", Optional.of("alternate-site-name"));
+    values.put("alternateDeploymentName", Optional.of("alternate-deployment-name"));
+    values.put("softwareNames", Optional.of("software-names"));
+    values.put("softwareVersions", Optional.of("software-versions"));
+    values.put("softwareProtocolCitation", Optional.of("software-protocol-citation"));
+    values.put("softwareDescription", Optional.of("software-description"));
+    values.put("softwareProcessingDescription", Optional.of("software-processing-description"));
+    values.put("audioStartTime", Optional.of(LocalDateTime.now().minusDays(14).toString()));
+    values.put("audioEndTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("modeledFrequency", Optional.of("1.0"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
+        .name("dataset-packager")
+        .build());
+    when(personRepository.getByUniqueField("scientist-1")).thenReturn(Person.builder()
+        .name("scientist-1")
+        .build());
+    when(personRepository.getByUniqueField("scientist-2")).thenReturn(Person.builder()
+        .name("scientist-2")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-1")).thenReturn(Organization.builder()
+        .name("sponsor-1")
+        .build());
+    when(organizationRepository.getByUniqueField("sponsor-2")).thenReturn(Organization.builder()
+        .name("sponsor-2")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-1")).thenReturn(Organization.builder()
+        .name("funder-1")
+        .build());
+    when(organizationRepository.getByUniqueField("funder-2")).thenReturn(Organization.builder()
+        .name("funder-2")
+        .build());
+    when(projectRepository.getByUniqueField("project-1")).thenReturn(Project.builder()
+        .name("project-1")
+        .build());
+    when(projectRepository.getByUniqueField("project-2")).thenReturn(Project.builder()
+        .name("project-2")
+        .build());
+    when(platformRepository.getByUniqueField("platform")).thenReturn(Platform.builder()
+        .name("platform")
+        .build());
+    when(instrumentRepository.getByUniqueField("instrument")).thenReturn(Instrument.builder()
+        .name("instrument")
+        .build());
+    when(personRepository.getByUniqueField("quality-analyst")).thenReturn(Person.builder()
+        .name("quality-analyst")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-1")).thenReturn(DepthSensor.builder()
+        .name("sensor-1")
+        .build());
+    when(sensorRepository.getByUniqueField("sensor-2")).thenReturn(AudioSensor.builder()
+        .name("sensor-2")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    );
+
+    assertInstanceOf(SoundPropagationModelsPackingJob.class, packingJob);
+
+    SoundPropagationModelsPackingJob soundPropagationModelsPackingJob = (SoundPropagationModelsPackingJob) packingJob;
+    assertEquals(values.get("temperaturePath").orElseThrow(), soundPropagationModelsPackingJob.getTemperaturePath().toString());
+    assertEquals(values.get("documentsPath").orElseThrow(), soundPropagationModelsPackingJob.getDocumentsPath().toString());
+    assertEquals(values.get("otherPath").orElseThrow(), soundPropagationModelsPackingJob.getOtherPath().toString());
+    assertEquals(values.get("navigationPath").orElseThrow(), soundPropagationModelsPackingJob.getNavigationPath().toString());
+    assertEquals(values.get("calibrationDocumentsPath").orElseThrow(), soundPropagationModelsPackingJob.getCalibrationDocumentsPath().toString());
+    assertEquals(values.get("sourcePath").orElseThrow(), soundPropagationModelsPackingJob.getSourcePath().toString());
+    assertEquals(values.get("biologicalPath").orElseThrow(), soundPropagationModelsPackingJob.getBiologicalPath().toString());
+    assertEquals(values.get("siteOrCruiseName").orElseThrow(), soundPropagationModelsPackingJob.getSiteOrCruiseName());
+    assertEquals(values.get("deploymentId").orElseThrow(), soundPropagationModelsPackingJob.getDeploymentId());
+    assertEquals(values.get("datasetPackager").orElseThrow(), soundPropagationModelsPackingJob.getDatasetPackager().getName());
+    assertEquals(values.get("projects").orElseThrow(), String.format(
+        "%s;%s", soundPropagationModelsPackingJob.getProjects().get(0).getName(), soundPropagationModelsPackingJob.getProjects().get(1).getName()
+    ));
+    assertEquals(values.get("publicReleaseDate").orElseThrow(), soundPropagationModelsPackingJob.getPublicReleaseDate().toString());
+    assertEquals(values.get("scientists").orElseThrow(), String.format(
+        "%s;%s", soundPropagationModelsPackingJob.getScientists().get(0).getName(), soundPropagationModelsPackingJob.getScientists().get(1).getName()
+    ));
+    assertEquals(values.get("sponsors").orElseThrow(), String.format(
+        "%s;%s", soundPropagationModelsPackingJob.getSponsors().get(0).getName(), soundPropagationModelsPackingJob.getSponsors().get(1).getName()
+    ));
+    assertEquals(values.get("funders").orElseThrow(), String.format(
+        "%s;%s", soundPropagationModelsPackingJob.getFunders().get(0).getName(), soundPropagationModelsPackingJob.getFunders().get(1).getName()
+    ));
+    assertEquals(values.get("platform").orElseThrow(), soundPropagationModelsPackingJob.getPlatform().getName());
+    assertEquals(values.get("instrument").orElseThrow(), soundPropagationModelsPackingJob.getInstrument().getName());
+    assertEquals(values.get("startTime").orElseThrow(), soundPropagationModelsPackingJob.getStartTime().toString());
+    assertEquals(values.get("endTime").orElseThrow(), soundPropagationModelsPackingJob.getEndTime().toString());
+    assertEquals(values.get("preDeploymentCalibrationDate").orElseThrow(), soundPropagationModelsPackingJob.getPreDeploymentCalibrationDate().toString());
+    assertEquals(values.get("postDeploymentCalibrationDate").orElseThrow(), soundPropagationModelsPackingJob.getPostDeploymentCalibrationDate().toString());
+    assertEquals(values.get("calibrationDescription").orElseThrow(), soundPropagationModelsPackingJob.getCalibrationDescription());
+    assertEquals(values.get("deploymentTitle").orElseThrow(), soundPropagationModelsPackingJob.getDeploymentTitle());
+    assertEquals(values.get("deploymentPurpose").orElseThrow(), soundPropagationModelsPackingJob.getDeploymentPurpose());
+    assertEquals(values.get("deploymentDescription").orElseThrow(), soundPropagationModelsPackingJob.getDeploymentDescription());
+    assertEquals(values.get("alternateSiteName").orElseThrow(), soundPropagationModelsPackingJob.getAlternateSiteName());
+    assertEquals(values.get("alternateDeploymentName").orElseThrow(), soundPropagationModelsPackingJob.getAlternateDeploymentName());
+    assertEquals(values.get("softwareNames").orElseThrow(), soundPropagationModelsPackingJob.getSoftwareNames());
+    assertEquals(values.get("softwareVersions").orElseThrow(), soundPropagationModelsPackingJob.getSoftwareVersions());
+    assertEquals(values.get("softwareProtocolCitation").orElseThrow(), soundPropagationModelsPackingJob.getSoftwareProtocolCitation());
+    assertEquals(values.get("softwareDescription").orElseThrow(), soundPropagationModelsPackingJob.getSoftwareDescription());
+    assertEquals(values.get("softwareProcessingDescription").orElseThrow(), soundPropagationModelsPackingJob.getSoftwareProcessingDescription());
+    assertEquals(values.get("audioStartTime").orElseThrow(), soundPropagationModelsPackingJob.getAudioStartTime().toString());
+    assertEquals(values.get("audioEndTime").orElseThrow(), soundPropagationModelsPackingJob.getAudioEndTime().toString());
+  }
+  
+  @Test
+  void testInvalidDatasetDateTime() {
+    Map<String, Optional<String>> values = Map.of(
+        "datasetType", Optional.of("audio"),
+        "startTime", Optional.of("TEST")
+    );
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    ));
+    assertEquals(0, exception.getRow());
+    assertEquals("Translation failed", exception.getMessage());
+    
+    assertEquals(1, exception.getSuppressed().length);
+    assertInstanceOf(FieldException.class, exception.getSuppressed()[0]);
+    FieldException fieldException = (FieldException) exception.getSuppressed()[0];
+    assertEquals("startTime", fieldException.getProperty());
+    assertEquals("invalid date time format", fieldException.getMessage());
+  }
+
+  @Test
+  void testInvalidDatasetDate() {
+    Map<String, Optional<String>> values = Map.of(
+        "datasetType", Optional.of("audio"),
+        "publicReleaseDate", Optional.of("TEST")
+    );
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    ));
+    assertEquals(0, exception.getRow());
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    assertInstanceOf(FieldException.class, exception.getSuppressed()[0]);
+    FieldException fieldException = (FieldException) exception.getSuppressed()[0];
+    assertEquals("publicReleaseDate", fieldException.getProperty());
+    assertEquals("invalid date format", fieldException.getMessage());
+  }
+
+  @Test
+  void testInvalidDatasetInteger() {
+    Map<String, Optional<String>> values = Map.of(
+        "datasetType", Optional.of("detections"),
+        "analysisEffort", Optional.of("TEST")
+    );
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    ));
+    assertEquals(0, exception.getRow());
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    assertInstanceOf(FieldException.class, exception.getSuppressed()[0]);
+    FieldException fieldException = (FieldException) exception.getSuppressed()[0];
+    assertEquals("analysisEffort", fieldException.getProperty());
+    assertEquals("invalid integer format", fieldException.getMessage());
+  }
+
+  @Test
+  void testInvalidDatasetQualityLevel() {
+    Map<String, Optional<String>> values = Map.of(
+        "datasetType", Optional.of("audio"),
+        "qualityEntries.qualityLevel", Optional.of("TEST")
+    );
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository
+    ));
+    assertEquals(0, exception.getRow());
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    assertInstanceOf(FieldException.class, exception.getSuppressed()[0]);
+    FieldException fieldException = (FieldException) exception.getSuppressed()[0];
+    assertEquals("qualityEntries.qualityLevel", fieldException.getProperty());
+    assertEquals("Invalid quality level. Was not one of Unverified, Good, Compromised, Unusable", fieldException.getMessage());
   }
 
 }

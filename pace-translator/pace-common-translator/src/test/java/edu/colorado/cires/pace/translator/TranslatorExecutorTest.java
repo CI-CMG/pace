@@ -104,7 +104,7 @@ class TranslatorExecutorTest {
       Project.class,
       Platform.class
   })
-  void translate(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
+  void translateFromInputStream(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
@@ -120,6 +120,38 @@ class TranslatorExecutorTest {
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null).toList();
+    assertEquals(2, results.size());
+    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertNull(results.get(0).rowConversionException());
+    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertNull(results.get(1).rowConversionException());
+    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
+  }
+
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Sea.class,
+      Project.class,
+      Platform.class
+  })
+  void translateFromReader(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
+    List<Map<String, Optional<String>>> maps = List.of(
+        Map.of(
+            "uuid", Optional.of(UUID.randomUUID().toString()),
+            "name", Optional.of("test-name-1")
+        ),
+        Map.of(
+            "uuid", Optional.of(UUID.randomUUID().toString()),
+            "name", Optional.of("test-name-2")
+        )
+    );
+
+    List<ObjectWithRowConversionException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 1),
+        new TestTranslatorField("name", 2)
+    )), maps, clazz).translate((Reader) null).toList();
     assertEquals(2, results.size());
     assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
