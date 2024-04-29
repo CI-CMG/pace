@@ -5,7 +5,6 @@ import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand;
-import edu.colorado.cires.pace.cli.command.packaging.PackageCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand;
 import edu.colorado.cires.pace.cli.command.platform.PlatformCommand;
@@ -24,7 +23,6 @@ import picocli.CommandLine.Command;
     description = "Passive Acoustic Collection Engine",
     versionProvider = VersionProvider.class,
     subcommands = {
-        PackageCommand.class,
         DatasetCommand.class,
         DetectionTypeCommand.class,
         FileTypeCommand.class,
