@@ -32,7 +32,10 @@ public final class SerializationUtils {
   }
   
   public static <T> List<T> deserializeBlobs(ObjectMapper objectMapper, File file, TypeReference<List<T>> typeReference) throws IOException {
-    return objectMapper.readValue(file, typeReference);
+    return objectMapper.readValue(
+        getJsonContents(file),
+        typeReference
+    );
   }
 
   private static String getJsonContents(File file) throws IOException {
