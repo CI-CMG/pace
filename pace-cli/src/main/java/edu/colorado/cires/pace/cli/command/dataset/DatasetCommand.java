@@ -19,9 +19,11 @@ import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.soundSource.SoundSourceRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
+import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
+import edu.colorado.cires.pace.packaging.ProgressIndicator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -97,6 +99,10 @@ public class DatasetCommand implements Runnable {
         
         ObjectMapper objectMapper = createObjectMapper();
         
+        ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
+            new CLIProgressIndicator()
+        };
+        
         try {
           deserializeAndProcess(
               objectMapper,
@@ -105,7 +111,7 @@ public class DatasetCommand implements Runnable {
               new TypeReference<>() {},
               (deserializedObject) -> {
                 try {
-                  packageProcessor.process(deserializedObject, outputPath);
+                  packageProcessor.process(deserializedObject, outputPath, progressIndicators);
                   return deserializedObject;
                 } catch (PackagingException | IOException e) {
                   throw new RuntimeException(e);

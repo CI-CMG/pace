@@ -10,6 +10,7 @@ import jakarta.validation.Validator;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class PackageProcessor {
   
@@ -21,19 +22,33 @@ public class PackageProcessor {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
 
-  public void process(PackingJob packingJob, Path outputDir)
+  public void process(PackingJob packingJob, Path outputDir, ProgressIndicator... progressIndicators)
       throws PackagingException, IOException {
     validatePackingJob(packingJob);
     
     FileUtils.mkdir(outputDir);
+
+    Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
+        packingJob,
+        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
+        outputDir
+    );
+    long totalRecords = instructionStream.count() + 4L; // accounting for generated files
+
+    for (ProgressIndicator progressIndicator : progressIndicators) {
+      progressIndicator.setTotalRecords(totalRecords);
+    }
+
+    instructionStream = PackageInstructionFactory.getPackageInstructions(
+        packingJob,
+        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
+        outputDir
+    );
     
     Packager.run(
-        PackageInstructionFactory.getPackageInstructions(
-            packingJob,
-            FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
-            outputDir
-        ),
-        outputDir
+        instructionStream,
+        outputDir,
+        progressIndicators
     );
   }
   

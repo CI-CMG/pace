@@ -15,27 +15,37 @@ class Packager {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Packager.class);
   
-  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir) throws PackagingException {
+  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, ProgressIndicator... progressIndicators) throws PackagingException {
     mkdir(outputDir);
     
+    Runnable incrementProgressFn = () -> incrementProgress(progressIndicators);
+    
     Path manifestFile = copyFilesAndWriteManifest(
-        moveInstructions, outputDir
+        moveInstructions, outputDir, incrementProgressFn
     );
     
-    Path bagInfoFile = writeBagInfoFile(outputDir);
-    Path bagitFile = writeBagItFile(outputDir);
+    Path bagInfoFile = writeBagInfoFile(outputDir, incrementProgressFn);
+    Path bagitFile = writeBagItFile(outputDir, incrementProgressFn);
     
     writeTagManifestFile(
-        bagInfoFile, bagitFile, manifestFile, outputDir
+        bagInfoFile, bagitFile, manifestFile, outputDir, incrementProgressFn
     );
   }
+  
+  private static void incrementProgress(ProgressIndicator... progressIndicators) {
+    for (ProgressIndicator progressIndicator : progressIndicators) {
+      progressIndicator.incrementProcessedRecords();
+    }
+  }
 
-  protected static void writeTagManifestFile(Path bagInfoFile, Path bagitFile, Path manifestFile, Path outputDir) throws PackagingException {
+  protected static void writeTagManifestFile(Path bagInfoFile, Path bagitFile, Path manifestFile, Path outputDir, Runnable incrementProgressFn) throws PackagingException {
     Path outputFile = outputDir.resolve("tagmanifest-sha256.txt");
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       FileUtils.appendChecksumToManifest(writer, bagInfoFile, outputDir);
       FileUtils.appendChecksumToManifest(writer, bagitFile, outputDir);
       FileUtils.appendChecksumToManifest(writer, manifestFile, outputDir);
+      
+      incrementProgressFn.run();
     } catch (IOException e) {
       throw new PackagingException(String.format(
           "Failed to write %s", outputFile
@@ -43,7 +53,7 @@ class Packager {
     }
   }
 
-  protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir) throws PackagingException {
+  protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir, Runnable incrementProgressFn) throws PackagingException {
     Path outputFile = outputDir.resolve("manifest-sha256.txt");
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
@@ -52,6 +62,8 @@ class Packager {
             try {
               FileUtils.copyFile(packageInstruction.source(), packageInstruction.target());
               FileUtils.appendChecksumToManifest(writer, packageInstruction.target(), outputDir);
+              
+              incrementProgressFn.run();
               return null;
             } catch (IOException e) {
               return new RuntimeException(e);
@@ -67,6 +79,7 @@ class Packager {
             exception.getSuppressed()
         );
       }
+      
     } catch (IOException e) {
       throw new PackagingException(String.format(
           "Failed to write %s", outputFile
@@ -75,10 +88,12 @@ class Packager {
     
     LOGGER.info("Wrote manifest file to {}", outputFile);
     
+    incrementProgressFn.run();
+    
     return outputFile;
   }
   
-  protected static Path writeBagInfoFile(Path outputDir) throws PackagingException {
+  protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn) throws PackagingException {
     Path bagInfoFile = outputDir.resolve("bag-info.txt");
     
     try (FileWriter writer = new FileWriter(bagInfoFile.toFile(), StandardCharsets.UTF_8, true)) {
@@ -96,10 +111,12 @@ class Packager {
     
     LOGGER.info("Wrote bag info file {}", bagInfoFile);
     
+    incrementProgressFn.run();
+    
     return bagInfoFile;
   }
   
-  protected static Path writeBagItFile(Path outputDir) throws PackagingException {
+  protected static Path writeBagItFile(Path outputDir, Runnable incrementProgressFn) throws PackagingException {
     Path bagitFile = outputDir.resolve("bagit.txt");
     
     try (FileWriter writer = new FileWriter(bagitFile.toFile(), StandardCharsets.UTF_8, true)) {
@@ -114,6 +131,8 @@ class Packager {
     }
     
     LOGGER.info("Wrote bagit file {}", bagitFile);
+    
+    incrementProgressFn.run();
     
     return bagitFile;
   }

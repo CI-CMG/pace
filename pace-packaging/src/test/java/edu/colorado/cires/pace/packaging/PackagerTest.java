@@ -152,7 +152,7 @@ class PackagerTest {
   
   @Test
   void testWriteBagitFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagItFile(TARGET_DIR));
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagItFile(TARGET_DIR, () -> {}));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bagit.txt")
     ), exception.getMessage());
@@ -160,7 +160,7 @@ class PackagerTest {
   
   @Test
   void testWriteBagInfoFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR));
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR, () -> {}));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bag-info.txt")
     ), exception.getMessage());
@@ -173,7 +173,8 @@ class PackagerTest {
         TARGET_DIR.resolve("bag-info.txt"),
         TARGET_DIR.resolve("bagit.txt"),
         TARGET_DIR.resolve("manifest-sha256.txt"),
-        TARGET_DIR
+        TARGET_DIR,
+        () -> {}
     ));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("tagmanifest-sha256.txt")
@@ -201,7 +202,7 @@ class PackagerTest {
   
   @Test
   void testWriteManifestDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR));
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, () -> {}));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("manifest-sha256.txt")
     ), exception.getMessage());
