@@ -10,7 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @SuperBuilder
 @Jacksonized
-public class SoundLevelMetricsPackingJob extends SoundClipsDataset implements PackingJob {
+public class SoundLevelMetricsPackingJob extends SoundLevelMetricsDataset implements PackingJob {
 
   private final Path temperaturePath;
   private final Path biologicalPath;
