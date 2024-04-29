@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.object.AudioPackingJob;
+import edu.colorado.cires.pace.data.object.CPODPackingJob;
 import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +52,7 @@ class PackageInstructionFactoryTest {
       "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files",
       "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
   })
-  void testGetPackageInstructions(
+  void testGetPackageInstructionsAudio(
       String biologicalPath,
       String calibrationDocumentsPath,
       String documentsPath,
@@ -102,6 +104,140 @@ class PackageInstructionFactoryTest {
             .anyMatch(packageInstruction -> 
                 packageInstruction.source().equals(metadataPath) &&
                 packageInstruction.target().equals(metadataPath)
+            )
+    );
+  }
+
+  @ParameterizedTest
+  @CsvSource(value = {
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+  })
+  void testGetPackageInstructionsCPOD(
+      String biologicalPath,
+      String calibrationDocumentsPath,
+      String documentsPath,
+      String navigationPath,
+      String otherPath,
+      String temperaturePath,
+      String sourcePath
+  ) throws IOException, PackagingException {
+    Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
+    Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
+    Path op = otherPath == null ? null : Path.of(otherPath).toAbsolutePath();
+    Path np = navigationPath == null ? null : Path.of(navigationPath).toAbsolutePath();
+    Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
+    Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
+    Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
+    PackingJob packingJob = CPODPackingJob.builder()
+        .temperaturePath(tp)
+        .biologicalPath(bp)
+        .otherPath(op)
+        .documentsPath(dp)
+        .calibrationDocumentsPath(cdp)
+        .navigationPath(np)
+        .sourcePath(sp)
+        .build();
+    writeFiles(bp);
+    writeFiles(cdp);
+    writeFiles(dp);
+    writeFiles(np);
+    writeFiles(op);
+    writeFiles(tp);
+    writeFiles(sp);
+
+    Path metadataPath = TARGET_PATH.resolve("metadata.json");
+
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
+        .toList();
+
+    Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
+
+    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
+    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
+    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
+    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
+    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
+    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
+    assertTrue(
+        packageInstructions.stream()
+            .anyMatch(packageInstruction ->
+                packageInstruction.source().equals(metadataPath) &&
+                    packageInstruction.target().equals(metadataPath)
+            )
+    );
+  }
+
+  @ParameterizedTest
+  @CsvSource(value = {
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+  })
+  void testGetPackageInstructionsSoundLevelMetrics(
+      String biologicalPath,
+      String calibrationDocumentsPath,
+      String documentsPath,
+      String navigationPath,
+      String otherPath,
+      String temperaturePath,
+      String sourcePath
+  ) throws IOException, PackagingException {
+    Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
+    Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
+    Path op = otherPath == null ? null : Path.of(otherPath).toAbsolutePath();
+    Path np = navigationPath == null ? null : Path.of(navigationPath).toAbsolutePath();
+    Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
+    Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
+    Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
+    PackingJob packingJob = SoundLevelMetricsPackingJob.builder()
+        .temperaturePath(tp)
+        .biologicalPath(bp)
+        .otherPath(op)
+        .documentsPath(dp)
+        .calibrationDocumentsPath(cdp)
+        .navigationPath(np)
+        .sourcePath(sp)
+        .build();
+    writeFiles(bp);
+    writeFiles(cdp);
+    writeFiles(dp);
+    writeFiles(np);
+    writeFiles(op);
+    writeFiles(tp);
+    writeFiles(sp);
+
+    Path metadataPath = TARGET_PATH.resolve("metadata.json");
+
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
+        .toList();
+
+    Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
+
+    checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
+    checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
+    checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
+    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+    checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
+    checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
+    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("data_files"));
+    assertTrue(
+        packageInstructions.stream()
+            .anyMatch(packageInstruction ->
+                packageInstruction.source().equals(metadataPath) &&
+                    packageInstruction.target().equals(metadataPath)
             )
     );
   }

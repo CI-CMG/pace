@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.packaging;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,6 +30,8 @@ import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -44,6 +47,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -65,6 +69,21 @@ class PackagerProcessorTest {
   void afterEach() {
     FileUtils.deleteQuietly(testOutputPath.toFile());
     FileUtils.deleteQuietly(testSourcePath.toFile());
+  }
+  
+  @Test
+  void testInvalidPackingJobNoSourcePath() {
+    PackingJob packingJob = createPackingJob(
+        null, null, null, null, null, null, null
+    );
+    
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(packingJob, testOutputPath));
+    assertEquals("PackingJob validation failed", exception.getMessage());
+    
+    assertEquals(1, exception.getConstraintViolations().size());
+    ConstraintViolation<?> constraintViolation = exception.getConstraintViolations().iterator().next();
+    assertEquals("sourcePath", constraintViolation.getPropertyPath().toString());
+    assertEquals("must not be null", constraintViolation.getMessage());
   }
 
   @ParameterizedTest
