@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.dataset;
 
 import static edu.colorado.cires.pace.cli.util.SerializationUtils.createObjectMapper;
-import static edu.colorado.cires.pace.cli.util.SerializationUtils.deserializeBlobs;
+import static edu.colorado.cires.pace.cli.util.SerializationUtils.deserializeAndProcess;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,14 +19,12 @@ import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.soundSource.SoundSourceRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
-import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -94,15 +92,30 @@ public class DatasetCommand implements Runnable {
     @Override
     public void run() {
       try {
-        ObjectMapper objectMapper = createObjectMapper();
-        List<PackingJob> packingJobs = deserializeBlobs(objectMapper, packageJob, new TypeReference<>() {});
-
         PackageProcessor packageProcessor = new PackageProcessor(createObjectMapper());
         Path outputPath = new ApplicationPropertyResolver().getWorkDir().resolve("output");
-        for (PackingJob packingJob : packingJobs) {
-          packageProcessor.process(packingJob, outputPath);
+        
+        ObjectMapper objectMapper = createObjectMapper();
+        
+        try {
+          deserializeAndProcess(
+              objectMapper,
+              packageJob,
+              PackingJob.class,
+              new TypeReference<>() {},
+              (deserializedObject) -> {
+                try {
+                  packageProcessor.process(deserializedObject, outputPath);
+                  return deserializedObject;
+                } catch (PackagingException | IOException e) {
+                  throw new RuntimeException(e);
+                }
+              }
+          );
+        } catch (RuntimeException exception) {
+          throw exception.getCause();
         }
-      } catch (IOException | PackagingException e) {
+      } catch (Throwable e) {
         throw new IllegalStateException("Packaging failed", e);
       }
     }

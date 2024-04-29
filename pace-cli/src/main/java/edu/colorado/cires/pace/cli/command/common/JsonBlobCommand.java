@@ -17,42 +17,49 @@ abstract class JsonBlobCommand<O extends ObjectWithUniqueField> extends CRUDComm
   
   protected abstract Supplier<File> getJsonBlobProvider();
   protected abstract Class<O> getJsonClass();
-  protected abstract Supplier<Boolean> isMultivalued();
   public abstract TypeReference<List<O>> getTypeReference();
 
   @Override
   protected Object runCommand()
       throws IOException, ConflictException, NotFoundException, DatastoreException, BadArgumentException, BatchWriteException {
-    if (isMultivalued().get()) {
-      List<O> objects = SerializationUtils.deserializeBlobs(objectMapper, getJsonBlobProvider().get(), getTypeReference());
-      List<O> resultsObjects = new ArrayList<>(objects.size());
-      
-      RuntimeException runtimeException = new RuntimeException();
-      for (O object : objects) {
-        try {
-          resultsObjects.add(
-              runCommandWithDeserializedObject(object)
-          );
-        } catch (Exception e) {
-          runtimeException.addSuppressed(e);
-        }
-      }
-      
-      if (runtimeException.getSuppressed().length != 0) {
-        BatchWriteException exception = new BatchWriteException("Batch command failed");
-
-        for (Throwable throwable : runtimeException.getSuppressed()) {
-          exception.addSuppressed(throwable);
-        }
-        
-        throw exception;
-      }
-      
-      return resultsObjects;
-    } else {
-      return runCommandWithDeserializedObject(
-          SerializationUtils.deserializeBlob(objectMapper, getJsonBlobProvider().get(), getJsonClass())
+    try {
+      return SerializationUtils.deserializeAndProcess(
+          objectMapper,
+          getJsonBlobProvider().get(),
+          getJsonClass(),
+          getTypeReference(),
+          (o) -> {
+            try {
+              return runCommandWithDeserializedObject(o);
+            } catch (IOException | ConflictException | NotFoundException | DatastoreException | BadArgumentException e) {
+              throw new RuntimeException(e);
+            }
+          }
       );
+    } catch (RuntimeException e) {
+      Throwable throwable = e.getCause();
+      
+      if (throwable instanceof ConflictException) {
+        throw (ConflictException) throwable;
+      }
+
+      if (throwable instanceof NotFoundException) {
+        throw (NotFoundException) throwable;
+      }
+
+      if (throwable instanceof DatastoreException) {
+        throw (DatastoreException) throwable;
+      }
+
+      if (throwable instanceof BadArgumentException) {
+        throw (BadArgumentException) throwable;
+      }
+
+      if (throwable instanceof BatchWriteException) {
+        throw (BatchWriteException) throwable;
+      }
+      
+      throw new IllegalStateException(e);
     }
   }
   

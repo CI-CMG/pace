@@ -75,9 +75,6 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
 
     @Parameters(description = "File containing object (- for stdin)")
     private File file;
-    
-    @Option(names = {"--multiple","-m"}, description = "create multiple records")
-    private boolean multivalued = false;
 
     @Override
     protected Supplier<File> getJsonBlobProvider() {
@@ -87,11 +84,6 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected Class<O> getJsonClass() {
       return baseCommand.getClazz();
-    }
-
-    @Override
-    protected Supplier<Boolean> isMultivalued() {
-      return () -> multivalued;
     }
 
     @Override
@@ -182,9 +174,6 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
 
     @Parameters(description = "File containing object (- for stdin)")
     private File file;
-
-    @Option(names = {"--multiple","-m"}, description = "update multiple records")
-    private boolean multivalued = false;
     
     @ParentCommand
     private BaseCommand baseCommand;
@@ -197,11 +186,6 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected Class<O> getJsonClass() {
       return baseCommand.getClazz();
-    }
-
-    @Override
-    protected Supplier<Boolean> isMultivalued() {
-      return () -> multivalued;
     }
 
     @Override
