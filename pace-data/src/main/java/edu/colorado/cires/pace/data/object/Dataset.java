@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "datasetType")
 @JsonSubTypes({
@@ -18,6 +16,5 @@ import jakarta.validation.constraints.NotNull;
     @Type(value = SoundPropagationModelsDataset.class, name = "sound propagation models")
 })
 public interface Dataset extends PackageInfo, PeopleOrganizationsInfo, DatasetDetail, LocationDetail, CalibrationDetail, DatasetDescription {
-  @NotNull @Valid
   LocationDetail getLocationDetail();
 }

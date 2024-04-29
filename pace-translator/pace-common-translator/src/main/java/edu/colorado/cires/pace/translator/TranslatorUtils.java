@@ -1,18 +1,20 @@
 package edu.colorado.cires.pace.translator;
 
-import edu.colorado.cires.pace.data.object.AudioDataset;
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
+import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CPodDataset;
+import edu.colorado.cires.pace.data.object.CPODPackingJob;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.DetectionsDataset;
+import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.OtherSensor;
+import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
@@ -21,9 +23,8 @@ import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.object.SoundClipsDataset;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsDataset;
-import edu.colorado.cires.pace.data.object.SoundPropagationModelsDataset;
+import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
@@ -39,6 +40,8 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import java.lang.reflect.Field;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -98,7 +101,7 @@ final class TranslatorUtils {
               () -> new RowConversionException("Instrument translation missing fileType repository", row)
           );
       object = (O) instrumentFromMap(propertyMap, (FileTypeRepository) repository, runtimeException);
-    } else if (clazz.isAssignableFrom(Dataset.class)) {
+    } else if (clazz.isAssignableFrom(PackingJob.class)) {
       CRUDRepository<?> projectRepository = Arrays.stream(dependencyRepositories)
           .filter(r -> r instanceof ProjectRepository)
           .findFirst().orElseThrow(
@@ -135,7 +138,7 @@ final class TranslatorUtils {
               () -> new RowConversionException("Dataset translation missing sound source repository", row)
           );
       
-      object = (O) datasetFromMap(
+      object = (O) packingJobFromMap(
           propertyMap,
           (ProjectRepository) projectRepository,
           (PersonRepository) personRepository,
@@ -186,8 +189,8 @@ final class TranslatorUtils {
       validateInstrumentTranslator(translator);
     } else if (clazz.isAssignableFrom(FileType.class)) {
       validateTranslatorWithFlatFields(translatorFields, FileType.class);
-    } else if (clazz.isAssignableFrom(Dataset.class)) {
-      validateTranslatorWithFlatFields(translatorFields, SoundClipsDataset.class);
+    } else if (clazz.isAssignableFrom(PackingJob.class)) {
+      validateTranslatorWithFlatFields(translatorFields, PackingJob.class);
     } else {
       throw new TranslatorValidationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -246,7 +249,7 @@ final class TranslatorUtils {
     }
   }
   
-  private static Dataset datasetFromMap(
+  private static Dataset packingJobFromMap(
       Map<String, Optional<String>> propertyMap,
       ProjectRepository projectRepository,
       PersonRepository personRepository,
@@ -257,6 +260,14 @@ final class TranslatorUtils {
       SoundSourceRepository soundSourceRepository,
       RuntimeException runtimeException
   ) {
+    Path temperaturePath = getPropertyAsPath("temperaturePath", propertyMap, runtimeException);
+    Path documentsPath = getPropertyAsPath("documentsPath", propertyMap, runtimeException);
+    Path otherPath = getPropertyAsPath("otherPath", propertyMap, runtimeException);
+    Path navigationPath = getPropertyAsPath("navigationPath", propertyMap, runtimeException);
+    Path calibrationDocumentsPath = getPropertyAsPath("calibrationDocumentsPath", propertyMap, runtimeException);
+    Path sourcePath = getPropertyAsPath("sourcePath", propertyMap, runtimeException);
+    Path biologicalPath = getPropertyAsPath("biologicalPath", propertyMap, runtimeException);
+    
     String siteOrCruiseName = getProperty(propertyMap, "siteOrCruiseName");
     String deploymentId = getProperty(propertyMap, "deploymentId");
     LocalDate publicReleaseDate = getPropertyAsDate(propertyMap, "publicReleaseDate", runtimeException);
@@ -355,7 +366,14 @@ final class TranslatorUtils {
 
     Dataset dataset = null;
     if (DatasetType.SOUND_CLIPS.getName().equals(datasetType)) {
-      dataset = SoundClipsDataset.builder()
+      dataset = SoundClipsPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -383,7 +401,14 @@ final class TranslatorUtils {
           .softwareProcessingDescription(softwareProcessingDescription)
           .build();
     } else if (DatasetType.AUDIO.getName().equals(datasetType)) {
-      dataset = AudioDataset.builder()
+      dataset = AudioPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -420,7 +445,14 @@ final class TranslatorUtils {
 //          .channels()
           .build();
     } else if (DatasetType.CPOD.getName().equals(datasetType)) {
-      dataset = CPodDataset.builder()
+      dataset = CPODPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -457,7 +489,14 @@ final class TranslatorUtils {
 //          .channels()
           .build();
     } else if (DatasetType.DETECTIONS.getName().equals(datasetType)) {
-      dataset = DetectionsDataset.builder()
+      dataset = DetectionsPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -496,7 +535,14 @@ final class TranslatorUtils {
           .alternateDeploymentName(alternateDeploymentName)
           .build();
     } else if (DatasetType.SOUND_LEVEL_METRICS.getName().equals(datasetType)) {
-      dataset = SoundLevelMetricsDataset.builder()
+      dataset = SoundLevelMetricsPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -536,7 +582,14 @@ final class TranslatorUtils {
           .softwareProcessingDescription(softwareProcessingDescription)
           .build();
     } else if (DatasetType.SOUND_PROPAGATION_MODELS.getName().equals(datasetType)) {
-      dataset = SoundPropagationModelsDataset.builder()
+      dataset = SoundPropagationModelsPackingJob.builder()
+          .temperaturePath(temperaturePath)
+          .documentsPath(documentsPath)
+          .otherPath(otherPath)
+          .navigationPath(navigationPath)
+          .calibrationDocumentsPath(calibrationDocumentsPath)
+          .sourcePath(sourcePath)
+          .biologicalPath(biologicalPath)
           .siteOrCruiseName(siteOrCruiseName)
           .deploymentId(deploymentId)
           .datasetPackager(datasetPackager)
@@ -858,6 +911,23 @@ final class TranslatorUtils {
       runtimeException.addSuppressed(new FieldException(
           propertyName, e.getMessage()
       ));
+      return null;
+    }
+  }
+  
+  private static Path getPropertyAsPath(String propertyName, Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
+    String stringValue = getProperty(propertyMap, propertyName);
+    
+    if (stringValue == null) {
+      return null;
+    }
+    
+    try {
+      return Path.of(stringValue);
+    } catch (InvalidPathException e) {
+      runtimeException.addSuppressed(
+          new FieldException(propertyName, "Invalid path format")
+      );
       return null;
     }
   }
