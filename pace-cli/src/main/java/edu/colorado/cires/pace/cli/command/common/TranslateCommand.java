@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorRepositoryFactory;
@@ -8,7 +9,7 @@ import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
@@ -70,9 +71,12 @@ public abstract class TranslateCommand<O> implements Runnable {
         ));
       }
 
-      System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-          translations
-      ));
+      System.out.println(
+          objectMapper.writerFor(new TypeReference<List<PackingJob>>() {})
+            .withDefaultPrettyPrinter()
+            .writeValueAsString(translations)
+      );
+
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     } catch (NotFoundException e) {
