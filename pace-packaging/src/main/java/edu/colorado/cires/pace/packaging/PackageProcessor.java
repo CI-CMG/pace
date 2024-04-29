@@ -21,7 +21,7 @@ public class PackageProcessor {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
 
-  public void process(PackingJob packingJob, Path outputDir, boolean sourceDataContainsAudioFiles)
+  public void process(PackingJob packingJob, Path outputDir)
       throws PackagingException, IOException {
     validatePackingJob(packingJob);
     
@@ -31,8 +31,7 @@ public class PackageProcessor {
         PackageInstructionFactory.getPackageInstructions(
             packingJob,
             FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
-            outputDir,
-            sourceDataContainsAudioFiles
+            outputDir
         ),
         outputDir
     );

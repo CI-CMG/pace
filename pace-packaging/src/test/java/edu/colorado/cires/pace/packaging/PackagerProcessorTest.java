@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.colorado.cires.pace.data.object.AudioDataset;
 import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.AudioSensor;
+import edu.colorado.cires.pace.data.object.CPodDataset;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
@@ -68,14 +69,14 @@ class PackagerProcessorTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,true",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
   })
   void testProcess(
       String biologicalPath,
@@ -84,8 +85,7 @@ class PackagerProcessorTest {
       String navigationPath,
       String otherPath,
       String temperaturePath,
-      String sourcePath,
-      boolean sourceContainsAudioData
+      String sourcePath
   ) throws IOException, PackagingException {
     Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
     Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
@@ -119,7 +119,7 @@ class PackagerProcessorTest {
 
     String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
     
-    processor.process(packingJob, testOutputPath, sourceContainsAudioData);
+    processor.process(packingJob, testOutputPath);
 
     Path baseExpectedOutputPath = testOutputPath.resolve("data");
 
@@ -130,7 +130,7 @@ class PackagerProcessorTest {
     checkTargetPaths(packingJob.getOtherPath(), baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packingJob.getTemperaturePath(), baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
-        sourceContainsAudioData ? "acoustic_files" : "data_files"
+        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? "acoustic_files" : "data_files"
     ));
     
     String actualMetadata = FileUtils.readFileToString(testOutputPath.resolve("data").resolve(String.format(

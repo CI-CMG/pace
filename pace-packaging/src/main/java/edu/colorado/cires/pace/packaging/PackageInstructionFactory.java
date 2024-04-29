@@ -1,5 +1,7 @@
 package edu.colorado.cires.pace.packaging;
 
+import edu.colorado.cires.pace.data.object.AudioDataset;
+import edu.colorado.cires.pace.data.object.CPodDataset;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +15,7 @@ class PackageInstructionFactory {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
   
-  public static Stream<PackageInstruction> getPackageInstructions(PackingJob packingJob, Path metadataPath, Path outputDirectory, boolean sourceContainsAudioFiles)
+  public static Stream<PackageInstruction> getPackageInstructions(PackingJob packingJob, Path metadataPath, Path outputDirectory)
       throws PackagingException {
     Path dataDirectory = outputDirectory.resolve("data");
     
@@ -43,7 +45,7 @@ class PackageInstructionFactory {
     );
     Stream<PackageInstruction> sourceFiles = processPath(
         packingJob::getSourcePath, 
-        sourceContainsAudioFiles ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
+        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
     );
     
     Stream<PackageInstruction> metadataFiles = Stream.<PackageInstruction>builder()

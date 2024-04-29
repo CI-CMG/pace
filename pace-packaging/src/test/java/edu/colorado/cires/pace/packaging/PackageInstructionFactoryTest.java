@@ -41,14 +41,14 @@ class PackageInstructionFactoryTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files,false",
-      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files,true",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      ",target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,,target/source/other,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,,target/source/temperature,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,,target/source/source-files",
+      "target/source/bio,target/source/cal-docs,target/source/docs,target/source/nav,target/source/other,target/source/temperature,target/source/source-files",
   })
   void testGetPackageInstructions(
       String biologicalPath,
@@ -57,8 +57,7 @@ class PackageInstructionFactoryTest {
       String navigationPath,
       String otherPath,
       String temperaturePath,
-      String sourcePath,
-      boolean sourceContainsAudioData
+      String sourcePath
   ) throws IOException, PackagingException {
     Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
     Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
@@ -86,7 +85,7 @@ class PackageInstructionFactoryTest {
     
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
     
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH, sourceContainsAudioData)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
         .toList();
     
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -97,9 +96,7 @@ class PackageInstructionFactoryTest {
     checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve(
-        sourceContainsAudioData ? "acoustic_files" : "data_files"
-    ));
+    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
     assertTrue(
         packageInstructions.stream()
             .anyMatch(packageInstruction -> 
@@ -121,7 +118,7 @@ class PackageInstructionFactoryTest {
     
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
     
-    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH, false));
+    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH));
     assertEquals(String.format(
         "Failed to compute packaging destinations for %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
     ), exception.getMessage());
