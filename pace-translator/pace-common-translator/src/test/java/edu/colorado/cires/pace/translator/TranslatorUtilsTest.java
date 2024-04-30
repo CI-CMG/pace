@@ -2024,10 +2024,14 @@ class TranslatorUtilsTest {
     values.put("datasetType", Optional.of("audio"));
     values.put("location.type", Optional.of("multipoint stationary marine"));
     values.put("location.seaArea", Optional.of("sea-area"));
-    values.put("location.latitude", Optional.of("1.0"));
-    values.put("location.longitude", Optional.of("2.0"));
-    values.put("location.seaFloorDepth", Optional.of("3.0"));
-    values.put("location.instrumentDepth", Optional.of("4.0"));
+    values.put("location.locations[0].latitude", Optional.of("1.0"));
+    values.put("location.locations[0].longitude", Optional.of("2.0"));
+    values.put("location.locations[0].seaFloorDepth", Optional.of("3.0"));
+    values.put("location.locations[0].instrumentDepth", Optional.of("4.0"));
+    values.put("location.locations[1].latitude", Optional.of("5.0"));
+    values.put("location.locations[1].longitude", Optional.of("6.0"));
+    values.put("location.locations[1].seaFloorDepth", Optional.of("7.0"));
+    values.put("location.locations[1].instrumentDepth", Optional.of("8.0"));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2058,10 +2062,14 @@ class TranslatorUtilsTest {
     assertInstanceOf(MultiPointStationaryMarineLocation.class, locationDetail);
     MultiPointStationaryMarineLocation multiPointStationaryMarineLocation = (MultiPointStationaryMarineLocation) locationDetail;
     assertEquals(values.get("location.seaArea").orElseThrow(), multiPointStationaryMarineLocation.getSeaArea().getName());
-    assertEquals(values.get("location.latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLatitude().toString());
-    assertEquals(values.get("location.longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLongitude().toString());
-    assertEquals(values.get("location.seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getSeaFloorDepth().toString());
-    assertEquals(values.get("location.instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getInstrumentDepth().toString());
+    assertEquals(values.get("location.locations[0].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLatitude().toString());
+    assertEquals(values.get("location.locations[1].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLatitude().toString());
+    assertEquals(values.get("location.locations[0].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLongitude().toString());
+    assertEquals(values.get("location.locations[1].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLongitude().toString());
+    assertEquals(values.get("location.locations[0].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getSeaFloorDepth().toString());
+    assertEquals(values.get("location.locations[1].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getSeaFloorDepth().toString());
+    assertEquals(values.get("location.locations[0].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getInstrumentDepth().toString());
+    assertEquals(values.get("location.locations[1].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getInstrumentDepth().toString());
   }
 
   @Test

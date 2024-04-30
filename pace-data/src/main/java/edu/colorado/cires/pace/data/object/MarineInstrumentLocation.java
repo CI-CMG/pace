@@ -1,8 +1,6 @@
 package edu.colorado.cires.pace.data.object;
 
 import edu.colorado.cires.pace.data.validation.ValidMarineInstrumentLocation;
-import jakarta.validation.constraints.Negative;
-import jakarta.validation.constraints.NegativeOrZero;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;

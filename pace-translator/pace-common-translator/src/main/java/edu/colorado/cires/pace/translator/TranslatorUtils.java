@@ -53,11 +53,13 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -997,14 +999,35 @@ final class TranslatorUtils {
           .instrumentElevation(getPropertyAsFloat(propertyMap, "location.instrumentElevation", runtimeException))
           .build();
     } else if (LocationType.MULTIPOINT_STATIONARY_MARINE.getName().equals(locationType)) {
+      List<MarineInstrumentLocation> marineInstrumentLocations = new ArrayList<>(0);
+      
+      Map<Integer, List<Entry<String, Optional<String>>>> locationMap = propertyMap.entrySet().stream()
+          .filter(e -> e.getKey().matches("^location.locations\\[\\d]\\.(?:latitude|longitude|seaFloorDepth|instrumentDepth)"))
+          .collect(Collectors.groupingBy(
+              e -> Integer.parseInt(String.valueOf(e.getKey().split("locations\\[")[1].charAt(0)))
+          ));
+      
+      locationMap.forEach((key, value) -> {
+        Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+        marineInstrumentLocations.add(key, MarineInstrumentLocation.builder()
+            .latitude(getPropertyAsFloat(map, String.format(
+                "location.locations[%s].latitude", key 
+            ), runtimeException))
+            .longitude(getPropertyAsFloat(map, String.format(
+                "location.locations[%s].longitude", key 
+            ), runtimeException))
+            .seaFloorDepth(getPropertyAsFloat(map, String.format(
+                "location.locations[%s].seaFloorDepth", key 
+            ), runtimeException))
+            .instrumentDepth(getPropertyAsFloat(map, String.format(
+                "location.locations[%s].instrumentDepth", key 
+            ), runtimeException))
+            .build());
+      });
+      
       return MultiPointStationaryMarineLocation.builder()
           .seaArea(getPropertyAsResource("location.seaArea", getProperty(propertyMap, "location.seaArea"), seaRepository, runtimeException))
-          .locations(Collections.singletonList(MarineInstrumentLocation.builder()
-              .latitude(getPropertyAsFloat(propertyMap, "location.latitude", runtimeException))
-              .longitude(getPropertyAsFloat(propertyMap, "location.longitude", runtimeException))
-              .seaFloorDepth(getPropertyAsFloat(propertyMap, "location.seaFloorDepth", runtimeException))
-              .instrumentDepth(getPropertyAsFloat(propertyMap, "location.instrumentDepth", runtimeException))
-              .build()))
+          .locations(marineInstrumentLocations)
           .build();
     } else {
       runtimeException.addSuppressed(new FieldException(
