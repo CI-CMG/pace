@@ -4,11 +4,14 @@ import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
 import edu.colorado.cires.pace.data.object.AudioPackingJob;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.CPODPackingJob;
+import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
+import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.Gain;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.LocationDetail;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
@@ -24,6 +27,7 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
+import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
@@ -469,7 +473,7 @@ final class TranslatorUtils {
           .recoveryTime(recoveryTime)
           .comments(comments)
           .sensors(sensors)
-//          .channels()
+          .channels(channelsFromMap(propertyMap, sensorRepository, runtimeException))
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.CPOD.getName().equals(datasetType)) {
@@ -514,7 +518,7 @@ final class TranslatorUtils {
           .recoveryTime(recoveryTime)
           .comments(comments)
           .sensors(sensors)
-//          .channels()
+          .channels(channelsFromMap(propertyMap, sensorRepository, runtimeException))
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.DETECTIONS.getName().equals(datasetType)) {
@@ -1059,6 +1063,123 @@ final class TranslatorUtils {
       ));
       return null;
     }
+  }
+  
+  private static List<Channel> channelsFromMap(Map<String, Optional<String>> propertyMap, SensorRepository sensorRepository, RuntimeException runtimeException) {
+    List<Channel> channels = new ArrayList<>(0);
+    
+    Map<Integer, List<Entry<String, Optional<String>>>> channelsMap = propertyMap.entrySet().stream()
+        .filter(e -> e.getKey().matches("^channels\\[\\d].*"))
+        .collect(Collectors.groupingBy(
+            e -> Integer.parseInt(String.valueOf(
+                e.getKey().split("channels\\[")[1].charAt(0)
+            ))
+        ));
+    
+    channelsMap.forEach((key, value) -> {
+      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      
+      String propertyPrefix = String.format("channels[%s]", key);
+      
+      channels.add(key, Channel.builder()
+              .sensor(getPropertyAsResource(
+                  propertyPrefix + ".sensor", getProperty(map, propertyPrefix + ".sensor"), sensorRepository, runtimeException 
+              ))
+              .startTime(getPropertyAsDateTime(map, propertyPrefix + ".startTime", runtimeException))
+              .endTime(getPropertyAsDateTime(map, propertyPrefix + ".endTime", runtimeException))
+              .sampleRates(sampleRatesFromMap(map, key, runtimeException))
+              .dutyCycles(dutyCyclesFromMap(map, key, runtimeException))
+              .gains(gainsFromMap(map, key, runtimeException))
+          .build());
+    });
+    
+    return channels;
+  }
+  
+  private static List<SampleRate> sampleRatesFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+    List<SampleRate> sampleRates = new ArrayList<>(0);
+    
+    Map<Integer, List<Entry<String, Optional<String>>>> sampleRatesMap = propertyMap.entrySet().stream()
+        .filter(e -> e.getKey().matches("^channels\\[\\d].sampleRates\\[\\d].*"))
+        .collect(Collectors.groupingBy(
+            e -> Integer.parseInt(String.valueOf(
+                e.getKey().split("sampleRates\\[")[1].charAt(0)
+            ))
+        ));
+    
+    sampleRatesMap.forEach((key, value) -> {
+      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      
+      String propertyPrefix = String.format(
+          "channels[%s].sampleRates[%s]", channelIndex, key
+      );
+      
+      sampleRates.add(key, SampleRate.builder()
+              .startTime(getPropertyAsDateTime(map, propertyPrefix + ".startTime", runtimeException))
+              .endTime(getPropertyAsDateTime(map, propertyPrefix + ".endTime", runtimeException))
+              .sampleRate(getPropertyAsFloat(map, propertyPrefix + ".sampleRate", runtimeException))
+              .sampleBits(getPropertyAsInteger(map, propertyPrefix + ".sampleBits", runtimeException))
+          .build());
+    });
+    
+    return sampleRates;
+  }
+  
+  private static List<DutyCycle> dutyCyclesFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+    List<DutyCycle> dutyCycles = new ArrayList<>(0);
+    
+    Map<Integer, List<Entry<String, Optional<String>>>> dutyCyclesMap = propertyMap.entrySet().stream()
+        .filter(e -> e.getKey().matches("^channels\\[\\d].dutyCycles\\[\\d].*"))
+        .collect(Collectors.groupingBy(
+            e -> Integer.parseInt(String.valueOf(
+                e.getKey().split("dutyCycles\\[")[1].charAt(0)
+            ))
+        ));
+    
+    dutyCyclesMap.forEach((key, value) -> {
+      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      
+      String propertyPrefix = String.format(
+        "channels[%s].dutyCycles[%s]", channelIndex, key  
+      );
+      
+      dutyCycles.add(DutyCycle.builder()
+              .startTime(getPropertyAsDateTime(map, propertyPrefix + ".startTime", runtimeException))
+              .endTime(getPropertyAsDateTime(map, propertyPrefix + ".endTime", runtimeException))
+              .interval(getPropertyAsFloat(map, propertyPrefix + ".interval", runtimeException))
+              .duration(getPropertyAsFloat(map, propertyPrefix + ".duration", runtimeException))
+          .build());
+    });
+    
+    return dutyCycles;
+  }
+  
+  private static List<Gain> gainsFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+    List<Gain> gains = new ArrayList<>(0);
+    
+    Map<Integer, List<Entry<String, Optional<String>>>> gainsMap = propertyMap.entrySet().stream()
+        .filter(e -> e.getKey().matches("^channels\\[\\d].gains\\[\\d].*"))
+        .collect(Collectors.groupingBy(
+            e -> Integer.parseInt(String.valueOf(
+                e.getKey().split("gains\\[")[1].charAt(0)
+            ))
+        ));
+    
+    gainsMap.forEach((key, value) -> {
+      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      
+      String propertyPrefix = String.format(
+          "channels[%s].gains[%s]", channelIndex, key
+      );
+      
+      gains.add(Gain.builder()
+              .startTime(getPropertyAsDateTime(map, propertyPrefix + ".startTime", runtimeException))
+              .endTime(getPropertyAsDateTime(map, propertyPrefix + ".endTime", runtimeException))
+              .gain(getPropertyAsFloat(map, propertyPrefix + ".gain", runtimeException))
+          .build());
+    });
+    
+    return gains;
   }
 
 }
