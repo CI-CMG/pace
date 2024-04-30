@@ -65,7 +65,7 @@ jobs:
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
           -i jars
-          --main-class edu.colorado.cire.pace.cli.Application
+          --main-class edu.colorado.cires.pace.cli.Application
           --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
       - name: Upload app image
         uses: actions/upload-artifact@v4
@@ -102,7 +102,7 @@ jobs:
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
           -i jars
-          --main-class edu.colorado.cire.pace.cli.Application
+          --main-class edu.colorado.cires.pace.cli.Application
           --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
       - name: Upload app image
         uses: actions/upload-artifact@v4
@@ -140,7 +140,7 @@ jobs:
           --name 'pace-cli'
           -i jars
           --dest application
-          --main-class edu.colorado.cire.pace.cli.Application
+          --main-class edu.colorado.cires.pace.cli.Application
           --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
       - name: Upload app image
         uses: actions/upload-artifact@v4
