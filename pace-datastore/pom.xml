@@ -14,6 +14,7 @@
   <modules>
     <module>pace-common-datastore</module>
     <module>pace-json-datastore</module>
+    <module>pace-sqlite-datastore</module>
   </modules>
 
   <properties>
