@@ -162,6 +162,7 @@ jobs:
       - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
       - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
       - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
+      - run: cp jar-with-dependencies/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
       - name: Update branch release
         uses: eine/tip@master
         with:
