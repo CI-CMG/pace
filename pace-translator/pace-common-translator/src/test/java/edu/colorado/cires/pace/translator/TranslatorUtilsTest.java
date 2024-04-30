@@ -904,12 +904,18 @@ class TranslatorUtilsTest {
     values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
     values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
     values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
-    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
-    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
-    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
-    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
-    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
-    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("qualityEntries[0].startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries[0].endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries[0].minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries[0].maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries[0].qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries[0].comments", Optional.of("quality-comment-1"));
+    values.put("qualityEntries[1].startTime", Optional.of(LocalDateTime.now().minusDays(2).toString()));
+    values.put("qualityEntries[1].endTime", Optional.of(LocalDateTime.now().plusDays(1).toString()));
+    values.put("qualityEntries[1].minFrequency", Optional.of("300.0"));
+    values.put("qualityEntries[1].maxFrequency", Optional.of("400.0"));
+    values.put("qualityEntries[1].qualityLevel", Optional.of("Unusable"));
+    values.put("qualityEntries[1].comments", Optional.of("quality-comment-2"));
     values.put("deploymentTime", Optional.of(LocalDateTime.now().minusDays(10).toString()));
     values.put("recoveryTime", Optional.of(LocalDateTime.now().toString()));
     values.put("comments", Optional.of("deployment-comments"));
@@ -1022,12 +1028,18 @@ class TranslatorUtilsTest {
     assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), audioPackingJob.getQualityAnalysisObjectives());
     assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), audioPackingJob.getQualityAnalysisMethod());
     assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), audioPackingJob.getQualityAssessmentDescription());
-    assertEquals(values.get("qualityEntries.startTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getStartTime().toString());
-    assertEquals(values.get("qualityEntries.endTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getEndTime().toString());
-    assertEquals(values.get("qualityEntries.minFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
-    assertEquals(values.get("qualityEntries.maxFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
-    assertEquals(values.get("qualityEntries.qualityLevel").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
-    assertEquals(values.get("qualityEntries.comments").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[0].startTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[0].endTime").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[0].minFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].maxFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].qualityLevel").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[0].comments").orElseThrow(), audioPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[1].startTime").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[1].endTime").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[1].minFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].maxFrequency").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].qualityLevel").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[1].comments").orElseThrow(), audioPackingJob.getQualityEntries().get(1).getComments());
     assertEquals(values.get("deploymentTime").orElseThrow(), audioPackingJob.getDeploymentTime().toString());
     assertEquals(values.get("recoveryTime").orElseThrow(), audioPackingJob.getRecoveryTime().toString());
     assertEquals(values.get("comments").orElseThrow(), audioPackingJob.getComments());
@@ -1076,12 +1088,18 @@ class TranslatorUtilsTest {
     values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
     values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
     values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
-    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
-    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
-    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
-    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
-    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
-    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("qualityEntries[0].startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries[0].endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries[0].minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries[0].maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries[0].qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries[0].comments", Optional.of("quality-comment-1"));
+    values.put("qualityEntries[1].startTime", Optional.of(LocalDateTime.now().minusDays(2).toString()));
+    values.put("qualityEntries[1].endTime", Optional.of(LocalDateTime.now().plusDays(1).toString()));
+    values.put("qualityEntries[1].minFrequency", Optional.of("300.0"));
+    values.put("qualityEntries[1].maxFrequency", Optional.of("400.0"));
+    values.put("qualityEntries[1].qualityLevel", Optional.of("Unusable"));
+    values.put("qualityEntries[1].comments", Optional.of("quality-comment-2"));
     values.put("deploymentTime", Optional.of(LocalDateTime.now().minusDays(10).toString()));
     values.put("recoveryTime", Optional.of(LocalDateTime.now().toString()));
     values.put("comments", Optional.of("deployment-comments"));
@@ -1194,12 +1212,18 @@ class TranslatorUtilsTest {
     assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), cpodPackingJob.getQualityAnalysisObjectives());
     assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), cpodPackingJob.getQualityAnalysisMethod());
     assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), cpodPackingJob.getQualityAssessmentDescription());
-    assertEquals(values.get("qualityEntries.startTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getStartTime().toString());
-    assertEquals(values.get("qualityEntries.endTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getEndTime().toString());
-    assertEquals(values.get("qualityEntries.minFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
-    assertEquals(values.get("qualityEntries.maxFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
-    assertEquals(values.get("qualityEntries.qualityLevel").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
-    assertEquals(values.get("qualityEntries.comments").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[0].startTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[0].endTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[0].minFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].maxFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].qualityLevel").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[0].comments").orElseThrow(), cpodPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[1].startTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[1].endTime").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[1].minFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].maxFrequency").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].qualityLevel").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[1].comments").orElseThrow(), cpodPackingJob.getQualityEntries().get(1).getComments());
     assertEquals(values.get("deploymentTime").orElseThrow(), cpodPackingJob.getDeploymentTime().toString());
     assertEquals(values.get("recoveryTime").orElseThrow(), cpodPackingJob.getRecoveryTime().toString());
     assertEquals(values.get("comments").orElseThrow(), cpodPackingJob.getComments());
@@ -1393,12 +1417,18 @@ class TranslatorUtilsTest {
     values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
     values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
     values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
-    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
-    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
-    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
-    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
-    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
-    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("qualityEntries[0].startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries[0].endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries[0].minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries[0].maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries[0].qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries[0].comments", Optional.of("quality-comment-1"));
+    values.put("qualityEntries[1].startTime", Optional.of(LocalDateTime.now().minusDays(2).toString()));
+    values.put("qualityEntries[1].endTime", Optional.of(LocalDateTime.now().plusDays(1).toString()));
+    values.put("qualityEntries[1].minFrequency", Optional.of("300.0"));
+    values.put("qualityEntries[1].maxFrequency", Optional.of("400.0"));
+    values.put("qualityEntries[1].qualityLevel", Optional.of("Unusable"));
+    values.put("qualityEntries[1].comments", Optional.of("quality-comment-2"));
     values.put("soundSource", Optional.of("sound-source"));
     values.put("analysisTimeZone", Optional.of("1"));
     values.put("analysisEffort", Optional.of("2"));
@@ -1519,6 +1549,22 @@ class TranslatorUtilsTest {
     assertEquals(values.get("sampleRate").orElseThrow(), detectionsPackingJob.getSampleRate().toString());
     assertEquals(values.get("minFrequency").orElseThrow(), detectionsPackingJob.getMinFrequency().toString());
     assertEquals(values.get("maxFrequency").orElseThrow(), detectionsPackingJob.getMaxFrequency().toString());
+    assertEquals(values.get("qualityAnalyst").orElseThrow(), detectionsPackingJob.getQualityAnalyst().getName());
+    assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), detectionsPackingJob.getQualityAnalysisObjectives());
+    assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), detectionsPackingJob.getQualityAnalysisMethod());
+    assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), detectionsPackingJob.getQualityAssessmentDescription());
+    assertEquals(values.get("qualityEntries[0].startTime").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[0].endTime").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[0].minFrequency").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].maxFrequency").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].qualityLevel").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[0].comments").orElseThrow(), detectionsPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[1].startTime").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[1].endTime").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[1].minFrequency").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].maxFrequency").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].qualityLevel").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[1].comments").orElseThrow(), detectionsPackingJob.getQualityEntries().get(1).getComments());
   }
 
   @Test
@@ -1562,12 +1608,18 @@ class TranslatorUtilsTest {
     values.put("qualityAnalysisObjectives", Optional.of("quality-analysis-objectives"));
     values.put("qualityAnalysisMethod", Optional.of("quality-analysis-method"));
     values.put("qualityAssessmentDescription", Optional.of("quality-assessment-description"));
-    values.put("qualityEntries.startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
-    values.put("qualityEntries.endTime", Optional.of(LocalDateTime.now().toString()));
-    values.put("qualityEntries.minFrequency", Optional.of("100.0"));
-    values.put("qualityEntries.maxFrequency", Optional.of("200.0"));
-    values.put("qualityEntries.qualityLevel", Optional.of("Good"));
-    values.put("qualityEntries.comments", Optional.of("quality-comment"));
+    values.put("qualityEntries[0].startTime", Optional.of(LocalDateTime.now().minusDays(1).toString()));
+    values.put("qualityEntries[0].endTime", Optional.of(LocalDateTime.now().toString()));
+    values.put("qualityEntries[0].minFrequency", Optional.of("100.0"));
+    values.put("qualityEntries[0].maxFrequency", Optional.of("200.0"));
+    values.put("qualityEntries[0].qualityLevel", Optional.of("Good"));
+    values.put("qualityEntries[0].comments", Optional.of("quality-comment-1"));
+    values.put("qualityEntries[1].startTime", Optional.of(LocalDateTime.now().minusDays(2).toString()));
+    values.put("qualityEntries[1].endTime", Optional.of(LocalDateTime.now().plusDays(1).toString()));
+    values.put("qualityEntries[1].minFrequency", Optional.of("300.0"));
+    values.put("qualityEntries[1].maxFrequency", Optional.of("400.0"));
+    values.put("qualityEntries[1].qualityLevel", Optional.of("Unusable"));
+    values.put("qualityEntries[1].comments", Optional.of("quality-comment-2"));
     values.put("analysisTimeZone", Optional.of("1"));
     values.put("analysisEffort", Optional.of("2"));
     values.put("sampleRate", Optional.of("3.0"));
@@ -1687,6 +1739,22 @@ class TranslatorUtilsTest {
     assertEquals(values.get("maxFrequency").orElseThrow(), soundLevelMetricsPackingJob.getMaxFrequency().toString());
     assertEquals(values.get("audioStartTime").orElseThrow(), soundLevelMetricsPackingJob.getAudioStartTime().toString());
     assertEquals(values.get("audioEndTime").orElseThrow(), soundLevelMetricsPackingJob.getAudioEndTime().toString());
+    assertEquals(values.get("qualityAnalyst").orElseThrow(), soundLevelMetricsPackingJob.getQualityAnalyst().getName());
+    assertEquals(values.get("qualityAnalysisObjectives").orElseThrow(), soundLevelMetricsPackingJob.getQualityAnalysisObjectives());
+    assertEquals(values.get("qualityAnalysisMethod").orElseThrow(), soundLevelMetricsPackingJob.getQualityAnalysisMethod());
+    assertEquals(values.get("qualityAssessmentDescription").orElseThrow(), soundLevelMetricsPackingJob.getQualityAssessmentDescription());
+    assertEquals(values.get("qualityEntries[0].startTime").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[0].endTime").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[0].minFrequency").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].maxFrequency").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[0].qualityLevel").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[0].comments").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(0).getComments());
+    assertEquals(values.get("qualityEntries[1].startTime").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getStartTime().toString());
+    assertEquals(values.get("qualityEntries[1].endTime").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getEndTime().toString());
+    assertEquals(values.get("qualityEntries[1].minFrequency").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getMinFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].maxFrequency").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getMaxFrequency().toString());
+    assertEquals(values.get("qualityEntries[1].qualityLevel").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getQualityLevel().getName());
+    assertEquals(values.get("qualityEntries[1].comments").orElseThrow(), soundLevelMetricsPackingJob.getQualityEntries().get(1).getComments());
   }
 
   @Test
@@ -1935,7 +2003,7 @@ class TranslatorUtilsTest {
   void testInvalidDatasetQualityLevel() {
     Map<String, Optional<String>> values = Map.of(
         "datasetType", Optional.of("audio"),
-        "qualityEntries.qualityLevel", Optional.of("TEST")
+        "qualityEntries[0].qualityLevel", Optional.of("TEST")
     );
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
@@ -1958,7 +2026,7 @@ class TranslatorUtilsTest {
     assertEquals(1, exception.getSuppressed().length);
     assertInstanceOf(FieldException.class, exception.getSuppressed()[0]);
     FieldException fieldException = (FieldException) exception.getSuppressed()[0];
-    assertEquals("qualityEntries.qualityLevel", fieldException.getProperty());
+    assertEquals("qualityEntries[0].qualityLevel", fieldException.getProperty());
     assertEquals("Invalid quality level. Was not one of Unverified, Good, Compromised, Unusable", fieldException.getMessage());
   }
 

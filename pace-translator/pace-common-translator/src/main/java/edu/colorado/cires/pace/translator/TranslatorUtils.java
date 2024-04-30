@@ -668,21 +668,41 @@ final class TranslatorUtils {
   }
   
   private static List<DataQualityEntry> qualityEntriesFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
-    LocalDateTime startTime = getPropertyAsDateTime(propertyMap, "qualityEntries.startTime", runtimeException);
-    LocalDateTime endTime = getPropertyAsDateTime(propertyMap, "qualityEntries.endTime", runtimeException);
-    Float minFrequency = getPropertyAsFloat(propertyMap, "qualityEntries.minFrequency", runtimeException);
-    Float maxFrequency = getPropertyAsFloat(propertyMap, "qualityEntries.maxFrequency", runtimeException);
-    QualityLevel qualityLevel = getQualityLevel(propertyMap, "qualityEntries.qualityLevel", runtimeException);
-    String comments = getProperty(propertyMap, "qualityEntries.comments");
     
-    return Collections.singletonList(DataQualityEntry.builder()
-            .startTime(startTime)
-            .endTime(endTime)
-            .minFrequency(minFrequency)
-            .maxFrequency(maxFrequency)
-            .qualityLevel(qualityLevel)
-            .comments(comments)
-        .build());
+    Map<Integer, List<Entry<String, Optional<String>>>> qcMap = propertyMap.entrySet().stream()
+        .filter(e -> e.getKey().matches("^qualityEntries\\[\\d]\\.(?:startTime|endTime|minFrequency|maxFrequency|qualityLevel|comments)"))
+        .collect(Collectors.groupingBy(
+            e -> Integer.parseInt(String.valueOf(e.getKey().split("qualityEntries\\[")[1].charAt(0)))
+        ));
+    
+    List<DataQualityEntry> dataQualityEntries = new ArrayList<>(0);
+    
+    qcMap.forEach((key, value) -> {
+      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      
+      dataQualityEntries.add(key, DataQualityEntry.builder()
+              .startTime(getPropertyAsDateTime(map, String.format(
+                  "qualityEntries[%s].startTime", key
+              ), runtimeException))
+              .endTime(getPropertyAsDateTime(map, String.format(
+                  "qualityEntries[%s].endTime", key
+              ), runtimeException))
+              .minFrequency(getPropertyAsFloat(map, String.format(
+                  "qualityEntries[%s].minFrequency", key
+              ), runtimeException))
+              .maxFrequency(getPropertyAsFloat(map, String.format(
+                  "qualityEntries[%s].maxFrequency", key
+              ), runtimeException))
+              .qualityLevel(getQualityLevel(map, String.format(
+                  "qualityEntries[%s].qualityLevel", key
+              ), runtimeException))
+              .comments(getProperty(map, String.format(
+                  "qualityEntries[%s].comments", key
+              )))
+          .build());
+    });
+    
+    return dataQualityEntries;
   }
   
   private static FileType fileTypeFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
