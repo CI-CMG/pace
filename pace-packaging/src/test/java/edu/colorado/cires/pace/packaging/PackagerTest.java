@@ -5,6 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +32,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 class PackagerTest {
   
@@ -75,8 +83,9 @@ class PackagerTest {
   @Test
   void testRun() throws IOException, PackagingException {
     List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     
-    Packager.run(packageInstructions.stream(), TARGET_DIR);
+    Packager.run(packageInstructions.stream(), TARGET_DIR, progressIndicator);
     
     Path bagitFile = TARGET_DIR.resolve("bagit.txt");
     List<String> lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
@@ -148,37 +157,52 @@ class PackagerTest {
         assertEquals(expectedChecksum, checksum);
       }
     }
+    
+    verify(progressIndicator, times(packageInstructions.size() + 4)).incrementProcessedRecords();
   }
   
   @Test
   void testWriteBagitFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagItFile(TARGET_DIR, () -> {}));
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagItFile(TARGET_DIR,
+        progressIndicator::incrementProcessedRecords));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bagit.txt")
     ), exception.getMessage());
+    
+    verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
   
   @Test
   void testWriteBagInfoFileDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR, () -> {}));
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR, progressIndicator::incrementProcessedRecords));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bag-info.txt")
     ), exception.getMessage());
+    
+    verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
   
   @Test
   void testWriteTagManifestFileDoesNotExist() throws PackagingException {
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    
     Packager.mkdir(TARGET_DIR);
     Exception exception = assertThrows(PackagingException.class, () -> Packager.writeTagManifestFile(
         TARGET_DIR.resolve("bag-info.txt"),
         TARGET_DIR.resolve("bagit.txt"),
         TARGET_DIR.resolve("manifest-sha256.txt"),
         TARGET_DIR,
-        () -> {}
+        progressIndicator::incrementProcessedRecords
     ));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("tagmanifest-sha256.txt")
     ), exception.getMessage());
+    
+    verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
   
   @Test
@@ -191,21 +215,29 @@ class PackagerTest {
       mockedStatic.when(() -> edu.colorado.cires.pace.packaging.FileUtils.mkdir(any())).thenCallRealMethod();
 
       List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
+      
+      ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
 
-      Exception exception = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR));
+      Exception exception = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, progressIndicator));
       assertEquals("Packing failed", exception.getMessage());
       for (Throwable throwable : exception.getSuppressed()) {
         assertEquals("java.io.IOException: test file error", throwable.getMessage());
       }
+      
+      verify(progressIndicator, times(0)).incrementProcessedRecords();
     }
   }
   
   @Test
   void testWriteManifestDirectoryDoesNotExist() {
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, () -> {}));
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, progressIndicator::incrementProcessedRecords));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("manifest-sha256.txt")
     ), exception.getMessage());
+    
+    verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
 
 }

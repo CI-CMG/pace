@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -77,13 +80,16 @@ class PackagerProcessorTest {
         null, null, null, null, null, null, null
     );
     
-    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(packingJob, testOutputPath));
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(packingJob, testOutputPath, progressIndicator));
     assertEquals("PackingJob validation failed", exception.getMessage());
     
     assertEquals(1, exception.getConstraintViolations().size());
     ConstraintViolation<?> constraintViolation = exception.getConstraintViolations().iterator().next();
     assertEquals("sourcePath", constraintViolation.getPropertyPath().toString());
     assertEquals("must not be null", constraintViolation.getMessage());
+    
+    verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
 
   @ParameterizedTest
@@ -138,8 +144,33 @@ class PackagerProcessorTest {
 
     String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
     
-    processor.process(packingJob, testOutputPath);
-
+    int expectedNumberOfInvocations = 0;
+    if (biologicalPath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (calibrationDocumentsPath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (documentsPath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (navigationPath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (otherPath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (temperaturePath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    if (sourcePath != null) {
+      expectedNumberOfInvocations += 20;
+    }
+    
+    ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    processor.process(packingJob, testOutputPath, progressIndicator);
+    verify(progressIndicator, times(expectedNumberOfInvocations + 5)).incrementProcessedRecords();
+    
     Path baseExpectedOutputPath = testOutputPath.resolve("data");
 
     checkTargetPaths(packingJob.getBiologicalPath(), baseExpectedOutputPath.resolve("biological"));
