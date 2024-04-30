@@ -171,7 +171,7 @@ class PackagerProcessorTest {
     processor.process(packingJob, testOutputPath, progressIndicator);
     verify(progressIndicator, times(expectedNumberOfInvocations + 5)).incrementProcessedRecords();
     
-    Path baseExpectedOutputPath = testOutputPath.resolve("data");
+    Path baseExpectedOutputPath = testOutputPath.resolve(((Dataset) packingJob).getPackageId()).resolve("data");
 
     checkTargetPaths(packingJob.getBiologicalPath(), baseExpectedOutputPath.resolve("biological"));
     checkTargetPaths(packingJob.getCalibrationDocumentsPath(), baseExpectedOutputPath.resolve("calibration"));
@@ -183,7 +183,7 @@ class PackagerProcessorTest {
         (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? "acoustic_files" : "data_files"
     ));
     
-    String actualMetadata = FileUtils.readFileToString(testOutputPath.resolve("data").resolve(String.format(
+    String actualMetadata = FileUtils.readFileToString(baseExpectedOutputPath.resolve(String.format(
         "%s.json", ((Dataset) packingJob).getPackageId()
     )).toFile(), StandardCharsets.UTF_8);
     

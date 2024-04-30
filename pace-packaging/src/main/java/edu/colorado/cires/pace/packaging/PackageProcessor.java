@@ -27,11 +27,13 @@ public class PackageProcessor {
     validatePackingJob(packingJob);
     
     FileUtils.mkdir(outputDir);
+    Path packageOutputDir = outputDir.resolve(((Dataset) packingJob).getPackageId());
+    FileUtils.mkdir(packageOutputDir);
 
     Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
-        outputDir
+        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, packageOutputDir.resolve("data")),
+        packageOutputDir
     );
     long totalRecords = instructionStream.count() + 4L; // accounting for generated files
 
@@ -41,13 +43,13 @@ public class PackageProcessor {
 
     instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDir.resolve("data")),
-        outputDir
+        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, packageOutputDir.resolve("data")),
+        packageOutputDir
     );
     
     Packager.run(
         instructionStream,
-        outputDir,
+        packageOutputDir,
         progressIndicators
     );
   }
