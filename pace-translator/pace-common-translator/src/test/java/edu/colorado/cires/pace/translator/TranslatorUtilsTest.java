@@ -16,6 +16,9 @@ import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.LocationDetail;
+import edu.colorado.cires.pace.data.object.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.OtherSensor;
@@ -30,6 +33,8 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundSource;
+import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
@@ -39,7 +44,9 @@ import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.PlatformRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
+import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslator;
 import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslatorField;
@@ -915,6 +922,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
     
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
             .name("dataset-packager")
@@ -964,7 +973,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-          sensorRepository, soundSourceRepository
+          sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
     
     assertInstanceOf(AudioPackingJob.class, packingJob);
@@ -1085,6 +1094,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
         .name("dataset-packager")
@@ -1134,7 +1145,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
 
     assertInstanceOf(CPODPackingJob.class, packingJob);
@@ -1242,6 +1253,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
         .name("dataset-packager")
@@ -1291,7 +1304,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
 
     assertInstanceOf(SoundClipsPackingJob.class, packingJob);
@@ -1400,6 +1413,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
         .name("dataset-packager")
@@ -1452,7 +1467,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
 
     assertInstanceOf(DetectionsPackingJob.class, packingJob);
@@ -1568,6 +1583,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
         .name("dataset-packager")
@@ -1617,7 +1634,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
 
     assertInstanceOf(SoundLevelMetricsPackingJob.class, packingJob);
@@ -1720,6 +1737,8 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     when(personRepository.getByUniqueField("dataset-packager")).thenReturn(Person.builder()
         .name("dataset-packager")
@@ -1769,7 +1788,7 @@ class TranslatorUtilsTest {
         PackingJob.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     );
 
     assertInstanceOf(SoundPropagationModelsPackingJob.class, packingJob);
@@ -1833,10 +1852,12 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
     
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     ));
     assertEquals(0, exception.getRow());
     assertEquals("Translation failed", exception.getMessage());
@@ -1862,10 +1883,12 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     ));
     assertEquals(0, exception.getRow());
     assertEquals("Translation failed", exception.getMessage());
@@ -1891,10 +1914,12 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     ));
     assertEquals(0, exception.getRow());
     assertEquals("Translation failed", exception.getMessage());
@@ -1920,10 +1945,12 @@ class TranslatorUtilsTest {
     InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
     SensorRepository sensorRepository = mock(SensorRepository.class);
     SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
 
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
-        sensorRepository, soundSourceRepository
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
     ));
     assertEquals(0, exception.getRow());
     assertEquals("Translation failed", exception.getMessage());
@@ -1933,6 +1960,195 @@ class TranslatorUtilsTest {
     FieldException fieldException = (FieldException) exception.getSuppressed()[0];
     assertEquals("qualityEntries.qualityLevel", fieldException.getProperty());
     assertEquals("Invalid quality level. Was not one of Unverified, Good, Compromised, Unusable", fieldException.getMessage());
+  }
+
+  @Test
+  void testTranslateStationaryMarineLocation() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("datasetType", Optional.of("audio"));
+    values.put("location.type", Optional.of("stationary marine"));
+    values.put("location.seaArea", Optional.of("sea-area"));
+    values.put("location.deploymentLocation.latitude", Optional.of("1.0"));
+    values.put("location.recoveryLocation.latitude", Optional.of("5.0"));
+    values.put("location.deploymentLocation.longitude", Optional.of("2.0"));
+    values.put("location.recoveryLocation.longitude", Optional.of("6.0"));
+    values.put("location.deploymentLocation.seaFloorDepth", Optional.of("3.0"));
+    values.put("location.recoveryLocation.seaFloorDepth", Optional.of("7.0"));
+    values.put("location.deploymentLocation.instrumentDepth", Optional.of("4.0"));
+    values.put("location.recoveryLocation.instrumentDepth", Optional.of("8.0"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
+    
+    when(seaRepository.getByUniqueField("sea-area")).thenReturn(Sea.builder()
+            .name("sea-area")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
+    );
+
+    assertInstanceOf(AudioPackingJob.class, packingJob);
+
+    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    LocationDetail locationDetail = audioPackingJob.getLocationDetail();
+    assertInstanceOf(StationaryMarineLocation.class, locationDetail);
+    StationaryMarineLocation stationaryMarineLocation = (StationaryMarineLocation) locationDetail;
+    assertEquals(values.get("location.seaArea").orElseThrow(), stationaryMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("location.deploymentLocation.latitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLatitude().toString());
+    assertEquals(values.get("location.recoveryLocation.latitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLatitude().toString());
+    assertEquals(values.get("location.deploymentLocation.longitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLongitude().toString());
+    assertEquals(values.get("location.recoveryLocation.longitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLongitude().toString());
+    assertEquals(values.get("location.deploymentLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getSeaFloorDepth().toString());
+    assertEquals(values.get("location.recoveryLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getSeaFloorDepth().toString());
+    assertEquals(values.get("location.deploymentLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getInstrumentDepth().toString());
+    assertEquals(values.get("location.recoveryLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getInstrumentDepth().toString());
+  }
+
+  @Test
+  void testTranslateMultiPointStationaryMarineLocation() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("datasetType", Optional.of("audio"));
+    values.put("location.type", Optional.of("multipoint stationary marine"));
+    values.put("location.seaArea", Optional.of("sea-area"));
+    values.put("location.latitude", Optional.of("1.0"));
+    values.put("location.longitude", Optional.of("2.0"));
+    values.put("location.seaFloorDepth", Optional.of("3.0"));
+    values.put("location.instrumentDepth", Optional.of("4.0"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
+
+    when(seaRepository.getByUniqueField("sea-area")).thenReturn(Sea.builder()
+        .name("sea-area")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
+    );
+
+    assertInstanceOf(AudioPackingJob.class, packingJob);
+
+    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    LocationDetail locationDetail = audioPackingJob.getLocationDetail();
+    assertInstanceOf(MultiPointStationaryMarineLocation.class, locationDetail);
+    MultiPointStationaryMarineLocation multiPointStationaryMarineLocation = (MultiPointStationaryMarineLocation) locationDetail;
+    assertEquals(values.get("location.seaArea").orElseThrow(), multiPointStationaryMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("location.latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLatitude().toString());
+    assertEquals(values.get("location.longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLongitude().toString());
+    assertEquals(values.get("location.seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getSeaFloorDepth().toString());
+    assertEquals(values.get("location.instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getInstrumentDepth().toString());
+  }
+
+  @Test
+  void testTranslateMobileMarineLocation() throws RowConversionException, NotFoundException, DatastoreException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("datasetType", Optional.of("audio"));
+    values.put("location.type", Optional.of("mobile marine"));
+    values.put("location.seaArea", Optional.of("sea-area"));
+    values.put("location.vessel", Optional.of("vessel"));
+    values.put("location.locationDerivationDescription", Optional.of("location-derivation-description"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
+
+    when(seaRepository.getByUniqueField("sea-area")).thenReturn(Sea.builder()
+        .name("sea-area")
+        .build());
+    when(shipRepository.getByUniqueField("vessel")).thenReturn(Ship.builder()
+            .name("vessel")
+        .build());
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
+    );
+
+    assertInstanceOf(AudioPackingJob.class, packingJob);
+
+    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    LocationDetail locationDetail = audioPackingJob.getLocationDetail();
+    assertInstanceOf(MobileMarineLocation.class, locationDetail);
+    MobileMarineLocation mobileMarineLocation = (MobileMarineLocation) locationDetail;
+    assertEquals(values.get("location.seaArea").orElseThrow(), mobileMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("location.vessel").orElseThrow(), mobileMarineLocation.getVessel().getName());
+    assertEquals(values.get("location.locationDerivationDescription").orElseThrow(), mobileMarineLocation.getLocationDerivationDescription());
+  }
+
+  @Test
+  void testTranslateStationaryTerrestrialLocation() throws RowConversionException {
+
+    Map<String, Optional<String>> values = new HashMap<>(0);
+    values.put("datasetType", Optional.of("audio"));
+    values.put("location.type", Optional.of("stationary terrestrial"));
+    values.put("location.latitude", Optional.of("1.0"));
+    values.put("location.longitude", Optional.of("2.0"));
+    values.put("location.surfaceElevation", Optional.of("3.0"));
+    values.put("location.instrumentElevation", Optional.of("4.0"));
+
+    ProjectRepository projectRepository = mock(ProjectRepository.class);
+    PersonRepository personRepository = mock(PersonRepository.class);
+    OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+    PlatformRepository platformRepository = mock(PlatformRepository.class);
+    InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+    SensorRepository sensorRepository = mock(SensorRepository.class);
+    SoundSourceRepository soundSourceRepository = mock(SoundSourceRepository.class);
+    SeaRepository seaRepository = mock(SeaRepository.class);
+    ShipRepository shipRepository = mock(ShipRepository.class);
+
+    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+        values,
+        PackingJob.class,
+        0,
+        projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
+        sensorRepository, soundSourceRepository, seaRepository, shipRepository
+    );
+
+    assertInstanceOf(AudioPackingJob.class, packingJob);
+
+    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    LocationDetail locationDetail = audioPackingJob.getLocationDetail();
+    assertInstanceOf(StationaryTerrestrialLocation.class, locationDetail);
+    StationaryTerrestrialLocation stationaryTerrestrialLocation = (StationaryTerrestrialLocation) locationDetail;
+    assertEquals(values.get("location.latitude").orElseThrow(), stationaryTerrestrialLocation.getLatitude().toString());
+    assertEquals(values.get("location.longitude").orElseThrow(), stationaryTerrestrialLocation.getLongitude().toString());
+    assertEquals(values.get("location.surfaceElevation").orElseThrow(), stationaryTerrestrialLocation.getSurfaceElevation().toString());
+    assertEquals(values.get("location.instrumentElevation").orElseThrow(), stationaryTerrestrialLocation.getInstrumentElevation().toString());
   }
 
 }

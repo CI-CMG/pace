@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = StationaryMarineLocation.class, name = "Stationary Marine"),
-    @JsonSubTypes.Type(value = MultiPointStationaryMarineLocation.class, name = "Multipoint Stationary Marine"),
-    @JsonSubTypes.Type(value = MobileMarineLocation.class, name = "Mobile Marine"),
-    @JsonSubTypes.Type(value = StationaryTerrestrialLocation.class, name = "Stationary Terrestrial")
+    @JsonSubTypes.Type(value = StationaryMarineLocation.class, name = "stationary marine"),
+    @JsonSubTypes.Type(value = MultiPointStationaryMarineLocation.class, name = "multipoint stationary marine"),
+    @JsonSubTypes.Type(value = MobileMarineLocation.class, name = "mobile marine"),
+    @JsonSubTypes.Type(value = StationaryTerrestrialLocation.class, name = "stationary terrestrial")
 })
 public interface LocationDetail {
 

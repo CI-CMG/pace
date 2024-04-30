@@ -10,6 +10,10 @@ import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.LocationDetail;
+import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.Organization;
@@ -26,6 +30,8 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundSource;
+import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -37,7 +43,9 @@ import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.PlatformRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
+import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import java.lang.reflect.Field;
 import java.nio.file.InvalidPathException;
@@ -137,6 +145,16 @@ final class TranslatorUtils {
           .findFirst().orElseThrow(
               () -> new RowConversionException("Dataset translation missing sound source repository", row)
           );
+      CRUDRepository<?> seaRepository = Arrays.stream(dependencyRepositories)
+          .filter(r -> r instanceof SeaRepository)
+          .findFirst().orElseThrow(
+              () -> new RowConversionException("Dataset translation missing sea repository", row)
+          );
+      CRUDRepository<?> shipRepository = Arrays.stream(dependencyRepositories)
+          .filter(r -> r instanceof ShipRepository)
+          .findFirst().orElseThrow(
+              () -> new RowConversionException("Dataset translation missing ship repository", row)
+          );
       
       object = (O) packingJobFromMap(
           propertyMap,
@@ -147,6 +165,8 @@ final class TranslatorUtils {
           (InstrumentRepository) instrumentRepository,
           (SensorRepository) sensorRepository,
           (SoundSourceRepository) soundSourceRepository,
+          (SeaRepository) seaRepository,
+          (ShipRepository) shipRepository, 
           runtimeException
       );
     } else {
@@ -258,6 +278,8 @@ final class TranslatorUtils {
       InstrumentRepository instrumentRepository,
       SensorRepository sensorRepository,
       SoundSourceRepository soundSourceRepository,
+      SeaRepository seaRepository,
+      ShipRepository shipRepository,
       RuntimeException runtimeException
   ) {
     Path temperaturePath = getPropertyAsPath("temperaturePath", propertyMap, runtimeException);
@@ -363,6 +385,8 @@ final class TranslatorUtils {
     LocalDateTime audioStartTime = getPropertyAsDateTime(propertyMap, "audioStartTime", runtimeException);
     LocalDateTime audioEndTime = getPropertyAsDateTime(propertyMap, "audioEndTime", runtimeException);
     Float modeledFrequency = getPropertyAsFloat(propertyMap, "modeledFrequency", runtimeException);
+    
+    LocationDetail locationDetail = locationDetailFromMap(propertyMap, runtimeException, seaRepository, shipRepository);
 
     Dataset dataset = null;
     if (DatasetType.SOUND_CLIPS.getName().equals(datasetType)) {
@@ -399,6 +423,7 @@ final class TranslatorUtils {
           .softwareProtocolCitation(softwareProtocolCitation)
           .softwareDescription(softwareDescription)
           .softwareProcessingDescription(softwareProcessingDescription)
+          .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.AUDIO.getName().equals(datasetType)) {
       dataset = AudioPackingJob.builder()
@@ -443,6 +468,7 @@ final class TranslatorUtils {
           .comments(comments)
           .sensors(sensors)
 //          .channels()
+          .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.CPOD.getName().equals(datasetType)) {
       dataset = CPODPackingJob.builder()
@@ -487,6 +513,7 @@ final class TranslatorUtils {
           .comments(comments)
           .sensors(sensors)
 //          .channels()
+          .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.DETECTIONS.getName().equals(datasetType)) {
       dataset = DetectionsPackingJob.builder()
@@ -533,6 +560,7 @@ final class TranslatorUtils {
           .deploymentDescription(deploymentDescription)
           .alternateSiteName(alternateSiteName)
           .alternateDeploymentName(alternateDeploymentName)
+          .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.SOUND_LEVEL_METRICS.getName().equals(datasetType)) {
       dataset = SoundLevelMetricsPackingJob.builder()
@@ -580,6 +608,7 @@ final class TranslatorUtils {
           .softwareProtocolCitation(softwareProtocolCitation)
           .softwareDescription(softwareDescription)
           .softwareProcessingDescription(softwareProcessingDescription)
+          .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.SOUND_PROPAGATION_MODELS.getName().equals(datasetType)) {
       dataset = SoundPropagationModelsPackingJob.builder()
@@ -618,6 +647,7 @@ final class TranslatorUtils {
           .softwareProtocolCitation(softwareProtocolCitation)
           .softwareDescription(softwareDescription)
           .softwareProcessingDescription(softwareProcessingDescription)
+          .locationDetail(locationDetail)
           .build();
     } else {
       runtimeException.addSuppressed(new FieldException(
@@ -928,6 +958,62 @@ final class TranslatorUtils {
       runtimeException.addSuppressed(
           new FieldException(propertyName, "Invalid path format")
       );
+      return null;
+    }
+  }
+  
+  private static LocationDetail locationDetailFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException, SeaRepository seaRepository, ShipRepository shipRepository) {
+    String locationType = getProperty(propertyMap, "location.type");
+    if (locationType == null) {
+      return null;
+    }
+    if (LocationType.STATIONARY_MARINE.getName().equals(locationType)) {
+      return StationaryMarineLocation.builder()
+          .seaArea(getPropertyAsResource("location.seaArea", getProperty(propertyMap, "location.seaArea"), seaRepository, runtimeException))
+          .deploymentLocation(MarineInstrumentLocation.builder()
+              .latitude(getPropertyAsFloat(propertyMap, "location.deploymentLocation.latitude", runtimeException))
+              .longitude(getPropertyAsFloat(propertyMap, "location.deploymentLocation.longitude", runtimeException))
+              .seaFloorDepth(getPropertyAsFloat(propertyMap, "location.deploymentLocation.seaFloorDepth", runtimeException))
+              .instrumentDepth(getPropertyAsFloat(propertyMap, "location.deploymentLocation.instrumentDepth", runtimeException))
+              .build())
+          .recoveryLocation(MarineInstrumentLocation.builder()
+              .latitude(getPropertyAsFloat(propertyMap, "location.recoveryLocation.latitude", runtimeException))
+              .longitude(getPropertyAsFloat(propertyMap, "location.recoveryLocation.longitude", runtimeException))
+              .seaFloorDepth(getPropertyAsFloat(propertyMap, "location.recoveryLocation.seaFloorDepth", runtimeException))
+              .instrumentDepth(getPropertyAsFloat(propertyMap, "location.recoveryLocation.instrumentDepth", runtimeException))
+              .build())
+          .build();
+    } else if (LocationType.MOBILE_MARINE.getName().equals(locationType)) {
+      return MobileMarineLocation.builder()
+          .seaArea(getPropertyAsResource("location.seaArea", getProperty(propertyMap, "location.seaArea"), seaRepository, runtimeException))
+          .vessel(getPropertyAsResource("location.vessel", getProperty(propertyMap, "location.vessel"), shipRepository, runtimeException))
+          .locationDerivationDescription(getProperty(propertyMap, "location.locationDerivationDescription"))
+          .build();
+    } else if (LocationType.STATIONARY_TERRESTRIAL.getName().equals(locationType)) {
+      return StationaryTerrestrialLocation.builder()
+          .latitude(getPropertyAsFloat(propertyMap, "location.latitude", runtimeException))
+          .longitude(getPropertyAsFloat(propertyMap, "location.longitude", runtimeException))
+          .surfaceElevation(getPropertyAsFloat(propertyMap, "location.surfaceElevation", runtimeException))
+          .instrumentElevation(getPropertyAsFloat(propertyMap, "location.instrumentElevation", runtimeException))
+          .build();
+    } else if (LocationType.MULTIPOINT_STATIONARY_MARINE.getName().equals(locationType)) {
+      return MultiPointStationaryMarineLocation.builder()
+          .seaArea(getPropertyAsResource("location.seaArea", getProperty(propertyMap, "location.seaArea"), seaRepository, runtimeException))
+          .locations(Collections.singletonList(MarineInstrumentLocation.builder()
+              .latitude(getPropertyAsFloat(propertyMap, "location.latitude", runtimeException))
+              .longitude(getPropertyAsFloat(propertyMap, "location.longitude", runtimeException))
+              .seaFloorDepth(getPropertyAsFloat(propertyMap, "location.seaFloorDepth", runtimeException))
+              .instrumentDepth(getPropertyAsFloat(propertyMap, "location.instrumentDepth", runtimeException))
+              .build()))
+          .build();
+    } else {
+      runtimeException.addSuppressed(new FieldException(
+          "location.type", String.format(
+          "Invalid location type. Was not one of %s", Arrays.stream(LocationType.values())
+              .map(LocationType::getName)
+              .collect(Collectors.joining(", "))
+          )
+      ));
       return null;
     }
   }
