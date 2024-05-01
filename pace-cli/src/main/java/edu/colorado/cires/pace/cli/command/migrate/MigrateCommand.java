@@ -36,49 +36,123 @@ public class MigrateCommand implements Runnable {
     Path datastoreDirectory = new ApplicationPropertyResolver().getWorkDir();
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
     
+    MigrationException migrationException = new MigrationException("Migration failed");
+
     try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           DetectionTypeRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
           DetectionTypeRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           FileTypeRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
           FileTypeRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           InstrumentRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), datastoreDirectory, objectMapper),
           InstrumentRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
-      Migrator.migrate(new MigrationRepositoryPair<>(
-          InstrumentRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), datastoreDirectory, objectMapper),
-          InstrumentRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
-      ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           OrganizationRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
           OrganizationRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           PersonRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
           PersonRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           PlatformRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
           PlatformRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           ProjectRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper),
           ProjectRepositoryFactory.createSQLiteRepository(localDataFile.toPath())
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           SeaRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
           SeaRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    try {
       Migrator.migrate(new MigrationRepositoryPair<>(
           ShipRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
           ShipRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
-    } catch (MigrationException | IOException e) {
-      throw new RuntimeException(e);
+    } catch (MigrationException e) {
+      for (Throwable throwable : e.getSuppressed()) {
+        migrationException.addSuppressed(throwable);
+      }
+    } catch (IOException e) {
+      migrationException.addSuppressed(e);
+    }
+    
+    if (migrationException.getSuppressed().length > 0) {
+      try {
+        throw migrationException;
+      } catch (MigrationException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }

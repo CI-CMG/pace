@@ -19,18 +19,30 @@ public class OrganizationsSQLiteDatastore extends SQLiteDatastore<Organization> 
   protected Stream<Organization> resultSetToStream(ResultSet resultSet) throws SQLException {
     List<Organization> organizations = new ArrayList<>(0);
     
+    SQLException sqlException = new SQLException("Failed to create objects");
+    
     while (resultSet.next()) {
-      organizations.add(Organization.builder()
-              .name(resultSet.getString("NAME"))
-              .street(resultSet.getString("STREET"))
-              .city(resultSet.getString("CITY"))
-              .state(resultSet.getString("STATE"))
-              .zip(resultSet.getString("ZIP"))
-              .country(resultSet.getString("COUNTRY"))
-              .email(resultSet.getString("EMAIL"))
-              .phone(resultSet.getString("PHONE"))
-              .uuid(UUID.fromString(resultSet.getString("UUID")))
-          .build());
+      try {
+        organizations.add(Organization.builder()
+            .name(resultSet.getString("NAME"))
+            .street(resultSet.getString("STREET"))
+            .city(resultSet.getString("CITY"))
+            .state(resultSet.getString("STATE"))
+            .zip(resultSet.getString("ZIP"))
+            .country(resultSet.getString("COUNTRY"))
+            .email(resultSet.getString("EMAIL"))
+            .phone(resultSet.getString("PHONE"))
+            .uuid(UUID.fromString(resultSet.getString("UUID")))
+            .build());
+      } catch (IllegalArgumentException e) {
+        sqlException.addSuppressed(new SQLException(String.format(
+            "Failed to create Organization: %s", e.getMessage() 
+        )));
+      }
+    }
+    
+    if (sqlException.getSuppressed().length > 0) {
+      throw sqlException;
     }
     
     return organizations.stream();

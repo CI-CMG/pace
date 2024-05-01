@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import edu.colorado.cires.pace.cli.command.common.BatchWriteException;
 import edu.colorado.cires.pace.cli.util.SerializationUtils;
+import edu.colorado.cires.pace.migrator.MigrationException;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.RowConversionException;
 import edu.colorado.cires.pace.translator.TranslationException;
@@ -65,7 +66,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
                   )
               ).toList()
       );
-    } else if (e instanceof BatchWriteException) {
+    } else if (e instanceof BatchWriteException || e instanceof MigrationException) {
       return objectWriter.writeValueAsString(
           Arrays.stream(e.getSuppressed())
               .map(ExecutionErrorHandler::getExceptionText)
