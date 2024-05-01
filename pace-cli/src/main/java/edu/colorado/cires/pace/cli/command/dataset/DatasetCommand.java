@@ -11,19 +11,20 @@ import edu.colorado.cires.pace.cli.command.common.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand.Package;
 import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand.Translate;
+import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.person.PersonRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.soundSource.SoundSourceRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -80,7 +81,7 @@ public class DatasetCommand implements Runnable {
           PlatformRepositoryFactory::createJsonRepository,
           InstrumentRepositoryFactory::createJsonRepository,
           SensorRepositoryFactory::createRepository,
-          SoundSourceRepositoryFactory::createRepository
+          DetectionTypeRepositoryFactory::createJsonRepository
       };
     }
   }

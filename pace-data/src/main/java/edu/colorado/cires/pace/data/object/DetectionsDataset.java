@@ -26,7 +26,7 @@ public class DetectionsDataset implements Dataset, DetectionsDatasetDetail {
   private final Instrument instrument;
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
-  private final SoundSource soundSource;
+  private final DetectionType soundSource;
   private final Person qualityAnalyst;
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;

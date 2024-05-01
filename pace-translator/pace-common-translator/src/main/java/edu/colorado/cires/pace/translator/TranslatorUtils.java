@@ -8,6 +8,7 @@ import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.DepthSensor;
+import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
 import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.FileType;
@@ -33,13 +34,13 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
-import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
@@ -50,7 +51,6 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
-import edu.colorado.cires.pace.repository.SoundSourceRepository;
 import java.lang.reflect.Field;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -100,12 +100,12 @@ final class TranslatorUtils {
           .build());
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       object = (O) sensorFromMap(propertyMap, runtimeException);
-    } else if (clazz.isAssignableFrom(SoundSource.class)) {
-      object = (O) objectWithNameFromMap(propertyMap, runtimeException, (o) -> SoundSource.builder()
-          .uuid(o.getUuid())
-          .name(o.getName())
-          .scientificName(getProperty(propertyMap, "scientificName"))
-          .build());
+    } else if (clazz.isAssignableFrom(DetectionType.class)) {
+      object = (O) DetectionType.builder()
+          .uuid(uuidFromString(getProperty(propertyMap, "uuid"), runtimeException))
+          .source(getProperty(propertyMap, "source"))
+          .scienceName(getProperty(propertyMap, "scienceName"))
+          .build();
     } else if (clazz.isAssignableFrom(FileType.class)) {
       object = (O) fileTypeFromMap(propertyMap, runtimeException);
     } else if (clazz.isAssignableFrom(Instrument.class)) {
@@ -146,8 +146,8 @@ final class TranslatorUtils {
           .findFirst().orElseThrow(
               () -> new RowConversionException("Dataset translation missing sensor repository", row)
           );
-      CRUDRepository<?> soundSourceRepository = Arrays.stream(dependencyRepositories)
-          .filter(r -> r instanceof SoundSourceRepository)
+      CRUDRepository<?> detectionTypeRepository = Arrays.stream(dependencyRepositories)
+          .filter(r -> r instanceof DetectionTypeRepository)
           .findFirst().orElseThrow(
               () -> new RowConversionException("Dataset translation missing sound source repository", row)
           );
@@ -170,7 +170,7 @@ final class TranslatorUtils {
           (PlatformRepository) platformRepository,
           (InstrumentRepository) instrumentRepository,
           (SensorRepository) sensorRepository,
-          (SoundSourceRepository) soundSourceRepository,
+          (DetectionTypeRepository) detectionTypeRepository,
           (SeaRepository) seaRepository,
           (ShipRepository) shipRepository, 
           runtimeException
@@ -207,8 +207,8 @@ final class TranslatorUtils {
       validateTranslatorWithFlatFields(translatorFields, Project.class);
     } else if (clazz.isAssignableFrom(Platform.class)) {
       validateTranslatorWithFlatFields(translatorFields, Platform.class);
-    } else if (clazz.isAssignableFrom(SoundSource.class)) {
-      validateTranslatorWithFlatFields(translatorFields, SoundSource.class);
+    } else if (clazz.isAssignableFrom(DetectionType.class)) {
+      validateTranslatorWithFlatFields(translatorFields, DetectionType.class);
     } else if (clazz.isAssignableFrom(Sensor.class)) {
       validateSensorTranslator(translatorFields);
     } else if (clazz.isAssignableFrom(Instrument.class)) {
@@ -283,7 +283,7 @@ final class TranslatorUtils {
       PlatformRepository platformRepository,
       InstrumentRepository instrumentRepository,
       SensorRepository sensorRepository,
-      SoundSourceRepository soundSourceRepository,
+      DetectionTypeRepository detectionTypeRepository,
       SeaRepository seaRepository,
       ShipRepository shipRepository,
       RuntimeException runtimeException
@@ -377,10 +377,10 @@ final class TranslatorUtils {
     String comments = getProperty(propertyMap, "comments");
     List<Sensor> sensors = getPropertyAsDelimitedResources("sensors", propertyMap, sensorRepository, runtimeException);
     List<DataQualityEntry> qualityEntries = qualityEntriesFromMap(propertyMap, runtimeException);
-    SoundSource soundSource = getPropertyAsResource(
+    DetectionType detectionType = getPropertyAsResource(
         "soundSource",
         getProperty(propertyMap, "soundSource"),
-        soundSourceRepository,
+        detectionTypeRepository,
         runtimeException
     );
     Integer analysisTimeZone = getPropertyAsInteger(propertyMap, "analysisTimeZone", runtimeException);
@@ -542,7 +542,7 @@ final class TranslatorUtils {
           .instrument(instrument)
           .startTime(startTime)
           .endTime(endTime)
-          .soundSource(soundSource)
+          .soundSource(detectionType)
           .qualityAnalyst(qualityAnalyst)
           .qualityAnalysisObjectives(qualityAnalysisObjectives)
           .qualityAnalysisMethod(qualityAnalysisMethod)

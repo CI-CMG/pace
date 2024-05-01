@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.DepthSensor;
+import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Platform;
@@ -12,7 +13,6 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.object.SoundSource;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import java.io.IOException;
@@ -166,30 +166,30 @@ class TranslatorExecutorTest {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-1"),
-            "scientificName", Optional.of("test-scientific-name-1")
+            "source", Optional.of("test-name-1"),
+            "scienceName", Optional.of("test-scientific-name-1")
         ),
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2"),
-            "scientificName", Optional.of("test-scientific-name-2")
+            "source", Optional.of("test-name-2"),
+            "scienceName", Optional.of("test-scientific-name-2")
         )
     );
 
-    List<ObjectWithRowConversionException<SoundSource>> results = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRowConversionException<DetectionType>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2),
-        new TestTranslatorField("scientificName", 3)
-    )), maps, SoundSource.class).translate((InputStream) null).toList();
+        new TestTranslatorField("source", 2),
+        new TestTranslatorField("scienceName", 3)
+    )), maps, DetectionType.class).translate((InputStream) null).toList();
     assertEquals(2, results.size());
     assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
-    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
-    assertEquals(maps.get(0).get("scientificName").orElseThrow(), results.get(0).object().getScientificName());
+    assertEquals(maps.get(0).get("source").orElseThrow(), results.get(0).object().getSource());
+    assertEquals(maps.get(0).get("scienceName").orElseThrow(), results.get(0).object().getScienceName());
     assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
     assertNull(results.get(1).rowConversionException());
-    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
-    assertEquals(maps.get(1).get("scientificName").orElseThrow(), results.get(1).object().getScientificName());
+    assertEquals(maps.get(1).get("source").orElseThrow(), results.get(1).object().getSource());
+    assertEquals(maps.get(1).get("scienceName").orElseThrow(), results.get(1).object().getScienceName());
   }
 
   @Test
@@ -338,9 +338,9 @@ class TranslatorExecutorTest {
 
     Exception result = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2),
-        new TestTranslatorField("scientificName", 3)
-    )), maps, SoundSource.class).translate((InputStream) null)
+        new TestTranslatorField("source", 2),
+        new TestTranslatorField("scienceName", 3)
+    )), maps, DetectionType.class).translate((InputStream) null)
         .map(ObjectWithRowConversionException::rowConversionException)
         .filter(Objects::nonNull)
         .map(e -> (Exception) e)
@@ -379,10 +379,10 @@ class TranslatorExecutorTest {
   void testInvalidSoundSourceTranslatorDefinition() {
     TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2)
-    )), Collections.emptyList(), SoundSource.class));
+        new TestTranslatorField("source", 2)
+    )), Collections.emptyList(), DetectionType.class));
     assertEquals(String.format(
-        "Translator does not fully describe %s. Missing fields: [scientificName]", SoundSource.class.getSimpleName()
+        "Translator does not fully describe %s. Missing fields: [scienceName]", DetectionType.class.getSimpleName()
     ), exception.getMessage());
   }
 

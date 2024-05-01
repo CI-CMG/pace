@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull;
 
 public interface DetectionsDatasetDetail extends DatasetDetail, DataQuality, SoftwareDescription, AnalysisDescription {
   @NotNull @Valid
-  SoundSource getSoundSource();
+  DetectionType getSoundSource();
 }
