@@ -1,16 +1,25 @@
 package edu.colorado.cires.pace.cli.command.common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Create;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Delete;
+import edu.colorado.cires.pace.cli.command.common.BaseCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.GetByUniqueField;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.List;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Translate;
 import edu.colorado.cires.pace.cli.command.common.BaseCommand.Update;
 import edu.colorado.cires.pace.cli.command.base.PaceCLI;
+import edu.colorado.cires.pace.cli.util.SerializationUtils;
+import edu.colorado.cires.pace.data.object.CSVTranslator;
+import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -25,7 +34,8 @@ import picocli.CommandLine.ParentCommand;
     GetByUUID.class,
     GetByUniqueField.class,
     Update.class,
-    Translate.class
+    Translate.class,
+    GenerateTranslator.class
 })
 public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Runnable {
   
@@ -33,6 +43,43 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
   private final RepositoryFactory<O> repositoryFactory;
   private final RepositoryFactory[] dependencyRepositoryFactories;
   private final TypeReference<java.util.List<O>> typeReference;
+  
+  private CSVTranslator getCSVTranslator() {
+    java.util.List<CSVTranslatorField> fieldList = new ArrayList<>();
+
+    Field[] fields = clazz.getDeclaredFields();
+    for (int i = 0; i < fields.length; i++) {
+      fieldList.add(
+          CSVTranslatorField.builder()
+              .propertyName(fields[i].getName())
+              .columnNumber(i + 1)
+              .build()
+      );
+    }
+    
+    return CSVTranslator.builder()
+        .name(clazz.getSimpleName())
+        .fields(fieldList)
+        .build();
+  }
+  
+  private ExcelTranslator getExcelTranslator() {
+    java.util.List<ExcelTranslatorField> fieldList = new ArrayList<>(0);
+    
+    Field[] fields = clazz.getDeclaredFields();
+    for (int i = 0; i < fields.length; i++) {
+      fieldList.add(ExcelTranslatorField.builder()
+              .propertyName(fields[i].getName())
+              .columnNumber(i + 1)
+              .sheetNumber(1)
+          .build());
+    }
+    
+    return ExcelTranslator.builder()
+        .name(clazz.getSimpleName())
+        .fields(fieldList)
+        .build();
+  }
   
   @ParentCommand
   private PaceCLI paceCLI;
@@ -237,6 +284,27 @@ public abstract class BaseCommand<O extends ObjectWithUniqueField> implements Ru
     @Override
     protected RepositoryFactory[] getDependencyRepositoryFactories() {
       return baseCommand.getDependencyRepositoryFactories();
+    }
+  }
+  
+  @Command(name = "generate-translator")
+  static class GenerateTranslator implements Runnable {
+
+    @ParentCommand
+    private BaseCommand baseCommand;
+    
+    @Parameters(description = "Translator type")
+    private TranslationType translatorType;
+
+    @Override
+    public void run() {
+      try {
+        System.out.println(SerializationUtils.createObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(
+            translatorType.equals(TranslationType.csv) ? baseCommand.getCSVTranslator() : baseCommand.getExcelTranslator()
+        ));
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
