@@ -7,7 +7,7 @@ import java.util.UUID;
 public class OrganizationRepository extends CRUDRepository<Organization> {
 
   public OrganizationRepository(Datastore<Organization> datastore) {
-    super(datastore);
+    super(datastore, true);
   }
 
   @Override

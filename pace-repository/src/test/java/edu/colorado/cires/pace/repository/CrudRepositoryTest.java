@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
+import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
 
       @Override
       public String getClassName() {
-        return String.class.getSimpleName();
+        return createNewObject(1).getClass().getSimpleName();
       }
 
       @Override
@@ -98,14 +99,14 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testCreateUUIDNotNull() {
+  void testCreateUUIDNotNull() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 
     O finalObject = object;
     Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
-        "uuid for new %s must not be defined", repository.getClassName()
+        "uuid for new %s %s must not be defined", repository.getClassName(), uniqueFieldGetter().apply(finalObject)
     ), exception.getMessage());
   }
   
@@ -191,7 +192,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
 
   @Test
-  void testUpdateNullUUID() throws Exception {
+  void testUpdateNullUUID() {
     O object = createNewObject(1);
     Exception exception = assertThrows(BadArgumentException.class, () -> repository.update(UUID.randomUUID(), object));
     assertEquals(String.format(
