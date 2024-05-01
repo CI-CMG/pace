@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 public class InstrumentCommand extends BaseCommand<Instrument> {
 
   InstrumentCommand() {
-    super(Instrument.class, InstrumentRepositoryFactory::createRepository, new TypeReference<>() {}, FileTypeRepositoryFactory::createRepository);
+    super(Instrument.class, InstrumentRepositoryFactory::createJsonRepository, new TypeReference<>() {}, FileTypeRepositoryFactory::createJsonRepository);
   }
 
   @Override

@@ -10,7 +10,7 @@ import java.util.Objects;
 public final class Migrator {
   
   public static <O extends ObjectWithUniqueField> void migrate(MigrationRepositoryPair<O> migrationRepositoryPair) throws MigrationException {
-    RuntimeException runtimeException = null;
+    RuntimeException runtimeException;
     try {
       runtimeException = migrationRepositoryPair.getInputRepository().findAll().map(
               (objectWithUniqueField -> {

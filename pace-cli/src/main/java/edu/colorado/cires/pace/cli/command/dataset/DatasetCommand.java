@@ -74,11 +74,11 @@ public class DatasetCommand implements Runnable {
     @Override
     protected RepositoryFactory[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[]{
-          PersonRepositoryFactory::createRepository,
-          ProjectRepositoryFactory::createRepository,
-          OrganizationRepositoryFactory::createRepository,
-          PlatformRepositoryFactory::createRepository,
-          InstrumentRepositoryFactory::createRepository,
+          PersonRepositoryFactory::createJsonRepository,
+          ProjectRepositoryFactory::createJsonRepository,
+          OrganizationRepositoryFactory::createJsonRepository,
+          PlatformRepositoryFactory::createJsonRepository,
+          InstrumentRepositoryFactory::createJsonRepository,
           SensorRepositoryFactory::createRepository,
           SoundSourceRepositoryFactory::createRepository
       };

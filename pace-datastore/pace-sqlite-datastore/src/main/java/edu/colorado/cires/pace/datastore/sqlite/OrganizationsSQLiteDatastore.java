@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class OrganizationsSQLiteDatastore extends SQLiteDatastore<Organization> {
 
-  protected OrganizationsSQLiteDatastore(Path sqliteFile) {
+  public OrganizationsSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "ORGANIZATIONS");
   }
 

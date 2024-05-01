@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class PlatformSQLiteDatastore extends SQLiteDatastore<Platform> {
 
-  protected PlatformSQLiteDatastore(Path sqliteFile) {
+  public PlatformSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "PLATFORMS");
   }
 

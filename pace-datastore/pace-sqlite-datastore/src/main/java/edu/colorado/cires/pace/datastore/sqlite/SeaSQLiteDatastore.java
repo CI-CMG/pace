@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class SeaSQLiteDatastore extends SQLiteDatastore<Sea> {
 
-  protected SeaSQLiteDatastore(Path sqliteFile) {
+  public SeaSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "SEAS");
   }
 

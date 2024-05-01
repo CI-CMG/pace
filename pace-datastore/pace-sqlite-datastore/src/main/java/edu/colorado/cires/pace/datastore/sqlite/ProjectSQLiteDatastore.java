@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class ProjectSQLiteDatastore extends SQLiteDatastore<Project> {
 
-  protected ProjectSQLiteDatastore(Path sqliteFile) {
+  public ProjectSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "PROJECTS");
   }
 

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class FileTypeSQLiteDatastore extends SQLiteDatastore<FileType> {
 
-  protected FileTypeSQLiteDatastore(Path sqliteFile) {
+  public FileTypeSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "FILE_TYPES");
   }
 

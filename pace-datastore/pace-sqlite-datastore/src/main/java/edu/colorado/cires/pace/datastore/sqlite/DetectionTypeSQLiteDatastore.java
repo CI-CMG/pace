@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class DetectionTypeSQLiteDatastore extends SQLiteDatastore<DetectionType> {
 
-  protected DetectionTypeSQLiteDatastore(Path sqliteFile) {
+  public DetectionTypeSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "DETECTION_TYPES");
   }
 

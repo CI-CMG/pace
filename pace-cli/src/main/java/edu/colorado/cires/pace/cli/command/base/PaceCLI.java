@@ -4,6 +4,7 @@ import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand;
+import edu.colorado.cires.pace.cli.command.migrate.MigrateCommand;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand;
@@ -36,7 +37,8 @@ import picocli.CommandLine.Command;
         SensorCommand.class,
         SoundSourceCommand.class,
         CSVTranslatorCommand.class,
-        ExcelTranslatorCommand.class
+        ExcelTranslatorCommand.class,
+        MigrateCommand.class
     }
 )
 public class PaceCLI implements Runnable {

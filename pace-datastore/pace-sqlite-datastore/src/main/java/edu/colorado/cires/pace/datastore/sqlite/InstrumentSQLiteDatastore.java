@@ -16,7 +16,7 @@ public class InstrumentSQLiteDatastore extends SQLiteDatastore<Instrument> {
   
   private final Datastore<FileType> fileTypeDatastore;
 
-  protected InstrumentSQLiteDatastore(Path sqliteFile, Datastore<FileType> fileTypeDatastore) {
+  public InstrumentSQLiteDatastore(Path sqliteFile, Datastore<FileType> fileTypeDatastore) {
     super(sqliteFile, "INSTRUMENTS");
     this.fileTypeDatastore = fileTypeDatastore;
   }
