@@ -88,8 +88,6 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
   }
   
   private static String getExceptionText(Throwable throwable) {
-    return String.format(
-        "%s: %s", throwable.getClass().getSimpleName(), throwable.getMessage()
-    );
+    return throwable.getMessage();
   }
 }
