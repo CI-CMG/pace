@@ -12,8 +12,8 @@ import lombok.extern.jackson.Jacksonized;
 public class DetectionType implements ObjectWithUniqueField {
 
   final UUID uuid;
-  final String source;
   @NotBlank
+  final String source;
   final String scienceName;
 
 }

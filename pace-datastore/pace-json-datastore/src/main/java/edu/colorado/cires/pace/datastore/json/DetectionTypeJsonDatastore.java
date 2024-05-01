@@ -8,11 +8,11 @@ import java.nio.file.Path;
 public class DetectionTypeJsonDatastore extends JsonDatastore<DetectionType> {
 
   public DetectionTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("data-types"), objectMapper, DetectionType.class, DetectionType::getScienceName);
+    super(workDirectory.resolve("data-types"), objectMapper, DetectionType.class, DetectionType::getSource);
   }
 
   @Override
   public String getUniqueFieldName() {
-    return "scienceName";
+    return "source";
   }
 }

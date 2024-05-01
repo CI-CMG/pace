@@ -22,7 +22,7 @@ class DetectionTypeJsonDatastoreTest extends JsonDatastoreTest<DetectionType> {
 
   @Override
   protected String getExpectedUniqueFieldName() {
-    return "scienceName";
+    return "source";
   }
 
   @Override
