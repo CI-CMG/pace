@@ -16,6 +16,7 @@
     <module>pace-datastore</module>
     <module>pace-repository</module>
     <module>pace-cli</module>
+    <module>pace-migrator</module>
   </modules>
 
   <properties>
