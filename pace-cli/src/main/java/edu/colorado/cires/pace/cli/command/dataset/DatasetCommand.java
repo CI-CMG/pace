@@ -17,14 +17,15 @@ import edu.colorado.cires.pace.cli.command.organization.OrganizationRepositoryFa
 import edu.colorado.cires.pace.cli.command.person.PersonRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.data.object.PackingJob;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
-import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -75,13 +76,15 @@ public class DatasetCommand implements Runnable {
     @Override
     protected RepositoryFactory[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[]{
-          PersonRepositoryFactory::createJsonRepository,
           ProjectRepositoryFactory::createJsonRepository,
+          PersonRepositoryFactory::createJsonRepository,
           OrganizationRepositoryFactory::createJsonRepository,
           PlatformRepositoryFactory::createJsonRepository,
           InstrumentRepositoryFactory::createJsonRepository,
           SensorRepositoryFactory::createRepository,
-          DetectionTypeRepositoryFactory::createJsonRepository
+          DetectionTypeRepositoryFactory::createJsonRepository,
+          SeaRepositoryFactory::createJsonRepository,
+          ShipRepositoryFactory::createJsonRepository
       };
     }
   }
