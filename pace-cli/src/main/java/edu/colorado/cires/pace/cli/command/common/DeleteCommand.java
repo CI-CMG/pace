@@ -4,7 +4,7 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-abstract class DeleteCommand<O extends ObjectWithUniqueField> extends VoidCommand<O> {
+public abstract class DeleteCommand<O extends ObjectWithUniqueField> extends VoidCommand<O> {
 
   protected abstract Supplier<UUID> getUUIDProvider();
 

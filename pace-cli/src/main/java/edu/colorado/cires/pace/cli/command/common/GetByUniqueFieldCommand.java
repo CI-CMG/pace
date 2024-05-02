@@ -6,7 +6,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import java.io.IOException;
 import java.util.function.Supplier;
 
-abstract class GetByUniqueFieldCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+public abstract class GetByUniqueFieldCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
 
   protected abstract Supplier<String> getUniqueFieldProvider();
   

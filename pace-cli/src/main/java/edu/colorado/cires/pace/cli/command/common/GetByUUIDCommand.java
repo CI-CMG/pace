@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-abstract class GetByUUIDCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+public abstract class GetByUUIDCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
   
   protected abstract Supplier<UUID> getUUIDProvider();
 

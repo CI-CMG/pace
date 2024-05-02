@@ -1,5 +1,5 @@
 package edu.colorado.cires.pace.translator;
 
-enum SensorType {
+public enum SensorType {
   audio, depth, other
 }

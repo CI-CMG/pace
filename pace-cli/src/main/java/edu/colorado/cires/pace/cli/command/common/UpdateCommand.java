@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-abstract class UpdateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
+public abstract class UpdateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
 
   @Override
   protected O runCommandWithDeserializedObject(O object)

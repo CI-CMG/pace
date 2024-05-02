@@ -7,7 +7,7 @@ import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import java.io.IOException;
 
-abstract class CreateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
+public abstract class CreateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
 
   @Override
   protected O runCommandWithDeserializedObject(O object)
