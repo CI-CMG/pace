@@ -12,11 +12,20 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.Create;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.Delete;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.FindAll;
+import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.GenerateCSV;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.Update;
+import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
+import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.translator.csv.CSVGenerator;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -29,7 +38,8 @@ import picocli.CommandLine.Parameters;
     GetByUUID.class,
     GetByName.class,
     Update.class,
-    Delete.class
+    Delete.class,
+    GenerateCSV.class
 })
 public class CSVTranslatorCommand implements Runnable {
   
@@ -150,6 +160,31 @@ public class CSVTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+  }
+  
+  @Command(name = "generate-csv", description = "Generate CSV from translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
+  static class GenerateCSV implements Runnable {
+    
+    @Parameters(description = "Output file path")
+    private File file;
+    
+    @Parameters(description = "Translator name")
+    private String translatorName;
+
+    private Path getDatastoreDirectory() {
+      return new ApplicationPropertyResolver().getWorkDir();
+    }
+
+    @Override
+    public void run() {
+      try {
+        CRUDRepository<CSVTranslator> repository = repositoryFactory.createRepository(getDatastoreDirectory(), SerializationUtils.createObjectMapper());
+        CSVTranslator csvTranslator = repository.getByUniqueField(translatorName);
+        new CSVGenerator().generateSpreadsheet(file.toPath(), csvTranslator);
+      } catch (IOException | NotFoundException | DatastoreException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }
