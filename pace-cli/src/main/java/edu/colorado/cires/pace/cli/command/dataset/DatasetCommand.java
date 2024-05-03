@@ -243,7 +243,7 @@ public class DatasetCommand implements Runnable {
   private static List<String> getDeclaredFields(DatasetType datasetType, LocationType locationType, List<Type> explicitClasses)
       throws ClassNotFoundException {
     List<FieldNameWithType> fields = getBaseFields(datasetType, locationType);
-    
+
     while (fieldsContainExplicitField(fields, explicitClasses)) {
       fields = processExplicitFields(fields, explicitClasses);
     }
@@ -293,10 +293,10 @@ public class DatasetCommand implements Runnable {
   @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class GenerateTranslator extends GenerateTranslatorCommand<PackingJob> {
     
-    @Option(names = {"--dataset-type", "-dt"}, description = "Dataset type")
+    @Option(names = {"--dataset-type", "-dt"}, description = "Dataset type", converter = DatasetTypeConverter.class)
     private DatasetType datasetType;
     
-    @Option(names = {"--location-type", "-lt"}, description = "Deployment location type", required = true)
+    @Option(names = {"--location-type", "-lt"}, description = "Deployment location type", required = true, converter = LocationTypeConverter.class)
     private LocationType locationType;
     
     @Parameters(description = "Translator type")
