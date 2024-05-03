@@ -293,7 +293,7 @@ public class DatasetCommand implements Runnable {
   @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class GenerateTranslator extends GenerateTranslatorCommand<PackingJob> {
     
-    @Option(names = {"--dataset-type", "-dt"}, description = "Dataset type", converter = DatasetTypeConverter.class)
+    @Option(names = {"--dataset-type", "-dt"}, description = "Dataset type", required = true, converter = DatasetTypeConverter.class)
     private DatasetType datasetType;
     
     @Option(names = {"--location-type", "-lt"}, description = "Deployment location type", required = true, converter = LocationTypeConverter.class)
