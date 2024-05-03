@@ -314,7 +314,7 @@ public class DatasetCommand implements Runnable {
 
     @Override
     protected List<String> getFieldNames() throws Exception {
-      return getDeclaredFields(datasetType, locationType, List.of(
+      List<String> fieldNames = getDeclaredFields(datasetType, locationType, List.of(
           MarineInstrumentLocation.class,
           Channel.class,
           DataQualityEntry.class,
@@ -322,6 +322,11 @@ public class DatasetCommand implements Runnable {
           DutyCycle.class,
           Gain.class
       ));
+      
+      fieldNames.add(1, "datasetType");
+      fieldNames.add(2, "locationType");
+      
+      return fieldNames;
     }
 
     @Override
