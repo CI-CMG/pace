@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
+import edu.colorado.cires.pace.cli.command.common.GenerateSpreadsheetCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -16,16 +17,11 @@ import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorCommand.Update;
-import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
-import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
-import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.translator.SpreadsheetGenerator;
 import edu.colorado.cires.pace.translator.csv.CSVGenerator;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -163,8 +159,8 @@ public class CSVTranslatorCommand implements Runnable {
     }
   }
   
-  @Command(name = "generate-csv", description = "Generate CSV from translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateCSV implements Runnable {
+  @Command(name = "generate", description = "Generate CSV from translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
+  static class GenerateCSV extends GenerateSpreadsheetCommand<CSVTranslatorField, CSVTranslator> {
     
     @Parameters(description = "Output file path")
     private File file;
@@ -172,19 +168,25 @@ public class CSVTranslatorCommand implements Runnable {
     @Parameters(description = "Translator name")
     private String translatorName;
 
-    private Path getDatastoreDirectory() {
-      return new ApplicationPropertyResolver().getWorkDir();
+
+    @Override
+    protected File getFile() {
+      return file;
     }
 
     @Override
-    public void run() {
-      try {
-        CRUDRepository<CSVTranslator> repository = repositoryFactory.createRepository(getDatastoreDirectory(), SerializationUtils.createObjectMapper());
-        CSVTranslator csvTranslator = repository.getByUniqueField(translatorName);
-        new CSVGenerator().generateSpreadsheet(file.toPath(), csvTranslator);
-      } catch (IOException | NotFoundException | DatastoreException e) {
-        throw new RuntimeException(e);
-      }
+    protected String getTranslatorName() {
+      return translatorName;
+    }
+
+    @Override
+    protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
+      return repositoryFactory;
+    }
+
+    @Override
+    protected SpreadsheetGenerator<CSVTranslatorField, CSVTranslator> getGenerator() {
+      return new CSVGenerator();
     }
   }
 }

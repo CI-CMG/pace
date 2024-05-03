@@ -33,7 +33,21 @@ public final class ApplicationPropertyResolver {
   }
   
   public String getVersion() {
-    return getPropertyValue("pace-cli.version");
+    return getVersion(true);
+  }
+  
+  public String getVersion(boolean includePatchVersion) {
+    String fullVersion = getPropertyValue("pace-cli.version");
+    if (includePatchVersion) {
+      return fullVersion;
+    }
+    
+    String[] versionParts = fullVersion.split("\\.");
+    return String.format(
+        "%s.%s", 
+        versionParts[0],
+        versionParts[1]
+    );
   }
 
 }

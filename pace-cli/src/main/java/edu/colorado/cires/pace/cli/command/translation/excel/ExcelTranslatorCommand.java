@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
+import edu.colorado.cires.pace.cli.command.common.GenerateSpreadsheetCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -12,10 +13,14 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.Create;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.Delete;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.FindAll;
+import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.GenerateExcel;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorCommand.Update;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.translator.SpreadsheetGenerator;
+import edu.colorado.cires.pace.translator.excel.ExcelGenerator;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +34,8 @@ import picocli.CommandLine.Parameters;
     GetByUUID.class,
     GetByName.class,
     Update.class,
-    Delete.class
+    Delete.class,
+    GenerateExcel.class
 })
 public class ExcelTranslatorCommand implements Runnable {
 
@@ -150,6 +156,38 @@ public class ExcelTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+  }
+  
+  @Command(name = "generate", description = "Generate Excel spreadsheet from translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
+  static class GenerateExcel extends GenerateSpreadsheetCommand<ExcelTranslatorField, ExcelTranslator> {
+
+    @Parameters(description = "Output file path")
+    private File file;
+
+    @Parameters(description = "Translator name")
+    private String translatorName;
+
+    @Override
+    protected File getFile() {
+      return file;
+    }
+
+    @Override
+    protected String getTranslatorName() {
+      return translatorName;
+    }
+
+    @Override
+    protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
+      return repositoryFactory;
+    }
+
+    @Override
+    protected SpreadsheetGenerator<ExcelTranslatorField, ExcelTranslator> getGenerator() {
+      return new ExcelGenerator(
+          applicationPropertyResolver.getVersion(false)
+      );
     }
   }
 }
