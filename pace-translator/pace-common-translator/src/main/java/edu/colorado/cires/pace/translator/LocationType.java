@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.translator;
 
-enum LocationType {
+public enum LocationType {
   STATIONARY_MARINE("stationary marine"),
   MULTIPOINT_STATIONARY_MARINE("multipoint stationary marine"),
   MOBILE_MARINE("mobile marine"),

@@ -21,17 +21,13 @@ import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Translate;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Update;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CSVTranslator;
-import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.translator.SensorType;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -228,55 +224,24 @@ public class SensorCommand implements Runnable {
       return translatorType;
     }
     
-    private Field[] getDeclaredFields(SensorType sensorType) {
-      return switch (sensorType) {
+    private List<String> getDeclaredFields(SensorType sensorType) {
+      return Arrays.stream(switch (sensorType) {
         case other -> OtherSensor.class.getDeclaredFields();
         case depth -> DepthSensor.class.getDeclaredFields();
         case audio -> AudioSensor.class.getDeclaredFields();
-      };
+      }).map(Field::getName).toList();
     }
 
     @Override
-    protected CSVTranslator getCSVTranslator() {
-      List<CSVTranslatorField> fields = new ArrayList<>(0);
-
-      Field[] objectFields = getDeclaredFields(sensorType);
-
-      for (int i = 0; i < objectFields.length; i++) {
-        fields.add(CSVTranslatorField.builder()
-                .propertyName(objectFields[i].getName())
-                .columnNumber(i + 1)
-            .build());
-      }
-      
-      return CSVTranslator.builder()
-          .name(String.format(
-              "%s-%s", clazz.getSimpleName(), sensorType.name()
-          ))
-          .fields(fields)
-          .build();
+    protected List<String> getFieldNames() {
+      return getDeclaredFields(sensorType);
     }
 
     @Override
-    protected ExcelTranslator getExcelTranslator() {
-      List<ExcelTranslatorField> fields = new ArrayList<>(0);
-      
-      Field[] objectFields = getDeclaredFields(sensorType);
-
-      for (int i = 0; i < objectFields.length; i++) {
-        fields.add(ExcelTranslatorField.builder()
-                .propertyName(objectFields[i].getName())
-                .sheetNumber(1)
-                .columnNumber(i + 1)
-            .build());
-      }
-      
-      return ExcelTranslator.builder()
-          .name(String.format(
-              "%s-%s", clazz.getSimpleName(), sensorType.name()
-          ))
-          .fields(fields)
-          .build();
+    protected String getTranslatorName() {
+      return String.format(
+          "%s-%s", super.getTranslatorName(), sensorType.name()
+      );
     }
   }
 }

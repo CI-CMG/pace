@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.translator;
 
-enum DatasetType {
+public enum DatasetType {
   SOUND_CLIPS("sound clips"),
   AUDIO("audio"),
   CPOD("CPOD"),
