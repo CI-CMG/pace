@@ -873,7 +873,12 @@ final class TranslatorUtils {
     if (stringValue != null && StringUtils.isBlank(stringValue)) {
       return null;
     }
-    return stringValue;
+    
+    if (stringValue == null) {
+      return null;
+    }
+
+    return stringValue.trim();
   }
   
   private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
