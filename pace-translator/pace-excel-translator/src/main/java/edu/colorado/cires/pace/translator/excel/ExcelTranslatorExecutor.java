@@ -48,7 +48,8 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
           .collect(Collectors.groupingBy(
               rowWithSheetIndex -> rowWithSheetIndex.row().getRowNum()
           )).values().stream()
-          .map(rows -> convertRowsToPropertyMap(rows, sheetTranslatorMappings));
+          .map(rows -> convertRowsToPropertyMap(rows, sheetTranslatorMappings))
+          .filter(Objects::nonNull);
     }
   }
 
@@ -59,6 +60,10 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
 
   private MapWithRowNumber convertRowsToPropertyMap(List<RowWithSheetIndex> rows, Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings) {
     HashMap<String, Optional<String>> objectMap = new HashMap<>(0);
+    
+    if (rows.stream().allMatch(rowWithSheetIndex -> rowWithSheetIndex.row().stream().map(Cell::getRawValue).allMatch(StringUtils::isBlank))) {
+      return null;
+    }
     
     Integer rowNumber = null;
     for (RowWithSheetIndex row : rows) {
