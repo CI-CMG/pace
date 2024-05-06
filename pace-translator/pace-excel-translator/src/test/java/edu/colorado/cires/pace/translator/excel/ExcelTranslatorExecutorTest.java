@@ -32,7 +32,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ExcelTranslatorExecutorTest {
+class ExcelTranslatorExecutorTest {
 
   private final Path TEST_PATH = Path.of("target").resolve("test-dir");
 
@@ -90,6 +90,7 @@ public class ExcelTranslatorExecutorTest {
           ship -> ship.object().getUuid().toString(),
           ship -> ship
       ));
+      assertEquals(recordsMap.size(), result.size()); // should not include empty rows
 
       for (Entry<String, String> entry : recordsMap.entrySet()) {
         ObjectWithRowConversionException<Ship> actual = result.get(entry.getKey());
@@ -167,6 +168,11 @@ public class ExcelTranslatorExecutorTest {
         Entry<String, String> entry = entries.get(i);
         uuidSheet.value(i, 0, entry.getKey());
         nameSheet.value(i, 1, entry.getValue());
+      }
+      // insert empty rows
+      for (int i = entries.size(); i < entries.size() * 2; i++) {
+        uuidSheet.value(i, 0,  (String) null);
+        nameSheet.value(i, 1, (String) null);
       }
     }
 
