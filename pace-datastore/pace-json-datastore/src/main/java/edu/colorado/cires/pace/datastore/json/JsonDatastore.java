@@ -1,17 +1,17 @@
 package edu.colorado.cires.pace.datastore.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -19,104 +19,91 @@ import java.util.stream.Stream;
 
 abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
   
-  private final Path storageDirectory;
+  private final Path storageFile;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
   private final Function<O, String> uniqueFieldGetter;
+  private final Map<String, O> objectsMap = new HashMap<>(0);
+  private final TypeReference<List<O>> typeReference;
 
-  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter) throws IOException {
-    this.storageDirectory = storageDirectory;
+  protected JsonDatastore(Path storageFile, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
+      TypeReference<List<O>> typeReference) throws IOException {
+    this.storageFile = storageFile;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
     this.uniqueFieldGetter = uniqueFieldGetter;
+    this.typeReference = typeReference;
     init();
   }
   
   private void init() throws IOException {
-    if (!storageDirectory.toFile().exists()) {
-      Files.createDirectories(storageDirectory);
+    if (!storageFile.toFile().exists()) {
+      Files.createDirectories(storageFile.getParent());
+      objectMapper.writeValue(storageFile.toFile(), Collections.emptyList());
     }
+    
+    readStorageFile();
   }
 
   @Override
   public O save(O object) throws DatastoreException {
-    String fileName = getFileName(object);
-    Path filePath = storageDirectory.resolve(fileName);
-    try (OutputStream outputStream = new FileOutputStream(filePath.toFile())) {
-      objectMapper.writeValue(outputStream, object);
+    String uniqueField = uniqueFieldGetter.apply(object);
+    try {
+      objectsMap.put(uniqueField, object);
+      writeStorageFile();
       return object;
     } catch (Exception e) {
       throw new DatastoreException(String.format(
-          "%s save failed", filePath
+          "%s save failed", object.getUuid()
       ), e);
     }
   }
 
   @Override
   public void delete(O object) throws DatastoreException {
-    String fileName = getFileName(object);
-    Path filePath = storageDirectory.resolve(fileName);
+    String uniqueField = uniqueFieldGetter.apply(object);
     try {
-      Files.delete(filePath);
+      objectsMap.remove(uniqueField);
+      writeStorageFile();
     } catch (IOException e) {
       throw new DatastoreException(String.format(
-          "%s delete failed", filePath
+          "%s delete failed", object.getUuid()
       ), e);
     }
   }
 
   @Override
-  public Optional<O> findByUUID(UUID uuid) throws DatastoreException {
-    try {
-      return getObjectStream(
-          (o) -> o.getUuid().equals(uuid)
-      ).findFirst();
-    } catch (IOException e) {
-      throw new DatastoreException("Failed to find object by uuid", e);
-    }
+  public Optional<O> findByUUID(UUID uuid) {
+    return objectsMap.values().stream()
+        .filter(o -> o.getUuid().equals(uuid))
+        .findFirst();
   }
 
   @Override
-  public Optional<O> findByUniqueField(String uniqueField) throws DatastoreException {
-    try {
-      return getObjectStream(
-          (o) -> uniqueFieldGetter.apply(o).equals(uniqueField)
-      ).findFirst();
-    } catch (IOException e) {
-      throw new DatastoreException(String.format(
-          "Failed to find object by %s", getUniqueFieldName()
-      ), e);
-    }
-  }
-
-  @Override
-  public Stream<O> findAll() throws DatastoreException {
-    try {
-      return getObjectStream((o) -> true);
-    } catch (IOException e) {
-      throw new DatastoreException("Failed to list objects", e);
-    }
-  }
-  
-  private Stream<O> getObjectStream(Function<O, Boolean> filter) throws IOException {
-    return Files.list(storageDirectory)
-        .map(Path::toFile)
-        .filter(File::isFile)
-        .map(f -> {
-          try (InputStream inputStream = new FileInputStream(f)) {
-            return objectMapper.readValue(inputStream, clazz);
-          } catch (IOException e) {
-            throw new IllegalStateException(String.format(
-                "Failed to deserialize %s", f
-            ), e);
-          }
-        }).filter(filter::apply);
-  }
-  
-  private String getFileName(O object) {
-    return String.format(
-        "%s.json", object.getUuid()
+  public Optional<O> findByUniqueField(String uniqueField) {
+    return Optional.ofNullable(
+        objectsMap.get(uniqueField)
     );
+  }
+
+  @Override
+  public Stream<O> findAll() {
+    return objectsMap.values().stream();
+  }
+
+  private void readStorageFile() throws IOException {
+    List<O> objects = objectMapper.readValue(storageFile.toFile(), typeReference);
+    objects.forEach(o -> objectsMap.put(
+        uniqueFieldGetter.apply(o), o
+    ));
+  }
+  
+  private void writeStorageFile() throws IOException {
+    objectMapper.writerFor(typeReference).writeValue(
+        storageFile.toFile(),
+        objectsMap.values().stream().toList()
+    );
+    readStorageFile();
   }
 
   @Override

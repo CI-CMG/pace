@@ -2,10 +2,12 @@ package edu.colorado.cires.pace.datastore.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.FileType;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 class FileTypeJsonDatastoreTest extends JsonDatastoreTest<FileType> {
@@ -23,6 +25,11 @@ class FileTypeJsonDatastoreTest extends JsonDatastoreTest<FileType> {
   @Override
   protected String getExpectedUniqueFieldName() {
     return "type";
+  }
+
+  @Override
+  protected TypeReference<List<FileType>> getTypeReference() {
+    return new TypeReference<>() {};
   }
 
   @Override

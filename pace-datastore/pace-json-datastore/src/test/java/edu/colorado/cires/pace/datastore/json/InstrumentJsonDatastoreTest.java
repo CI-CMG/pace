@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.datastore.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
@@ -26,6 +27,11 @@ class InstrumentJsonDatastoreTest extends JsonDatastoreTest<Instrument> {
   @Override
   protected String getExpectedUniqueFieldName() {
     return "name";
+  }
+
+  @Override
+  protected TypeReference<List<Instrument>> getTypeReference() {
+    return new TypeReference<>() {};
   }
 
   @Override

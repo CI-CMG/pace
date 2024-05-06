@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.datastore.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
@@ -25,6 +26,11 @@ class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator> {
   @Override
   protected String getExpectedUniqueFieldName() {
     return "name";
+  }
+
+  @Override
+  protected TypeReference<List<CSVTranslator>> getTypeReference() {
+    return new TypeReference<>() {};
   }
 
   @Override

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUUID;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
@@ -29,6 +30,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   protected abstract JsonDatastore<O> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException;
   protected abstract String getExpectedUniqueFieldName();
   private JsonDatastore<O> datastore;
+  protected abstract TypeReference<List<O>> getTypeReference();
   
   @BeforeEach
   void beforeEach() throws IOException {
@@ -54,7 +56,21 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     O result = datastore.save(object);
     assertObjectsEqual(object, result);
     assertSavedObjectEqualsObject(object, result);
-    assertTrue(getFileForObject(result).isPresent());
+  }
+  
+  @Test
+  void testSaveDatastoreFileExists() throws IOException, DatastoreException {
+    O object = createNewObject();
+
+    O result = datastore.save(object);
+    assertObjectsEqual(object, result);
+    assertSavedObjectEqualsObject(object, result);
+    
+    JsonDatastore<O> newDatastore = createDatastore(TEST_PATH, OBJECT_MAPPER);
+    object = createNewObject();
+    O saved = newDatastore.save(object);
+    assertObjectsEqual(object, saved);
+    assertSavedObjectEqualsObject(object, saved);
   }
   
   @Test
@@ -65,7 +81,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     
     Exception exception = assertThrows(DatastoreException.class, () -> datastore.save(object));
     assertTrue(exception.getMessage().endsWith(String.format(
-        "%s.json save failed", object.getUuid()
+        "%s save failed", object.getUuid()
     )));
   }
   
@@ -87,7 +103,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     
     Exception exception = assertThrows(DatastoreException.class, () -> datastore.delete(object));
     assertTrue(exception.getMessage().endsWith(String.format(
-        "%s.json delete failed", object.getUuid()
+        "%s delete failed", object.getUuid()
     )));
   }
   
@@ -106,18 +122,6 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testFindByUUIDFailed() throws DatastoreException {
-    O object = createNewObject();
-    object = datastore.save(object);
-    
-    FileUtils.deleteQuietly(TEST_PATH.toFile());
-
-    O finalObject = object;
-    Exception exception = assertThrows(DatastoreException.class, () -> datastore.findByUUID(finalObject.getUuid()));
-    assertEquals("Failed to find object by uuid", exception.getMessage());
-  }
-  
-  @Test
   void testFindByUniqueField() throws DatastoreException {
     O object = createNewObject();
     O result = datastore.save(object);
@@ -129,16 +133,6 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     object = createNewObject();
     maybeResult = datastore.findByUniqueField(datastore.getUniqueFieldGetter().apply(object));
     assertTrue(maybeResult.isEmpty());
-  }
-  
-  @Test
-  void testFindByUniqueFieldFailed() {
-    FileUtils.deleteQuietly(TEST_PATH.toFile());
-    
-    Exception exception = assertThrows(DatastoreException.class, () -> datastore.findByUniqueField("test"));
-    assertEquals(String.format(
-       "Failed to find object by %s", datastore.getUniqueFieldName() 
-    ), exception.getMessage());
   }
   
   @Test
@@ -161,14 +155,6 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     }
   }
   
-  @Test
-  void testFindAllFailed() {
-    FileUtils.deleteQuietly(TEST_PATH.toFile());
-    
-    DatastoreException exception = assertThrows(DatastoreException.class, () -> datastore.findAll());
-    assertEquals("Failed to list objects", exception.getMessage());
-  }
-  
   protected abstract O createNewObject();
   protected abstract void assertObjectsEqual(O expected, O actual);
   
@@ -176,13 +162,15 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     try (Stream<Path> paths = Files.walk(TEST_PATH)) {
       paths.map(Path::toFile)
           .filter(File::isFile)
-          .filter(f -> f.getName().contains(actual.getUuid().toString()))
           .findFirst().ifPresentOrElse(
               (f) -> {
                 try {
+                  O actualObject = OBJECT_MAPPER.readValue(f, getTypeReference()).stream()
+                      .filter(o -> o.getUuid().equals(actual.getUuid()))
+                      .findFirst().orElseThrow();
                   assertObjectsEqual(
                       expected,
-                      OBJECT_MAPPER.readValue(f, getClazz())
+                      actualObject
                   );
                 } catch (IOException e) {
                   throw new IllegalStateException(String.format(
