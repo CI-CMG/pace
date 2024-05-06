@@ -72,7 +72,7 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
       for (ExcelTranslatorField field : fields) {
         objectMap.put(
             field.getPropertyName(),
-            row.row().getCellAsString(field.getColumnNumber())
+            Optional.ofNullable(row.row().getCellText(field.getColumnNumber()))
         );
       }
     }
