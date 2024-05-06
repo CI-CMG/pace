@@ -11,10 +11,13 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
+import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
@@ -30,8 +33,8 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
     try (ReadableWorkbook readableWorkbook = new ReadableWorkbook(inputStream)) {
       Map<Integer, List<ExcelTranslatorField>> sheetTranslatorMappings = translatorDefinition.getFields().stream()
           .map(f -> f.toBuilder()
-              .sheetNumber(f.getColumnNumber() - 1)
-              .columnNumber(f.getSheetNumber() - 1)
+              .sheetNumber(f.getSheetNumber() - 1)
+              .columnNumber(f.getColumnNumber() - 1)
               .build())
           .collect(Collectors.groupingBy(ExcelTranslatorField::getSheetNumber));
 
