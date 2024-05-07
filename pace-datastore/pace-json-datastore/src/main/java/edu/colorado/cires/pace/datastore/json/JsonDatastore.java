@@ -48,7 +48,16 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   @Override
   public O save(O object) throws DatastoreException {
     String uniqueField = uniqueFieldGetter.apply(object);
+    
+    List<O> existingObjects = objectsMap.values().stream()
+        .filter(o -> o.getUuid().equals(object.getUuid()))
+        .toList();
+    
     try {
+      if (!existingObjects.isEmpty()) { // update
+        existingObjects.forEach(o -> objectsMap.remove(uniqueFieldGetter.apply(o)));
+      }
+      
       objectsMap.put(uniqueField, object);
       writeStorageFile();
       return object;
