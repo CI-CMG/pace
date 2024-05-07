@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
-import edu.colorado.cires.pace.cli.command.common.TranslationType;
+import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.dataset.DatasetCommand.Package;

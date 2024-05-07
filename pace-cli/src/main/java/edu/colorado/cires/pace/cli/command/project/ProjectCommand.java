@@ -9,7 +9,7 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
-import edu.colorado.cires.pace.cli.command.common.TranslationType;
+import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.Create;

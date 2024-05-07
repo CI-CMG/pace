@@ -18,6 +18,7 @@
     <module>pace-utilities</module>
     <module>pace-migrator</module>
     <module>pace-cli</module>
+    <module>pace-gui</module>
   </modules>
 
   <properties>

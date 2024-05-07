@@ -37,9 +37,9 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
         .map(m -> {
           try {
             O object = TranslatorUtils.convertMapToObject(m.map(), clazz, m.row(), dependencyRepositories);
-            return new ObjectWithRowConversionException<>(object, null);
+            return new ObjectWithRowConversionException<>(object, m.row(), null);
           } catch (RowConversionException e) {
-            return new ObjectWithRowConversionException<>(null, e);
+            return new ObjectWithRowConversionException<>(null, m.row(), e);
           }
         });
   }

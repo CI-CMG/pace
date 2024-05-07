@@ -36,7 +36,7 @@ class SpreadsheetGeneratorTest {
     }
 
     @Override
-    public int getColumnNumber() {
+    public Integer getColumnNumber() {
       return columnNumber;
     }
   }

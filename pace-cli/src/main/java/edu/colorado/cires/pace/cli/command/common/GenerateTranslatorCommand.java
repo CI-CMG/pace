@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import edu.colorado.cires.pace.utilities.TranslationType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;

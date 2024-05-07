@@ -7,12 +7,12 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class ExcelTranslatorField implements TabularTranslationField {
   final String propertyName;
-  final int columnNumber;
-  final int sheetNumber;
+  final Integer columnNumber;
+  final Integer sheetNumber;
 
   @Builder(toBuilder = true)
   @Jacksonized
-  public ExcelTranslatorField(String propertyName, int columnNumber, int sheetNumber) {
+  public ExcelTranslatorField(String propertyName, Integer columnNumber, Integer sheetNumber) {
     this.propertyName = propertyName;
     this.columnNumber = columnNumber;
     this.sheetNumber = sheetNumber;

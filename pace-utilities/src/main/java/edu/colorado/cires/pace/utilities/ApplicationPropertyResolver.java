@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 
 public final class ApplicationPropertyResolver {
 
-  private String getPropertyValue(String propertyName) {
+  public <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
     Properties properties = new Properties();
     try (InputStream inputStream = getClass().getResourceAsStream("/application.properties")) {
       properties.load(inputStream);
@@ -18,11 +19,18 @@ public final class ApplicationPropertyResolver {
           "Failed to read %s value from application properties", propertyName
       ), e);
     }
-    return properties.getProperty(propertyName);
+    
+    String propertyValue = properties.getProperty(propertyName);
+    
+    if (StringUtils.isBlank(propertyValue)) {
+      return null;
+    }
+    
+    return transform.apply(propertyValue);
   }
 
   public Path getWorkDir() {
-    String dirString = getPropertyValue("pace-cli.work-dir");
+    String dirString = getPropertyValue("pace-cli.work-dir", (s) -> s);
     if (StringUtils.isBlank(dirString)) {
       return Path.of(
           System.getProperty("user.home")
@@ -37,7 +45,7 @@ public final class ApplicationPropertyResolver {
   }
 
   public String getVersion(boolean includePatchVersion) {
-    String fullVersion = getPropertyValue("pace-cli.version");
+    String fullVersion = getPropertyValue("pace-cli.version", (s) -> s);
     if (includePatchVersion) {
       return fullVersion;
     }

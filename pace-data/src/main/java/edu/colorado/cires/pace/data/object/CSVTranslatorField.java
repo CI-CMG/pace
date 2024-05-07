@@ -9,9 +9,9 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class CSVTranslatorField implements TabularTranslationField {
   final String propertyName;
-  final int columnNumber;
+  final Integer columnNumber;
 
-  CSVTranslatorField(String propertyName, int columnNumber) {
+  CSVTranslatorField(String propertyName, Integer columnNumber) {
     this.propertyName = propertyName;
     this.columnNumber = columnNumber;
   }

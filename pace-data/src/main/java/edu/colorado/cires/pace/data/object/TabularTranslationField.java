@@ -8,6 +8,6 @@ public interface TabularTranslationField {
   @NotBlank
   String getPropertyName();
   @Positive
-  int getColumnNumber();
+  Integer getColumnNumber();
 
 }
