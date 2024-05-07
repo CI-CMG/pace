@@ -1,15 +1,14 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 

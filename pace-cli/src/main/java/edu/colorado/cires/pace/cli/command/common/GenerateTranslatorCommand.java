@@ -1,11 +1,11 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.cli.util.SerializationUtils;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;

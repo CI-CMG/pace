@@ -15,8 +15,9 @@
     <module>pace-translator</module>
     <module>pace-datastore</module>
     <module>pace-repository</module>
-    <module>pace-cli</module>
+    <module>pace-utilities</module>
     <module>pace-migrator</module>
+    <module>pace-cli</module>
   </modules>
 
   <properties>

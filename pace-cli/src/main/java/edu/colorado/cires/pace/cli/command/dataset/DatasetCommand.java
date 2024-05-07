@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.dataset;
 
-import static edu.colorado.cires.pace.cli.util.SerializationUtils.createObjectMapper;
-import static edu.colorado.cires.pace.cli.util.SerializationUtils.deserializeAndProcess;
+import static edu.colorado.cires.pace.utilities.SerializationUtils.createObjectMapper;
+import static edu.colorado.cires.pace.utilities.SerializationUtils.deserializeAndProcess;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,6 @@ import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
-import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
 import edu.colorado.cires.pace.data.object.AudioDataset;
@@ -53,6 +52,7 @@ import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
+import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;

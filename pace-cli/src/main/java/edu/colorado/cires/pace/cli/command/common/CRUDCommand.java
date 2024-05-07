@@ -2,16 +2,15 @@ package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.cli.util.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable {
   protected final ObjectMapper objectMapper = new ObjectMapper();

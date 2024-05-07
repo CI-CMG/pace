@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.cli.util;
+package edu.colorado.cires.pace.utilities;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -19,11 +19,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 public final class SerializationUtils {
-  
+
   public static ObjectMapper createObjectMapper() {
     DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
     prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
-    
+
     return new ObjectMapper()
         .setSerializationInclusion(Include.NON_NULL)
         .registerModule(new JavaTimeModule())
@@ -47,22 +47,22 @@ public final class SerializationUtils {
     return "-".equals(file.getName())
         ? IOUtils.toString(System.in, StandardCharsets.UTF_8) : FileUtils.readFileToString(file, StandardCharsets.UTF_8);
   }
-  
+
   public static <T> Object deserializeAndProcess(ObjectMapper objectMapper, File file, Class<T> tClass, TypeReference<List<T>> typeReference, Function<T, T> processor) throws IOException {
     String jsonContents = getJsonContents(file);
 
     JsonNode jsonNode = objectMapper.readTree(
         jsonContents
     );
-    
+
     if (jsonNode instanceof ArrayNode) {
       List<T> deserializedList = deserializeBlobs(objectMapper, jsonContents, typeReference);
-      
+
       List<T> processedList = new ArrayList<>(deserializedList.size());
       for (T deserializedObject : deserializedList) {
         processedList.add(processor.apply(deserializedObject));
       }
-      
+
       return processedList;
     } else if (jsonNode instanceof ObjectNode) {
       T deserializedObject = deserializeBlob(objectMapper, jsonContents, tClass);

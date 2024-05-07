@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.cli.util;
+package edu.colorado.cires.pace.utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 
 public final class ApplicationPropertyResolver {
-  
+
   private String getPropertyValue(String propertyName) {
     Properties properties = new Properties();
     try (InputStream inputStream = getClass().getResourceAsStream("/application.properties")) {
@@ -20,7 +20,7 @@ public final class ApplicationPropertyResolver {
     }
     return properties.getProperty(propertyName);
   }
-  
+
   public Path getWorkDir() {
     String dirString = getPropertyValue("pace-cli.work-dir");
     if (StringUtils.isBlank(dirString)) {
@@ -28,23 +28,23 @@ public final class ApplicationPropertyResolver {
           System.getProperty("user.home")
       ).resolve(".pace-cli").resolve("data").toAbsolutePath();
     }
-    
+
     return Paths.get(dirString).toAbsolutePath();
   }
-  
+
   public String getVersion() {
     return getVersion(true);
   }
-  
+
   public String getVersion(boolean includePatchVersion) {
     String fullVersion = getPropertyValue("pace-cli.version");
     if (includePatchVersion) {
       return fullVersion;
     }
-    
+
     String[] versionParts = fullVersion.split("\\.");
     return String.format(
-        "%s.%s", 
+        "%s.%s",
         versionParts[0],
         versionParts[1]
     );
