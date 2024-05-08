@@ -9,6 +9,7 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -225,11 +226,7 @@ public class SensorCommand implements Runnable {
     }
     
     private List<String> getDeclaredFields(SensorType sensorType) {
-      return Arrays.stream(switch (sensorType) {
-        case other -> OtherSensor.class.getDeclaredFields();
-        case depth -> DepthSensor.class.getDeclaredFields();
-        case audio -> AudioSensor.class.getDeclaredFields();
-      }).map(Field::getName).toList();
+      return FieldNameFactory.getSensorDeclaredFields(sensorType);
     }
 
     @Override
