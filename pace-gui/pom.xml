@@ -50,4 +50,34 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>dep-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>8.4.3</version>
+            <configuration>
+              <failBuildOnCVSS>0</failBuildOnCVSS>
+              <suppressionFiles>
+                <suppressionFile>${project.parent.basedir}/owasp-dep-check-suppression.xml</suppressionFile>
+              </suppressionFiles>
+            </configuration>
+            <executions>
+              <execution>
+                <id>check-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
