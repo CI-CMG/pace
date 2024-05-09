@@ -18,6 +18,7 @@ import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.OtherSensor;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.SoundClipsDataset;
 import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
@@ -45,12 +46,24 @@ public final class FieldNameFactory {
   }
 
   public static List<String> getSensorDeclaredFields(SensorType sensorType) {
-    List<String> fieldNames = Arrays.stream(switch (sensorType) {
+    List<FieldNameWithType> fields = Arrays.stream(switch (sensorType) {
       case other -> OtherSensor.class.getDeclaredFields();
       case depth -> DepthSensor.class.getDeclaredFields();
       case audio -> AudioSensor.class.getDeclaredFields();
-    }).map(Field::getName).collect(Collectors.toList());
+    }).map(f -> new FieldNameWithType(f.getName(), f.getGenericType())).collect(Collectors.toList());
     
+    List<Type> explicitClasses = List.of(
+        Position.class
+    );
+    
+    while (fieldsContainExplicitField(fields, explicitClasses)) {
+      fields = processExplicitFields(fields, explicitClasses);
+    }
+
+    List<String> fieldNames = fields.stream()
+        .map(FieldNameWithType::fieldName)
+        .collect(Collectors.toList());
+
     fieldNames.add(1, "type");
     
     return fieldNames;
