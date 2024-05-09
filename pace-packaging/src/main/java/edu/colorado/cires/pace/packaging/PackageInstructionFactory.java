@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.packaging;
 
 import edu.colorado.cires.pace.data.object.AudioDataset;
 import edu.colorado.cires.pace.data.object.CPodDataset;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +15,7 @@ class PackageInstructionFactory {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
   
-  public static Stream<PackageInstruction> getPackageInstructions(PackingJob packingJob, Path metadataPath, Path outputDirectory)
+  public static Stream<PackageInstruction> getPackageInstructions(Package packingJob, Path metadataPath, Path outputDirectory)
       throws PackagingException {
     Path dataDirectory = outputDirectory.resolve("data");
     

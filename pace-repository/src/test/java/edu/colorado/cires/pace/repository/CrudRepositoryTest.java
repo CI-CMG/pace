@@ -210,7 +210,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testUpdateNotFound() {
+  void testUpdateNotFound() throws BadArgumentException {
     O object = createNewObject(1);
     object = repository.setUUID(object, UUID.randomUUID());
 

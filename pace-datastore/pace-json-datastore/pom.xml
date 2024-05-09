@@ -24,6 +24,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.github.ci-cmg</groupId>
+      <artifactId>pace-utilities</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.10.1</version>

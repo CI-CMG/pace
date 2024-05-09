@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Dataset;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -22,7 +22,7 @@ public class PackageProcessor {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
 
-  public void process(PackingJob packingJob, Path outputDir, ProgressIndicator... progressIndicators)
+  public void process(Package packingJob, Path outputDir, ProgressIndicator... progressIndicators)
       throws PackagingException, IOException {
     validatePackingJob(packingJob);
     
@@ -54,11 +54,11 @@ public class PackageProcessor {
     );
   }
   
-  private void validatePackingJob(PackingJob packingJob) {
-    Set<ConstraintViolation<PackingJob>> violations = validator.validate(packingJob);
+  private void validatePackingJob(Package packingJob) {
+    Set<ConstraintViolation<Package>> violations = validator.validate(packingJob);
     if (!violations.isEmpty()) {
       throw new ConstraintViolationException(String.format(
-          "%s validation failed", PackingJob.class.getSimpleName()
+          "%s validation failed", Package.class.getSimpleName()
       ), violations);
     }
   }

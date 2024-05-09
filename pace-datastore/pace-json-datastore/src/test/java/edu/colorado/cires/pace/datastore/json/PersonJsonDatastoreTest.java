@@ -33,7 +33,7 @@ class PersonJsonDatastoreTest extends JsonDatastoreTest<Person> {
   }
 
   @Override
-  protected Person createNewObject() {
+  protected Person createNewObject(int suffix) {
     return Person.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

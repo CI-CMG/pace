@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Jacksonized
 public class SoundPropagationModelsDataset implements Dataset, SoundPropagationModelsDatasetDetail {
 
@@ -34,7 +34,7 @@ public class SoundPropagationModelsDataset implements Dataset, SoundPropagationM
   private final String softwareProcessingDescription;
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
-
+  
   private final LocalDate preDeploymentCalibrationDate;
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;

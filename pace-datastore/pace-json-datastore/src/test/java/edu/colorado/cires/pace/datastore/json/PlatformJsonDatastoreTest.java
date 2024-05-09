@@ -33,7 +33,7 @@ class PlatformJsonDatastoreTest extends JsonDatastoreTest<Platform> {
   }
 
   @Override
-  protected Platform createNewObject() {
+  protected Platform createNewObject(int suffix) {
     return Platform.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

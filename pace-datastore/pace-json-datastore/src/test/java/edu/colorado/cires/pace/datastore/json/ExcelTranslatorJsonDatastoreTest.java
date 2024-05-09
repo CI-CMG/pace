@@ -34,7 +34,7 @@ class ExcelTranslatorJsonDatastoreTest extends JsonDatastoreTest<ExcelTranslator
   }
 
   @Override
-  protected ExcelTranslator createNewObject() {
+  protected ExcelTranslator createNewObject(int suffix) {
     ExcelTranslatorField field1 = ExcelTranslatorField.builder()
         .propertyName("property1")
         .columnNumber(1)

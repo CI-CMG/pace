@@ -7,7 +7,7 @@ import edu.colorado.cires.pace.cli.command.translation.csv.CSVTranslatorReposito
 import edu.colorado.cires.pace.cli.command.translation.excel.ExcelTranslatorRepositoryFactory;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
@@ -73,7 +73,7 @@ public abstract class TranslateCommand<O> implements Runnable {
       }
 
       System.out.println(
-          objectMapper.writerFor(new TypeReference<List<PackingJob>>() {})
+          objectMapper.writerFor(new TypeReference<List<Package>>() {})
             .withDefaultPrettyPrinter()
             .writeValueAsString(translations)
       );

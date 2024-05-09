@@ -34,9 +34,9 @@ class TranslatorExecutorTest {
   
   static class TestTranslatorField implements TabularTranslationField {
     private final String propertyName;
-    private final int columnNumber;
+    private final Integer columnNumber;
 
-    TestTranslatorField(String propertyName, int columnNumber) {
+    TestTranslatorField(String propertyName, Integer columnNumber) {
       this.propertyName = propertyName;
       this.columnNumber = columnNumber;
     }
@@ -47,7 +47,7 @@ class TranslatorExecutorTest {
     }
 
     @Override
-    public int getColumnNumber() {
+    public Integer getColumnNumber() {
       return columnNumber;
     }
 

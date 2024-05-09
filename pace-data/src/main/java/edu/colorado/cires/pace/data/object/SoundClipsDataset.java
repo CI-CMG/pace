@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Jacksonized
 public class SoundClipsDataset implements Dataset, SoundClipsDatasetDetail {
 

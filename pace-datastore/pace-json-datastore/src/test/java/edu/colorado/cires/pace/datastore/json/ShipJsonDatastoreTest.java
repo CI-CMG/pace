@@ -33,7 +33,7 @@ class ShipJsonDatastoreTest extends JsonDatastoreTest<Ship> {
   }
 
   @Override
-  protected Ship createNewObject() {
+  protected Ship createNewObject(int suffix) {
     return Ship.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

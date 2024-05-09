@@ -35,7 +35,7 @@ class InstrumentJsonDatastoreTest extends JsonDatastoreTest<Instrument> {
   }
 
   @Override
-  protected Instrument createNewObject() {
+  protected Instrument createNewObject(int suffix) {
     FileType fileType1 = FileType.builder()
         .uuid(UUID.randomUUID())
         .type(UUID.randomUUID().toString())

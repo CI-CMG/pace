@@ -33,7 +33,7 @@ class OrganizationJsonDatastoreTest extends JsonDatastoreTest<Organization> {
   }
 
   @Override
-  protected Organization createNewObject() {
+  protected Organization createNewObject(int suffix) {
     return Organization.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

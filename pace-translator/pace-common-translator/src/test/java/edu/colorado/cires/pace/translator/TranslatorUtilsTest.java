@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
-import edu.colorado.cires.pace.data.object.AudioPackingJob;
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CPODPackingJob;
+import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.LocationDetail;
@@ -23,7 +23,7 @@ import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
@@ -31,8 +31,8 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundClipsPackage;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
@@ -1024,17 +1024,17 @@ class TranslatorUtilsTest {
             .name("sensor-2")
         .build());
     
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
           sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
     
-    assertInstanceOf(AudioPackingJob.class, packingJob);
+    assertInstanceOf(AudioPackage.class, packingJob);
     
-    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    AudioPackage audioPackingJob = (AudioPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), audioPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), audioPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), audioPackingJob.getOtherPath().toString());
@@ -1308,17 +1308,17 @@ class TranslatorUtilsTest {
         .name("sensor-2")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(CPODPackingJob.class, packingJob);
+    assertInstanceOf(CPODPackage.class, packingJob);
 
-    CPODPackingJob cpodPackingJob = (CPODPackingJob) packingJob;
+    CPODPackage cpodPackingJob = (CPODPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), cpodPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), cpodPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), cpodPackingJob.getOtherPath().toString());
@@ -1523,17 +1523,17 @@ class TranslatorUtilsTest {
         .name("sensor-2")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(SoundClipsPackingJob.class, packingJob);
+    assertInstanceOf(SoundClipsPackage.class, packingJob);
 
-    SoundClipsPackingJob soundClipsPackingJob = (SoundClipsPackingJob) packingJob;
+    SoundClipsPackage soundClipsPackingJob = (SoundClipsPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), soundClipsPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), soundClipsPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), soundClipsPackingJob.getOtherPath().toString());
@@ -1692,17 +1692,17 @@ class TranslatorUtilsTest {
             .source("sound-source")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(DetectionsPackingJob.class, packingJob);
+    assertInstanceOf(DetectionsPackage.class, packingJob);
 
-    DetectionsPackingJob detectionsPackingJob = (DetectionsPackingJob) packingJob;
+    DetectionsPackage detectionsPackingJob = (DetectionsPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), detectionsPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), detectionsPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), detectionsPackingJob.getOtherPath().toString());
@@ -1881,17 +1881,17 @@ class TranslatorUtilsTest {
         .name("sensor-2")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(SoundLevelMetricsPackingJob.class, packingJob);
+    assertInstanceOf(SoundLevelMetricsPackage.class, packingJob);
 
-    SoundLevelMetricsPackingJob soundLevelMetricsPackingJob = (SoundLevelMetricsPackingJob) packingJob;
+    SoundLevelMetricsPackage soundLevelMetricsPackingJob = (SoundLevelMetricsPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), soundLevelMetricsPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), soundLevelMetricsPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), soundLevelMetricsPackingJob.getOtherPath().toString());
@@ -2051,17 +2051,17 @@ class TranslatorUtilsTest {
         .name("sensor-2")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(SoundPropagationModelsPackingJob.class, packingJob);
+    assertInstanceOf(SoundPropagationModelsPackage.class, packingJob);
 
-    SoundPropagationModelsPackingJob soundPropagationModelsPackingJob = (SoundPropagationModelsPackingJob) packingJob;
+    SoundPropagationModelsPackage soundPropagationModelsPackingJob = (SoundPropagationModelsPackage) packingJob;
     assertEquals(values.get("temperaturePath").orElseThrow(), soundPropagationModelsPackingJob.getTemperaturePath().toString());
     assertEquals(values.get("documentsPath").orElseThrow(), soundPropagationModelsPackingJob.getDocumentsPath().toString());
     assertEquals(values.get("otherPath").orElseThrow(), soundPropagationModelsPackingJob.getOtherPath().toString());
@@ -2123,7 +2123,7 @@ class TranslatorUtilsTest {
     SeaRepository seaRepository = mock(SeaRepository.class);
     ShipRepository shipRepository = mock(ShipRepository.class);
     
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, Package.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     ));
@@ -2154,7 +2154,7 @@ class TranslatorUtilsTest {
     SeaRepository seaRepository = mock(SeaRepository.class);
     ShipRepository shipRepository = mock(ShipRepository.class);
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, Package.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     ));
@@ -2185,7 +2185,7 @@ class TranslatorUtilsTest {
     SeaRepository seaRepository = mock(SeaRepository.class);
     ShipRepository shipRepository = mock(ShipRepository.class);
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, Package.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     ));
@@ -2216,7 +2216,7 @@ class TranslatorUtilsTest {
     SeaRepository seaRepository = mock(SeaRepository.class);
     ShipRepository shipRepository = mock(ShipRepository.class);
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, PackingJob.class, 0,
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(values, Package.class, 0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     ));
@@ -2260,17 +2260,17 @@ class TranslatorUtilsTest {
             .name("sea-area")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(AudioPackingJob.class, packingJob);
+    assertInstanceOf(AudioPackage.class, packingJob);
 
-    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    AudioPackage audioPackingJob = (AudioPackage) packingJob;
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(StationaryMarineLocation.class, locationDetail);
     StationaryMarineLocation stationaryMarineLocation = (StationaryMarineLocation) locationDetail;
@@ -2315,17 +2315,17 @@ class TranslatorUtilsTest {
         .name("sea-area")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(AudioPackingJob.class, packingJob);
+    assertInstanceOf(AudioPackage.class, packingJob);
 
-    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    AudioPackage audioPackingJob = (AudioPackage) packingJob;
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(MultiPointStationaryMarineLocation.class, locationDetail);
     MultiPointStationaryMarineLocation multiPointStationaryMarineLocation = (MultiPointStationaryMarineLocation) locationDetail;
@@ -2367,17 +2367,17 @@ class TranslatorUtilsTest {
             .name("vessel")
         .build());
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(AudioPackingJob.class, packingJob);
+    assertInstanceOf(AudioPackage.class, packingJob);
 
-    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    AudioPackage audioPackingJob = (AudioPackage) packingJob;
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(MobileMarineLocation.class, locationDetail);
     MobileMarineLocation mobileMarineLocation = (MobileMarineLocation) locationDetail;
@@ -2407,17 +2407,17 @@ class TranslatorUtilsTest {
     SeaRepository seaRepository = mock(SeaRepository.class);
     ShipRepository shipRepository = mock(ShipRepository.class);
 
-    PackingJob packingJob = TranslatorUtils.convertMapToObject(
+    Package packingJob = TranslatorUtils.convertMapToObject(
         values,
-        PackingJob.class,
+        Package.class,
         0,
         projectRepository, personRepository, organizationRepository, platformRepository, instrumentRepository,
         sensorRepository, detectionTypeRepository, seaRepository, shipRepository
     );
 
-    assertInstanceOf(AudioPackingJob.class, packingJob);
+    assertInstanceOf(AudioPackage.class, packingJob);
 
-    AudioPackingJob audioPackingJob = (AudioPackingJob) packingJob;
+    AudioPackage audioPackingJob = (AudioPackage) packingJob;
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(StationaryTerrestrialLocation.class, locationDetail);
     StationaryTerrestrialLocation stationaryTerrestrialLocation = (StationaryTerrestrialLocation) locationDetail;

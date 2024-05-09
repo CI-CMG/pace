@@ -28,7 +28,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     this.writableUUID = writableUUID;
   }
 
-  protected abstract O setUUID(O object, UUID uuid);
+  protected abstract O setUUID(O object, UUID uuid) throws BadArgumentException;
   
   public O create(O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     validate(object);

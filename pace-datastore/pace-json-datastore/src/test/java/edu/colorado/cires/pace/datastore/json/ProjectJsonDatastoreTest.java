@@ -33,7 +33,7 @@ class ProjectJsonDatastoreTest extends JsonDatastoreTest<Project> {
   }
 
   @Override
-  protected Project createNewObject() {
+  protected Project createNewObject(int suffix) {
     return Project.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

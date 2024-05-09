@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.colorado.cires.pace.data.object.AudioDataset;
-import edu.colorado.cires.pace.data.object.AudioPackingJob;
+import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.CPodDataset;
 import edu.colorado.cires.pace.data.object.Channel;
@@ -24,7 +24,7 @@ import edu.colorado.cires.pace.data.object.Gain;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
@@ -76,13 +76,15 @@ class PackagerProcessorTest {
   
   @Test
   void testInvalidPackingJobNoSourcePath() {
-    PackingJob packingJob = createPackingJob(
+    Package packingJob = createPackingJob(
         null, null, null, null, null, null, null
     );
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(packingJob, testOutputPath, progressIndicator));
-    assertEquals("PackingJob validation failed", exception.getMessage());
+    assertEquals(String.format(
+        "%s validation failed", Package.class.getSimpleName()
+    ), exception.getMessage());
     
     assertEquals(1, exception.getConstraintViolations().size());
     ConstraintViolation<?> constraintViolation = exception.getConstraintViolations().iterator().next();
@@ -120,7 +122,7 @@ class PackagerProcessorTest {
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
     
-    PackingJob packingJob = createPackingJob(
+    Package packingJob = createPackingJob(
         sp,
         tp,
         op,
@@ -139,7 +141,7 @@ class PackagerProcessorTest {
     writeFiles(sp);
     
     packingJob = objectMapper.readValue(
-        objectMapper.writeValueAsString(packingJob), PackingJob.class
+        objectMapper.writeValueAsString(packingJob), Package.class
     );
 
     String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
@@ -193,7 +195,7 @@ class PackagerProcessorTest {
     assertInstanceOf(AudioDataset.class, dataset);
   }
 
-  private PackingJob createPackingJob(
+  private Package createPackingJob(
       Path sourcePath,
       Path temperaturePath,
       Path otherPath,
@@ -202,7 +204,7 @@ class PackagerProcessorTest {
       Path calibrationDocumentsPath,
       Path biologicalPath
   ) {
-    return AudioPackingJob.builder()
+    return AudioPackage.builder()
         .sourcePath(sourcePath)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)

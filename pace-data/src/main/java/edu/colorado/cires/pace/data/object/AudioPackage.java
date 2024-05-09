@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
 import java.nio.file.Path;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -8,10 +9,11 @@ import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Jacksonized
-public class CPODPackingJob extends CPodDataset implements PackingJob {
+public class AudioPackage extends AudioDataset implements Package {
 
+  private final UUID uuid;
   private final Path temperaturePath;
   private final Path biologicalPath;
   private final Path otherPath;
@@ -20,4 +22,8 @@ public class CPODPackingJob extends CPodDataset implements PackingJob {
   private final Path navigationPath;
   private final Path sourcePath;
 
+  @Override
+  public String getPackageId() {
+    return super.getPackageId();
+  }
 }

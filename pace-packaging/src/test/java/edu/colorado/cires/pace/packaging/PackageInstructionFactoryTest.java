@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.colorado.cires.pace.data.object.AudioPackingJob;
-import edu.colorado.cires.pace.data.object.CPODPackingJob;
-import edu.colorado.cires.pace.data.object.PackingJob;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.CPODPackage;
+import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +68,7 @@ class PackageInstructionFactoryTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
-    PackingJob packingJob = AudioPackingJob.builder()
+    Package packingJob = AudioPackage.builder()
         .temperaturePath(tp)
         .biologicalPath(bp)
         .otherPath(op)
@@ -135,7 +135,7 @@ class PackageInstructionFactoryTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
-    PackingJob packingJob = CPODPackingJob.builder()
+    Package packingJob = CPODPackage.builder()
         .temperaturePath(tp)
         .biologicalPath(bp)
         .otherPath(op)
@@ -202,7 +202,7 @@ class PackageInstructionFactoryTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
-    PackingJob packingJob = SoundLevelMetricsPackingJob.builder()
+    Package packingJob = SoundLevelMetricsPackage.builder()
         .temperaturePath(tp)
         .biologicalPath(bp)
         .otherPath(op)
@@ -245,7 +245,7 @@ class PackageInstructionFactoryTest {
   @Test
   void testPathDoesNotExist() throws IOException {
     Path sourcePath = Path.of("target/source/source-files").toAbsolutePath();
-    PackingJob packingJob = AudioPackingJob.builder()
+    Package packingJob = AudioPackage.builder()
         .sourcePath(sourcePath)
         .build();
     writeFiles(sourcePath);

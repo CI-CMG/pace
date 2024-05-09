@@ -1,16 +1,16 @@
 package edu.colorado.cires.pace.translator;
 
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.AudioDataset;
-import edu.colorado.cires.pace.data.object.AudioPackingJob;
+import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CPODPackingJob;
+import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.CPodDataset;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionsDataset;
-import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.Gain;
 import edu.colorado.cires.pace.data.object.LocationDetail;
@@ -21,9 +21,9 @@ import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.SoundClipsDataset;
-import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsDataset;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.SoundPropagationModelsDataset;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
@@ -175,12 +175,12 @@ public final class FieldNameFactory {
     Function<Field, Boolean> locationFilter = (f) -> !f.getType().equals(LocationDetail.class);
 
     List<FieldNameWithType> fieldNames = switch (datasetType) {
-      case CPOD -> fieldsToFieldNames(CPodDataset.class, CPODPackingJob.class, locationFilter);
-      case AUDIO -> fieldsToFieldNames(AudioDataset.class, AudioPackingJob.class, locationFilter);
-      case DETECTIONS -> fieldsToFieldNames(DetectionsDataset.class, DetectionsPackingJob.class, locationFilter);
-      case SOUND_CLIPS -> fieldsToFieldNames(SoundClipsDataset.class, SoundClipsPackingJob.class, locationFilter);
-      case SOUND_LEVEL_METRICS -> fieldsToFieldNames(SoundLevelMetricsDataset.class, SoundLevelMetricsPackingJob.class, locationFilter);
-      case SOUND_PROPAGATION_MODELS -> fieldsToFieldNames(SoundPropagationModelsDataset.class, SoundPropagationModelsPackingJob.class, locationFilter);
+      case CPOD -> fieldsToFieldNames(CPodDataset.class, CPODPackage.class, locationFilter);
+      case AUDIO -> fieldsToFieldNames(AudioDataset.class, AudioPackage.class, locationFilter);
+      case DETECTIONS -> fieldsToFieldNames(DetectionsDataset.class, DetectionsPackage.class, locationFilter);
+      case SOUND_CLIPS -> fieldsToFieldNames(SoundClipsDataset.class, SoundClipsPackage.class, locationFilter);
+      case SOUND_LEVEL_METRICS -> fieldsToFieldNames(SoundLevelMetricsDataset.class, SoundLevelMetricsPackage.class, locationFilter);
+      case SOUND_PROPAGATION_MODELS -> fieldsToFieldNames(SoundPropagationModelsDataset.class, SoundPropagationModelsPackage.class, locationFilter);
     };
 
     fieldNames.addAll(switch (locationType) {

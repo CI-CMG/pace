@@ -26,9 +26,9 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   private final Map<String, O> objectsMap = new HashMap<>(0);
   private final TypeReference<List<O>> typeReference;
 
-  protected JsonDatastore(Path storageFile, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
+  protected JsonDatastore(Path storagePath, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
       TypeReference<List<O>> typeReference) throws IOException {
-    this.storageFile = storageFile;
+    this.storageFile = storagePath;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
     this.uniqueFieldGetter = uniqueFieldGetter;

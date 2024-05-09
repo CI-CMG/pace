@@ -33,7 +33,7 @@ class FileTypeJsonDatastoreTest extends JsonDatastoreTest<FileType> {
   }
 
   @Override
-  protected FileType createNewObject() {
+  protected FileType createNewObject(int suffix) {
     return FileType.builder()
         .uuid(UUID.randomUUID())
         .type(UUID.randomUUID().toString())

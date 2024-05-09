@@ -33,7 +33,7 @@ class SeaJsonDatastoreTest extends JsonDatastoreTest<Sea> {
   }
 
   @Override
-  protected Sea createNewObject() {
+  protected Sea createNewObject(int suffix) {
     return Sea.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())

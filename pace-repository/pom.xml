@@ -28,7 +28,13 @@
       <artifactId>pace-common-datastore</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
+    <dependency>
+      <groupId>io.github.ci-cmg</groupId>
+      <artifactId>pace-utilities</artifactId>
+      <scope>test</scope>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>

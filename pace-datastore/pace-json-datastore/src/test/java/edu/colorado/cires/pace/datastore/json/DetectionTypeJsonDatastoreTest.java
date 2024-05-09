@@ -33,7 +33,7 @@ class DetectionTypeJsonDatastoreTest extends JsonDatastoreTest<DetectionType> {
   }
 
   @Override
-  protected DetectionType createNewObject() {
+  protected DetectionType createNewObject(int suffix) {
     return DetectionType.builder()
         .uuid(UUID.randomUUID())
         .source(UUID.randomUUID().toString())

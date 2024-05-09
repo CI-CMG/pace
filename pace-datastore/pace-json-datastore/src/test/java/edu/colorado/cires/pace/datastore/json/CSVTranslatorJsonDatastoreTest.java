@@ -34,7 +34,7 @@ class CSVTranslatorJsonDatastoreTest extends JsonDatastoreTest<CSVTranslator> {
   }
 
   @Override
-  protected CSVTranslator createNewObject() {
+  protected CSVTranslator createNewObject(int suffix) {
     CSVTranslatorField field1 = CSVTranslatorField.builder()
         .propertyName("property1")
         .columnNumber(1)

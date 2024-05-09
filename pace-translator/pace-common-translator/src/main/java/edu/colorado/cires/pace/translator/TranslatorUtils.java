@@ -1,15 +1,15 @@
 package edu.colorado.cires.pace.translator;
 
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackingJob;
-import edu.colorado.cires.pace.data.object.AudioPackingJob;
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CPODPackingJob;
+import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.object.DetectionsPackingJob;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Gain;
@@ -22,7 +22,7 @@ import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.PackingJob;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Position;
@@ -32,8 +32,8 @@ import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.object.SoundClipsPackingJob;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackingJob;
+import edu.colorado.cires.pace.data.object.SoundClipsPackage;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
@@ -115,7 +115,7 @@ final class TranslatorUtils {
               () -> new RowConversionException("Instrument translation missing fileType repository", row)
           );
       object = (O) instrumentFromMap(propertyMap, (FileTypeRepository) repository, runtimeException);
-    } else if (clazz.isAssignableFrom(PackingJob.class)) {
+    } else if (clazz.isAssignableFrom(Package.class)) {
       CRUDRepository<?> projectRepository = Arrays.stream(dependencyRepositories)
           .filter(r -> r instanceof ProjectRepository)
           .findFirst().orElseThrow(
@@ -215,8 +215,8 @@ final class TranslatorUtils {
       validateInstrumentTranslator(translator);
     } else if (clazz.isAssignableFrom(FileType.class)) {
       validateTranslatorWithFlatFields(translatorFields, FileType.class);
-    } else if (clazz.isAssignableFrom(PackingJob.class)) {
-      validateTranslatorWithFlatFields(translatorFields, PackingJob.class);
+    } else if (clazz.isAssignableFrom(Package.class)) {
+      validateTranslatorWithFlatFields(translatorFields, Package.class);
     } else {
       throw new TranslatorValidationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -396,7 +396,7 @@ final class TranslatorUtils {
 
     Dataset dataset = null;
     if (DatasetType.SOUND_CLIPS.getName().equals(datasetType)) {
-      dataset = SoundClipsPackingJob.builder()
+      dataset = SoundClipsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)
@@ -432,7 +432,7 @@ final class TranslatorUtils {
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.AUDIO.getName().equals(datasetType)) {
-      dataset = AudioPackingJob.builder()
+      dataset = AudioPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)
@@ -477,7 +477,7 @@ final class TranslatorUtils {
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.CPOD.getName().equals(datasetType)) {
-      dataset = CPODPackingJob.builder()
+      dataset = CPODPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)
@@ -522,7 +522,7 @@ final class TranslatorUtils {
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.DETECTIONS.getName().equals(datasetType)) {
-      dataset = DetectionsPackingJob.builder()
+      dataset = DetectionsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)
@@ -569,7 +569,7 @@ final class TranslatorUtils {
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.SOUND_LEVEL_METRICS.getName().equals(datasetType)) {
-      dataset = SoundLevelMetricsPackingJob.builder()
+      dataset = SoundLevelMetricsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)
@@ -617,7 +617,7 @@ final class TranslatorUtils {
           .locationDetail(locationDetail)
           .build();
     } else if (DatasetType.SOUND_PROPAGATION_MODELS.getName().equals(datasetType)) {
-      dataset = SoundPropagationModelsPackingJob.builder()
+      dataset = SoundPropagationModelsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
           .otherPath(otherPath)

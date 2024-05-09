@@ -35,7 +35,7 @@ class SensorJsonDatastoreTest extends JsonDatastoreTest<Sensor> {
   }
 
   @Override
-  protected Sensor createNewObject() {
+  protected Sensor createNewObject(int suffix) {
     return AudioSensor.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())
