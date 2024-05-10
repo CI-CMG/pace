@@ -5,16 +5,19 @@ import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ProjectJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ShipJsonDatastore;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
@@ -22,6 +25,7 @@ import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import edu.colorado.pace.gui.metadata.common.MetadataPanel;
 import edu.colorado.pace.gui.metadata.common.ObjectForm;
+import edu.colorado.pace.gui.metadata.organization.OrganizationForm;
 import edu.colorado.pace.gui.metadata.person.PersonForm;
 import edu.colorado.pace.gui.metadata.project.ProjectForm;
 import edu.colorado.pace.gui.metadata.ship.ShipForm;
@@ -231,6 +235,53 @@ public final class MetadataPanelFactory {
       @Override
       protected ObjectForm<Person> getEditForm(Person object) {
         return new PersonForm(object);
+      }
+    };
+  }
+  
+  public MetadataPanel<Organization> createOrganizationsPanel() throws IOException {
+    OrganizationRepository repository = new OrganizationRepository(
+        new OrganizationJsonDatastore(
+            workDir, objectMapper
+        )
+    );
+    
+    return new MetadataPanel<>(repository, true, Organization.class) {
+      @Override
+      protected String[] getHeaders() {
+        return new String[]{
+            "UUID", "Name", "Street", "City", "State",
+            "Zip", "Country", "Email", "Phone"
+        };
+      }
+
+      @Override
+      protected Object[] objectToItemArray(Organization object) {
+        return new Object[] {
+            object.getUuid(), object.getName(), object.getStreet(),
+            object.getCity(), object.getState(), object.getZip(), object.getCountry(),
+            object.getEmail(), object.getPhone()
+        };
+      }
+
+      @Override
+      protected Organization objectFromItemsArray(Object[] itemsArray) {
+        return Organization.builder()
+            .uuid(UUID.fromString(itemsArray[0].toString()))
+            .name(itemsArray[1].toString())
+            .street(itemsArray[2].toString())
+            .city(itemsArray[3].toString())
+            .state(itemsArray[4].toString())
+            .zip(itemsArray[5].toString())
+            .country(itemsArray[6].toString())
+            .email(itemsArray[7].toString())
+            .phone(itemsArray[8].toString())
+            .build();
+      }
+
+      @Override
+      protected ObjectForm<Organization> getEditForm(Organization object) {
+        return new OrganizationForm(object);
       }
     };
   }

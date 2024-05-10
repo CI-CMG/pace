@@ -2,6 +2,7 @@ package edu.colorado.pace.gui;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Ship;
@@ -23,6 +24,7 @@ public class MainUI {
   private MetadataPanel<CSVTranslator> csvTranslatorPanel;
   private MetadataPanel<ExcelTranslator> excelTranslatorPanel;
   private MetadataPanel<Person> peoplePanel;
+  private MetadataPanel<Organization> organizationsPanel;
 
   public JPanel getRootPanel() {
     return rootPanel;
@@ -36,5 +38,6 @@ public class MainUI {
     csvTranslatorPanel = metadataPanelFactory.createCSVTranslatorPanel();
     excelTranslatorPanel = metadataPanelFactory.createExcelTranslatorPanel();
     peoplePanel = metadataPanelFactory.createPeoplePanel();
+    organizationsPanel = metadataPanelFactory.createOrganizationsPanel();
   }
 }
