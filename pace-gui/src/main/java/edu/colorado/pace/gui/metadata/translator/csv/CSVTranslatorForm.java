@@ -1,6 +1,8 @@
 package edu.colorado.pace.gui.metadata.translator.csv;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
+import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
@@ -44,12 +46,14 @@ public class CSVTranslatorForm extends ObjectForm<CSVTranslator> {
     chooseTemplateButton.setVisible(initialTranslator == null);
     chooseTemplateButton.addActionListener(e -> {
       String choice = (String) JOptionPane.showInputDialog(formPanel, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Ship", "Project"
+          "Ship", "Project", "Person", "Organization"
       }, null);
 
       CSVTranslator translator = switch (choice) {
         case "Ship" -> CSVTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Ship.class));
         case "Project" -> CSVTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Project.class));
+        case "Organization" -> CSVTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Organization.class));
+        case "Person" -> CSVTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Person.class)); 
         default -> null;
       };
       

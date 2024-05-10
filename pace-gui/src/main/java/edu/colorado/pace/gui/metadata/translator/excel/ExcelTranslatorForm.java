@@ -1,6 +1,8 @@
 package edu.colorado.pace.gui.metadata.translator.excel;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
@@ -44,12 +46,14 @@ public class ExcelTranslatorForm extends ObjectForm<ExcelTranslator> {
     chooseTemplateButton.setVisible(initialTranslator == null);
     chooseTemplateButton.addActionListener(e -> {
       String choice = (String) JOptionPane.showInputDialog(formPanel, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Ship", "Project"
+          "Ship", "Project", "Person", "Organization"
       }, null);
 
       ExcelTranslator translator = switch (choice) {
         case "Ship" -> ExcelTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Ship.class));
         case "Project" -> ExcelTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Project.class));
+        case "Organization" -> ExcelTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Organization.class));
+        case "Person" -> ExcelTranslatorFactory.createTranslator(null, () -> FieldNameFactory.getDefaultDeclaredFields(Person.class));
         default -> null;
       };
 
