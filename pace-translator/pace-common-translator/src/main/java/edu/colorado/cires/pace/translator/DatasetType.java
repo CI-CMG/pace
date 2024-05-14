@@ -1,6 +1,14 @@
 package edu.colorado.cires.pace.translator;
 
+import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.CPODPackage;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.SoundClipsPackage;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public enum DatasetType {
@@ -38,4 +46,27 @@ public enum DatasetType {
       ));
     };
   }
+  
+  public static DatasetType fromPackage(Package dataPackage) {
+    return switch (dataPackage.getClass().getSimpleName()) {
+      case "AudioPackage" -> AUDIO;
+      case "CPODPackage" -> CPOD;
+      case "DetectionsPackage" -> DETECTIONS;
+      case "SoundClipsPackage" -> SOUND_CLIPS;
+      case "SoundLevelMetricsPackage" -> SOUND_LEVEL_METRICS;
+      case "SoundPropagationModelsPackage" -> SOUND_PROPAGATION_MODELS;
+      default -> throw new IllegalArgumentException(String.format(
+          "Invalid dataset type: %s. Was not one of: %s",
+          dataPackage.getClass().getSimpleName(),
+          String.join(", ", List.of(
+              AudioPackage.class.getSimpleName(),
+              CPODPackage.class.getSimpleName(),
+              DetectionsPackage.class.getSimpleName(),
+              SoundClipsPackage.class.getSimpleName(),
+              SoundLevelMetricsPackage.class.getSimpleName(),
+              SoundPropagationModelsPackage.class.getSimpleName()
+          ))
+      ));
+    };
+  } 
 }

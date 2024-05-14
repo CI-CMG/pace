@@ -7,6 +7,7 @@ public class ApplicationTabs extends JTabbedPane {
 
   public ApplicationTabs() throws IOException {
     setTabPlacement(JTabbedPane.LEFT);
+    add("Packages", DataPanelFactory.createPackagesPanel());
     add("Metadata", new MetadataTabbedPane());
   }
 }

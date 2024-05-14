@@ -2,18 +2,23 @@ package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.PackageJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ProjectJsonDatastore;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
+import edu.colorado.cires.pace.repository.PackageRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.translator.DatasetType;
+import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
@@ -107,5 +112,16 @@ final class DataPanelFactory {
         OrganizationForm::new
     );
   }
+  
+  public static DataPanel<Package> createPackagesPanel() throws IOException {
+    return new PackagesPanel(
+        new PackageRepository(new PackageJsonDatastore(workDir, objectMapper)),
+        new String[] { "UUID", "Package ID", "Dataset Type", "Location Type" },
+        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(p.getLocationDetail())},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Package.class
+    );
+  } 
 
 }

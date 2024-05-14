@@ -1,5 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
+import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
@@ -225,12 +227,5 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
         .filter(Objects::nonNull)
         .forEach(saveAction);
 
-  }
-  
-  private GridBagConstraints configureLayout(Consumer<GridBagConstraints> constraintsConsumer) {
-    GridBagConstraints constraints = new GridBagConstraints();
-    constraints.fill = GridBagConstraints.HORIZONTAL;
-    constraintsConsumer.accept(constraints);
-    return constraints;
   }
 }
