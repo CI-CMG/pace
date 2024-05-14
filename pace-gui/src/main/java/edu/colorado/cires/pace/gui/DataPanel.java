@@ -3,6 +3,8 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
+import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -25,7 +27,17 @@ public class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
   private final Function<Object[], O> rowConversion;
   private final Function<O, Form<O>> formSupplier;
 
-  public DataPanel(CRUDRepository<O> repository, String[] headers, Function<O, Object[]> objectConversion, Function<Object[], O> rowConversion, Function<O, Form<O>> formSupplier) {
+  public DataPanel(
+      CRUDRepository<O> repository,
+      ExcelTranslatorRepository excelTranslatorRepository,
+      CSVTranslatorRepository csvTranslatorRepository,
+      String[] headers,
+      Function<O, Object[]> objectConversion,
+      Function<Object[], O> rowConversion,
+      Function<O, Form<O>> formSupplier,
+      Class<O> clazz,
+      CRUDRepository<?>... dependencyRepositories
+  ) {
     this.objectConversion = objectConversion;
     this.repository = repository;
     this.tableModel = new TableModel(
@@ -37,20 +49,20 @@ public class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
 
     setLayout(new BorderLayout());
     
-    add(createContentPanel(headers));
+    add(createContentPanel(headers, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
     
     loadData();
   }
   
-  private JPanel createContentPanel(String[] headers) {
+  private JPanel createContentPanel(String[] headers, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(new JScrollPane(createTable(headers)), BorderLayout.CENTER);
-    panel.add(createControlPanel(), BorderLayout.SOUTH);
+    panel.add(createControlPanel(excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories), BorderLayout.SOUTH);
     return panel;
   }
   
-  private JPanel createControlPanel() {
+  private JPanel createControlPanel(ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     JButton translateButton = new JButton("Translate");
@@ -59,6 +71,13 @@ public class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
     panel.add(createButton, BorderLayout.EAST);
     
     createButton.addActionListener((e) -> createFormDialog(null));
+    translateButton.addActionListener((e) -> {
+      try {
+        createTranslateForm(excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories);
+      } catch (DatastoreException ex) {
+        throw new RuntimeException(ex);
+      }
+    });
     
     return panel;
   }
@@ -85,6 +104,14 @@ public class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
     });
 
     dialog.add(formPanel);
+    dialog.pack();
+    dialog.setVisible(true);
+  }
+  
+  private void createTranslateForm(ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
+      throws DatastoreException {
+    JDialog dialog = new JDialog();
+    dialog.add(new TranslateForm<>(repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
     dialog.pack();
     dialog.setVisible(true);
   }
