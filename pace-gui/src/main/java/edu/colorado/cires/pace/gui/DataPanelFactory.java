@@ -1,10 +1,13 @@
 package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ProjectJsonDatastore;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
@@ -56,6 +59,27 @@ final class DataPanelFactory {
             .orcid((String) objects[11])
             .build(),
         PersonForm::new
+    );
+  }
+  
+  public static DataPanel<Organization> createOrganizationsPanel() throws IOException {
+    return new DataPanel<>(
+        new OrganizationRepository(new OrganizationJsonDatastore(workDir, objectMapper)),
+        new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"},
+        (person) -> new Object[]{person.getUuid(), person.getName(), person.getStreet(), person.getCity(),
+            person.getState(), person.getZip(), person.getCountry(), person.getEmail(), person.getPhone()},
+        (objects) -> Organization.builder()
+            .uuid((UUID) objects[0])
+            .name((String) objects[1])
+            .street((String) objects[2])
+            .city((String) objects[3])
+            .state((String) objects[4])
+            .zip((String) objects[5])
+            .country((String) objects[6])
+            .email((String) objects[7])
+            .phone((String) objects[8])
+            .build(),
+        OrganizationForm::new
     );
   }
 

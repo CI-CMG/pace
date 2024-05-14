@@ -8,5 +8,6 @@ public class MetadataTabbedPane extends JTabbedPane {
   public MetadataTabbedPane() throws IOException {
     add("Projects", DataPanelFactory.createProjectsPanel());
     add("People", DataPanelFactory.createPeoplePanel());
+    add("Organizations", DataPanelFactory.createOrganizationsPanel());
   }
 }
