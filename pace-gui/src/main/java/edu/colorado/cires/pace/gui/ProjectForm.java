@@ -7,8 +7,8 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.util.UUID;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,28 +20,17 @@ public class ProjectForm extends Form<Project> {
   private final JTextField nameField = new JTextField();
 
   public ProjectForm(Project initialProject) {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    setLayout(new BorderLayout());
 
-    JPanel uuidPanel = new JPanel();
-    uuidPanel.setLayout(new BorderLayout());
-    JPanel uuidFieldPanel = new JPanel();
-    uuidFieldPanel.setLayout(new BorderLayout());
-    uuidFieldPanel.add(new JLabel("UUID"), BorderLayout.NORTH);
-    uuidFieldPanel.add(uuidField, BorderLayout.SOUTH);
-    uuidPanel.add(uuidFieldPanel, BorderLayout.NORTH);
+    JPanel contentPanel = new JPanel();
+    contentPanel.setLayout(new GridLayout(4, 1));
+    contentPanel.add(new JLabel("UUID"));
+    contentPanel.add(uuidField);
+    contentPanel.add(new JLabel("Name"));
+    contentPanel.add(nameField);
+    add(contentPanel, BorderLayout.NORTH);
     
     uuidField.setEnabled(false);
-    
-    JPanel namePanel = new JPanel();
-    namePanel.setLayout(new BorderLayout());
-    JPanel nameFieldPanel = new JPanel();
-    nameFieldPanel.setLayout(new BorderLayout());
-    nameFieldPanel.add(new JLabel("Name"), BorderLayout.NORTH);
-    nameFieldPanel.add(nameField, BorderLayout.SOUTH);
-    namePanel.add(nameFieldPanel, BorderLayout.NORTH);
-    
-    add(uuidPanel);
-    add(namePanel);
     
     initializeFields(initialProject);
   }
