@@ -52,7 +52,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   
   protected abstract JPanel createControlPanel();
   
-  private void loadData() {
+  protected void loadData() {
     try {
       repository.findAll().forEach(
           o -> tableModel.addRow(objectConversion.apply(o))

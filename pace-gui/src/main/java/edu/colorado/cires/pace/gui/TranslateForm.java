@@ -59,7 +59,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
   private final Map<String, ExcelTranslator> excelTranslators = new HashMap<>(0);
   private final Map<String, CSVTranslator> csvTranslators = new HashMap<>(0);
 
-  public TranslateForm(CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
+  public TranslateForm(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
       throws DatastoreException {
     initializeModels();
     initializeTranslatorOptions(excelTranslatorRepository, excelTranslators);
@@ -69,7 +69,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     
     add(createFormPanel(), configureLayout((c) -> { c.gridx = c.gridy = 0; c.anchor = GridBagConstraints.NORTH; c.weightx = 1; }));
     add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weighty = 1; }));
-    add(createControlPanel(repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    add(createControlPanel(successAction, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
   }
   
   private void initializeModels() {
@@ -132,18 +132,18 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     return panel;
   }
   
-  private JPanel createControlPanel(CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
+  private JPanel createControlPanel(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.add(new JPanel(), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     JButton translateButton = new JButton("Translate");
     panel.add(translateButton, configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 0; }));
     
-    translateButton.addActionListener((e) -> translateSpreadsheet(repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
+    translateButton.addActionListener((e) -> translateSpreadsheet(successAction, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
     
     return panel;
   }
   
-  private void translateSpreadsheet(CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
+  private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     TranslationType translationType = (TranslationType) fileFormatComboBoxModel.getSelectedItem();
     if (translationType == null) {
       JOptionPane.showMessageDialog(this, "Please choose a file format", "Error", JOptionPane.ERROR_MESSAGE);
@@ -186,25 +186,6 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
       return;
     }
 
-    Stream<ObjectWithRowConversionException<O>> outputStream;
-    try {
-      outputStream = switch (translationType) {
-        case excel -> {
-          try (InputStream inputStream = new FileInputStream(selectedFile)) {
-            yield executor.translate(inputStream);
-          }
-        }
-        case csv -> {
-          try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream)) {
-            yield executor.translate(reader);
-          }
-        }
-      };
-    } catch (Exception ex) {
-      JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      return;
-    }
-    
     Consumer<O> saveAction = (o) -> {
       try {
         if (updateCheckBox.isSelected()) {
@@ -217,15 +198,35 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
       }
     };
 
-    outputStream
-        .peek(o -> {
-          RowConversionException exception = o.rowConversionException();
-          if (exception != null) {
-            JOptionPane.showMessageDialog(this, exception.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    try {
+      switch (translationType) {
+        case excel -> {
+          try (InputStream inputStream = new FileInputStream(selectedFile)) {
+            postProcessStream(executor.translate(inputStream), saveAction, successAction);
           }
-        }).map(ObjectWithRowConversionException::object)
+        }
+        case csv -> {
+          try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream)) {
+            postProcessStream(executor.translate(reader), saveAction, successAction);
+          }
+        }
+      };
+    } catch (Exception ex) {
+      JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+  }
+  
+  private void postProcessStream(Stream<ObjectWithRowConversionException<O>> stream, Consumer<O> saveAction, Runnable successAction) {
+    stream.peek(o -> {
+      RowConversionException exception = o.rowConversionException();
+      if (exception != null) {
+        JOptionPane.showMessageDialog(this, exception.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      }
+    }).map(ObjectWithRowConversionException::object)
         .filter(Objects::nonNull)
         .forEach(saveAction);
-
+    
+    successAction.run();
   }
 }
