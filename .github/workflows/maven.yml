@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "release-gui" ]
+    branches: [ "trunk" ]
 
 jobs:
   build:
@@ -30,11 +30,16 @@ jobs:
         run: mvn -B clean package -Pdep-check -Pcoverage
       - id: version
         run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
-      - name: Upload Jar
+      - name: Upload CLI Jar
         uses: actions/upload-artifact@v4
         with:
           name: cli-jar
           path: "pace-cli/target/*-jar-with-dependencies.jar"
+      - name: Upload GUI Jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: gui-jar
+          path: "pace-gui/target/*-jar-with-dependencies.jar"
           
   package-osx:
     needs: build
@@ -163,6 +168,7 @@ jobs:
       - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
       - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
       - run: cp cli-jar/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
+      - run: cp gui-jar/* release/pace-gui-${{ needs.build.outputs.version }}-exe.jar
       - name: Update branch release
         uses: eine/tip@master
         with:
