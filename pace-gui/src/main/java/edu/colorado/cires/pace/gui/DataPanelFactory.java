@@ -41,30 +41,31 @@ final class DataPanelFactory {
   }
 
   public static DataPanel<Project> createProjectsPanel() throws IOException {
-    return new DataPanel<>(new ProjectRepository(
+    return new MetadataPanel<>(new ProjectRepository(
         new ProjectJsonDatastore(
             workDir, objectMapper
         )
-    ), excelTranslatorRepository, csvTranslatorRepository, new String[]{
+    ), new String[]{
         "UUID", "Name"
     }, (project -> new Object[] {
         project.getUuid(), project.getName()
-    }), (o) -> Project.builder()
+    }), excelTranslatorRepository, csvTranslatorRepository, Project.class, (o) -> Project.builder()
         .uuid((UUID) o[0])
         .name((String) o[1])
-        .build(), ProjectForm::new, Project.class);
+        .build(), ProjectForm::new);
   }
   
   public static DataPanel<Person> createPeoplePanel() throws IOException {
-    return new DataPanel<>(
+    return new MetadataPanel<>(
         new PersonRepository(new PersonJsonDatastore(workDir, objectMapper)),
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         new String[]{"UUID", "Name", "Organization", "Position", "Street", "City", "State", "Zip", "Country", "Email",
             "Phone", "Orcid"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getOrganization(), person.getPosition(),
             person.getStreet(), person.getCity(), person.getState(), person.getZip(), person.getCountry(), person.getEmail(),
             person.getPhone(), person.getOrcid()},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Person.class,
         (objects) -> Person.builder()
             .uuid((UUID) objects[0])
             .name((String) objects[1])
@@ -79,19 +80,19 @@ final class DataPanelFactory {
             .phone((String) objects[10])
             .orcid((String) objects[11])
             .build(),
-        PersonForm::new,
-        Person.class
+        PersonForm::new
     );
   }
   
   public static DataPanel<Organization> createOrganizationsPanel() throws IOException {
-    return new DataPanel<>(
+    return new MetadataPanel<>(
         new OrganizationRepository(new OrganizationJsonDatastore(workDir, objectMapper)),
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getStreet(), person.getCity(),
             person.getState(), person.getZip(), person.getCountry(), person.getEmail(), person.getPhone()},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Organization.class,
         (objects) -> Organization.builder()
             .uuid((UUID) objects[0])
             .name((String) objects[1])
@@ -103,8 +104,7 @@ final class DataPanelFactory {
             .email((String) objects[7])
             .phone((String) objects[8])
             .build(),
-        OrganizationForm::new,
-        Organization.class
+        OrganizationForm::new
     );
   }
 
