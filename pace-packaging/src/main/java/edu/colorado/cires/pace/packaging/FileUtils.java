@@ -1,7 +1,10 @@
 package edu.colorado.cires.pace.packaging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.Dataset;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.Person;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +73,18 @@ final class FileUtils {
     ));
     
     Files.writeString(targetPath, metadata, StandardCharsets.UTF_8);
+    
+    return targetPath;
+  }
+  
+  public static <O extends ObjectWithUniqueField> Path writeObjectsBlob(List<O> objects, ObjectMapper objectMapper, Path targetDirectory, String fileName) throws IOException {
+    String jsonBlob = objectMapper.writeValueAsString(objects);
+    
+    mkdir(targetDirectory);
+    
+    Path targetPath = targetDirectory.resolve(fileName);
+    
+    Files.writeString(targetPath, jsonBlob, StandardCharsets.UTF_8);
     
     return targetPath;
   }

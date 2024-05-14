@@ -55,10 +55,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class PackagerProcessorTest {
+  
+  private static final List<Person> PEOPLE = List.of(Person.builder()
+          .name("person")
+          .organization("organization")
+          .position("position")
+      .build()); 
+  
+  private static final List<Organization> ORGANIZATIONS = List.of(Organization.builder()
+          .name("organization")
+      .build());
+  
+  private static final List<Project> PROJECTS = List.of(Project.builder()
+          .name("project")
+      .build());
 
   private final ObjectMapper objectMapper = new ObjectMapper()
       .registerModule(new JavaTimeModule());
-  private final PackageProcessor processor = new PackageProcessor(objectMapper);
+  private final PackageProcessor processor = new PackageProcessor(objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS);
   private final Path testOutputPath = Paths.get("target").resolve("output");
   private final Path testSourcePath = Paths.get("target").resolve("source");
   
@@ -145,6 +159,9 @@ class PackagerProcessorTest {
     );
 
     String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
+    String expectedPeople = objectMapper.writeValueAsString(PEOPLE);
+    String expectedOrganizations = objectMapper.writeValueAsString(ORGANIZATIONS);
+    String expectedProjects = objectMapper.writeValueAsString(PROJECTS);
     
     int expectedNumberOfInvocations = 0;
     if (biologicalPath != null) {
@@ -171,7 +188,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     processor.process(packingJob, testOutputPath, progressIndicator);
-    verify(progressIndicator, times(expectedNumberOfInvocations + 5)).incrementProcessedRecords();
+    verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
     
     Path baseExpectedOutputPath = testOutputPath.resolve(((Dataset) packingJob).getPackageId()).resolve("data");
 
@@ -190,6 +207,15 @@ class PackagerProcessorTest {
     )).toFile(), StandardCharsets.UTF_8);
     
     assertEquals(expectedMetadata, actualMetadata);
+    
+    String actualPeople = FileUtils.readFileToString(baseExpectedOutputPath.resolve("people.json").toFile(), StandardCharsets.UTF_8);
+    assertEquals(expectedPeople, actualPeople);
+    
+    String actualOrganizations = FileUtils.readFileToString(baseExpectedOutputPath.resolve("organizations.json").toFile(), StandardCharsets.UTF_8);
+    assertEquals(expectedOrganizations, actualOrganizations);
+    
+    String actualProjects = FileUtils.readFileToString(baseExpectedOutputPath.resolve("projects.json").toFile(), StandardCharsets.UTF_8);
+    assertEquals(expectedProjects, actualProjects);
     
     Dataset dataset = objectMapper.readValue(actualMetadata, Dataset.class);
     assertInstanceOf(AudioDataset.class, dataset);

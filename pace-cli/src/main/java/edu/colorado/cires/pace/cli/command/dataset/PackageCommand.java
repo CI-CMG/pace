@@ -21,7 +21,11 @@ import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByPackageId
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Pack;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Update;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -244,10 +248,15 @@ public class PackageCommand implements Runnable {
     @Override
     public void run() {
       try {
-        PackageProcessor packageProcessor = new PackageProcessor(createObjectMapper());
-        Path outputPath = new ApplicationPropertyResolver().getWorkDir().resolve("output");
-        
+        Path workDir = new ApplicationPropertyResolver().getWorkDir();
         ObjectMapper objectMapper = createObjectMapper();
+        
+        List<Person> people = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
+        List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
+        List<Project> projects = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
+        
+        PackageProcessor packageProcessor = new PackageProcessor(objectMapper, people, organizations, projects);
+        Path outputPath = new ApplicationPropertyResolver().getWorkDir().resolve("output");
         
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
             new CLIProgressIndicator()

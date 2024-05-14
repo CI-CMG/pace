@@ -86,8 +86,11 @@ class PackageInstructionFactoryTest {
     writeFiles(sp);
     
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    Path peoplePath = TARGET_PATH.resolve("people.json");
+    Path organizationsPath = TARGET_PATH.resolve("organizations.json");
+    Path projectsPath = TARGET_PATH.resolve("projects.json");
     
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
         .toList();
     
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -153,8 +156,11 @@ class PackageInstructionFactoryTest {
     writeFiles(sp);
 
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    Path peoplePath = TARGET_PATH.resolve("people.json");
+    Path organizationsPath = TARGET_PATH.resolve("organizations.json");
+    Path projectsPath = TARGET_PATH.resolve("projects.json");
 
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
         .toList();
 
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -220,8 +226,11 @@ class PackageInstructionFactoryTest {
     writeFiles(sp);
 
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    Path peoplePath = TARGET_PATH.resolve("people.json");
+    Path organizationsPath = TARGET_PATH.resolve("organizations.json");
+    Path projectsPath = TARGET_PATH.resolve("projects.json");
 
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
         .toList();
 
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -253,8 +262,11 @@ class PackageInstructionFactoryTest {
     FileUtils.deleteQuietly(SOURCE_PATH.toFile());
     
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
+    Path peoplePath = TARGET_PATH.resolve("people.json");
+    Path organizationsPath = TARGET_PATH.resolve("organizations.json");
+    Path projectsPath = TARGET_PATH.resolve("projects.json");
     
-    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, TARGET_PATH));
+    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH));
     assertEquals(String.format(
         "Failed to compute packaging destinations for %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
     ), exception.getMessage());

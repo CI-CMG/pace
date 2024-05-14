@@ -15,7 +15,7 @@ class PackageInstructionFactory {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
   
-  public static Stream<PackageInstruction> getPackageInstructions(Package packingJob, Path metadataPath, Path outputDirectory)
+  public static Stream<PackageInstruction> getPackageInstructions(Package packingJob, Path metadataPath, Path peoplePath, Path organizationsPath, Path projectsPath, Path outputDirectory)
       throws PackagingException {
     Path dataDirectory = outputDirectory.resolve("data");
     
@@ -48,8 +48,11 @@ class PackageInstructionFactory {
         (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
     );
     
-    Stream<PackageInstruction> metadataFiles = Stream.<PackageInstruction>builder()
+    Stream<PackageInstruction> additionalFiles = Stream.<PackageInstruction>builder()
         .add(new PackageInstruction(metadataPath, metadataPath))
+        .add(new PackageInstruction(peoplePath, peoplePath))
+        .add(new PackageInstruction(organizationsPath, organizationsPath))
+        .add(new PackageInstruction(projectsPath, projectsPath))
         .build();
     
     return Stream.of(
@@ -60,7 +63,7 @@ class PackageInstructionFactory {
       calibrationDocsFiles,
       navigationFiles,
       sourceFiles,
-      metadataFiles
+      additionalFiles
     ).flatMap(stream -> stream);
   }
   
