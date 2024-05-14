@@ -8,14 +8,14 @@ import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
 import java.util.function.Function;
 import javax.swing.JDialog;
 
-public abstract class TranslatorPanel<O extends ObjectWithUniqueField> extends DataPanel<O> {
+public abstract class TranslatePanel<O extends ObjectWithUniqueField> extends DataPanel<O> {
 
   private final ExcelTranslatorRepository excelTranslatorRepository;
   private final CSVTranslatorRepository csvTranslatorRepository;
   private final Class<O> clazz;
   private final CRUDRepository<?>[] dependencyRepositories;
 
-  public TranslatorPanel(CRUDRepository<O> repository, String[] headers,
+  public TranslatePanel(CRUDRepository<O> repository, String[] headers,
       Function<O, Object[]> objectConversion, ExcelTranslatorRepository excelTranslatorRepository,
       CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     super(repository, headers, objectConversion);

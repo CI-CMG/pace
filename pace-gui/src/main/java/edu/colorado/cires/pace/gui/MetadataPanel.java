@@ -17,7 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-public class MetadataPanel<O extends ObjectWithUniqueField> extends TranslatorPanel<O> {
+public class MetadataPanel<O extends ObjectWithUniqueField> extends TranslatePanel<O> {
 
   private final Function<Object[], O> rowConversion;
   private final Function<O, Form<O>> formSupplier;
@@ -81,7 +81,7 @@ public class MetadataPanel<O extends ObjectWithUniqueField> extends TranslatorPa
       }
       s.forEach(o -> tableModel.addRow(objectConversion.apply(o)));
       dialog.dispose();
-    });
+    }, object != null);
 
     dialog.add(formPanel);
     dialog.pack();

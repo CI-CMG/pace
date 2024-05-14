@@ -43,7 +43,5 @@ public interface Package extends ObjectWithUniqueField {
   Path getSourcePath();
   @JsonIgnore
   String getPackageId();
-  @JsonIgnore
-  LocationDetail getLocationDetail();
 
 }

@@ -16,19 +16,21 @@ import javax.swing.JPanel;
 
 public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
   
-  public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer) {
+  public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, boolean isEdit) {
     setLayout(new BorderLayout());
     add(form, BorderLayout.CENTER);
-    add(createControlPanel(form, repository, updatedObjectsConsumer), BorderLayout.SOUTH);
+    add(createControlPanel(form, repository, updatedObjectsConsumer, isEdit), BorderLayout.SOUTH);
   }
   
-  private JPanel createControlPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer) {
+  private JPanel createControlPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, boolean isEdit) {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     JButton deleteButton = new JButton("Delete");
     panel.add(deleteButton, BorderLayout.WEST);
     JButton saveButton = new JButton("Save");
     panel.add(saveButton, BorderLayout.EAST);
+    
+    deleteButton.setVisible(isEdit);
     
     saveButton.addActionListener((e) -> {
       try {

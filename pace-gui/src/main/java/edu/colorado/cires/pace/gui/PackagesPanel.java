@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-public class PackagesPanel extends TranslatorPanel<Package> {
+public class PackagesPanel extends TranslatePanel<Package> {
 
   public PackagesPanel(CRUDRepository<Package> repository, String[] headers,
       Function<Package, Object[]> objectConversion,

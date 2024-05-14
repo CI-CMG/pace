@@ -1,6 +1,11 @@
 package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.CSVTranslator;
+import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.data.object.Dataset;
+import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
@@ -23,6 +28,7 @@ import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 final class DataPanelFactory {
@@ -117,11 +123,39 @@ final class DataPanelFactory {
     return new PackagesPanel(
         new PackageRepository(new PackageJsonDatastore(workDir, objectMapper)),
         new String[] { "UUID", "Package ID", "Dataset Type", "Location Type" },
-        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(p.getLocationDetail())},
+        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(((Dataset) p).getLocationDetail())},
         excelTranslatorRepository,
         csvTranslatorRepository,
         Package.class
     );
-  } 
+  }
+  
+  public static DataPanel<ExcelTranslator> createExcelTranslatorsPanel() {
+    return new TranslatorsPanel<>(
+        excelTranslatorRepository,
+        new String[] { "UUID", "Name", "Fields" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t.getFields() },
+        (o) -> ExcelTranslator.builder()
+            .uuid((UUID) o[0])
+            .name((String) o[1])
+            .fields((List<ExcelTranslatorField>) o[2])
+            .build(),
+        ExcelTranslatorForm::new
+    );
+  }
+  
+  public static DataPanel<CSVTranslator> createCSVTranslatorsPanel() {
+    return new TranslatorsPanel<>(
+        csvTranslatorRepository,
+        new String[] { "UUID", "Name", "Fields" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t.getFields() },
+        (o) -> CSVTranslator.builder()
+            .uuid((UUID) o[0])
+            .name((String) o[1])
+            .fields((List<CSVTranslatorField>) o[2])
+            .build(),
+        CSVTranslatorForm::new
+    );
+  }
 
 }
