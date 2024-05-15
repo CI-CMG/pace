@@ -3,9 +3,7 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
-import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
@@ -36,7 +34,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +75,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     
     add(createFormPanel(), configureLayout((c) -> { c.gridx = c.gridy = 0; c.anchor = GridBagConstraints.NORTH; c.weightx = 1; }));
     add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weighty = 1; }));
-    add(createControlPanel(successAction, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    add(createControlPanel(successAction, repository, clazz, dependencyRepositories), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
   }
   
   private void initializeModels() {
@@ -141,7 +138,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     return panel;
   }
   
-  private JPanel createControlPanel(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
+  private JPanel createControlPanel(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     JPanel panel = new JPanel(new GridBagLayout());
     JButton generateTemplateButton = new JButton("Generate Template");
     panel.add(generateTemplateButton, configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
@@ -149,7 +146,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     JButton translateButton = new JButton("Translate");
     panel.add(translateButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
     
-    translateButton.addActionListener((e) -> translateSpreadsheet(successAction, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
+    translateButton.addActionListener((e) -> translateSpreadsheet(successAction, repository, clazz, dependencyRepositories));
     generateTemplateButton.addActionListener((e) -> generateTemplate());
     
     return panel;
@@ -217,7 +214,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     
   }
   
-  private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
+  private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     TranslationType translationType = (TranslationType) fileFormatComboBoxModel.getSelectedItem();
     if (translationType == null) {
       JOptionPane.showMessageDialog(this, "Please choose a file format", "Error", JOptionPane.ERROR_MESSAGE);
@@ -276,7 +273,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
             postProcessStream(executor.translate(reader), saveAction, successAction);
           }
         }
-      };
+      }
     } catch (Exception ex) {
       JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -287,9 +284,10 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     stream.peek(o -> {
       RowConversionException exception = o.rowConversionException();
       if (exception != null) {
-        JOptionPane.showMessageDialog(this, Arrays.stream(exception.getSuppressed())
-                .map(Throwable::getMessage)
-            .collect(Collectors.joining("\n")), "Error", JOptionPane.ERROR_MESSAGE);
+        String errorMessage = exception.getSuppressed().length == 0 ? exception.getMessage() : Arrays.stream(exception.getSuppressed())
+            .map(Throwable::getMessage)
+            .collect(Collectors.joining("\n"));
+        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
       }
     }).map(ObjectWithRowConversionException::object)
         .filter(Objects::nonNull)

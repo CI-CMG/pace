@@ -7,6 +7,7 @@ import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
@@ -232,6 +233,24 @@ final class DataPanelFactory {
             .fields((List<CSVTranslatorField>) o[2])
             .build(),
         CSVTranslatorForm::new
+    );
+  }
+  
+  public static DataPanel<Instrument> createInstrumentsPanel() {
+    return new MetadataPanel<>(
+        instrumentRepository,
+        new String[]{"UUID", "Name", "File Types"},
+        (i) -> new Object[]{i.getUuid(), i.getName(), i.getFileTypes()},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Instrument.class,
+        (o) -> Instrument.builder()
+            .uuid((UUID) o[0])
+            .name((String) o[1])
+            .fileTypes((List<FileType>) o[2])
+            .build(),
+        (i) -> new InstrumentForm(i, fileTypeRepository),
+        fileTypeRepository
     );
   }
 

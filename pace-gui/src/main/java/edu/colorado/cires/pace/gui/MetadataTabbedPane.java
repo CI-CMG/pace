@@ -10,5 +10,6 @@ public class MetadataTabbedPane extends JTabbedPane {
     add("Organizations", DataPanelFactory.createOrganizationsPanel());
     add("Platforms", DataPanelFactory.createPlatformPanel());
     add("File Types", DataPanelFactory.createFileTypesPanel());
+    add("Instruments", DataPanelFactory.createInstrumentsPanel());
   }
 }
