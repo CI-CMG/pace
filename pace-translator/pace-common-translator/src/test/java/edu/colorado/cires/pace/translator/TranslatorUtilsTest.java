@@ -2351,16 +2351,16 @@ class TranslatorUtilsTest {
 
     Map<String, Optional<String>> values = new HashMap<>(0);
     values.put("datasetType", Optional.of("audio"));
-    values.put("location.type", Optional.of("stationary marine"));
-    values.put("location.seaArea", Optional.of("sea-area"));
-    values.put("location.deploymentLocation.latitude", Optional.of("1.0"));
-    values.put("location.recoveryLocation.latitude", Optional.of("5.0"));
-    values.put("location.deploymentLocation.longitude", Optional.of("2.0"));
-    values.put("location.recoveryLocation.longitude", Optional.of("6.0"));
-    values.put("location.deploymentLocation.seaFloorDepth", Optional.of("3.0"));
-    values.put("location.recoveryLocation.seaFloorDepth", Optional.of("7.0"));
-    values.put("location.deploymentLocation.instrumentDepth", Optional.of("4.0"));
-    values.put("location.recoveryLocation.instrumentDepth", Optional.of("8.0"));
+    values.put("locationType", Optional.of("stationary marine"));
+    values.put("seaArea", Optional.of("sea-area"));
+    values.put("deploymentLocation.latitude", Optional.of("1.0"));
+    values.put("recoveryLocation.latitude", Optional.of("5.0"));
+    values.put("deploymentLocation.longitude", Optional.of("2.0"));
+    values.put("recoveryLocation.longitude", Optional.of("6.0"));
+    values.put("deploymentLocation.seaFloorDepth", Optional.of("3.0"));
+    values.put("recoveryLocation.seaFloorDepth", Optional.of("7.0"));
+    values.put("deploymentLocation.instrumentDepth", Optional.of("4.0"));
+    values.put("recoveryLocation.instrumentDepth", Optional.of("8.0"));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2390,15 +2390,15 @@ class TranslatorUtilsTest {
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(StationaryMarineLocation.class, locationDetail);
     StationaryMarineLocation stationaryMarineLocation = (StationaryMarineLocation) locationDetail;
-    assertEquals(values.get("location.seaArea").orElseThrow(), stationaryMarineLocation.getSeaArea().getName());
-    assertEquals(values.get("location.deploymentLocation.latitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLatitude().toString());
-    assertEquals(values.get("location.recoveryLocation.latitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLatitude().toString());
-    assertEquals(values.get("location.deploymentLocation.longitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLongitude().toString());
-    assertEquals(values.get("location.recoveryLocation.longitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLongitude().toString());
-    assertEquals(values.get("location.deploymentLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getSeaFloorDepth().toString());
-    assertEquals(values.get("location.recoveryLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getSeaFloorDepth().toString());
-    assertEquals(values.get("location.deploymentLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getInstrumentDepth().toString());
-    assertEquals(values.get("location.recoveryLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getInstrumentDepth().toString());
+    assertEquals(values.get("seaArea").orElseThrow(), stationaryMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("deploymentLocation.latitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLatitude().toString());
+    assertEquals(values.get("recoveryLocation.latitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLatitude().toString());
+    assertEquals(values.get("deploymentLocation.longitude").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getLongitude().toString());
+    assertEquals(values.get("recoveryLocation.longitude").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getLongitude().toString());
+    assertEquals(values.get("deploymentLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getSeaFloorDepth().toString());
+    assertEquals(values.get("recoveryLocation.seaFloorDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getSeaFloorDepth().toString());
+    assertEquals(values.get("deploymentLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getDeploymentLocation().getInstrumentDepth().toString());
+    assertEquals(values.get("recoveryLocation.instrumentDepth").orElseThrow(), stationaryMarineLocation.getRecoveryLocation().getInstrumentDepth().toString());
   }
 
   @Test
@@ -2406,16 +2406,16 @@ class TranslatorUtilsTest {
 
     Map<String, Optional<String>> values = new HashMap<>(0);
     values.put("datasetType", Optional.of("audio"));
-    values.put("location.type", Optional.of("multipoint stationary marine"));
-    values.put("location.seaArea", Optional.of("sea-area"));
-    values.put("location.locations[0].latitude", Optional.of("1.0"));
-    values.put("location.locations[0].longitude", Optional.of("2.0"));
-    values.put("location.locations[0].seaFloorDepth", Optional.of("3.0"));
-    values.put("location.locations[0].instrumentDepth", Optional.of("4.0"));
-    values.put("location.locations[1].latitude", Optional.of("5.0"));
-    values.put("location.locations[1].longitude", Optional.of("6.0"));
-    values.put("location.locations[1].seaFloorDepth", Optional.of("7.0"));
-    values.put("location.locations[1].instrumentDepth", Optional.of("8.0"));
+    values.put("locationType", Optional.of("multipoint stationary marine"));
+    values.put("seaArea", Optional.of("sea-area"));
+    values.put("locations[0].latitude", Optional.of("1.0"));
+    values.put("locations[0].longitude", Optional.of("2.0"));
+    values.put("locations[0].seaFloorDepth", Optional.of("3.0"));
+    values.put("locations[0].instrumentDepth", Optional.of("4.0"));
+    values.put("locations[1].latitude", Optional.of("5.0"));
+    values.put("locations[1].longitude", Optional.of("6.0"));
+    values.put("locations[1].seaFloorDepth", Optional.of("7.0"));
+    values.put("locations[1].instrumentDepth", Optional.of("8.0"));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2445,15 +2445,15 @@ class TranslatorUtilsTest {
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(MultiPointStationaryMarineLocation.class, locationDetail);
     MultiPointStationaryMarineLocation multiPointStationaryMarineLocation = (MultiPointStationaryMarineLocation) locationDetail;
-    assertEquals(values.get("location.seaArea").orElseThrow(), multiPointStationaryMarineLocation.getSeaArea().getName());
-    assertEquals(values.get("location.locations[0].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLatitude().toString());
-    assertEquals(values.get("location.locations[1].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLatitude().toString());
-    assertEquals(values.get("location.locations[0].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLongitude().toString());
-    assertEquals(values.get("location.locations[1].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLongitude().toString());
-    assertEquals(values.get("location.locations[0].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getSeaFloorDepth().toString());
-    assertEquals(values.get("location.locations[1].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getSeaFloorDepth().toString());
-    assertEquals(values.get("location.locations[0].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getInstrumentDepth().toString());
-    assertEquals(values.get("location.locations[1].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getInstrumentDepth().toString());
+    assertEquals(values.get("seaArea").orElseThrow(), multiPointStationaryMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("locations[0].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLatitude().toString());
+    assertEquals(values.get("locations[1].latitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLatitude().toString());
+    assertEquals(values.get("locations[0].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getLongitude().toString());
+    assertEquals(values.get("locations[1].longitude").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getLongitude().toString());
+    assertEquals(values.get("locations[0].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getSeaFloorDepth().toString());
+    assertEquals(values.get("locations[1].seaFloorDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getSeaFloorDepth().toString());
+    assertEquals(values.get("locations[0].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(0).getInstrumentDepth().toString());
+    assertEquals(values.get("locations[1].instrumentDepth").orElseThrow(), multiPointStationaryMarineLocation.getLocations().get(1).getInstrumentDepth().toString());
   }
 
   @Test
@@ -2461,10 +2461,11 @@ class TranslatorUtilsTest {
 
     Map<String, Optional<String>> values = new HashMap<>(0);
     values.put("datasetType", Optional.of("audio"));
-    values.put("location.type", Optional.of("mobile marine"));
-    values.put("location.seaArea", Optional.of("sea-area"));
-    values.put("location.vessel", Optional.of("vessel"));
-    values.put("location.locationDerivationDescription", Optional.of("location-derivation-description"));
+    values.put("locationType", Optional.of("mobile marine"));
+    values.put("type", Optional.of("mobile marine"));
+    values.put("seaArea", Optional.of("sea-area"));
+    values.put("vessel", Optional.of("vessel"));
+    values.put("locationDerivationDescription", Optional.of("location-derivation-description"));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2497,9 +2498,9 @@ class TranslatorUtilsTest {
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(MobileMarineLocation.class, locationDetail);
     MobileMarineLocation mobileMarineLocation = (MobileMarineLocation) locationDetail;
-    assertEquals(values.get("location.seaArea").orElseThrow(), mobileMarineLocation.getSeaArea().getName());
-    assertEquals(values.get("location.vessel").orElseThrow(), mobileMarineLocation.getVessel().getName());
-    assertEquals(values.get("location.locationDerivationDescription").orElseThrow(), mobileMarineLocation.getLocationDerivationDescription());
+    assertEquals(values.get("seaArea").orElseThrow(), mobileMarineLocation.getSeaArea().getName());
+    assertEquals(values.get("vessel").orElseThrow(), mobileMarineLocation.getVessel().getName());
+    assertEquals(values.get("locationDerivationDescription").orElseThrow(), mobileMarineLocation.getLocationDerivationDescription());
   }
 
   @Test
@@ -2507,11 +2508,11 @@ class TranslatorUtilsTest {
 
     Map<String, Optional<String>> values = new HashMap<>(0);
     values.put("datasetType", Optional.of("audio"));
-    values.put("location.type", Optional.of("stationary terrestrial"));
-    values.put("location.latitude", Optional.of("1.0"));
-    values.put("location.longitude", Optional.of("2.0"));
-    values.put("location.surfaceElevation", Optional.of("3.0"));
-    values.put("location.instrumentElevation", Optional.of("4.0"));
+    values.put("locationType", Optional.of("stationary terrestrial"));
+    values.put("latitude", Optional.of("1.0"));
+    values.put("longitude", Optional.of("2.0"));
+    values.put("surfaceElevation", Optional.of("3.0"));
+    values.put("instrumentElevation", Optional.of("4.0"));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2537,10 +2538,10 @@ class TranslatorUtilsTest {
     LocationDetail locationDetail = audioPackingJob.getLocationDetail();
     assertInstanceOf(StationaryTerrestrialLocation.class, locationDetail);
     StationaryTerrestrialLocation stationaryTerrestrialLocation = (StationaryTerrestrialLocation) locationDetail;
-    assertEquals(values.get("location.latitude").orElseThrow(), stationaryTerrestrialLocation.getLatitude().toString());
-    assertEquals(values.get("location.longitude").orElseThrow(), stationaryTerrestrialLocation.getLongitude().toString());
-    assertEquals(values.get("location.surfaceElevation").orElseThrow(), stationaryTerrestrialLocation.getSurfaceElevation().toString());
-    assertEquals(values.get("location.instrumentElevation").orElseThrow(), stationaryTerrestrialLocation.getInstrumentElevation().toString());
+    assertEquals(values.get("latitude").orElseThrow(), stationaryTerrestrialLocation.getLatitude().toString());
+    assertEquals(values.get("longitude").orElseThrow(), stationaryTerrestrialLocation.getLongitude().toString());
+    assertEquals(values.get("surfaceElevation").orElseThrow(), stationaryTerrestrialLocation.getSurfaceElevation().toString());
+    assertEquals(values.get("instrumentElevation").orElseThrow(), stationaryTerrestrialLocation.getInstrumentElevation().toString());
   }
 
 }
