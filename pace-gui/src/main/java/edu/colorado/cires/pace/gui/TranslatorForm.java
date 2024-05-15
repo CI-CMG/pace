@@ -19,6 +19,7 @@ import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.translator.SensorType;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class TranslatorForm<F extends TabularTranslationField, T extends TabularTranslator<F>> extends Form<T> {
@@ -40,6 +42,7 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
   private final JTextField uuidField = new JTextField();
   private final JTextField nameField = new JTextField();
   private final JPanel fieldsPanel = new JPanel(new GridBagLayout());
+  private final JPanel fluff = new JPanel();
   private final Function<Supplier<List<String>>, T> translatorGenerator;
   
   public TranslatorForm(T initialTranslator, Function<Supplier<List<String>>, T> translatorGenerator) {
@@ -59,7 +62,7 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
     JButton addFieldButton = new JButton("Add Field");
     controlPanel.add(addFieldButton, configureLayout((c) -> { c.gridx = 3; c.gridy = 0; }));
     add(controlPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; }));
-    add(new JScrollPane(fieldsPanel), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weighty = 1; c.weightx = 1; c.anchor = GridBagConstraints.NORTH; }));
+    add(new JScrollPane(fieldsPanel), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weighty = 1; c.weightx = 1; c.fill = GridBagConstraints.BOTH; }));
     
     uuidField.setEnabled(false);
     addFromTemplateButton.setVisible(initialTranslator == null);
@@ -121,7 +124,9 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
       fieldsPanel.remove(p);
       revalidate();
     });
-    fieldsPanel.add(panel, configureLayout((c) -> { c.gridx = 0; c.gridy = fieldsPanel.getComponentCount(); c.weightx = 1; c.weighty = 0; }));
+    fieldsPanel.remove(fluff);
+    fieldsPanel.add(panel, configureLayout((c) -> { c.gridx = 0; c.gridy = fieldsPanel.getComponentCount(); c.weightx = 1; }));
+    fieldsPanel.add(fluff, configureLayout((c) -> { c.gridx = 0; c.gridy = fieldsPanel.getComponentCount(); c.weightx = 1; c.weighty = 1; }));
 
     revalidate();
   }

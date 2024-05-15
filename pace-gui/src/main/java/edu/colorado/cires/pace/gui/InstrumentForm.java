@@ -28,6 +28,7 @@ public class InstrumentForm extends Form<Instrument> {
   private final JTextField nameField = new JTextField();
   private final JPanel fileTypesPanel = new JPanel(new GridBagLayout());
   private final FileTypeRepository fileTypeRepository;
+  private final JPanel fluff = new JPanel();
 
   public InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
     this.fileTypeRepository = fileTypeRepository;
@@ -39,13 +40,13 @@ public class InstrumentForm extends Form<Instrument> {
     add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     
-    JPanel fileTypesControlPanel = new JPanel(new GridBagLayout());
-    fileTypesControlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
-    fileTypesControlPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
+    JPanel controlPanel = new JPanel(new GridBagLayout());
+    controlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
+    controlPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
     JButton addFileTypeButton = new JButton("Add File Type");
-    fileTypesControlPanel.add(addFileTypeButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
-    fileTypesControlPanel.add(new JScrollPane(fileTypesPanel), configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; c.weighty = 1; c.anchor = GridBagConstraints.NORTH; c.gridwidth = GridBagConstraints.REMAINDER; }));
-    add(fileTypesControlPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; c.weighty = 1; c.anchor = GridBagConstraints.NORTH; }));
+    controlPanel.add(addFileTypeButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
+    add(controlPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    add(new JScrollPane(fileTypesPanel), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH; }));
     
     uuidField.setEnabled(false);
     
@@ -56,12 +57,14 @@ public class InstrumentForm extends Form<Instrument> {
   
   private void addFileType(FileType initialFileType) {
     try {
+      fileTypesPanel.remove(fluff);
       fileTypesPanel.add(new InstrumentFileTypePanel(
           initialFileType, fileTypeRepository, (p) -> {
             fileTypesPanel.remove(p);
             revalidate();
           }
       ), configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; }));
+      fileTypesPanel.add(fluff, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; c.weighty = 1; }));
       revalidate();
     } catch (DatastoreException e) {
       throw new RuntimeException(e);
@@ -86,6 +89,7 @@ public class InstrumentForm extends Form<Instrument> {
         .uuid(!update ? null : UUID.fromString(uuidText))
         .name(nameField.getText())
         .fileTypes(Arrays.stream(fileTypesPanel.getComponents())
+            .filter(c -> c instanceof InstrumentFileTypePanel)
             .map(c -> (InstrumentFileTypePanel) c)
             .map(InstrumentFileTypePanel::toFileType)
             .filter(Objects::nonNull)
