@@ -11,12 +11,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
 
 public abstract class SpreadsheetGenerator<F extends TabularTranslationField, T extends TabularTranslator<F>> {
 
   private static final Pattern WORD_FINDER = Pattern.compile("(([A-Z]?[a-z]+)|([A-Z]))|(\\(\\d\\))");
   
   public void generateSpreadsheet(Path outputPath, T translator) throws IOException {
+    if (!outputPath.getParent().toFile().exists()) {
+      FileUtils.createParentDirectories(outputPath.toFile());
+    }
     try (OutputStream outputStream = new FileOutputStream(outputPath.toFile())) {
       writeFieldsToSpreadsheet(outputStream, translator.getFields());
     }
