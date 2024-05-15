@@ -11,17 +11,30 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.FileTypeJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.InstrumentJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.PackageJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.PlatformJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ProjectJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.SeaJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.SensorJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.ShipJsonDatastore;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PackageRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.PlatformRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SeaRepository;
+import edu.colorado.cires.pace.repository.SensorRepository;
+import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
@@ -37,6 +50,16 @@ final class DataPanelFactory {
   private static final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   private static final ExcelTranslatorRepository excelTranslatorRepository;
   private static final CSVTranslatorRepository csvTranslatorRepository;
+  private static final ProjectRepository projectRepository;
+  private static final PersonRepository personRepository;
+  private static final OrganizationRepository organizationRepository;
+  private static final PlatformRepository platformRepository;
+  private static final InstrumentRepository instrumentRepository;
+  private static final SensorRepository sensorRepository;
+  private static final DetectionTypeRepository detectionTypeRepository;
+  private static final SeaRepository seaRepository;
+  private static final ShipRepository shipRepository;
+  private static final FileTypeJsonDatastore fileTypeJsonDatastore;
 
   static {
     try {
@@ -46,17 +69,24 @@ final class DataPanelFactory {
       csvTranslatorRepository = new CSVTranslatorRepository(
           new CSVTranslatorJsonDatastore(workDir, objectMapper)
       );
+      fileTypeJsonDatastore = new FileTypeJsonDatastore(workDir, objectMapper);
+      projectRepository = new ProjectRepository(new ProjectJsonDatastore(workDir, objectMapper));
+      personRepository = new PersonRepository(new PersonJsonDatastore(workDir, objectMapper));
+      organizationRepository = new OrganizationRepository(new OrganizationJsonDatastore(workDir, objectMapper));
+      platformRepository = new PlatformRepository(new PlatformJsonDatastore(workDir, objectMapper));
+      instrumentRepository = new InstrumentRepository(new InstrumentJsonDatastore(workDir, objectMapper), fileTypeJsonDatastore);
+      sensorRepository = new SensorRepository(new SensorJsonDatastore(workDir, objectMapper));
+      detectionTypeRepository = new DetectionTypeRepository(new DetectionTypeJsonDatastore(workDir, objectMapper));
+      seaRepository = new SeaRepository(new SeaJsonDatastore(workDir, objectMapper));
+      shipRepository = new ShipRepository(new ShipJsonDatastore(workDir, objectMapper));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public static DataPanel<Project> createProjectsPanel() throws IOException {
-    return new MetadataPanel<>(new ProjectRepository(
-        new ProjectJsonDatastore(
-            workDir, objectMapper
-        )
-    ), new String[]{
+  public static DataPanel<Project> createProjectsPanel() {
+    return new MetadataPanel<>(
+        projectRepository, new String[]{
         "UUID", "Name"
     }, (project -> new Object[] {
         project.getUuid(), project.getName()
@@ -66,9 +96,9 @@ final class DataPanelFactory {
         .build(), ProjectForm::new);
   }
   
-  public static DataPanel<Person> createPeoplePanel() throws IOException {
+  public static DataPanel<Person> createPeoplePanel() {
     return new MetadataPanel<>(
-        new PersonRepository(new PersonJsonDatastore(workDir, objectMapper)),
+        personRepository,
         new String[]{"UUID", "Name", "Organization", "Position", "Street", "City", "State", "Zip", "Country", "Email",
             "Phone", "Orcid"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getOrganization(), person.getPosition(),
@@ -95,9 +125,9 @@ final class DataPanelFactory {
     );
   }
   
-  public static DataPanel<Organization> createOrganizationsPanel() throws IOException {
+  public static DataPanel<Organization> createOrganizationsPanel() {
     return new MetadataPanel<>(
-        new OrganizationRepository(new OrganizationJsonDatastore(workDir, objectMapper)),
+        organizationRepository,
         new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getStreet(), person.getCity(),
             person.getState(), person.getZip(), person.getCountry(), person.getEmail(), person.getPhone()},
@@ -126,7 +156,16 @@ final class DataPanelFactory {
         (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(((Dataset) p).getLocationDetail())},
         excelTranslatorRepository,
         csvTranslatorRepository,
-        Package.class
+        Package.class,
+        projectRepository,
+        personRepository,
+        organizationRepository,
+        platformRepository,
+        instrumentRepository,
+        sensorRepository,
+        detectionTypeRepository,
+        seaRepository,
+        shipRepository
     );
   }
   
