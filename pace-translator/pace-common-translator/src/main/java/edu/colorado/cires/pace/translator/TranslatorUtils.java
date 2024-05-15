@@ -175,6 +175,33 @@ final class TranslatorUtils {
           (ShipRepository) shipRepository, 
           runtimeException
       );
+    } else if (clazz.isAssignableFrom(Person.class)) {
+      object = (O) objectWithNameFromMap(propertyMap, runtimeException, (p) -> Person.builder()
+          .uuid(p.getUuid())
+          .name(p.getName())
+          .organization(getProperty(propertyMap, "organization"))
+          .position(getProperty(propertyMap, "position"))
+          .street(getProperty(propertyMap, "street"))
+          .city(getProperty(propertyMap, "city"))
+          .state(getProperty(propertyMap, "state"))
+          .zip(getProperty(propertyMap, "zip"))
+          .country(getProperty(propertyMap, "country"))
+          .email(getProperty(propertyMap, "email"))
+          .phone(getProperty(propertyMap, "phone"))
+          .orcid(getProperty(propertyMap, "orcid"))
+          .build());
+    } else if (clazz.isAssignableFrom(Organization.class)) {
+      object = (O) objectWithNameFromMap(propertyMap, runtimeException, (o) -> Organization.builder()
+          .uuid(o.getUuid())
+          .name(o.getName())
+          .street(getProperty(propertyMap, "street"))
+          .city(getProperty(propertyMap, "city"))
+          .state(getProperty(propertyMap, "state"))
+          .zip(getProperty(propertyMap, "zip"))
+          .country(getProperty(propertyMap, "country"))
+          .email(getProperty(propertyMap, "email"))
+          .phone(getProperty(propertyMap, "phone"))
+          .build());
     } else {
       throw new RowConversionException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()
@@ -217,6 +244,10 @@ final class TranslatorUtils {
       validateTranslatorWithFlatFields(translatorFields, FileType.class);
     } else if (clazz.isAssignableFrom(Package.class)) {
       validateTranslatorWithFlatFields(translatorFields, Package.class);
+    } else if (clazz.isAssignableFrom(Person.class)) {
+      validateTranslatorWithFlatFields(translatorFields, Person.class);
+    } else if (clazz.isAssignableFrom(Organization.class)) {
+      validateTranslatorWithFlatFields(translatorFields, Organization.class);
     } else {
       throw new TranslatorValidationException(String.format(
           "Translation not supported for %s", clazz.getSimpleName()

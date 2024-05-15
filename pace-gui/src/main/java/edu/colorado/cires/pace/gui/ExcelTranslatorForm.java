@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.translator.excel.ExcelTranslatorFactory;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public class ExcelTranslatorForm extends TranslatorForm<ExcelTranslatorField, ExcelTranslator> {
 
   public ExcelTranslatorForm(ExcelTranslator initialTranslator) {
-    super(initialTranslator);
+    super(initialTranslator, (s) -> ExcelTranslatorFactory.createTranslator(null, s));
   }
 
   @Override

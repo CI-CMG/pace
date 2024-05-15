@@ -2,6 +2,8 @@ package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
+import edu.colorado.cires.pace.translator.FieldNameFactory;
+import edu.colorado.cires.pace.translator.csv.CSVTranslatorFactory;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -10,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 public class CSVTranslatorForm extends TranslatorForm<CSVTranslatorField, CSVTranslator> {
 
   public CSVTranslatorForm(CSVTranslator initialTranslator) {
-    super(initialTranslator);
+    super(initialTranslator, (s) -> CSVTranslatorFactory.createTranslator(null, s));
   }
 
   @Override

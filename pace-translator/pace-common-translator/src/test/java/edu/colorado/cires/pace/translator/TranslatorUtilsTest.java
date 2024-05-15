@@ -66,6 +66,122 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TranslatorUtilsTest {
   
   @Test
+  void testValidatePersonTranslator() {
+    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 0),
+        new TestTranslatorField("name", 1),
+        new TestTranslatorField("organization", 2),
+        new TestTranslatorField("position", 3),
+        new TestTranslatorField("street", 4),
+        new TestTranslatorField("city", 5),
+        new TestTranslatorField("state", 6),
+        new TestTranslatorField("zip", 7),
+        new TestTranslatorField("country", 8),
+        new TestTranslatorField("email", 9),
+        new TestTranslatorField("phone", 10),
+        new TestTranslatorField("orcid", 11)
+    )), Person.class));
+    
+    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 0),
+        new TestTranslatorField("name", 1),
+        new TestTranslatorField("position", 3),
+        new TestTranslatorField("street", 4),
+        new TestTranslatorField("city", 5),
+        new TestTranslatorField("state", 6),
+        new TestTranslatorField("zip", 7),
+        new TestTranslatorField("country", 8),
+        new TestTranslatorField("email", 9),
+        new TestTranslatorField("phone", 10),
+        new TestTranslatorField("orcid", 11)
+    )), Person.class));
+    assertEquals("Translator does not fully describe Person. Missing fields: [organization]", exception.getMessage());
+  }
+
+  @Test
+  void testValidateOrganizationTranslator() {
+    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 0),
+        new TestTranslatorField("name", 1),
+        new TestTranslatorField("street", 4),
+        new TestTranslatorField("city", 5),
+        new TestTranslatorField("state", 6),
+        new TestTranslatorField("zip", 7),
+        new TestTranslatorField("country", 8),
+        new TestTranslatorField("email", 9),
+        new TestTranslatorField("phone", 10)
+    )), Organization.class));
+
+    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
+        new TestTranslatorField("uuid", 0),
+        new TestTranslatorField("name", 1),
+        new TestTranslatorField("city", 5),
+        new TestTranslatorField("state", 6),
+        new TestTranslatorField("zip", 7),
+        new TestTranslatorField("country", 8),
+        new TestTranslatorField("email", 9),
+        new TestTranslatorField("phone", 10)
+    )), Organization.class));
+    assertEquals("Translator does not fully describe Organization. Missing fields: [street]", exception.getMessage());
+  }
+  
+  @Test
+  void testConvertPerson() throws RowConversionException {
+    Map<String, Optional<String>> map = new HashMap<>(0);
+    map.put("uuid", Optional.of(UUID.randomUUID().toString()));
+    map.put("name", Optional.of("person-name"));
+    map.put("organization", Optional.of("person-organization"));
+    map.put("position", Optional.of("person-position"));
+    map.put("street", Optional.of("person-street"));
+    map.put("city", Optional.of("person-city"));
+    map.put("state", Optional.of("person-state"));
+    map.put("zip", Optional.of("person-zip"));
+    map.put("country", Optional.of("person-country"));
+    map.put("email", Optional.of("person-email"));
+    map.put("phone", Optional.of("person-phone"));
+    map.put("orcid", Optional.of("person-orcid"));
+    
+    Person person = TranslatorUtils.convertMapToObject(map, Person.class, 0);
+    assertEquals(map.get("uuid").orElseThrow(), person.getUuid().toString());
+    assertEquals(map.get("name").orElseThrow(), person.getName());
+    assertEquals(map.get("organization").orElseThrow(), person.getOrganization());
+    assertEquals(map.get("position").orElseThrow(), person.getPosition());
+    assertEquals(map.get("street").orElseThrow(), person.getStreet());
+    assertEquals(map.get("city").orElseThrow(), person.getCity());
+    assertEquals(map.get("state").orElseThrow(), person.getState());
+    assertEquals(map.get("zip").orElseThrow(), person.getZip());
+    assertEquals(map.get("country").orElseThrow(), person.getCountry());
+    assertEquals(map.get("email").orElseThrow(), person.getEmail());
+    assertEquals(map.get("phone").orElseThrow(), person.getPhone());
+    assertEquals(map.get("orcid").orElseThrow(), person.getOrcid());
+  }
+  
+  @Test
+  void testConvertOrganization() throws RowConversionException {
+    Map<String, Optional<String>> map = new HashMap<>(0);
+    map.put("uuid", Optional.of(UUID.randomUUID().toString()));
+    map.put("name", Optional.of("organization-name"));
+    map.put("street", Optional.of("organization-street"));
+    map.put("city", Optional.of("organization-city"));
+    map.put("state", Optional.of("organization-state"));
+    map.put("zip", Optional.of("organization-zip"));
+    map.put("country", Optional.of("organization-country"));
+    map.put("email", Optional.of("organization-email"));
+    map.put("phone", Optional.of("organization-phone"));
+
+    Organization organization = TranslatorUtils.convertMapToObject(map, Organization.class, 0);
+    assertEquals(map.get("uuid").orElseThrow(), organization.getUuid().toString());
+    assertEquals(map.get("name").orElseThrow(), organization.getName());
+    assertEquals(map.get("street").orElseThrow(), organization.getStreet());
+    assertEquals(map.get("city").orElseThrow(), organization.getCity());
+    assertEquals(map.get("state").orElseThrow(), organization.getState());
+    assertEquals(map.get("zip").orElseThrow(), organization.getZip());
+    assertEquals(map.get("country").orElseThrow(), organization.getCountry());
+    assertEquals(map.get("email").orElseThrow(), organization.getEmail());
+    assertEquals(map.get("phone").orElseThrow(), organization.getPhone());
+  }
+  
+  @Test
   void testUnsupportedType() {
     record TestObject(String name) {}
     
