@@ -12,7 +12,9 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
+import edu.colorado.cires.pace.translator.LocationType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -61,13 +63,29 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
     addFieldButton.addActionListener((e) -> addField(null));
     addFromTemplateButton.addActionListener((e) -> {
       String choice = (String) JOptionPane.showInputDialog(this, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Project", "Person", "Organization"
+          "Project", "Person", "Organization", "Package"
       }, null);
       
       T translator = switch (choice) {
         case "Project" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Project.class));
         case "Person" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Person.class));
         case "Organization" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Organization.class));
+        case "Package" -> {
+         String packageTypeChoice = (String) JOptionPane.showInputDialog(this, null, "Choose package type", JOptionPane.PLAIN_MESSAGE, null, 
+             Arrays.stream(DatasetType.values())
+              .map(DatasetType::getName)
+             .toArray(String[]::new), null);
+         
+         String locationTypeChoice = (String) JOptionPane.showInputDialog(this, null, "Choose location type", JOptionPane.PLAIN_MESSAGE, null,
+             Arrays.stream(LocationType.values())
+                 .map(LocationType::getName)
+                 .toArray(String[]::new), null);
+         
+         DatasetType datasetType = DatasetType.fromName(packageTypeChoice);
+         LocationType locationType = LocationType.fromName(locationTypeChoice);
+         
+         yield translatorGenerator.apply(() -> FieldNameFactory.getDatasetDeclaredFields(datasetType, locationType));
+        }
         default -> {
           JOptionPane.showMessageDialog(this, "Invalid translator template", "Error", JOptionPane.ERROR_MESSAGE);
           yield null;
