@@ -287,7 +287,9 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     stream.peek(o -> {
       RowConversionException exception = o.rowConversionException();
       if (exception != null) {
-        JOptionPane.showMessageDialog(this, exception.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, Arrays.stream(exception.getSuppressed())
+                .map(Throwable::getMessage)
+            .collect(Collectors.joining("\n")), "Error", JOptionPane.ERROR_MESSAGE);
       }
     }).map(ObjectWithRowConversionException::object)
         .filter(Objects::nonNull)
