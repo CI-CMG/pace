@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
+import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
@@ -64,10 +65,11 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
     addFieldButton.addActionListener((e) -> addField(null));
     addFromTemplateButton.addActionListener((e) -> {
       String choice = (String) JOptionPane.showInputDialog(this, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Package", "Project", "Person", "Organization", "Platform"
+          "Package", "Project", "Person", "Organization", "Platform", "File Type"
       }, null);
       
       T translator = switch (choice) {
+        case "File Type" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(FileType.class));
         case "Platform" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Platform.class));
         case "Project" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Project.class));
         case "Person" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Person.class));

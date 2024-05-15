@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
+import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
@@ -27,6 +28,7 @@ import edu.colorado.cires.pace.datastore.json.ShipJsonDatastore;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PackageRepository;
@@ -61,6 +63,7 @@ final class DataPanelFactory {
   private static final SeaRepository seaRepository;
   private static final ShipRepository shipRepository;
   private static final FileTypeJsonDatastore fileTypeJsonDatastore;
+  private static final FileTypeRepository fileTypeRepository;
 
   static {
     try {
@@ -71,6 +74,7 @@ final class DataPanelFactory {
           new CSVTranslatorJsonDatastore(workDir, objectMapper)
       );
       fileTypeJsonDatastore = new FileTypeJsonDatastore(workDir, objectMapper);
+      fileTypeRepository = new FileTypeRepository(fileTypeJsonDatastore);
       projectRepository = new ProjectRepository(new ProjectJsonDatastore(workDir, objectMapper));
       personRepository = new PersonRepository(new PersonJsonDatastore(workDir, objectMapper));
       organizationRepository = new OrganizationRepository(new OrganizationJsonDatastore(workDir, objectMapper));
@@ -110,6 +114,23 @@ final class DataPanelFactory {
             .name((String) o[1])
             .build(),
         PlatformForm::new
+    );
+  }
+  
+  public static DataPanel<FileType> createFileTypesPanel() {
+    return new MetadataPanel<>(
+        fileTypeRepository,
+        new String[]{"UUID", "Type", "Comment"},
+        (fileType) -> new Object[]{fileType.getUuid(), fileType.getType(), fileType.getComment()},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        FileType.class,
+        (objects) -> FileType.builder()
+            .uuid((UUID) objects[0])
+            .type((String) objects[1])
+            .comment((String) objects[2])
+            .build(),
+        FileTypeForm::new
     );
   }
   
