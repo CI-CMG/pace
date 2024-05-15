@@ -53,6 +53,10 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   protected abstract JPanel createControlPanel();
   
   protected void loadData() {
+    while (tableModel.getRowCount() > 0) {
+      tableModel.removeRow(0);
+    }
+    
     try {
       repository.findAll().forEach(
           o -> tableModel.addRow(objectConversion.apply(o))
