@@ -11,6 +11,7 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
@@ -191,7 +192,7 @@ final class DataPanelFactory {
     return new PackagesPanel(
         new PackageRepository(new PackageJsonDatastore(workDir, objectMapper)),
         new String[] { "UUID", "Package ID", "Dataset Type", "Location Type" },
-        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(((Dataset) p).getLocationDetail())},
+        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(((Dataset) p).getLocationDetail()).getName()},
         excelTranslatorRepository,
         csvTranslatorRepository,
         Package.class,
@@ -254,6 +255,18 @@ final class DataPanelFactory {
         (o) -> (Sensor) o[4],
         SensorForm::new
     );
+  }
+
+  public static DataPanel<Sea> createSeaAreasPanel() {
+    return new MetadataPanel<>(
+        seaRepository, new String[]{
+        "UUID", "Name"
+    }, (sea -> new Object[]{
+        sea.getUuid(), sea.getName()
+    }), excelTranslatorRepository, csvTranslatorRepository, Sea.class, (o) -> Sea.builder()
+        .uuid((UUID) o[0])
+        .name((String) o[1])
+        .build(), SeaForm::new);
   }
 
 }

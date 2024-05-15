@@ -12,5 +12,6 @@ public class MetadataTabbedPane extends JTabbedPane {
     add("File Types", DataPanelFactory.createFileTypesPanel());
     add("Instruments", DataPanelFactory.createInstrumentsPanel());
     add("Sensors", DataPanelFactory.createSensorsPanel());
+    add("Sea Areas", DataPanelFactory.createSeaAreasPanel());
   }
 }

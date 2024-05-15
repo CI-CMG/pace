@@ -8,6 +8,7 @@ import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -19,7 +20,6 @@ import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.translator.SensorType;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -34,7 +34,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class TranslatorForm<F extends TabularTranslationField, T extends TabularTranslator<F>> extends Form<T> {
@@ -43,10 +42,8 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
   private final JTextField nameField = new JTextField();
   private final JPanel fieldsPanel = new JPanel(new GridBagLayout());
   private final JPanel fluff = new JPanel();
-  private final Function<Supplier<List<String>>, T> translatorGenerator;
-  
+
   public TranslatorForm(T initialTranslator, Function<Supplier<List<String>>, T> translatorGenerator) {
-    this.translatorGenerator = translatorGenerator;
     setLayout(new GridBagLayout());
     
     add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
@@ -70,10 +67,11 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
     addFieldButton.addActionListener((e) -> addField(null));
     addFromTemplateButton.addActionListener((e) -> {
       String choice = (String) JOptionPane.showInputDialog(this, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Package", "Project", "Person", "Organization", "Platform", "File Type", "Instrument", "Sensor"
+          "Package", "Project", "Person", "Organization", "Platform", "File Type", "Instrument", "Sensor", "Sea Area"
       }, null);
       
       T translator = switch (choice) {
+        case "Sea Area" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Sea.class));
         case "Sensor" -> {
           SensorType sensorType = (SensorType) JOptionPane.showInputDialog(this, null, "Choose sensor type", JOptionPane.PLAIN_MESSAGE, null,
               Arrays.stream(SensorType.values())
@@ -153,6 +151,7 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
         uuidText,
         nameField.getText(),
         Arrays.stream(fieldsPanel.getComponents())
+            .filter(c -> c instanceof TranslatorFieldPanel<?>)
             .map(c -> (TranslatorFieldPanel<F>) c)
             .map(TranslatorFieldPanel::toField)
             .toList()
