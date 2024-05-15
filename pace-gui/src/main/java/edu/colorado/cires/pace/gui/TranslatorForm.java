@@ -18,6 +18,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.translator.LocationType;
+import edu.colorado.cires.pace.translator.SensorType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -66,10 +67,17 @@ public abstract class TranslatorForm<F extends TabularTranslationField, T extend
     addFieldButton.addActionListener((e) -> addField(null));
     addFromTemplateButton.addActionListener((e) -> {
       String choice = (String) JOptionPane.showInputDialog(this, null, "Choose translator template", JOptionPane.PLAIN_MESSAGE, null, new Object[] {
-          "Package", "Project", "Person", "Organization", "Platform", "File Type", "Instrument"
+          "Package", "Project", "Person", "Organization", "Platform", "File Type", "Instrument", "Sensor"
       }, null);
       
       T translator = switch (choice) {
+        case "Sensor" -> {
+          SensorType sensorType = (SensorType) JOptionPane.showInputDialog(this, null, "Choose sensor type", JOptionPane.PLAIN_MESSAGE, null,
+              Arrays.stream(SensorType.values())
+                  .toArray(SensorType[]::new), null);
+          
+          yield translatorGenerator.apply(() -> FieldNameFactory.getSensorDeclaredFields(sensorType));
+        }
         case "Instrument" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Instrument.class));
         case "File Type" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(FileType.class));
         case "Platform" -> translatorGenerator.apply(() -> FieldNameFactory.getDefaultDeclaredFields(Platform.class));

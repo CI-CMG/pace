@@ -1025,7 +1025,7 @@ final class TranslatorUtils {
   }
   
   private static LocationDetail locationDetailFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException, SeaRepository seaRepository, ShipRepository shipRepository) {
-    String locationType = getProperty(propertyMap, "location.type");
+    String locationType = getProperty(propertyMap, "locationType");
     if (locationType == null) {
       return null;
     }

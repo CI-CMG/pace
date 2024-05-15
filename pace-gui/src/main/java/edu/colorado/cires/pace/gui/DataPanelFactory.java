@@ -2,10 +2,8 @@ package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
-import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
-import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.Organization;
@@ -13,6 +11,7 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
@@ -45,8 +44,8 @@ import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 final class DataPanelFactory {
 
@@ -211,13 +210,9 @@ final class DataPanelFactory {
   public static DataPanel<ExcelTranslator> createExcelTranslatorsPanel() {
     return new TranslatorsPanel<>(
         excelTranslatorRepository,
-        new String[] { "UUID", "Name", "Fields" },
-        (t) -> new Object[] { t.getUuid(), t.getName(), t.getFields() },
-        (o) -> ExcelTranslator.builder()
-            .uuid((UUID) o[0])
-            .name((String) o[1])
-            .fields((List<ExcelTranslatorField>) o[2])
-            .build(),
+        new String[] { "UUID", "Name", "Object" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t },
+        (o) -> (ExcelTranslator) o[2],
         ExcelTranslatorForm::new
     );
   }
@@ -225,13 +220,9 @@ final class DataPanelFactory {
   public static DataPanel<CSVTranslator> createCSVTranslatorsPanel() {
     return new TranslatorsPanel<>(
         csvTranslatorRepository,
-        new String[] { "UUID", "Name", "Fields" },
-        (t) -> new Object[] { t.getUuid(), t.getName(), t.getFields() },
-        (o) -> CSVTranslator.builder()
-            .uuid((UUID) o[0])
-            .name((String) o[1])
-            .fields((List<CSVTranslatorField>) o[2])
-            .build(),
+        new String[] { "UUID", "Name", "Object" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t },
+        (o) -> (CSVTranslator) o[2],
         CSVTranslatorForm::new
     );
   }
@@ -239,18 +230,29 @@ final class DataPanelFactory {
   public static DataPanel<Instrument> createInstrumentsPanel() {
     return new MetadataPanel<>(
         instrumentRepository,
-        new String[]{"UUID", "Name", "File Types"},
-        (i) -> new Object[]{i.getUuid(), i.getName(), i.getFileTypes()},
+        new String[]{"UUID", "Name", "File Types", "Object"},
+        (i) -> new Object[]{i.getUuid(), i.getName(), i.getFileTypes().stream()
+            .map(FileType::getType)
+            .collect(Collectors.joining(", ")), i},
         excelTranslatorRepository,
         csvTranslatorRepository,
         Instrument.class,
-        (o) -> Instrument.builder()
-            .uuid((UUID) o[0])
-            .name((String) o[1])
-            .fileTypes((List<FileType>) o[2])
-            .build(),
+        (o) -> (Instrument) o[3],
         (i) -> new InstrumentForm(i, fileTypeRepository),
         fileTypeRepository
+    );
+  }
+  
+  public static DataPanel<Sensor> createSensorsPanel() {
+    return new MetadataPanel<>(
+        sensorRepository,
+        new String[]{"UUID", "Name", "Position", "Description", "Object"},
+        (s) -> new Object[]{s.getUuid(), s.getName(), String.format("(%s, %s, %s)", s.getPosition().getX(), s.getPosition().getY(), s.getPosition().getZ()), s.getDescription(), s},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Sensor.class,
+        (o) -> (Sensor) o[4],
+        SensorForm::new
     );
   }
 
