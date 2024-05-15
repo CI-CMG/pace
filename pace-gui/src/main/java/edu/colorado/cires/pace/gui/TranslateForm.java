@@ -3,7 +3,9 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import edu.colorado.cires.pace.data.object.CSVTranslator;
+import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.ExcelTranslator;
+import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
@@ -19,15 +21,22 @@ import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
 import edu.colorado.cires.pace.translator.RowConversionException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
+import edu.colorado.cires.pace.translator.csv.CSVGenerator;
 import edu.colorado.cires.pace.translator.csv.CSVTranslatorExecutor;
+import edu.colorado.cires.pace.translator.excel.ExcelGenerator;
 import edu.colorado.cires.pace.translator.excel.ExcelTranslatorExecutor;
+import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.TranslationType;
+import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,13 +143,78 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
   
   private JPanel createControlPanel(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     JPanel panel = new JPanel(new GridBagLayout());
-    panel.add(new JPanel(), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
+    JButton generateTemplateButton = new JButton("Generate Template");
+    panel.add(generateTemplateButton, configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
+    panel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
     JButton translateButton = new JButton("Translate");
-    panel.add(translateButton, configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 0; }));
+    panel.add(translateButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
     
     translateButton.addActionListener((e) -> translateSpreadsheet(successAction, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
+    generateTemplateButton.addActionListener((e) -> generateTemplate());
     
     return panel;
+  }
+  
+  private void generateTemplate() {
+    TranslationType translationType = (TranslationType) fileFormatComboBoxModel.getSelectedItem();
+    if (translationType == null) {
+      JOptionPane.showMessageDialog(this, "Please choose a file format", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
+    String translatorName = (String) translatorComboBoxModel.getSelectedItem();
+    if (translatorName == null) {
+      JOptionPane.showMessageDialog(this, "Please choose a translator", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    
+    ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
+
+    Path outputDirectory = propertyResolver.getWorkDir().resolve("templates");
+    Path outputPath = null;
+    
+    try {
+      switch (translationType) {
+        case csv -> {
+          CSVTranslator translator = csvTranslators.get(translatorName);
+          outputPath = outputDirectory.resolve(String.format(
+              "%s.csv", translatorName
+          ));
+          new CSVGenerator().generateSpreadsheet(
+              outputPath,
+              translator
+          );
+        }
+        case excel -> {
+          ExcelTranslator translator = excelTranslators.get(translatorName);
+          outputPath = outputDirectory.resolve(String.format(
+              "%s.xlsx", translatorName
+          ));
+          new ExcelGenerator(propertyResolver.getVersion(false)).generateSpreadsheet(
+              outputPath,
+              translator
+          );
+        }
+      }
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    
+    if (Desktop.isDesktopSupported()) {
+      try {
+        Desktop.getDesktop().open(outputPath.toFile());
+      } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, String.format(
+            "Failed to open template. Template can be opened at: %s", outputPath
+        ), "Error", JOptionPane.ERROR_MESSAGE);
+      }
+    } else {
+      JOptionPane.showMessageDialog(this, String.format(
+          "Generated template. Template can be opened at: %s", outputPath
+      ), null, JOptionPane.PLAIN_MESSAGE);
+    }
+    
   }
   
   private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
@@ -156,18 +230,10 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
       return;
     }
 
-    CRUDRepository<? extends TabularTranslator<? extends TabularTranslationField>> translatorRepository = switch (translationType) {
-      case excel -> excelTranslatorRepository;
-      case csv -> csvTranslatorRepository;
+    TabularTranslator<? extends TabularTranslationField> translator = switch (translationType) {
+      case csv -> csvTranslators.get(translatorName);
+      case excel -> excelTranslators.get(translatorName);
     };
-
-    TabularTranslator<? extends TabularTranslationField> translator;
-    try {
-      translator = translatorRepository.getByUniqueField(translatorName);
-    } catch (DatastoreException | NotFoundException ex) {
-      JOptionPane.showMessageDialog(this, "Invalid translator", "Error", JOptionPane.ERROR_MESSAGE);
-      return;
-    }
 
     TranslatorExecutor<O, ? extends TabularTranslator<? extends TabularTranslationField>> executor = null;
     try {
