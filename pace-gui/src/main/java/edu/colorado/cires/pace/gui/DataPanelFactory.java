@@ -9,6 +9,7 @@ import edu.colorado.cires.pace.data.object.ExcelTranslatorField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
@@ -94,6 +95,22 @@ final class DataPanelFactory {
         .uuid((UUID) o[0])
         .name((String) o[1])
         .build(), ProjectForm::new);
+  }
+  
+  public static DataPanel<Platform> createPlatformPanel() {
+    return new MetadataPanel<>(
+        platformRepository,
+        new String[]{"UUID", "Name"},
+        (platform) -> new Object[]{platform.getUuid(), platform.getName()},
+        excelTranslatorRepository,
+        csvTranslatorRepository,
+        Platform.class,
+        (o) -> Platform.builder()
+            .uuid((UUID) o[0])
+            .name((String) o[1])
+            .build(),
+        PlatformForm::new
+    );
   }
   
   public static DataPanel<Person> createPeoplePanel() {
