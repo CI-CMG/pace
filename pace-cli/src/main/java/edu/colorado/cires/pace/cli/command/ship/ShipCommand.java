@@ -72,6 +72,11 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List ships", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get ship by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete ship", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
     }
   }
   

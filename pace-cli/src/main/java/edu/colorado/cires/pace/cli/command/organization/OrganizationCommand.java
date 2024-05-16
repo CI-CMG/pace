@@ -72,6 +72,11 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List organizations", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get organization by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete organization", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
     }
   }
   

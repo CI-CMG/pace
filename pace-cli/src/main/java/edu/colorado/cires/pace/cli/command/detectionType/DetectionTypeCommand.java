@@ -72,6 +72,11 @@ public class DetectionTypeCommand implements Runnable {
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List detection types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class DetectionTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class DetectionTypeCommand implements Runnable {
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-source", description = "Get detection type by source", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class DetectionTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class DetectionTypeCommand implements Runnable {
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete detection type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class DetectionTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
     }
   }
   

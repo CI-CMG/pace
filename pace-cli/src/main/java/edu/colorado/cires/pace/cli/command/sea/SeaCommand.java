@@ -72,6 +72,11 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List sea areas", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get sea area by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete sea area", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
     }
   }
   

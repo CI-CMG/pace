@@ -72,6 +72,11 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List projects", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get project by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete project", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
     }
   }
   

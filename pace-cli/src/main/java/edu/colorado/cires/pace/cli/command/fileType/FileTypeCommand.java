@@ -72,6 +72,11 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List file types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-type", description = "Get file type by type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
     }
   }
   

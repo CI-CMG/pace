@@ -73,6 +73,11 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List instruments", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -81,6 +86,11 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
     }
   }
   
@@ -99,6 +109,11 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get instrument by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -115,6 +130,11 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
     }
   }
   
@@ -143,6 +163,11 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete instrument", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -159,6 +184,11 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
     }
   }
   

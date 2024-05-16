@@ -25,7 +25,6 @@ import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.datastore.json.PersonJsonDatastore;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -42,14 +41,13 @@ import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
-import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -102,6 +100,11 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -110,6 +113,11 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
     }
   }
   
@@ -128,6 +136,11 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-package-id", description = "Get package by packageId", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -144,6 +157,11 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
     }
   }
   
@@ -172,6 +190,11 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete package", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -188,6 +211,11 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
     }
   }
 
@@ -255,28 +283,31 @@ public class PackageCommand implements Runnable {
         List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         List<Project> projects = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         
-        PackageProcessor packageProcessor = new PackageProcessor(objectMapper, people, organizations, projects);
         Path outputPath = new ApplicationPropertyResolver().getWorkDir().resolve("output");
         
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
             new CLIProgressIndicator()
         };
         
+        
         try {
+          List<Package> packages = new ArrayList<>(0);
           deserializeAndProcess(
               objectMapper,
               packageJob,
               Package.class,
               new TypeReference<>() {},
               (deserializedObject) -> {
-                try {
-                  packageProcessor.process(deserializedObject, outputPath, progressIndicators);
-                  return deserializedObject;
-                } catch (PackagingException | IOException e) {
-                  throw new RuntimeException(e);
-                }
+                packages.add(deserializedObject);
+                return deserializedObject;
               }
           );
+          
+          PackageProcessor packageProcessor = new PackageProcessor(
+              objectMapper, people, organizations, projects, packages, outputPath, progressIndicators
+          );
+          
+          packageProcessor.process();
         } catch (RuntimeException exception) {
           throw exception.getCause();
         }

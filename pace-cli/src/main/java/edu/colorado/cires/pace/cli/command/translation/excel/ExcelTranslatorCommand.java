@@ -70,6 +70,11 @@ public class ExcelTranslatorCommand implements Runnable {
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List Excel translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -78,6 +83,11 @@ public class ExcelTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
     }
   }
   
@@ -96,6 +106,11 @@ public class ExcelTranslatorCommand implements Runnable {
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get Excel translator by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -112,6 +127,11 @@ public class ExcelTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
     }
   }
   
@@ -140,6 +160,11 @@ public class ExcelTranslatorCommand implements Runnable {
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -156,6 +181,11 @@ public class ExcelTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<ExcelTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<ExcelTranslator> getClazz() {
+      return clazz;
     }
   }
   

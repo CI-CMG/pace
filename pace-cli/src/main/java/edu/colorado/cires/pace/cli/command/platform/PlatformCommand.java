@@ -72,6 +72,11 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List platforms", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get platform by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete platform", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
     }
   }
   

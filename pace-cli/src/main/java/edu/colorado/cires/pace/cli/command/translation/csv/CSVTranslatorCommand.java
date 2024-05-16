@@ -70,6 +70,11 @@ public class CSVTranslatorCommand implements Runnable {
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List CSV translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -78,6 +83,11 @@ public class CSVTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
     }
   }
   
@@ -96,6 +106,11 @@ public class CSVTranslatorCommand implements Runnable {
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-uuid", description = "Get CSV translator by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -112,6 +127,11 @@ public class CSVTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
     }
   }
   
@@ -140,6 +160,11 @@ public class CSVTranslatorCommand implements Runnable {
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete CSV translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -156,6 +181,11 @@ public class CSVTranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<CSVTranslator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<CSVTranslator> getClazz() {
+      return clazz;
     }
   }
   

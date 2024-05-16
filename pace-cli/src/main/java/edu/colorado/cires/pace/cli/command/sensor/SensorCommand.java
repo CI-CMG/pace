@@ -79,6 +79,11 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return SensorRepositoryFactory::createRepository;
     }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List sensors", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -87,6 +92,11 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
     }
   }
   
@@ -105,6 +115,11 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get sensor by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -121,6 +136,11 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
     }
   }
   
@@ -149,6 +169,11 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete sensor", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -165,6 +190,11 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
     }
   }
   

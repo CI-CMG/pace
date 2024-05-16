@@ -72,6 +72,11 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "list", description = "List people", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -80,6 +85,11 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
     }
   }
   
@@ -98,6 +108,11 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "get-by-name", description = "Get person by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -114,6 +129,11 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
     }
   }
   
@@ -142,6 +162,11 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "delete", description = "Delete person", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -158,6 +183,11 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
     }
   }
   
