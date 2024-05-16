@@ -283,7 +283,7 @@ public class PackageCommand implements Runnable {
         List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         List<Project> projects = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         
-        Path outputPath = new ApplicationPropertyResolver().getWorkDir().resolve("output");
+        Path outputPath = new ApplicationPropertyResolver().getOutputDir();
         
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
             new CLIProgressIndicator()

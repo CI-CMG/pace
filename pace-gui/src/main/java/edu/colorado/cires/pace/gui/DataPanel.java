@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
   
-  protected final TableModel tableModel;
+  protected final DefaultTableModel tableModel;
   protected final CRUDRepository<O> repository;
   protected final Function<O, Object[]> objectConversion;
   protected final String[] headers;
@@ -30,16 +30,20 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     this.headers = headers;
     this.objectConversion = objectConversion;
     this.repository = repository;
-    this.tableModel = new TableModel(
-        null,
-        headers
-    );
+    this.tableModel = createTableModel(headers);
 
     setLayout(new BorderLayout());
     
     add(createContentPanel());
     
     loadData();
+  }
+  
+  protected DefaultTableModel createTableModel(String[] headers) {
+    return new TableModel(
+        null,
+        headers
+    );
   }
   
   private JPanel createContentPanel() {
@@ -69,8 +73,11 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   protected JTable createTable() {
     JTable table = new JTable();
     table.setModel(tableModel);
+    table.setAutoCreateRowSorter(true);
 
     table.addMouseListener(getTableMouseAdapter());
+    table.setCellSelectionEnabled(false);
+    table.setRowSelectionAllowed(false);
     
     return table;
   }

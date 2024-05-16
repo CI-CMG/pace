@@ -39,6 +39,17 @@ public final class ApplicationPropertyResolver {
 
     return Paths.get(dirString).toAbsolutePath();
   }
+  
+  public Path getOutputDir() {
+    String dirString = getPropertyValue("pace-cli.output-dir", (s) -> s);
+    if (StringUtils.isBlank(dirString)) {
+      return Path.of(
+          System.getProperty("user.home")
+      ).resolve(".pace-cli").resolve("output").toAbsolutePath();
+    }
+
+    return Paths.get(dirString).toAbsolutePath();
+  }
 
   public String getVersion() {
     return getVersion(true);
