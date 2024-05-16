@@ -114,7 +114,9 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     object = datastore.save(object);
     
     if (writableUUID && (uuid != objectUUID)) {
-      delete(uuid);
+      if (datastore.findByUUID(existingObject.getUuid()).isPresent()) {
+        datastore.delete(existingObject);
+      }
     }
     
     return object;

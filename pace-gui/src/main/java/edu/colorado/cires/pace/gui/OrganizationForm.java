@@ -25,8 +25,11 @@ public class OrganizationForm extends Form<Organization> {
   private final JTextField countryField = new JTextField();
   private final JTextField emailField = new JTextField();
   private final JTextField phoneField = new JTextField();
+  private final Organization initialOrganization;
 
   public OrganizationForm(Organization initialOrganization) {
+    this.initialOrganization = initialOrganization;
+    
     setLayout(new BorderLayout());
 
     JPanel contentPanel = new JPanel();
@@ -50,8 +53,6 @@ public class OrganizationForm extends Form<Organization> {
     contentPanel.add(new JLabel("Phone"));
     contentPanel.add(phoneField);
     add(contentPanel, BorderLayout.NORTH);
-    
-    uuidField.setEnabled(false);
     
     initializeFields(initialOrganization);
   }
@@ -90,7 +91,7 @@ public class OrganizationForm extends Form<Organization> {
 
     if (update) {
       repository.update(
-          organization.getUuid(),
+          initialOrganization.getUuid(),
           organization
       );
     } else {

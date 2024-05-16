@@ -28,8 +28,11 @@ public class PersonForm extends Form<Person> {
   private final JTextField emailField = new JTextField();
   private final JTextField phoneField = new JTextField();
   private final JTextField orcidField = new JTextField();
+  
+  private final Person initialPerson;
 
   public PersonForm(Person initialPerson) {
+    this.initialPerson = initialPerson;
    setLayout(new BorderLayout());
 
     JPanel contentPanel = new JPanel();
@@ -59,8 +62,6 @@ public class PersonForm extends Form<Person> {
     contentPanel.add(new JLabel("Orcid"));
     contentPanel.add(orcidField);
     add(contentPanel, BorderLayout.NORTH);
-    
-    uuidField.setEnabled(false);
     
     initializeFields(initialPerson);
   }
@@ -105,7 +106,7 @@ public class PersonForm extends Form<Person> {
     
     if (update) {
       repository.update(
-          person.getUuid(),
+          initialPerson.getUuid(),
           person
       );
     } else {
@@ -115,10 +116,6 @@ public class PersonForm extends Form<Person> {
 
   @Override
   protected void delete(CRUDRepository<Person> repository) throws NotFoundException, DatastoreException {
-    String uuidText = uuidField.getText();
-    
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(initialPerson.getUuid());
   }
 }
