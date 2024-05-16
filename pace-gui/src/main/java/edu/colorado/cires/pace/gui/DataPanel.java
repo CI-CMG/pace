@@ -5,11 +5,14 @@ import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
   
@@ -70,6 +73,10 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     }
   }
   
+  protected List<String> getHiddenColumns() {
+    return Collections.singletonList("UUID");
+  }
+  
   protected JTable createTable() {
     JTable table = new JTable();
     table.setModel(tableModel);
@@ -78,6 +85,15 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     table.addMouseListener(getTableMouseAdapter());
     table.setCellSelectionEnabled(false);
     table.setRowSelectionAllowed(false);
+
+    TableColumnModel columnModel = table.getColumnModel();
+    getHiddenColumns().forEach(
+        c -> columnModel.removeColumn(
+            columnModel.getColumn(
+                columnModel.getColumnIndex(c)
+            )
+        )
+    );
     
     return table;
   }

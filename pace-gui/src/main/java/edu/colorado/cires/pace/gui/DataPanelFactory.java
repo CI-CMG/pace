@@ -44,6 +44,8 @@ import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -206,7 +208,12 @@ final class DataPanelFactory {
         detectionTypeRepository,
         seaRepository,
         shipRepository
-    );
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID", "Object");
+      }
+    };
   }
   
   public static DataPanel<ExcelTranslator> createExcelTranslatorsPanel() {
@@ -242,7 +249,12 @@ final class DataPanelFactory {
         (o) -> (Instrument) o[3],
         (i) -> new InstrumentForm(i, fileTypeRepository),
         fileTypeRepository
-    );
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID", "Object");
+      }
+    };
   }
   
   public static DataPanel<Sensor> createSensorsPanel() {
@@ -255,7 +267,12 @@ final class DataPanelFactory {
         Sensor.class,
         (o) -> (Sensor) o[4],
         SensorForm::new
-    );
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID", "Object");
+      }
+    };
   }
 
   public static DataPanel<Sea> createSeaAreasPanel() {
