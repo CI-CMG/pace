@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.Package;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -14,6 +15,17 @@ import org.slf4j.LoggerFactory;
 class PackageInstructionFactory {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
+  
+  public static long getInstructionCount(Package packingJob, Path outputDirectory) throws PackagingException {
+    return getPackageInstructions(
+        packingJob,
+        Paths.get("metadata"),
+        Paths.get("people"),
+        Paths.get("organizations"),
+        Paths.get("projects"),
+        outputDirectory
+    ).count() + 4L; // account for generated files
+  }
   
   public static Stream<PackageInstruction> getPackageInstructions(Package packingJob, Path metadataPath, Path peoplePath, Path organizationsPath, Path projectsPath, Path outputDirectory)
       throws PackagingException {

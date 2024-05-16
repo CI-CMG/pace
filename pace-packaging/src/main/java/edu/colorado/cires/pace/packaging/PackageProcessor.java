@@ -12,7 +12,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -25,40 +24,62 @@ public class PackageProcessor {
   private final List<Person> people;
   private final List<Organization> organizations;
   private final List<Project> projects;
+  private final ProgressIndicator[] progressIndicators;
+  private final List<Package> packages;
+  private final Path outputDir;
 
-  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects) {
+  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
+      List<Package> packages, Path outputDir,
+      ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
     this.projects = Collections.unmodifiableList(projects);
+    this.packages = packages;
+    this.outputDir = outputDir;
+    this.progressIndicators = progressIndicators;
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
+  
+  public void process() throws IOException, PackagingException {
+    FileUtils.mkdir(outputDir);
 
-  public void process(Package packingJob, Path outputDir, ProgressIndicator... progressIndicators)
+    for (Package aPackage : packages) {
+      FileUtils.mkdir(getPackageOutputDir(aPackage));
+    }
+
+    new Thread(this::initializeProgressIndicators).start();
+
+    for (Package aPackage : packages) {
+      Path packageOutputDir = getPackageOutputDir(aPackage);
+
+      processPackage(aPackage, packageOutputDir);
+    }
+  }
+  
+  private void initializeProgressIndicators() {
+    try {
+      for (Package aPackage : packages) {
+        Path packageOutputDir = getPackageOutputDir(aPackage);
+        long instructionCount = PackageInstructionFactory.getInstructionCount(aPackage, packageOutputDir);
+        for (ProgressIndicator progressIndicator : progressIndicators) {
+          progressIndicator.setTotalRecords(
+              progressIndicator.getTotalRecords() + instructionCount 
+          );
+        }
+      }
+    } catch (IOException | PackagingException exception) {
+      throw new RuntimeException("Failed to establish total records for packaging job");
+    }
+  }
+
+  private void processPackage(Package packingJob, Path packageOutputDir)
       throws PackagingException, IOException {
     validatePackingJob(packingJob);
     
-    FileUtils.mkdir(outputDir);
-    Path packageOutputDir = outputDir.resolve(((Dataset) packingJob).getPackageId());
-    FileUtils.mkdir(packageOutputDir);
-
-    Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
-        packingJob,
-        Paths.get("metadata"),
-        Paths.get("people"),
-        Paths.get("organizations"),
-        Paths.get("projects"),
-        packageOutputDir
-    );
-    long totalRecords = instructionStream.count() + 4L; // accounting for generated files
-
-    for (ProgressIndicator progressIndicator : progressIndicators) {
-      progressIndicator.setTotalRecords(totalRecords);
-    }
-    
     Path outputDirectory = packageOutputDir.resolve("data");
 
-    instructionStream = PackageInstructionFactory.getPackageInstructions(
+    Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
         FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDirectory),
         FileUtils.writeObjectsBlob(people, objectMapper, outputDirectory, "people.json"),
@@ -81,6 +102,10 @@ public class PackageProcessor {
           "%s validation failed", Package.class.getSimpleName()
       ), violations);
     }
+  }
+  
+  private Path getPackageOutputDir(Package packingJob) throws IOException {
+    return outputDir.resolve(((Dataset) packingJob).getPackageId());
   }
 
 }

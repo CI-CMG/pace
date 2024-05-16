@@ -7,7 +7,10 @@ public abstract class ProgressIndicator {
 
   public void setTotalRecords(long totalRecords) {
     this.totalRecords = totalRecords;
-    this.processedRecords = 0;
+  }
+
+  public long getTotalRecords() {
+    return totalRecords;
   }
 
   public void incrementProcessedRecords() {

@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,7 +73,6 @@ class PackagerProcessorTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper()
       .registerModule(new JavaTimeModule());
-  private final PackageProcessor processor = new PackageProcessor(objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS);
   private final Path testOutputPath = Paths.get("target").resolve("output");
   private final Path testSourcePath = Paths.get("target").resolve("source");
   
@@ -95,7 +95,9 @@ class PackagerProcessorTest {
     );
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
-    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> processor.process(packingJob, testOutputPath, progressIndicator));
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
+    ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
     ), exception.getMessage());
@@ -187,7 +189,9 @@ class PackagerProcessorTest {
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
-    processor.process(packingJob, testOutputPath, progressIndicator);
+    new PackageProcessor(
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
+    ).process();
     verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
     
     Path baseExpectedOutputPath = testOutputPath.resolve(((Dataset) packingJob).getPackageId()).resolve("data");
