@@ -16,12 +16,10 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
   private final Class<O> clazz;
   private final CRUDRepository<?>[] dependencyRepositories;
 
-  protected TranslatorExecutor(T translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories)
-      throws TranslatorValidationException {
+  protected TranslatorExecutor(T translatorDefinition, Class<O> clazz, CRUDRepository<?>... dependencyRepositories) {
     this.translatorDefinition = translatorDefinition;
     this.clazz = clazz;
     this.dependencyRepositories = dependencyRepositories;
-    TranslatorUtils.validateTranslator(translatorDefinition, clazz);
   }
 
   public Stream<ObjectWithRowConversionException<O>> translate(InputStream inputStream) throws IOException {

@@ -8,7 +8,6 @@ import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -77,8 +75,7 @@ class TranslatorExecutorTest {
     }
   }
   
-  private <O> TranslatorExecutor<O, TabularTranslator<TabularTranslationField>> createExecutor(TestTranslator translator, List<Map<String, Optional<String>>> maps, Class<O> clazz)
-      throws TranslatorValidationException {
+  private <O> TranslatorExecutor<O, TabularTranslator<TabularTranslationField>> createExecutor(TestTranslator translator, List<Map<String, Optional<String>>> maps, Class<O> clazz) {
     return new TranslatorExecutor<>(translator, clazz) {
 
       @Override
@@ -104,7 +101,7 @@ class TranslatorExecutorTest {
       Project.class,
       Platform.class
   })
-  void translateFromInputStream(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
+  void translateFromInputStream(Class<ObjectWithName> clazz) throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
@@ -136,7 +133,7 @@ class TranslatorExecutorTest {
       Project.class,
       Platform.class
   })
-  void translateFromReader(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
+  void translateFromReader(Class<ObjectWithName> clazz) throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
@@ -162,7 +159,7 @@ class TranslatorExecutorTest {
   }
 
   @Test
-  void translateSoundSource() throws IOException, TranslatorValidationException {
+  void translateSoundSource() throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
@@ -193,7 +190,7 @@ class TranslatorExecutorTest {
   }
 
   @Test
-  void translateSensor() throws IOException, TranslatorValidationException {
+  void translateSensor() throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
@@ -287,7 +284,7 @@ class TranslatorExecutorTest {
       Project.class,
       Platform.class
   })
-  void translateInvalidObject(Class<ObjectWithName> clazz) throws IOException, TranslatorValidationException {
+  void translateInvalidObject(Class<ObjectWithName> clazz) throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of("test-uuid"),
@@ -322,17 +319,17 @@ class TranslatorExecutorTest {
   }
 
   @Test
-  void translateSoundSourceInvalidObject() throws IOException, TranslatorValidationException {
+  void translateSoundSourceInvalidObject() throws IOException {
     List<Map<String, Optional<String>>> maps = List.of(
         Map.of(
             "uuid", Optional.of("test-uuid"),
-            "name", Optional.of("test-name-1"),
-            "scientificName", Optional.of("test-scientific-name-1")
+            "source", Optional.of("test-name-1"),
+            "scienceName", Optional.of("test-scientific-name-1")
         ),
         Map.of(
             "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2"),
-            "scientificName", Optional.of("test-scientific-name-2")
+            "source", Optional.of("test-name-2"),
+            "scienceName", Optional.of("test-scientific-name-2")
         )
     );
 
@@ -356,82 +353,5 @@ class TranslatorExecutorTest {
     FieldException fieldException = (FieldException) cause;
     assertEquals("invalid uuid format", fieldException.getMessage());
     assertEquals("uuid", fieldException.getProperty());
-  }
-  
-  @ParameterizedTest
-  @ValueSource(classes = {
-      Ship.class,
-      Sea.class,
-      Project.class,
-      Platform.class
-  })
-  void testInvalidTranslatorDefinition(Class<ObjectWithName> clazz) {
-    TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> createExecutor(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name-invalid", 2)
-    )), Collections.emptyList(), clazz));
-    assertEquals(String.format(
-        "Translator does not fully describe %s. Missing fields: [name]", clazz.getSimpleName()
-    ), exception.getMessage());
-  }
-
-  @Test
-  void testInvalidSoundSourceTranslatorDefinition() {
-    TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> createExecutor(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("source", 2)
-    )), Collections.emptyList(), DetectionType.class));
-    assertEquals(String.format(
-        "Translator does not fully describe %s. Missing fields: [scienceName]", DetectionType.class.getSimpleName()
-    ), exception.getMessage());
-  }
-
-  @Test
-  void testInvalidSensorTranslatorDefinition() {
-    List<TabularTranslationField> fields = new ArrayList<>(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2),
-        new TestTranslatorField("description", 3)
-    ));
-
-    TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> createExecutor(new TestTranslator(fields), Collections.emptyList(), Sensor.class).translate((InputStream) null));
-    assertEquals("Translator does not fully describe Sensor. Missing fields: [position.x, position.y, position.z, type]", exception.getMessage());
-  }
-
-  @Test
-  void testUnsupportedSensor() {
-    class TestSensor implements Sensor {
-
-      @Override
-      public Position getPosition() {
-        return Position.builder().build();
-      }
-
-      @Override
-      public String getDescription() {
-        return "description";
-      }
-
-      @Override
-      public String getName() {
-        return "name";
-      }
-
-      @Override
-      public UUID getUuid() {
-        return UUID.randomUUID();
-      }
-    }
-    
-    List<TabularTranslationField> fields = new ArrayList<>(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("name", 2),
-        new TestTranslatorField("description", 3)
-    ));
-
-    TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> createExecutor(new TestTranslator(fields), Collections.emptyList(), TestSensor.class).translate((InputStream) null));
-    assertEquals(String.format(
-        "Translation not supported for %s", TestSensor.class.getSimpleName()
-    ), exception.getMessage());
   }
 }

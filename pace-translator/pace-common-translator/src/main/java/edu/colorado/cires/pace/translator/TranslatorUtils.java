@@ -36,8 +36,6 @@ import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
-import edu.colorado.cires.pace.data.object.TabularTranslationField;
-import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
@@ -51,7 +49,6 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
-import java.lang.reflect.Field;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -60,12 +57,10 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -76,6 +71,18 @@ final class TranslatorUtils {
   public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz, int row, CRUDRepository<?>... dependencyRepositories)
       throws RowConversionException {
     RuntimeException runtimeException = new RuntimeException();
+    
+    validateTranslation(propertyMap, clazz, runtimeException);
+
+    if (runtimeException.getSuppressed().length > 0) {
+      RowConversionException exception = new RowConversionException("Translation failed", row);
+
+      for (Throwable throwable : runtimeException.getSuppressed()) {
+        exception.addSuppressed(throwable);
+      }
+
+      throw exception;
+    }
     
     O object;
     if (clazz.isAssignableFrom(Ship.class)) {
@@ -220,92 +227,71 @@ final class TranslatorUtils {
     
     return object;
   }
-
-  public static void validateTranslator(TabularTranslator<? extends TabularTranslationField> translator, Class<?> clazz) throws TranslatorValidationException {
-    Set<String> translatorFields = translator.getFields().stream()
-        .map(TabularTranslationField::getPropertyName)
-        .collect(Collectors.toSet());
+  
+  private static void validateTranslation(Map<String, Optional<String>> propertyMap, Class<?> clazz, RuntimeException runtimeException) {
+    List<String> fieldNames = switch (clazz.getSimpleName()) {
+      case "Sensor" -> {
+        if (!propertyMap.containsKey("type")) {
+          runtimeException.addSuppressed(new TranslatorValidationException(
+              "Translator missing required field 'type'"
+          ));
+          yield null;
+        }
+        SensorType sensorType = getSensorType(propertyMap, runtimeException);
+        if (sensorType == null) {
+          yield null;
+        }
+        yield FieldNameFactory.getSensorDeclaredFields(sensorType);
+      }
+      case "Package" -> {
+        boolean datasetTypeDefined = propertyMap.containsKey("datasetType");
+        if (!datasetTypeDefined) {
+          runtimeException.addSuppressed(new TranslatorValidationException(
+              "Translator missing required field 'datasetType'"
+          ));
+        }
+        boolean locationTypeDefined = propertyMap.containsKey("locationType");
+        if (!locationTypeDefined) {
+          runtimeException.addSuppressed(new TranslatorValidationException(
+              "Translator missing required field 'locationType'"
+          ));
+        }
+        
+        if (!locationTypeDefined || !datasetTypeDefined) {
+          yield null;
+        }
+        
+        DatasetType datasetType = getPropertyAsDatasetType(propertyMap, "datasetType", runtimeException);
+        LocationType locationType = getPropertyAsLocationType(propertyMap, "locationType", runtimeException);
+        if (datasetType == null || locationType == null) {
+          yield null;
+        }
+        
+        yield FieldNameFactory.getDatasetDeclaredFields(datasetType, locationType);
+      }
+      case "Ship", "Sea", "Project", "Platform", "DetectionType", "FileType", "Person", "Organization", "Instrument" -> FieldNameFactory.getDefaultDeclaredFields(clazz);
+      default -> null;
+    };
     
-    if (clazz.isAssignableFrom(Ship.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Ship.class);
-    } else if (clazz.isAssignableFrom(Sea.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Sea.class);
-    } else if (clazz.isAssignableFrom(Project.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Project.class);
-    } else if (clazz.isAssignableFrom(Platform.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Platform.class);
-    } else if (clazz.isAssignableFrom(DetectionType.class)) {
-      validateTranslatorWithFlatFields(translatorFields, DetectionType.class);
-    } else if (clazz.isAssignableFrom(Sensor.class)) {
-      validateSensorTranslator(translatorFields);
-    } else if (clazz.isAssignableFrom(Instrument.class)) {
-      validateInstrumentTranslator(translator);
-    } else if (clazz.isAssignableFrom(FileType.class)) {
-      validateTranslatorWithFlatFields(translatorFields, FileType.class);
-    } else if (clazz.isAssignableFrom(Package.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Package.class);
-    } else if (clazz.isAssignableFrom(Person.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Person.class);
-    } else if (clazz.isAssignableFrom(Organization.class)) {
-      validateTranslatorWithFlatFields(translatorFields, Organization.class);
-    } else {
-      throw new TranslatorValidationException(String.format(
-          "Translation not supported for %s", clazz.getSimpleName()
-      ));
+    if (fieldNames == null) {
+      return;
     }
-  }
-  
-  private static void validateInstrumentTranslator(TabularTranslator<? extends TabularTranslationField> translator) throws TranslatorValidationException {
-    Set<String> baseRequiredFields = new HashSet<>(Set.of(
-        "uuid", "name", "fileTypes" 
-    ));
     
-    Set<String> fieldNames = translator.getFields().stream()
-        .map(TabularTranslationField::getPropertyName)
-        .collect(Collectors.toSet());
-
-    Set<String> missingFields = baseRequiredFields.stream()
-        .filter(v -> !fieldNames.contains(v))
-        .collect(Collectors.toSet());
-
-    if (!missingFields.isEmpty()) {
-      throw new TranslatorValidationException(String.format(
-          "Translator does not fully describe %s. Missing fields: %s", Instrument.class.getSimpleName(), missingFields
-      ));
-    }
-  }
-  
-  private static void validateSensorTranslator(Set<String> propertyNames) throws TranslatorValidationException {
-    Set<String> baseRequiredFields = new HashSet<>(Set.of(
-        "uuid", "name", "description", "position.x", "position.y", "position.z", "type"
-    ));
-
-    Set<String> missingFields = baseRequiredFields.stream()
-        .filter(v -> !propertyNames.contains(v))
-        .collect(Collectors.toSet());
+    List<String> missingProperties = fieldNames.stream()
+        .filter(n -> !propertyMap.containsKey(n))
+        .toList();
     
-    if (!missingFields.isEmpty()) {
-      throw new TranslatorValidationException(String.format(
-          "Translator does not fully describe %s. Missing fields: %s", Sensor.class.getSimpleName(), missingFields
-      ));
+    if (missingProperties.isEmpty()) {
+      return;
     }
+    
+    missingProperties.forEach(
+        p -> runtimeException.addSuppressed(new TranslatorValidationException(
+            String.format("Translator missing required field '%s'", p)
+        ))
+    );
   }
-  
-  private static void validateTranslatorWithFlatFields(Set<String> propertyNames, Class<?> clazz) throws TranslatorValidationException {
-    Set<String> missingFieldNames = Arrays.stream(clazz.getDeclaredFields())
-        .map(Field::getName)
-        .filter(name -> !propertyNames.contains(name))
-        .collect(Collectors.toSet());
 
-    if (!missingFieldNames.isEmpty()) {
-      throw new TranslatorValidationException(
-          String.format(
-              "Translator does not fully describe %s. Missing fields: %s", clazz.getSimpleName(), missingFieldNames
-          )
-      );
-    }
-  }
-  
   private static Dataset packingJobFromMap(
       Map<String, Optional<String>> propertyMap,
       ProjectRepository projectRepository,
@@ -319,6 +305,8 @@ final class TranslatorUtils {
       ShipRepository shipRepository,
       RuntimeException runtimeException
   ) {
+    
+    
     Path temperaturePath = getPropertyAsPath("temperaturePath", propertyMap, runtimeException);
     Path documentsPath = getPropertyAsPath("documentsPath", propertyMap, runtimeException);
     Path otherPath = getPropertyAsPath("otherPath", propertyMap, runtimeException);
@@ -962,7 +950,49 @@ final class TranslatorUtils {
       return null;
     }
   }
-  
+
+  private static DatasetType getPropertyAsDatasetType(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
+    String propertyStringValue = getProperty(map, property);
+
+    if (propertyStringValue == null) {
+      return null;
+    }
+
+    try {
+      return DatasetType.fromName(propertyStringValue);
+    } catch (IllegalArgumentException e) {
+      runtimeException.addSuppressed(
+          new FieldException(property, String.format(
+              "Invalid dataset type. Was not one of %s", Arrays.stream(DatasetType.values())
+                  .map(DatasetType::getName)
+                  .collect(Collectors.joining(", "))
+          ))
+      );
+      return null;
+    }
+  }
+
+  private static LocationType getPropertyAsLocationType(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
+    String propertyStringValue = getProperty(map, property);
+
+    if (propertyStringValue == null) {
+      return null;
+    }
+
+    try {
+      return LocationType.fromName(propertyStringValue);
+    } catch (IllegalArgumentException e) {
+      runtimeException.addSuppressed(
+          new FieldException(property, String.format(
+              "Invalid location type. Was not one of %s", Arrays.stream(LocationType.values())
+                  .map(LocationType::getName)
+                  .collect(Collectors.joining(", "))
+          ))
+      );
+      return null;
+    }
+  }
+
   private static LocalDateTime getPropertyAsDateTime(Map<String, Optional<String>> propertyMap, String property, RuntimeException runtimeException) {
     String propertyStringValue = getProperty(propertyMap, property);
     

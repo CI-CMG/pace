@@ -35,8 +35,8 @@ import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
-import edu.colorado.cires.pace.data.object.TabularTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.InstrumentRepository;
@@ -48,81 +48,216 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
-import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslator;
-import edu.colorado.cires.pace.translator.TranslatorExecutorTest.TestTranslatorField;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class TranslatorUtilsTest {
   
-  @Test
-  void testValidatePersonTranslator() {
-    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 0),
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("organization", 2),
-        new TestTranslatorField("position", 3),
-        new TestTranslatorField("street", 4),
-        new TestTranslatorField("city", 5),
-        new TestTranslatorField("state", 6),
-        new TestTranslatorField("zip", 7),
-        new TestTranslatorField("country", 8),
-        new TestTranslatorField("email", 9),
-        new TestTranslatorField("phone", 10),
-        new TestTranslatorField("orcid", 11)
-    )), Person.class));
+  @ParameterizedTest
+  @ValueSource(classes = {
+      Ship.class,
+      Sea.class,
+      Project.class,
+      Platform.class,
+      DetectionType.class,
+      FileType.class,
+      Person.class,
+      Organization.class,
+      Instrument.class,
+      
+  })
+  void testValidateTranslators(Class<?> clazz) {
+    List<String> expectedFieldNames = FieldNameFactory.getDefaultDeclaredFields(clazz);
+    Map<String, Optional<String>> propertyMap = expectedFieldNames.stream().collect(Collectors.toMap(
+        n -> n,
+        n -> Optional.of("")
+    ));
+
+    CRUDRepository<?>[] dependencyRepositories;
+    if (clazz.getSimpleName().equals("Instrument")) {
+      dependencyRepositories = new CRUDRepository[]{mock(FileTypeRepository.class)};
+    } else {
+      dependencyRepositories = new CRUDRepository[0];
+    }
     
-    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 0),
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("position", 3),
-        new TestTranslatorField("street", 4),
-        new TestTranslatorField("city", 5),
-        new TestTranslatorField("state", 6),
-        new TestTranslatorField("zip", 7),
-        new TestTranslatorField("country", 8),
-        new TestTranslatorField("email", 9),
-        new TestTranslatorField("phone", 10),
-        new TestTranslatorField("orcid", 11)
-    )), Person.class));
-    assertEquals("Translator does not fully describe Person. Missing fields: [organization]", exception.getMessage());
+    assertDoesNotThrow(() -> TranslatorUtils.convertMapToObject(
+        propertyMap, clazz, 0, dependencyRepositories
+    ));
+
+    String removedFieldName = expectedFieldNames.get(expectedFieldNames.size() - 1);
+    propertyMap.remove(removedFieldName);
+    
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, clazz, 0, dependencyRepositories
+    ));
+    
+    assertEquals("Translation failed", exception.getMessage());
+    
+    assertEquals(1, exception.getSuppressed().length);
+    Throwable suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
+    
   }
+  
+  @ParameterizedTest
+  @EnumSource(SensorType.class)
+  void testValidateSensorTranslator(SensorType sensorType) {
+    List<String> expectedFieldNames = FieldNameFactory.getSensorDeclaredFields(sensorType);
+    Map<String, Optional<String>> propertyMap = expectedFieldNames.stream().collect(Collectors.toMap(
+        n -> n,
+        n -> n.equals("type") ? Optional.of(sensorType.name()) : Optional.of("")
+    ));
 
-  @Test
-  void testValidateOrganizationTranslator() {
-    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 0),
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("street", 4),
-        new TestTranslatorField("city", 5),
-        new TestTranslatorField("state", 6),
-        new TestTranslatorField("zip", 7),
-        new TestTranslatorField("country", 8),
-        new TestTranslatorField("email", 9),
-        new TestTranslatorField("phone", 10)
-    )), Organization.class));
 
-    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 0),
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("city", 5),
-        new TestTranslatorField("state", 6),
-        new TestTranslatorField("zip", 7),
-        new TestTranslatorField("country", 8),
-        new TestTranslatorField("email", 9),
-        new TestTranslatorField("phone", 10)
-    )), Organization.class));
-    assertEquals("Translator does not fully describe Organization. Missing fields: [street]", exception.getMessage());
+    assertDoesNotThrow(() -> TranslatorUtils.convertMapToObject(
+        propertyMap, Sensor.class, 0
+    ));
+
+    String removedFieldName = expectedFieldNames.get(expectedFieldNames.size() - 1);
+    propertyMap.remove(removedFieldName);
+
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Sensor.class, 0
+    ));
+
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    Throwable suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
+
+    propertyMap.remove("type");
+    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Sensor.class, 0
+    ));
+
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals("Translator missing required field 'type'", translatorValidationException.getMessage());
+
+    propertyMap.put("type", Optional.of("test-type"));
+    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Sensor.class, 0
+    ));
+
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(FieldException.class, suppressed);
+    FieldException fieldException = (FieldException) suppressed;
+    assertEquals("Invalid sensor type. Was not one of audio, depth, other", fieldException.getMessage());
+  }
+  
+  @ParameterizedTest
+  @CsvSource(value = {
+      "SOUND_CLIPS,STATIONARY_MARINE",
+      "AUDIO,STATIONARY_MARINE",
+      "CPOD,STATIONARY_MARINE",
+      "DETECTIONS,STATIONARY_MARINE",
+      "SOUND_LEVEL_METRICS,STATIONARY_MARINE",
+      "SOUND_PROPAGATION_MODELS,STATIONARY_MARINE",
+      "SOUND_PROPAGATION_MODELS,MULTIPOINT_STATIONARY_MARINE",
+      "SOUND_PROPAGATION_MODELS,MOBILE_MARINE",
+      "SOUND_PROPAGATION_MODELS,STATIONARY_TERRESTRIAL",
+  })
+  void testValidateDatasetTranslator(DatasetType datasetType, LocationType locationType) {
+    List<String> expectedFieldNames = FieldNameFactory.getDatasetDeclaredFields(datasetType, locationType);
+    Map<String, Optional<String>> propertyMap = expectedFieldNames.stream().collect(Collectors.toMap(
+        n -> n,
+        n -> {
+          if (n.equals("datasetType")) {
+            return Optional.of(datasetType.getName());
+          } else if (n.equals("locationType")) {
+            return Optional.of(locationType.getName());
+          } else {
+            return Optional.of("");
+          }
+        }
+    ));
+    
+    CRUDRepository<?>[] dependencyRepositories = new CRUDRepository[] {
+        mock(ProjectRepository.class),
+        mock(PersonRepository.class),
+        mock(OrganizationRepository.class),
+        mock(PlatformRepository.class),
+        mock(InstrumentRepository.class),
+        mock(SensorRepository.class),
+        mock(DetectionTypeRepository.class),
+        mock(SeaRepository.class),
+        mock(ShipRepository.class)
+    };
+
+
+    assertDoesNotThrow(() -> TranslatorUtils.convertMapToObject(
+        propertyMap, Package.class, 0, dependencyRepositories
+    ));
+
+    String removedFieldName = expectedFieldNames.get(expectedFieldNames.size() - 1);
+    propertyMap.remove(removedFieldName);
+
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Package.class, 0, dependencyRepositories
+    ));
+
+    assertEquals("Translation failed", exception.getMessage());
+
+    assertEquals(1, exception.getSuppressed().length);
+    Throwable suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
+
+    propertyMap.remove("datasetType");
+    propertyMap.remove("locationType");
+    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Package.class, 0, dependencyRepositories
+    ));
+    assertEquals(2, exception.getSuppressed().length);
+    suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals("Translator missing required field 'datasetType'", translatorValidationException.getMessage());
+    suppressed = exception.getSuppressed()[1];
+    assertInstanceOf(TranslatorValidationException.class, suppressed);
+    translatorValidationException = (TranslatorValidationException) suppressed;
+    assertEquals("Translator missing required field 'locationType'", translatorValidationException.getMessage());
+    
+    propertyMap.put("datasetType", Optional.of("test-datasetType"));
+    propertyMap.put("locationType", Optional.of("test-locationType"));
+    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(
+        propertyMap, Package.class, 0, dependencyRepositories
+    ));
+    assertEquals(2, exception.getSuppressed().length);
+    suppressed = exception.getSuppressed()[0];
+    assertInstanceOf(FieldException.class, suppressed);
+    FieldException fieldException = (FieldException) suppressed;
+    assertEquals("Invalid dataset type. Was not one of sound clips, audio, CPOD, detections, sound level metrics, sound propagation models", fieldException.getMessage());
+    suppressed = exception.getSuppressed()[1];
+    assertInstanceOf(FieldException.class, suppressed);
+    fieldException = (FieldException) suppressed;
+    assertEquals("Invalid location type. Was not one of stationary marine, multipoint stationary marine, mobile marine, stationary terrestrial", fieldException.getMessage());
+    
   }
   
   @Test
@@ -336,6 +471,7 @@ class TranslatorUtilsTest {
   })
   void testConvertMissingProperty(Class<? extends ObjectWithName> clazz) throws RowConversionException {
     Map<String, Optional<String>> propertyMap = Map.of(
+        "uuid", Optional.of(""),
         "name", Optional.of("test-name")
     );
 
@@ -350,7 +486,8 @@ class TranslatorUtilsTest {
   void testConvertSoundSourceMissingProperty() throws RowConversionException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of(UUID.randomUUID().toString()),
-        "source", Optional.of("test-name")
+        "source", Optional.of("test-name"),
+        "scienceName", Optional.of("")
     );
 
     DetectionType object = TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1);
@@ -371,6 +508,7 @@ class TranslatorUtilsTest {
   })
   void testConvertMissingSensorProperty(String type) throws RowConversionException {
     Map<String, Optional<String>> propertyMap = new java.util.HashMap<>(Map.of(
+        "uuid", Optional.of(""),
         "name", Optional.of("test-name"),
         "description", Optional.of("test-description"),
         "position.x", Optional.of("1.0"),
@@ -436,7 +574,8 @@ class TranslatorUtilsTest {
   void testConvertSoundSourceNullUUID() throws RowConversionException {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.empty(),
-        "source", Optional.of("test-name")
+        "source", Optional.of("test-name"),
+        "scienceName", Optional.of("")
     );
 
     DetectionType object = TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1);
@@ -528,7 +667,8 @@ class TranslatorUtilsTest {
   void testConvertSoundSourceBadUUIDAndName() {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of("test-uuid"),
-        "name", Optional.empty()
+        "source", Optional.empty(),
+        "scienceName", Optional.of("")
     );
 
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
@@ -623,7 +763,8 @@ class TranslatorUtilsTest {
   void testConvertSoundSourceBadUUID() {
     Map<String, Optional<String>> propertyMap = Map.of(
         "uuid", Optional.of("test-uuid"),
-        "name", Optional.of("test-name")
+        "source", Optional.of("test-name"),
+        "scienceName", Optional.of("")
     );
 
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
@@ -773,42 +914,30 @@ class TranslatorUtilsTest {
         return UUID.randomUUID();
       }
     }
+
+    Map<String, Optional<String>> propertyMap = FieldNameFactory.getSensorDeclaredFields(SensorType.depth).stream()
+        .collect(Collectors.toMap(
+            n -> n,
+            n -> Optional.of("")
+        ));
     
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), TestSensor.class, 1));
+    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, TestSensor.class, 1));
     assertEquals(String.format(
         "Translation not supported for %s", TestSensor.class.getSimpleName()
     ), exception.getMessage());
   }
   
   @Test
-  void testValidateInstrumentTranslatorPass() {
-    TabularTranslator<?> translator = new TestTranslator(List.of(
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("fileTypes", 2),
-        new TestTranslatorField("uuid", 3)
-    ));
-    
-    
-    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(translator, Instrument.class));
-  }
-  
-  @Test
-  void testValidateInstrumentTranslatorMissingField() {
-    TabularTranslator<?> translator = new TestTranslator(List.of(
-        new TestTranslatorField("name", 1),
-        new TestTranslatorField("fileTypes", 2)
-    ));
-    
-    TranslatorValidationException exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(translator, Instrument.class));
-    assertEquals("Translator does not fully describe Instrument. Missing fields: [uuid]", exception.getMessage());
-  }
-  
-  @Test
   void testTranslateInstrumentMissingRepository() {
-    Exception exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class, 1, mock(PersonRepository.class)));
+    Map<String, Optional<String>> propertyMap = FieldNameFactory.getDefaultDeclaredFields(Instrument.class).stream()
+        .collect(Collectors.toMap(
+            n -> n,
+            n -> Optional.of("")
+        ));
+    Exception exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Instrument.class, 1, mock(PersonRepository.class)));
     assertEquals("Instrument translation missing fileType repository", exception.getMessage());
 
-    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Collections.emptyMap(), Instrument.class, 1));
+    exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Instrument.class, 1));
     assertEquals("Instrument translation missing fileType repository", exception.getMessage());
   }
   
@@ -859,7 +988,7 @@ class TranslatorUtilsTest {
     Instrument instrument = TranslatorUtils.convertMapToObject(Map.of(
         "uuid", Optional.empty(),
         "name", Optional.of("test-name"),
-        "fileType", Optional.empty()
+        "fileTypes", Optional.empty()
     ), Instrument.class, 1, fileTypeRepository);
 
     assertNull(instrument.getUuid());
@@ -874,7 +1003,7 @@ class TranslatorUtilsTest {
     RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(Map.of(
         "uuid", Optional.of("TEST-UUID"),
         "name", Optional.of("test-name"),
-        "fileType", Optional.empty()
+        "fileTypes", Optional.empty()
     ), Instrument.class, 1, fileTypeRepository));
     
     assertEquals("Translation failed", exception.getMessage());
@@ -957,27 +1086,6 @@ class TranslatorUtilsTest {
     assertEquals(String.format(
         "failed to retrieve file type with type %s", fileType2
     ), notFoundException.getMessage());
-  }
-  
-  @Test
-  void testInvalidFileTypeTranslator() {
-    TestTranslator translator = new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 1)
-    ));
-    
-    Exception exception = assertThrows(TranslatorValidationException.class, () -> TranslatorUtils.validateTranslator(translator, FileType.class));
-    assertEquals("Translator does not fully describe FileType. Missing fields: [comment, type]", exception.getMessage());
-  }
-
-  @Test
-  void testValidFileTypeTranslator() {
-    TestTranslator translator = new TestTranslator(List.of(
-        new TestTranslatorField("uuid", 1),
-        new TestTranslatorField("type", 2),
-        new TestTranslatorField("comment", 3)
-    ));
-
-    assertDoesNotThrow(() -> TranslatorUtils.validateTranslator(translator, FileType.class));
   }
   
   @Test
@@ -1086,6 +1194,8 @@ class TranslatorUtilsTest {
     values.put("channels[1].gains[1].startTime", Optional.of(LocalDateTime.now().minusDays(201).toString()));
     values.put("channels[1].gains[1].endTime", Optional.of(LocalDateTime.now().minusDays(151).toString()));
     values.put("channels[1].gains[1].gain", Optional.of("201.0"));
+    
+    values = createDatasetMap(DatasetType.AUDIO, LocationType.MOBILE_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -1267,7 +1377,7 @@ class TranslatorUtilsTest {
   @Test
   void testTranslateCPODDataset() throws RowConversionException, NotFoundException, DatastoreException {
 
-    Map<String, Optional<String>> values = new HashMap<>(0);
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.CPOD, LocationType.MOBILE_MARINE, new HashMap<>(0));
     values.put("temperaturePath", Optional.of("temperaturePath"));
     values.put("documentsPath", Optional.of("documentsPath"));
     values.put("otherPath", Optional.of("otherPath"));
@@ -1585,6 +1695,7 @@ class TranslatorUtilsTest {
     values.put("softwareProtocolCitation", Optional.of("software-protocol-citation"));
     values.put("softwareDescription", Optional.of("software-description"));
     values.put("softwareProcessingDescription", Optional.of("software-processing-description"));
+    values = createDatasetMap(DatasetType.SOUND_CLIPS, LocationType.MOBILE_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -1751,6 +1862,7 @@ class TranslatorUtilsTest {
     values.put("sampleRate", Optional.of("3.0"));
     values.put("minFrequency", Optional.of("4.0"));
     values.put("maxFrequency", Optional.of("5.0"));
+    values = createDatasetMap(DatasetType.DETECTIONS, LocationType.STATIONARY_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -1886,7 +1998,7 @@ class TranslatorUtilsTest {
   @Test
   void testTranslateSoundLevelMetrics() throws RowConversionException, NotFoundException, DatastoreException {
 
-    Map<String, Optional<String>> values = new HashMap<>(0);
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.SOUND_LEVEL_METRICS, LocationType.STATIONARY_MARINE, new HashMap<>(0));
     values.put("temperaturePath", Optional.of("temperaturePath"));
     values.put("documentsPath", Optional.of("documentsPath"));
     values.put("otherPath", Optional.of("otherPath"));
@@ -2076,7 +2188,7 @@ class TranslatorUtilsTest {
   @Test
   void testTranslateSoundPropagationModels() throws RowConversionException, NotFoundException, DatastoreException {
 
-    Map<String, Optional<String>> values = new HashMap<>(0);
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.SOUND_PROPAGATION_MODELS, LocationType.STATIONARY_MARINE, new HashMap<>(0));
     values.put("temperaturePath", Optional.of("temperaturePath"));
     values.put("documentsPath", Optional.of("documentsPath"));
     values.put("otherPath", Optional.of("otherPath"));
@@ -2224,10 +2336,10 @@ class TranslatorUtilsTest {
   
   @Test
   void testInvalidDatasetDateTime() {
-    Map<String, Optional<String>> values = Map.of(
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.AUDIO, LocationType.MOBILE_MARINE, Map.of(
         "datasetType", Optional.of("audio"),
         "startTime", Optional.of("TEST")
-    );
+    ));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2255,10 +2367,10 @@ class TranslatorUtilsTest {
 
   @Test
   void testInvalidDatasetDate() {
-    Map<String, Optional<String>> values = Map.of(
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.AUDIO, LocationType.STATIONARY_MARINE, Map.of(
         "datasetType", Optional.of("audio"),
         "publicReleaseDate", Optional.of("TEST")
-    );
+    ));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2286,10 +2398,10 @@ class TranslatorUtilsTest {
 
   @Test
   void testInvalidDatasetInteger() {
-    Map<String, Optional<String>> values = Map.of(
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.DETECTIONS, LocationType.STATIONARY_MARINE, Map.of(
         "datasetType", Optional.of("detections"),
         "analysisEffort", Optional.of("TEST")
-    );
+    ));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2317,10 +2429,10 @@ class TranslatorUtilsTest {
 
   @Test
   void testInvalidDatasetQualityLevel() {
-    Map<String, Optional<String>> values = Map.of(
+    Map<String, Optional<String>> values = createDatasetMap(DatasetType.AUDIO, LocationType.MOBILE_MARINE, Map.of(
         "datasetType", Optional.of("audio"),
         "qualityEntries[0].qualityLevel", Optional.of("TEST")
-    );
+    ));
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2361,6 +2473,8 @@ class TranslatorUtilsTest {
     values.put("recoveryLocation.seaFloorDepth", Optional.of("7.0"));
     values.put("deploymentLocation.instrumentDepth", Optional.of("4.0"));
     values.put("recoveryLocation.instrumentDepth", Optional.of("8.0"));
+    
+    values = createDatasetMap(DatasetType.AUDIO, LocationType.STATIONARY_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2416,6 +2530,8 @@ class TranslatorUtilsTest {
     values.put("locations[1].longitude", Optional.of("6.0"));
     values.put("locations[1].seaFloorDepth", Optional.of("7.0"));
     values.put("locations[1].instrumentDepth", Optional.of("8.0"));
+    
+    values = createDatasetMap(DatasetType.AUDIO, LocationType.MULTIPOINT_STATIONARY_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2466,6 +2582,8 @@ class TranslatorUtilsTest {
     values.put("seaArea", Optional.of("sea-area"));
     values.put("vessel", Optional.of("vessel"));
     values.put("locationDerivationDescription", Optional.of("location-derivation-description"));
+    
+    values = createDatasetMap(DatasetType.AUDIO, LocationType.MOBILE_MARINE, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2513,6 +2631,8 @@ class TranslatorUtilsTest {
     values.put("longitude", Optional.of("2.0"));
     values.put("surfaceElevation", Optional.of("3.0"));
     values.put("instrumentElevation", Optional.of("4.0"));
+    
+    values = createDatasetMap(DatasetType.AUDIO, LocationType.STATIONARY_TERRESTRIAL, values);
 
     ProjectRepository projectRepository = mock(ProjectRepository.class);
     PersonRepository personRepository = mock(PersonRepository.class);
@@ -2542,6 +2662,24 @@ class TranslatorUtilsTest {
     assertEquals(values.get("longitude").orElseThrow(), stationaryTerrestrialLocation.getLongitude().toString());
     assertEquals(values.get("surfaceElevation").orElseThrow(), stationaryTerrestrialLocation.getSurfaceElevation().toString());
     assertEquals(values.get("instrumentElevation").orElseThrow(), stationaryTerrestrialLocation.getInstrumentElevation().toString());
+  }
+  
+  private Map<String, Optional<String>> createDatasetMap(DatasetType datasetType, LocationType locationType, Map<String, Optional<String>> additionalProperties) {
+    Map<String, Optional<String>> values = FieldNameFactory.getDatasetDeclaredFields(datasetType, locationType).stream()
+        .collect(Collectors.toMap(
+            n -> n,
+            n -> {
+              if (n.equals("datasetType")) {
+                return Optional.of(datasetType.getName());
+              } else if (n.equals("locationType")) {
+                return Optional.of(locationType.getName());
+              } else {
+                return Optional.of("");
+              }
+            }
+        ));
+    values.putAll(additionalProperties);
+    return values;
   }
 
 }
