@@ -3512,3 +3512,5 @@ build/
 /pace-data/node_modules/yn/package.json
 /pace-data/node_modules/yn/readme.md
 /pace-data/node_modules/.package-lock.json
+/pace-cli/dependency-reduced-pom.xml
+/pace-gui/dependency-reduced-pom.xml

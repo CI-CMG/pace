@@ -49,9 +49,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.github.weisj</groupId>
-      <artifactId>darklaf-core</artifactId>
-      <version>3.0.2</version>
+      <groupId>com.formdev</groupId>
+      <artifactId>flatlaf</artifactId>
+      <version>3.4.1</version>
     </dependency>
   </dependencies>
 
@@ -71,25 +71,20 @@
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>edu.colorado.cires.pace.gui.Application</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>edu.colorado.cires.pace.gui.Application</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
       </plugin>

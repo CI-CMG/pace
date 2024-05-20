@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.IntelliJTheme;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.awt.Font;
 import javax.swing.JFrame;
@@ -12,8 +11,8 @@ import javax.swing.plaf.FontUIResource;
 public class Application {
   
   public static void main(String[] args) {
-    LafManager.install(new IntelliJTheme());
-
+    FlatIntelliJLaf.setup();
+    
     ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
 
     java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();

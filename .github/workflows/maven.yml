@@ -29,19 +29,26 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean package -Pdep-check -Pcoverage
       - id: version
-        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
       - name: Upload CLI Jar
         uses: actions/upload-artifact@v4
         with:
           name: cli-jar
-          path: "pace-cli/target/*-jar-with-dependencies.jar"
+          path: "pace-cli/target/pace-cli-${{ env.version }}.jar"
       - name: Upload GUI Jar
         uses: actions/upload-artifact@v4
         with:
           name: gui-jar
-          path: "pace-gui/target/*-jar-with-dependencies.jar"
+          path: "pace-gui/target/pace-gui-${{ env.version }}.jar"
+      - name: Upload build resources
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-resources
+          path: build-resources
           
-  package-osx:
+  package-cli-osx:
     needs: build
     strategy:
       matrix: 
@@ -62,23 +69,148 @@ jobs:
         with:
           name: cli-jar
           path: jars
-      - name: Package jar as app-image
+      - name: Download Build Resources
+        uses: actions/download-artifact@v4
+        with:
+          name: build-resources
+      - name: Create signing keychain
+        run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: sign-keychain
+          MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          APP_CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
+          APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
+          INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
+      - name: Package jar as pkg
         run: >
           jpackage
-          --type app-image
+          --type pkg
           --verbose
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
           -i jars
           --main-class edu.colorado.cires.pace.cli.Application
-          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
-      - name: Upload app image
+          --main-jar pace-cli-${{ needs.build.outputs.version }}.jar
+          --mac-package-identifier edu.colorado.cires.pace.cli.Application
+          --mac-sign 
+          --mac-signing-key-user-name "$MAC_SIGNING_KEY_USER_NAME"
+          --mac-package-signing-prefix 'edu.colorado.cires.pace.cli.'
+          --mac-signing-keychain "$MY_KEYCHAIN"
+        env:
+          MY_KEYCHAIN: sign-keychain
+          MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
+      - name: Cleanup signing keychain
+        run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: sign-keychain
+      - name: Store notarization credentials
+        run: >
+          xcrun notarytool store-credentials notarytool-password
+          --apple-id $APPLE_NOTARIZATION_ID
+          --team-id $APPLE_NOTARIZATION_TEAM_ID
+          --password $APPLE_NOTARIZATION_PASSWORD
+        env:
+          APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
+          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+      - name: Notarize artifact
+        run: >
+          xcrun notarytool submit *.pkg
+          --wait 
+          --keychain-profile notarytool-password > submission.txt 2>&1 &&
+          export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
+          xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
+      - name: Staple notarization ticket to artifact
+        run: xcrun stapler staple *.pkg
+      - name: Upload pkg
         uses: actions/upload-artifact@v4
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
-          path: "*.app"
-  
-  package-linux:
+          path: "*.pkg"
+          
+  package-gui-osx:
+    needs: build
+    strategy:
+      matrix:
+        os: [ macos-14, macos-11 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+          echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-jar
+          path: jars
+      - name: Download Build Resources
+        uses: actions/download-artifact@v4
+        with:
+          name: build-resources
+      - name: Create signing keychain
+        run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: sign-keychain
+          MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          APP_CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
+          APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
+          INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
+      - name: Package jar as dmg installer
+        run: >
+          jpackage
+          --verbose
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace-gui'
+          -i jars
+          --main-class edu.colorado.cires.pace.gui.Application
+          --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
+          --about-url https://github.com/CI-CMG/pace
+          --mac-package-identifier edu.colorado.cires.pace.gui.Application
+          --mac-sign 
+          --mac-signing-key-user-name "$MAC_SIGNING_KEY_USER_NAME"
+          --mac-package-signing-prefix 'edu.colorado.cires.pace.gui.'
+          --mac-signing-keychain "$MY_KEYCHAIN"
+        env:
+          MY_KEYCHAIN: sign-keychain
+          MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
+      - name: Cleanup signing keychain
+        run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: sign-keychain
+      - name: Store notarization credentials
+        run: >
+          xcrun notarytool store-credentials notarytool-password
+          --apple-id $APPLE_NOTARIZATION_ID
+          --team-id $APPLE_NOTARIZATION_TEAM_ID
+          --password $APPLE_NOTARIZATION_PASSWORD
+        env:
+          APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
+          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+      - name: Notarize artifact
+        run: >
+          xcrun notarytool submit *.dmg
+          --wait 
+          --keychain-profile notarytool-password > submission.txt 2>&1 &&
+          export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
+          xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
+      - name: Staple notarization ticket to artifact
+        run: xcrun stapler staple *.dmg
+      - name: Upload dmg
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-gui-${{ env.os }}-${{ env.arch }}
+          path: "*.dmg"
+    
+  package-cli-linux:
     needs: build
     strategy:
       matrix:
@@ -108,14 +240,14 @@ jobs:
           --name 'pace-cli'
           -i jars
           --main-class edu.colorado.cires.pace.cli.Application
-          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
+          --main-jar pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Upload app image
         uses: actions/upload-artifact@v4
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: "pace-cli"
           
-  package-windows:
+  package-cli-windows:
     needs: build
     strategy:
       matrix:
@@ -146,7 +278,7 @@ jobs:
           -i jars
           --dest application
           --main-class edu.colorado.cires.pace.cli.Application
-          --main-jar pace-cli-${{ needs.build.outputs.version }}-jar-with-dependencies.jar
+          --main-jar pace-cli-${{ needs.build.outputs.version }}.jar
       - name: Upload app image
         uses: actions/upload-artifact@v4
         with:
@@ -156,16 +288,19 @@ jobs:
   release:
     needs: 
       - build
-      - package-osx
-      - package-linux
-      - package-windows
+      - package-cli-osx
+      - package-gui-osx
+      - package-cli-linux
+      - package-cli-windows
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
       - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
-      - run: zip -r release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-ARM64 
-      - run: zip -r release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.zip pace-cli-macOS-X64
+      - run: cp pace-cli-macOS-ARM64/*.pkg release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.pkg
+      - run: cp pace-cli-macOS-X64/*.pkg release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.pkg
+      - run: cp pace-gui-macOS-ARM64/*.dmg release/pace-gui-macOS-ARM64-${{ needs.build.outputs.version }}.dmg
+      - run: cp pace-gui-macOS-X64/*.dmg release/pace-gui-macOS-X64-${{ needs.build.outputs.version }}.dmg
       - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
       - run: cp cli-jar/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
       - run: cp gui-jar/* release/pace-gui-${{ needs.build.outputs.version }}-exe.jar
