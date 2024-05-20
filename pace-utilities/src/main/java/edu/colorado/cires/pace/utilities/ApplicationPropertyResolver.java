@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class ApplicationPropertyResolver {
 
+  private static final String APPLICATION_BASE_DIR = ".pace";
+
   public <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
     Properties properties = new Properties();
     try (InputStream inputStream = getClass().getResourceAsStream("/application.properties")) {
@@ -34,7 +36,7 @@ public final class ApplicationPropertyResolver {
     if (StringUtils.isBlank(dirString)) {
       return Path.of(
           System.getProperty("user.home")
-      ).resolve(".pace-cli").resolve("data").toAbsolutePath();
+      ).resolve(APPLICATION_BASE_DIR).resolve("data").toAbsolutePath();
     }
 
     return Paths.get(dirString).toAbsolutePath();
@@ -45,7 +47,7 @@ public final class ApplicationPropertyResolver {
     if (StringUtils.isBlank(dirString)) {
       return Path.of(
           System.getProperty("user.home")
-      ).resolve(".pace-cli").resolve("output").toAbsolutePath();
+      ).resolve(APPLICATION_BASE_DIR).resolve("output").toAbsolutePath();
     }
 
     return Paths.get(dirString).toAbsolutePath();
