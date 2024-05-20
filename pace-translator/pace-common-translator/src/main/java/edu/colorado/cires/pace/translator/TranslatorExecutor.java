@@ -47,6 +47,8 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
   
   protected abstract Stream<MapWithRowNumber> getPropertyStream(Reader reader, T translatorDefinition) throws IOException;
   
-  public record MapWithRowNumber(Map<String, Optional<String>> map, Integer row) {}
+  public record MapWithRowNumber(Map<String, ValueWithColumnNumber> map, Integer row) {}
+  
+  public record ValueWithColumnNumber(Optional<String> value, Integer column) {}
 
 }

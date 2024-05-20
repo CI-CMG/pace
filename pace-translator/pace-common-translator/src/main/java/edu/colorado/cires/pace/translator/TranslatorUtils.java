@@ -49,6 +49,7 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
+import edu.colorado.cires.pace.translator.TranslatorExecutor.ValueWithColumnNumber;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -68,7 +69,7 @@ import org.apache.commons.lang3.StringUtils;
 
 final class TranslatorUtils {
 
-  public static <O> O convertMapToObject(Map<String, Optional<String>> propertyMap, Class<O> clazz, int row, CRUDRepository<?>... dependencyRepositories)
+  public static <O> O convertMapToObject(Map<String, ValueWithColumnNumber> propertyMap, Class<O> clazz, int row, CRUDRepository<?>... dependencyRepositories)
       throws RowConversionException {
     RuntimeException runtimeException = new RuntimeException();
     
@@ -109,9 +110,9 @@ final class TranslatorUtils {
       object = (O) sensorFromMap(propertyMap, runtimeException);
     } else if (clazz.isAssignableFrom(DetectionType.class)) {
       object = (O) DetectionType.builder()
-          .uuid(uuidFromString(getProperty(propertyMap, "uuid"), runtimeException))
-          .source(getProperty(propertyMap, "source"))
-          .scienceName(getProperty(propertyMap, "scienceName"))
+          .uuid(getPropertyAsUUID(propertyMap, "uuid", runtimeException))
+          .source(getPropertyAsString(propertyMap, "source"))
+          .scienceName(getPropertyAsString(propertyMap, "scienceName"))
           .build();
     } else if (clazz.isAssignableFrom(FileType.class)) {
       object = (O) fileTypeFromMap(propertyMap, runtimeException);
@@ -186,28 +187,28 @@ final class TranslatorUtils {
       object = (O) objectWithNameFromMap(propertyMap, runtimeException, (p) -> Person.builder()
           .uuid(p.getUuid())
           .name(p.getName())
-          .organization(getProperty(propertyMap, "organization"))
-          .position(getProperty(propertyMap, "position"))
-          .street(getProperty(propertyMap, "street"))
-          .city(getProperty(propertyMap, "city"))
-          .state(getProperty(propertyMap, "state"))
-          .zip(getProperty(propertyMap, "zip"))
-          .country(getProperty(propertyMap, "country"))
-          .email(getProperty(propertyMap, "email"))
-          .phone(getProperty(propertyMap, "phone"))
-          .orcid(getProperty(propertyMap, "orcid"))
+          .organization(getPropertyAsString(propertyMap, "organization"))
+          .position(getPropertyAsString(propertyMap, "position"))
+          .street(getPropertyAsString(propertyMap, "street"))
+          .city(getPropertyAsString(propertyMap, "city"))
+          .state(getPropertyAsString(propertyMap, "state"))
+          .zip(getPropertyAsString(propertyMap, "zip"))
+          .country(getPropertyAsString(propertyMap, "country"))
+          .email(getPropertyAsString(propertyMap, "email"))
+          .phone(getPropertyAsString(propertyMap, "phone"))
+          .orcid(getPropertyAsString(propertyMap, "orcid"))
           .build());
     } else if (clazz.isAssignableFrom(Organization.class)) {
       object = (O) objectWithNameFromMap(propertyMap, runtimeException, (o) -> Organization.builder()
           .uuid(o.getUuid())
           .name(o.getName())
-          .street(getProperty(propertyMap, "street"))
-          .city(getProperty(propertyMap, "city"))
-          .state(getProperty(propertyMap, "state"))
-          .zip(getProperty(propertyMap, "zip"))
-          .country(getProperty(propertyMap, "country"))
-          .email(getProperty(propertyMap, "email"))
-          .phone(getProperty(propertyMap, "phone"))
+          .street(getPropertyAsString(propertyMap, "street"))
+          .city(getPropertyAsString(propertyMap, "city"))
+          .state(getPropertyAsString(propertyMap, "state"))
+          .zip(getPropertyAsString(propertyMap, "zip"))
+          .country(getPropertyAsString(propertyMap, "country"))
+          .email(getPropertyAsString(propertyMap, "email"))
+          .phone(getPropertyAsString(propertyMap, "phone"))
           .build());
     } else {
       throw new RowConversionException(String.format(
@@ -228,7 +229,7 @@ final class TranslatorUtils {
     return object;
   }
   
-  private static void validateTranslation(Map<String, Optional<String>> propertyMap, Class<?> clazz, RuntimeException runtimeException) {
+  private static void validateTranslation(Map<String, ValueWithColumnNumber> propertyMap, Class<?> clazz, RuntimeException runtimeException) {
     List<String> fieldNames = switch (clazz.getSimpleName()) {
       case "Sensor" -> {
         if (!propertyMap.containsKey("type")) {
@@ -293,7 +294,7 @@ final class TranslatorUtils {
   }
 
   private static Dataset packingJobFromMap(
-      Map<String, Optional<String>> propertyMap,
+      Map<String, ValueWithColumnNumber> propertyMap,
       ProjectRepository projectRepository,
       PersonRepository personRepository,
       OrganizationRepository organizationRepository,
@@ -307,16 +308,16 @@ final class TranslatorUtils {
   ) {
     
     
-    Path temperaturePath = getPropertyAsPath("temperaturePath", propertyMap, runtimeException);
-    Path documentsPath = getPropertyAsPath("documentsPath", propertyMap, runtimeException);
-    Path otherPath = getPropertyAsPath("otherPath", propertyMap, runtimeException);
-    Path navigationPath = getPropertyAsPath("navigationPath", propertyMap, runtimeException);
-    Path calibrationDocumentsPath = getPropertyAsPath("calibrationDocumentsPath", propertyMap, runtimeException);
-    Path sourcePath = getPropertyAsPath("sourcePath", propertyMap, runtimeException);
-    Path biologicalPath = getPropertyAsPath("biologicalPath", propertyMap, runtimeException);
+    Path temperaturePath = getPropertyAsPath(propertyMap, "temperaturePath", runtimeException);
+    Path documentsPath = getPropertyAsPath(propertyMap, "documentsPath", runtimeException);
+    Path otherPath = getPropertyAsPath(propertyMap, "otherPath", runtimeException);
+    Path navigationPath = getPropertyAsPath(propertyMap, "navigationPath", runtimeException);
+    Path calibrationDocumentsPath = getPropertyAsPath(propertyMap, "calibrationDocumentsPath", runtimeException);
+    Path sourcePath = getPropertyAsPath(propertyMap, "sourcePath", runtimeException);
+    Path biologicalPath = getPropertyAsPath(propertyMap, "biologicalPath", runtimeException);
     
-    String siteOrCruiseName = getProperty(propertyMap, "siteOrCruiseName");
-    String deploymentId = getProperty(propertyMap, "deploymentId");
+    String siteOrCruiseName = getPropertyAsString(propertyMap, "siteOrCruiseName");
+    String deploymentId = getPropertyAsString(propertyMap, "deploymentId");
     LocalDate publicReleaseDate = getPropertyAsDate(propertyMap, "publicReleaseDate", runtimeException);
     List<Project> projects = getPropertyAsDelimitedResources(
         "projects",
@@ -366,19 +367,21 @@ final class TranslatorUtils {
     LocalDateTime endTime = getPropertyAsDateTime(propertyMap, "endTime", runtimeException);
     LocalDate preDeploymentCalibrationDate = getPropertyAsDate(propertyMap, "preDeploymentCalibrationDate", runtimeException);
     LocalDate postDeploymentCalibrationDate = getPropertyAsDate(propertyMap, "postDeploymentCalibrationDate", runtimeException);
-    String calibrationDescription = getProperty(propertyMap, "calibrationDescription");
-    String deploymentTitle = getProperty(propertyMap, "deploymentTitle");
-    String deploymentPurpose = getProperty(propertyMap, "deploymentPurpose");
-    String deploymentDescription = getProperty(propertyMap, "deploymentDescription");
-    String alternateSiteName = getProperty(propertyMap, "alternateSiteName");
-    String alternateDeploymentName = getProperty(propertyMap, "alternateDeploymentName");
-    String softwareNames = getProperty(propertyMap, "softwareNames");
-    String softwareVersions = getProperty(propertyMap, "softwareVersions");
-    String softwareProtocolCitation = getProperty(propertyMap, "softwareProtocolCitation");
-    String softwareDescription = getProperty(propertyMap, "softwareDescription");
-    String softwareProcessingDescription = getProperty(propertyMap, "softwareProcessingDescription");
-    String datasetType = getProperty(propertyMap, "datasetType");
-    String instrumentId = getProperty(propertyMap, "instrumentId");
+    String calibrationDescription = getPropertyAsString(propertyMap, "calibrationDescription");
+    String deploymentTitle = getPropertyAsString(propertyMap, "deploymentTitle");
+    String deploymentPurpose = getPropertyAsString(propertyMap, "deploymentPurpose");
+    String deploymentDescription = getPropertyAsString(propertyMap, "deploymentDescription");
+    String alternateSiteName = getPropertyAsString(propertyMap, "alternateSiteName");
+    String alternateDeploymentName = getPropertyAsString(propertyMap, "alternateDeploymentName");
+    String softwareNames = getPropertyAsString(propertyMap, "softwareNames");
+    String softwareVersions = getPropertyAsString(propertyMap, "softwareVersions");
+    String softwareProtocolCitation = getPropertyAsString(propertyMap, "softwareProtocolCitation");
+    String softwareDescription = getPropertyAsString(propertyMap, "softwareDescription");
+    String softwareProcessingDescription = getPropertyAsString(propertyMap, "softwareProcessingDescription");
+    String datasetTypePropertyName = "datasetType";
+    ValueWithColumnNumber datasetTypeCell = getProperty(propertyMap, datasetTypePropertyName);
+    DatasetType datasetType = getPropertyAsDatasetType(propertyMap, datasetTypePropertyName, runtimeException);
+    String instrumentId = getPropertyAsString(propertyMap, "instrumentId");
     Float hydrophoneSensitivity = getPropertyAsFloat(propertyMap, "hydrophoneSensitivity", runtimeException);
     Float frequencyRange = getPropertyAsFloat(propertyMap, "frequencyRange", runtimeException);
     Float gain = getPropertyAsFloat(propertyMap, "gain", runtimeException);
@@ -388,12 +391,12 @@ final class TranslatorUtils {
         personRepository,
         runtimeException
     );
-    String qualityAnalysisObjectives = getProperty(propertyMap, "qualityAnalysisObjectives");
-    String qualityAnalysisMethod = getProperty(propertyMap, "qualityAnalysisMethod");
-    String qualityAssessmentDescription = getProperty(propertyMap, "qualityAssessmentDescription");
+    String qualityAnalysisObjectives = getPropertyAsString(propertyMap, "qualityAnalysisObjectives");
+    String qualityAnalysisMethod = getPropertyAsString(propertyMap, "qualityAnalysisMethod");
+    String qualityAssessmentDescription = getPropertyAsString(propertyMap, "qualityAssessmentDescription");
     LocalDateTime deploymentTime = getPropertyAsDateTime(propertyMap, "deploymentTime", runtimeException);
     LocalDateTime recoveryTime = getPropertyAsDateTime(propertyMap, "recoveryTime", runtimeException);
-    String comments = getProperty(propertyMap, "comments");
+    String comments = getPropertyAsString(propertyMap, "comments");
     List<Sensor> sensors = getPropertyAsDelimitedResources("sensors", propertyMap, sensorRepository, runtimeException);
     List<DataQualityEntry> qualityEntries = qualityEntriesFromMap(propertyMap, runtimeException);
     DetectionType detectionType = getPropertyAsResource(
@@ -414,7 +417,7 @@ final class TranslatorUtils {
     LocationDetail locationDetail = locationDetailFromMap(propertyMap, runtimeException, seaRepository, shipRepository);
 
     Dataset dataset = null;
-    if (DatasetType.SOUND_CLIPS.getName().equals(datasetType)) {
+    if (DatasetType.SOUND_CLIPS.equals(datasetType)) {
       dataset = SoundClipsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -450,7 +453,7 @@ final class TranslatorUtils {
           .softwareProcessingDescription(softwareProcessingDescription)
           .locationDetail(locationDetail)
           .build();
-    } else if (DatasetType.AUDIO.getName().equals(datasetType)) {
+    } else if (DatasetType.AUDIO.equals(datasetType)) {
       dataset = AudioPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -495,7 +498,7 @@ final class TranslatorUtils {
           .channels(channelsFromMap(propertyMap, sensorRepository, runtimeException))
           .locationDetail(locationDetail)
           .build();
-    } else if (DatasetType.CPOD.getName().equals(datasetType)) {
+    } else if (DatasetType.CPOD.equals(datasetType)) {
       dataset = CPODPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -540,7 +543,7 @@ final class TranslatorUtils {
           .channels(channelsFromMap(propertyMap, sensorRepository, runtimeException))
           .locationDetail(locationDetail)
           .build();
-    } else if (DatasetType.DETECTIONS.getName().equals(datasetType)) {
+    } else if (DatasetType.DETECTIONS.equals(datasetType)) {
       dataset = DetectionsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -587,7 +590,7 @@ final class TranslatorUtils {
           .alternateDeploymentName(alternateDeploymentName)
           .locationDetail(locationDetail)
           .build();
-    } else if (DatasetType.SOUND_LEVEL_METRICS.getName().equals(datasetType)) {
+    } else if (DatasetType.SOUND_LEVEL_METRICS.equals(datasetType)) {
       dataset = SoundLevelMetricsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -635,7 +638,7 @@ final class TranslatorUtils {
           .softwareProcessingDescription(softwareProcessingDescription)
           .locationDetail(locationDetail)
           .build();
-    } else if (DatasetType.SOUND_PROPAGATION_MODELS.getName().equals(datasetType)) {
+    } else if (DatasetType.SOUND_PROPAGATION_MODELS.equals(datasetType)) {
       dataset = SoundPropagationModelsPackage.builder()
           .temperaturePath(temperaturePath)
           .documentsPath(documentsPath)
@@ -683,16 +686,17 @@ final class TranslatorUtils {
               Arrays.stream(DatasetType.values())
                   .map(DatasetType::getName)
                   .toList()
-          )
+          ),
+          datasetTypeCell.column()
       ));
     }
 
     return dataset;
   }
   
-  private static List<DataQualityEntry> qualityEntriesFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
+  private static List<DataQualityEntry> qualityEntriesFromMap(Map<String, ValueWithColumnNumber> propertyMap, RuntimeException runtimeException) {
     
-    Map<Integer, List<Entry<String, Optional<String>>>> qcMap = propertyMap.entrySet().stream()
+    Map<Integer, List<Entry<String, ValueWithColumnNumber>>> qcMap = propertyMap.entrySet().stream()
         .filter(e -> e.getKey().matches("^qualityEntries\\[\\d]\\.(?:startTime|endTime|minFrequency|maxFrequency|qualityLevel|comments)"))
         .collect(Collectors.groupingBy(
             e -> Integer.parseInt(String.valueOf(e.getKey().split("qualityEntries\\[")[1].charAt(0)))
@@ -701,7 +705,7 @@ final class TranslatorUtils {
     List<DataQualityEntry> dataQualityEntries = new ArrayList<>(0);
     
     qcMap.forEach((key, value) -> {
-      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
       
       dataQualityEntries.add(key, DataQualityEntry.builder()
               .startTime(getPropertyAsDateTime(map, String.format(
@@ -719,7 +723,7 @@ final class TranslatorUtils {
               .qualityLevel(getQualityLevel(map, String.format(
                   "qualityEntries[%s].qualityLevel", key
               ), runtimeException))
-              .comments(getProperty(map, String.format(
+              .comments(getPropertyAsString(map, String.format(
                   "qualityEntries[%s].comments", key
               )))
           .build());
@@ -728,11 +732,11 @@ final class TranslatorUtils {
     return dataQualityEntries;
   }
   
-  private static FileType fileTypeFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
-    UUID uuid = uuidFromString(getProperty(propertyMap, "uuid"), runtimeException);
+  private static FileType fileTypeFromMap(Map<String, ValueWithColumnNumber> propertyMap, RuntimeException runtimeException) {
+    UUID uuid = getPropertyAsUUID(propertyMap, "uuid", runtimeException);
 
-    String type = getProperty(propertyMap, "type");
-    String comment = getProperty(propertyMap, "comment");
+    String type = getPropertyAsString(propertyMap, "type");
+    String comment = getPropertyAsString(propertyMap, "comment");
     
     return FileType.builder()
         .uuid(uuid)
@@ -741,10 +745,10 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static Instrument instrumentFromMap(Map<String, Optional<String>> propertyMap, FileTypeRepository fileTypeRepository, RuntimeException runtimeException) {
-    UUID uuid = uuidFromString(getProperty(propertyMap, "uuid"), runtimeException);
+  private static Instrument instrumentFromMap(Map<String, ValueWithColumnNumber> propertyMap, FileTypeRepository fileTypeRepository, RuntimeException runtimeException) {
+    UUID uuid = getPropertyAsUUID(propertyMap, "uuid", runtimeException);
 
-    String name = getProperty(propertyMap, "name");
+    String name = getPropertyAsString(propertyMap, "name");
 
     List<FileType> fileTypes = getPropertyAsDelimitedResources(
         "fileTypes",
@@ -760,11 +764,11 @@ final class TranslatorUtils {
         .build();
   }
   
-  private static Sensor sensorFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
-    UUID uuid = uuidFromString(getProperty(propertyMap, "uuid"), runtimeException);
+  private static Sensor sensorFromMap(Map<String, ValueWithColumnNumber> propertyMap, RuntimeException runtimeException) {
+    UUID uuid = getPropertyAsUUID(propertyMap, "uuid", runtimeException);
     
-    String name = getProperty(propertyMap, "name");
-    String description = getProperty(propertyMap, "description");
+    String name = getPropertyAsString(propertyMap, "name");
+    String description = getPropertyAsString(propertyMap, "description");
 
     Float x = getPropertyAsFloat(propertyMap, "position.x", runtimeException);
     Float y = getPropertyAsFloat(propertyMap, "position.y", runtimeException);
@@ -792,8 +796,8 @@ final class TranslatorUtils {
           .name(name)
           .position(position)
           .description(description)
-          .hydrophoneId(getProperty(propertyMap, "hydrophoneId"))
-          .preampId(getProperty(propertyMap, "preampId"))
+          .hydrophoneId(getPropertyAsString(propertyMap, "hydrophoneId"))
+          .preampId(getPropertyAsString(propertyMap, "preampId"))
           .build();
     } else if (SensorType.other.equals(type)) {
       sensor = OtherSensor.builder()
@@ -801,30 +805,37 @@ final class TranslatorUtils {
           .name(name)
           .position(position)
           .description(description)
-          .properties(getProperty(propertyMap, "properties"))
-          .sensorType(getProperty(propertyMap, "sensorType"))
+          .properties(getPropertyAsString(propertyMap, "properties"))
+          .sensorType(getPropertyAsString(propertyMap, "sensorType"))
           .build();
     }
     
     return sensor;
   }
 
-  private static <O extends ObjectWithName> O objectWithNameFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException, Function<ObjectWithName, O> convertFn) {
+  private static <O extends ObjectWithName> O objectWithNameFromMap(Map<String, ValueWithColumnNumber> propertyMap, RuntimeException runtimeException, Function<ObjectWithName, O> convertFn) {
     return convertFn.apply(new ObjectWithName() {
       @Override
       public String getName() {
-        return getProperty(propertyMap, "name");
+        return getPropertyAsString(propertyMap, "name");
       }
 
       @Override
       public UUID getUuid() {
-        return uuidFromString(getProperty(propertyMap, "uuid"), runtimeException);
+        return getPropertyAsUUID(propertyMap, "uuid", runtimeException);
       }
     });
   }
   
-  private static UUID uuidFromString(String uuidString, RuntimeException runtimeException) {
-    if (uuidString == null || StringUtils.isBlank(uuidString)) {
+  private static UUID getPropertyAsUUID(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber uuidCell = getProperty(map, property);
+    if (uuidCell.value().isEmpty()) {
+      return null;
+    }
+    
+    String uuidString = uuidCell.value().get();
+    
+    if (StringUtils.isBlank(uuidString)) {
       return null;
     }
     
@@ -832,36 +843,41 @@ final class TranslatorUtils {
       return UUID.fromString(uuidString);
     } catch (IllegalArgumentException e) {
       runtimeException.addSuppressed(
-          new FieldException("uuid", "invalid uuid format")
+          new FieldException("uuid", "invalid uuid format", uuidCell.column())
       );
       return null;
     }
   }
   
-  private static SensorType getSensorType(Map<String, Optional<String>> map, RuntimeException runtimeException) {
-    String typeString = getProperty(map, "type");
-    if (typeString == null || StringUtils.isBlank(typeString)) {
+  private static SensorType getSensorType(Map<String, ValueWithColumnNumber> map, RuntimeException runtimeException) {
+    ValueWithColumnNumber typeCell = getProperty(map, "type");
+    if (typeCell.value().isEmpty()) {
       return null;
     }
     
     try {
-      return SensorType.valueOf(typeString);
+      return SensorType.valueOf(typeCell.value().get());
     } catch (Exception e) {
       runtimeException.addSuppressed(
           new FieldException("type", String.format(
               "Invalid sensor type. Was not one of %s", Arrays.stream(SensorType.values())
                   .map(Enum::name)
                   .collect(Collectors.joining(", "))
-          ))
+          ), typeCell.column())
       );
       
       return null;
     }
   }
   
-  private static QualityLevel getQualityLevel(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String qualityLevelString = getProperty(map, property);
-    if (qualityLevelString == null || StringUtils.isBlank(qualityLevelString)) {
+  private static QualityLevel getQualityLevel(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber qualityLevelCell = getProperty(map, property);
+    if (qualityLevelCell.value().isEmpty()) {
+      return null;
+    }
+    
+    String qualityLevelString = qualityLevelCell.value().get();
+    if (StringUtils.isBlank(qualityLevelString)) {
       return null;
     }
     
@@ -875,190 +891,214 @@ final class TranslatorUtils {
                   "Invalid quality level. Was not one of %s", Arrays.stream(QualityLevel.values())
                       .map(QualityLevel::getName)
                       .collect(Collectors.joining(", "))
-              )
+              ),
+              qualityLevelCell.column()
           )
       );
       return null;
     }
   }
   
-  private static String getProperty(Map<String, Optional<String>> map, String property) {
-    Optional<String> value = map.get(property);
-    if (value == null) {
-      return null;
+  private static String getPropertyAsString(Map<String, ValueWithColumnNumber> map, String property) {
+    return getProperty(map, property).value().orElse(null);
+  }
+  
+  private static ValueWithColumnNumber getProperty(Map<String, ValueWithColumnNumber> map, String property) {
+    ValueWithColumnNumber valueWithColumnNumber = map.get(property);
+    if (valueWithColumnNumber == null) {
+      return new ValueWithColumnNumber(
+          Optional.empty(),
+          null
+      );
     }
+    
+    Optional<String> value = valueWithColumnNumber.value();
     
     String stringValue = value.orElse(null);
     if (stringValue != null && StringUtils.isBlank(stringValue)) {
-      return null;
+      return new ValueWithColumnNumber(
+          Optional.empty(),
+          valueWithColumnNumber.column()
+      );
     }
     
     if (stringValue == null) {
-      return null;
+      return new ValueWithColumnNumber(
+          Optional.empty(),
+          valueWithColumnNumber.column()
+      );
     }
 
-    return stringValue.trim();
+    return new ValueWithColumnNumber(
+        Optional.of(stringValue.trim()),
+        valueWithColumnNumber.column()
+    );
   }
   
-  private static Float getPropertyAsFloat(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(map, property);
+  private static Float getPropertyAsFloat(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber floatCell = getProperty(map, property);
     
-    if (propertyStringValue == null) {
+    if (floatCell.value().isEmpty()) {
       return null;
     }
     
     try {
-      return Float.parseFloat(propertyStringValue);
+      return Float.parseFloat(floatCell.value().get());
     } catch (NumberFormatException e) {
       runtimeException.addSuppressed(
-          new FieldException(property, "invalid decimal format")
+          new FieldException(property, "invalid decimal format", floatCell.column())
       );
       return null;
     }
   }
   
-  private static Integer getPropertyAsInteger(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(map, property);
+  private static Integer getPropertyAsInteger(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber integerCell = getProperty(map, property);
 
-    if (propertyStringValue == null) {
+    if (integerCell.value().isEmpty()) {
       return null;
     }
 
     try {
-      return Integer.parseInt(propertyStringValue);
+      return Integer.parseInt(integerCell.value().get());
     } catch (NumberFormatException e) {
       runtimeException.addSuppressed(
-          new FieldException(property, "invalid integer format")
+          new FieldException(property, "invalid integer format", integerCell.column())
       );
       return null;
     }
   }
   
-  private static LocalDate getPropertyAsDate(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(map, property);
+  private static LocalDate getPropertyAsDate(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber dateCell = getProperty(map, property);
     
-    if (propertyStringValue == null) {
+    if (dateCell.value().isEmpty()) {
       return null;
     }
     
     try {
-      return LocalDate.parse(propertyStringValue);
+      return LocalDate.parse(dateCell.value().get());
     } catch (DateTimeParseException e) {
       runtimeException.addSuppressed(
-          new FieldException(property, "invalid date format")
+          new FieldException(property, "invalid date format", dateCell.column())
       );
       return null;
     }
   }
 
-  private static DatasetType getPropertyAsDatasetType(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(map, property);
+  private static DatasetType getPropertyAsDatasetType(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber datasetTypeCell = getProperty(map, property);
 
-    if (propertyStringValue == null) {
+    if (datasetTypeCell.value().isEmpty()) {
       return null;
     }
 
     try {
-      return DatasetType.fromName(propertyStringValue);
+      return DatasetType.fromName(datasetTypeCell.value().get());
     } catch (IllegalArgumentException e) {
       runtimeException.addSuppressed(
           new FieldException(property, String.format(
               "Invalid dataset type. Was not one of %s", Arrays.stream(DatasetType.values())
                   .map(DatasetType::getName)
                   .collect(Collectors.joining(", "))
-          ))
+          ), datasetTypeCell.column())
       );
       return null;
     }
   }
 
-  private static LocationType getPropertyAsLocationType(Map<String, Optional<String>> map, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(map, property);
+  private static LocationType getPropertyAsLocationType(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber locationTypeCell = getProperty(map, property);
 
-    if (propertyStringValue == null) {
+    if (locationTypeCell.value().isEmpty()) {
       return null;
     }
 
     try {
-      return LocationType.fromName(propertyStringValue);
+      return LocationType.fromName(locationTypeCell.value().get());
     } catch (IllegalArgumentException e) {
       runtimeException.addSuppressed(
           new FieldException(property, String.format(
               "Invalid location type. Was not one of %s", Arrays.stream(LocationType.values())
                   .map(LocationType::getName)
                   .collect(Collectors.joining(", "))
-          ))
+          ), locationTypeCell.column())
       );
       return null;
     }
   }
 
-  private static LocalDateTime getPropertyAsDateTime(Map<String, Optional<String>> propertyMap, String property, RuntimeException runtimeException) {
-    String propertyStringValue = getProperty(propertyMap, property);
+  private static LocalDateTime getPropertyAsDateTime(Map<String, ValueWithColumnNumber> propertyMap, String property, RuntimeException runtimeException) {
+    ValueWithColumnNumber dateTimeCell = getProperty(propertyMap, property);
     
-    if (propertyStringValue == null) {
+    if (dateTimeCell.value().isEmpty()) {
       return null;
     }
     
     try {
-      return LocalDateTime.parse(propertyStringValue);
+      return LocalDateTime.parse(dateTimeCell.value().get());
     } catch (DateTimeParseException e) {
       runtimeException.addSuppressed(
-          new FieldException(property, "invalid date time format")
+          new FieldException(property, "invalid date time format", dateTimeCell.column())
       );
       return null;
     }
   }
   
-  private static <O extends ObjectWithUniqueField> List<O> getPropertyAsDelimitedResources(String propertyName, Map<String, Optional<String>> propertyMap, CRUDRepository<O> repository, RuntimeException runtimeException) {
-    String uniqueFields = getProperty(propertyMap, propertyName);
+  private static <O extends ObjectWithUniqueField> List<O> getPropertyAsDelimitedResources(String propertyName, Map<String, ValueWithColumnNumber> propertyMap, CRUDRepository<O> repository, RuntimeException runtimeException) {
+    ValueWithColumnNumber objectCell = getProperty(propertyMap, propertyName);
     
-    if (uniqueFields != null) {
-      return Arrays.stream(uniqueFields.split(";"))
-          .map(uniqueField -> getPropertyAsResource(propertyName, uniqueField, repository, runtimeException))
+    if (objectCell.value().isPresent()) {
+      return Arrays.stream(objectCell.value().get().split(";"))
+          .map(uniqueField -> getPropertyAsResource(propertyName, new ValueWithColumnNumber(Optional.of(uniqueField), objectCell.column()), repository, runtimeException))
           .toList();
     } else {
       return Collections.emptyList();
     }
   }
   
-  private static <O extends ObjectWithUniqueField> O getPropertyAsResource(String propertyName, String uniqueField, CRUDRepository<O> repository, RuntimeException runtimeException) {
-    if (uniqueField == null) {
+  private static <O extends ObjectWithUniqueField> O getPropertyAsResource(String propertyName, ValueWithColumnNumber uniqueFieldCell, CRUDRepository<O> repository, RuntimeException runtimeException) {
+    if (uniqueFieldCell.value().isEmpty()) {
       return null;
     }
+    
+    String uniqueField = uniqueFieldCell.value().get();
 
     try {
       return repository.getByUniqueField(uniqueField);
     } catch (DatastoreException | NotFoundException e) {
       runtimeException.addSuppressed(new FieldException(
-          propertyName, e.getMessage()
+          propertyName, e.getMessage(), uniqueFieldCell.column()
       ));
       return null;
     }
   }
   
-  private static Path getPropertyAsPath(String propertyName, Map<String, Optional<String>> propertyMap, RuntimeException runtimeException) {
-    String stringValue = getProperty(propertyMap, propertyName);
+  private static Path getPropertyAsPath(Map<String, ValueWithColumnNumber> propertyMap, String propertyName, RuntimeException runtimeException) {
+    ValueWithColumnNumber pathCell = getProperty(propertyMap, propertyName);
     
-    if (stringValue == null) {
+    if (pathCell.value().isEmpty()) {
       return null;
     }
     
     try {
-      return Path.of(stringValue);
+      return Path.of(pathCell.value().get());
     } catch (InvalidPathException e) {
       runtimeException.addSuppressed(
-          new FieldException(propertyName, "Invalid path format")
+          new FieldException(propertyName, "Invalid path format", pathCell.column())
       );
       return null;
     }
   }
   
-  private static LocationDetail locationDetailFromMap(Map<String, Optional<String>> propertyMap, RuntimeException runtimeException, SeaRepository seaRepository, ShipRepository shipRepository) {
-    String locationType = getProperty(propertyMap, "locationType");
-    if (locationType == null) {
+  private static LocationDetail locationDetailFromMap(Map<String, ValueWithColumnNumber> propertyMap, RuntimeException runtimeException, SeaRepository seaRepository, ShipRepository shipRepository) {
+    ValueWithColumnNumber locationTypeCell = getProperty(propertyMap, "locationType");
+    if (locationTypeCell.value().isEmpty()) {
       return null;
     }
+    
+    String locationType = locationTypeCell.value().get();
+    
     if (LocationType.STATIONARY_MARINE.getName().equals(locationType)) {
       return StationaryMarineLocation.builder()
           .seaArea(getPropertyAsResource("seaArea", getProperty(propertyMap, "seaArea"), seaRepository, runtimeException))
@@ -1079,7 +1119,7 @@ final class TranslatorUtils {
       return MobileMarineLocation.builder()
           .seaArea(getPropertyAsResource("seaArea", getProperty(propertyMap, "seaArea"), seaRepository, runtimeException))
           .vessel(getPropertyAsResource("vessel", getProperty(propertyMap, "vessel"), shipRepository, runtimeException))
-          .locationDerivationDescription(getProperty(propertyMap, "locationDerivationDescription"))
+          .locationDerivationDescription(getPropertyAsString(propertyMap, "locationDerivationDescription"))
           .build();
     } else if (LocationType.STATIONARY_TERRESTRIAL.getName().equals(locationType)) {
       return StationaryTerrestrialLocation.builder()
@@ -1091,14 +1131,14 @@ final class TranslatorUtils {
     } else if (LocationType.MULTIPOINT_STATIONARY_MARINE.getName().equals(locationType)) {
       List<MarineInstrumentLocation> marineInstrumentLocations = new ArrayList<>(0);
       
-      Map<Integer, List<Entry<String, Optional<String>>>> locationMap = propertyMap.entrySet().stream()
+      Map<Integer, List<Entry<String, ValueWithColumnNumber>>> locationMap = propertyMap.entrySet().stream()
           .filter(e -> e.getKey().matches("^locations\\[\\d]\\.(?:latitude|longitude|seaFloorDepth|instrumentDepth)"))
           .collect(Collectors.groupingBy(
               e -> Integer.parseInt(String.valueOf(e.getKey().split("locations\\[")[1].charAt(0)))
           ));
       
       locationMap.forEach((key, value) -> {
-        Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+        Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
         marineInstrumentLocations.add(key, MarineInstrumentLocation.builder()
             .latitude(getPropertyAsFloat(map, String.format(
                 "locations[%s].latitude", key 
@@ -1125,16 +1165,17 @@ final class TranslatorUtils {
           "Invalid location type. Was not one of %s", Arrays.stream(LocationType.values())
               .map(LocationType::getName)
               .collect(Collectors.joining(", "))
-          )
+          ),
+          locationTypeCell.column()
       ));
       return null;
     }
   }
   
-  private static List<Channel> channelsFromMap(Map<String, Optional<String>> propertyMap, SensorRepository sensorRepository, RuntimeException runtimeException) {
+  private static List<Channel> channelsFromMap(Map<String, ValueWithColumnNumber> propertyMap, SensorRepository sensorRepository, RuntimeException runtimeException) {
     List<Channel> channels = new ArrayList<>(0);
     
-    Map<Integer, List<Entry<String, Optional<String>>>> channelsMap = propertyMap.entrySet().stream()
+    Map<Integer, List<Entry<String, ValueWithColumnNumber>>> channelsMap = propertyMap.entrySet().stream()
         .filter(e -> e.getKey().matches("^channels\\[\\d].*"))
         .collect(Collectors.groupingBy(
             e -> Integer.parseInt(String.valueOf(
@@ -1143,7 +1184,7 @@ final class TranslatorUtils {
         ));
     
     channelsMap.forEach((key, value) -> {
-      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
       
       String propertyPrefix = String.format("channels[%s]", key);
       
@@ -1162,10 +1203,10 @@ final class TranslatorUtils {
     return channels;
   }
   
-  private static List<SampleRate> sampleRatesFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+  private static List<SampleRate> sampleRatesFromMap(Map<String, ValueWithColumnNumber> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
     List<SampleRate> sampleRates = new ArrayList<>(0);
     
-    Map<Integer, List<Entry<String, Optional<String>>>> sampleRatesMap = propertyMap.entrySet().stream()
+    Map<Integer, List<Entry<String, ValueWithColumnNumber>>> sampleRatesMap = propertyMap.entrySet().stream()
         .filter(e -> e.getKey().matches("^channels\\[\\d].sampleRates\\[\\d].*"))
         .collect(Collectors.groupingBy(
             e -> Integer.parseInt(String.valueOf(
@@ -1174,7 +1215,7 @@ final class TranslatorUtils {
         ));
     
     sampleRatesMap.forEach((key, value) -> {
-      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
       
       String propertyPrefix = String.format(
           "channels[%s].sampleRates[%s]", channelIndex, key
@@ -1191,10 +1232,10 @@ final class TranslatorUtils {
     return sampleRates;
   }
   
-  private static List<DutyCycle> dutyCyclesFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+  private static List<DutyCycle> dutyCyclesFromMap(Map<String, ValueWithColumnNumber> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
     List<DutyCycle> dutyCycles = new ArrayList<>(0);
     
-    Map<Integer, List<Entry<String, Optional<String>>>> dutyCyclesMap = propertyMap.entrySet().stream()
+    Map<Integer, List<Entry<String, ValueWithColumnNumber>>> dutyCyclesMap = propertyMap.entrySet().stream()
         .filter(e -> e.getKey().matches("^channels\\[\\d].dutyCycles\\[\\d].*"))
         .collect(Collectors.groupingBy(
             e -> Integer.parseInt(String.valueOf(
@@ -1203,7 +1244,7 @@ final class TranslatorUtils {
         ));
     
     dutyCyclesMap.forEach((key, value) -> {
-      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
       
       String propertyPrefix = String.format(
         "channels[%s].dutyCycles[%s]", channelIndex, key  
@@ -1220,10 +1261,10 @@ final class TranslatorUtils {
     return dutyCycles;
   }
   
-  private static List<Gain> gainsFromMap(Map<String, Optional<String>> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
+  private static List<Gain> gainsFromMap(Map<String, ValueWithColumnNumber> propertyMap, Integer channelIndex, RuntimeException runtimeException) {
     List<Gain> gains = new ArrayList<>(0);
     
-    Map<Integer, List<Entry<String, Optional<String>>>> gainsMap = propertyMap.entrySet().stream()
+    Map<Integer, List<Entry<String, ValueWithColumnNumber>>> gainsMap = propertyMap.entrySet().stream()
         .filter(e -> e.getKey().matches("^channels\\[\\d].gains\\[\\d].*"))
         .collect(Collectors.groupingBy(
             e -> Integer.parseInt(String.valueOf(
@@ -1232,7 +1273,7 @@ final class TranslatorUtils {
         ));
     
     gainsMap.forEach((key, value) -> {
-      Map<String, Optional<String>> map = Map.ofEntries(value.toArray(Entry[]::new));
+      Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
       
       String propertyPrefix = String.format(
           "channels[%s].gains[%s]", channelIndex, key

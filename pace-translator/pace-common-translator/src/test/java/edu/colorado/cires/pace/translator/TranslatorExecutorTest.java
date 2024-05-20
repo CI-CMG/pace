@@ -14,6 +14,7 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.TabularTranslationField;
 import edu.colorado.cires.pace.data.object.TabularTranslator;
+import edu.colorado.cires.pace.translator.TranslatorExecutor.ValueWithColumnNumber;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -75,7 +76,7 @@ class TranslatorExecutorTest {
     }
   }
   
-  private <O> TranslatorExecutor<O, TabularTranslator<TabularTranslationField>> createExecutor(TestTranslator translator, List<Map<String, Optional<String>>> maps, Class<O> clazz) {
+  private <O> TranslatorExecutor<O, TabularTranslator<TabularTranslationField>> createExecutor(TestTranslator translator, List<Map<String, ValueWithColumnNumber>> maps, Class<O> clazz) {
     return new TranslatorExecutor<>(translator, clazz) {
 
       @Override
@@ -102,14 +103,14 @@ class TranslatorExecutorTest {
       Platform.class
   })
   void translateFromInputStream(Class<ObjectWithName> clazz) throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-1")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-1"), 1)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-2"), 1)
         )
     );
     
@@ -118,12 +119,12 @@ class TranslatorExecutorTest {
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null).toList();
     assertEquals(2, results.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
-    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
     assertNull(results.get(1).rowConversionException());
-    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
+    assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
   }
 
   @ParameterizedTest
@@ -134,14 +135,14 @@ class TranslatorExecutorTest {
       Platform.class
   })
   void translateFromReader(Class<ObjectWithName> clazz) throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-1")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-1"), 1)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-2"), 1)
         )
     );
 
@@ -150,26 +151,26 @@ class TranslatorExecutorTest {
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((Reader) null).toList();
     assertEquals(2, results.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
-    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
     assertNull(results.get(1).rowConversionException());
-    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
+    assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
   }
 
   @Test
   void translateSoundSource() throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "source", Optional.of("test-name-1"),
-            "scienceName", Optional.of("test-scientific-name-1")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "source", new ValueWithColumnNumber(Optional.of("test-name-1"), 1),
+            "scienceName", new ValueWithColumnNumber(Optional.of("test-scientific-name-1"), 2)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "source", Optional.of("test-name-2"),
-            "scienceName", Optional.of("test-scientific-name-2")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "source", new ValueWithColumnNumber(Optional.of("test-name-2"), 1),
+            "scienceName", new ValueWithColumnNumber(Optional.of("test-scientific-name-2"), 2)
         )
     );
 
@@ -179,49 +180,49 @@ class TranslatorExecutorTest {
         new TestTranslatorField("scienceName", 3)
     )), maps, DetectionType.class).translate((InputStream) null).toList();
     assertEquals(2, results.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
-    assertEquals(maps.get(0).get("source").orElseThrow(), results.get(0).object().getSource());
-    assertEquals(maps.get(0).get("scienceName").orElseThrow(), results.get(0).object().getScienceName());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertEquals(maps.get(0).get("source").value().orElseThrow(), results.get(0).object().getSource());
+    assertEquals(maps.get(0).get("scienceName").value().orElseThrow(), results.get(0).object().getScienceName());
+    assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
     assertNull(results.get(1).rowConversionException());
-    assertEquals(maps.get(1).get("source").orElseThrow(), results.get(1).object().getSource());
-    assertEquals(maps.get(1).get("scienceName").orElseThrow(), results.get(1).object().getScienceName());
+    assertEquals(maps.get(1).get("source").value().orElseThrow(), results.get(1).object().getSource());
+    assertEquals(maps.get(1).get("scienceName").value().orElseThrow(), results.get(1).object().getScienceName());
   }
 
   @Test
   void translateSensor() throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-1"),
-            "description", Optional.of("test-description-1"),
-            "position.x", Optional.of("1.0"),
-            "position.y", Optional.of("2.0"),
-            "position.z", Optional.of("3.0"),
-            "properties", Optional.of("test-properties-1"),
-            "sensorType", Optional.of("test-sensor-type-1"),
-            "type", Optional.of("other")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-1"), 0),
+            "description", new ValueWithColumnNumber(Optional.of("test-description-1"), 0),
+            "position.x", new ValueWithColumnNumber(Optional.of("1.0"), 0),
+            "position.y", new ValueWithColumnNumber(Optional.of("2.0"), 0),
+            "position.z", new ValueWithColumnNumber(Optional.of("3.0"), 0),
+            "properties", new ValueWithColumnNumber(Optional.of("test-properties-1"), 0),
+            "sensorType", new ValueWithColumnNumber(Optional.of("test-sensor-type-1"), 0),
+            "type", new ValueWithColumnNumber(Optional.of("other"), 0)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2"),
-            "description", Optional.of("test-description-2"),
-            "position.x", Optional.of("1.0"),
-            "position.y", Optional.of("2.0"),
-            "position.z", Optional.of("3.0"),
-            "hydrophoneId", Optional.of("test-hydrophoneId-2"),
-            "preampId", Optional.of("test-preampId-2"),
-            "type", Optional.of("audio")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-2"), 0),
+            "description", new ValueWithColumnNumber(Optional.of("test-description-2"), 0),
+            "position.x", new ValueWithColumnNumber(Optional.of("1.0"), 0),
+            "position.y", new ValueWithColumnNumber(Optional.of("2.0"), 0),
+            "position.z", new ValueWithColumnNumber(Optional.of("3.0"), 0),
+            "hydrophoneId", new ValueWithColumnNumber(Optional.of("test-hydrophoneId-2"), 0),
+            "preampId", new ValueWithColumnNumber(Optional.of("test-preampId-2"), 0),
+            "type", new ValueWithColumnNumber(Optional.of("audio"), 0)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-3"),
-            "description", Optional.of("test-description-3"),
-            "position.x", Optional.of("1.0"),
-            "position.y", Optional.of("2.0"),
-            "position.z", Optional.of("3.0"),
-            "type", Optional.of("depth")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-3"), 0),
+            "description", new ValueWithColumnNumber(Optional.of("test-description-3"), 0),
+            "position.x", new ValueWithColumnNumber(Optional.of("1.0"), 0),
+            "position.y", new ValueWithColumnNumber(Optional.of("2.0"), 0),
+            "position.z", new ValueWithColumnNumber(Optional.of("3.0"), 0),
+            "type", new ValueWithColumnNumber(Optional.of("depth"), 0)
         )
     );
     
@@ -241,37 +242,37 @@ class TranslatorExecutorTest {
 
     List<ObjectWithRowConversionException<Sensor>> results = createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList();
     assertEquals(3, results.size());
-    assertEquals(maps.get(0).get("uuid").orElseThrow(), results.get(0).object().getUuid().toString());
+    assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
     assertNull(results.get(0).rowConversionException());
-    assertEquals(maps.get(0).get("name").orElseThrow(), results.get(0).object().getName());
-    assertEquals(maps.get(0).get("description").orElseThrow(), results.get(0).object().getDescription());
-    assertEquals(maps.get(0).get("position.x").orElseThrow(), results.get(0).object().getPosition().getX().toString());
-    assertEquals(maps.get(0).get("position.y").orElseThrow(), results.get(0).object().getPosition().getY().toString());
-    assertEquals(maps.get(0).get("position.z").orElseThrow(), results.get(0).object().getPosition().getZ().toString());
-    assertEquals(maps.get(1).get("uuid").orElseThrow(), results.get(1).object().getUuid().toString());
+    assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
+    assertEquals(maps.get(0).get("description").value().orElseThrow(), results.get(0).object().getDescription());
+    assertEquals(maps.get(0).get("position.x").value().orElseThrow(), results.get(0).object().getPosition().getX().toString());
+    assertEquals(maps.get(0).get("position.y").value().orElseThrow(), results.get(0).object().getPosition().getY().toString());
+    assertEquals(maps.get(0).get("position.z").value().orElseThrow(), results.get(0).object().getPosition().getZ().toString());
+    assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
     assertNull(results.get(1).rowConversionException());
-    assertEquals(maps.get(1).get("name").orElseThrow(), results.get(1).object().getName());
-    assertEquals(maps.get(1).get("description").orElseThrow(), results.get(1).object().getDescription());
-    assertEquals(maps.get(1).get("position.x").orElseThrow(), results.get(1).object().getPosition().getX().toString());
-    assertEquals(maps.get(1).get("position.y").orElseThrow(), results.get(1).object().getPosition().getY().toString());
-    assertEquals(maps.get(1).get("position.z").orElseThrow(), results.get(1).object().getPosition().getZ().toString());
-    assertEquals(maps.get(2).get("uuid").orElseThrow(), results.get(2).object().getUuid().toString());
+    assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
+    assertEquals(maps.get(1).get("description").value().orElseThrow(), results.get(1).object().getDescription());
+    assertEquals(maps.get(1).get("position.x").value().orElseThrow(), results.get(1).object().getPosition().getX().toString());
+    assertEquals(maps.get(1).get("position.y").value().orElseThrow(), results.get(1).object().getPosition().getY().toString());
+    assertEquals(maps.get(1).get("position.z").value().orElseThrow(), results.get(1).object().getPosition().getZ().toString());
+    assertEquals(maps.get(2).get("uuid").value().orElseThrow(), results.get(2).object().getUuid().toString());
     assertNull(results.get(2).rowConversionException());
-    assertEquals(maps.get(2).get("name").orElseThrow(), results.get(2).object().getName());
-    assertEquals(maps.get(2).get("description").orElseThrow(), results.get(2).object().getDescription());
-    assertEquals(maps.get(2).get("position.x").orElseThrow(), results.get(2).object().getPosition().getX().toString());
-    assertEquals(maps.get(2).get("position.y").orElseThrow(), results.get(2).object().getPosition().getY().toString());
-    assertEquals(maps.get(2).get("position.z").orElseThrow(), results.get(2).object().getPosition().getZ().toString());
+    assertEquals(maps.get(2).get("name").value().orElseThrow(), results.get(2).object().getName());
+    assertEquals(maps.get(2).get("description").value().orElseThrow(), results.get(2).object().getDescription());
+    assertEquals(maps.get(2).get("position.x").value().orElseThrow(), results.get(2).object().getPosition().getX().toString());
+    assertEquals(maps.get(2).get("position.y").value().orElseThrow(), results.get(2).object().getPosition().getY().toString());
+    assertEquals(maps.get(2).get("position.z").value().orElseThrow(), results.get(2).object().getPosition().getZ().toString());
     
     Sensor sensor = results.get(0).object();
     assertInstanceOf(OtherSensor.class, sensor);
-    assertEquals(maps.get(0).get("properties").orElseThrow(), ((OtherSensor) sensor).getProperties());
-    assertEquals(maps.get(0).get("sensorType").orElseThrow(), ((OtherSensor) sensor).getSensorType());
+    assertEquals(maps.get(0).get("properties").value().orElseThrow(), ((OtherSensor) sensor).getProperties());
+    assertEquals(maps.get(0).get("sensorType").value().orElseThrow(), ((OtherSensor) sensor).getSensorType());
     
     sensor = results.get(1).object();
     assertInstanceOf(AudioSensor.class, sensor);
-    assertEquals(maps.get(1).get("hydrophoneId").orElseThrow(), ((AudioSensor) sensor).getHydrophoneId());
-    assertEquals(maps.get(1).get("preampId").orElseThrow(), ((AudioSensor) sensor).getPreampId());
+    assertEquals(maps.get(1).get("hydrophoneId").value().orElseThrow(), ((AudioSensor) sensor).getHydrophoneId());
+    assertEquals(maps.get(1).get("preampId").value().orElseThrow(), ((AudioSensor) sensor).getPreampId());
     
     sensor = results.get(2).object();
     assertInstanceOf(DepthSensor.class, sensor);
@@ -285,14 +286,14 @@ class TranslatorExecutorTest {
       Platform.class
   })
   void translateInvalidObject(Class<ObjectWithName> clazz) throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of("test-uuid"),
-            "name", Optional.of("test-name-1")
+            "uuid", new ValueWithColumnNumber(Optional.of("test-uuid"), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-1"), 0)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "name", Optional.of("test-name-2")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "name", new ValueWithColumnNumber(Optional.of("test-name-2"), 0)
         )
     );
 
@@ -320,16 +321,16 @@ class TranslatorExecutorTest {
 
   @Test
   void translateSoundSourceInvalidObject() throws IOException {
-    List<Map<String, Optional<String>>> maps = List.of(
+    List<Map<String, ValueWithColumnNumber>> maps = List.of(
         Map.of(
-            "uuid", Optional.of("test-uuid"),
-            "source", Optional.of("test-name-1"),
-            "scienceName", Optional.of("test-scientific-name-1")
+            "uuid", new ValueWithColumnNumber(Optional.of("test-uuid"), 0),
+            "source", new ValueWithColumnNumber(Optional.of("test-name-1"), 0),
+            "scienceName", new ValueWithColumnNumber(Optional.of("test-scientific-name-1"), 0)
         ),
         Map.of(
-            "uuid", Optional.of(UUID.randomUUID().toString()),
-            "source", Optional.of("test-name-2"),
-            "scienceName", Optional.of("test-scientific-name-2")
+            "uuid", new ValueWithColumnNumber(Optional.of(UUID.randomUUID().toString()), 0),
+            "source", new ValueWithColumnNumber(Optional.of("test-name-2"), 0),
+            "scienceName", new ValueWithColumnNumber(Optional.of("test-scientific-name-2"), 0)
         )
     );
 

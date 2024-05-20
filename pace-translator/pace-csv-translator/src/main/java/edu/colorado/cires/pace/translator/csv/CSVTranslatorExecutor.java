@@ -42,8 +42,11 @@ public class CSVTranslatorExecutor<O> extends TranslatorExecutor<O, CSVTranslato
         translator.getFields().stream()
             .collect(Collectors.toMap(
                 CSVTranslatorField::getPropertyName,
-                f -> Optional.ofNullable(
-                    record.get(f.getColumnNumber() - 1)
+                f -> new ValueWithColumnNumber(
+                    Optional.ofNullable(
+                        record.get(f.getColumnNumber() - 1)
+                    ),
+                    f.getColumnNumber()
                 )
             )),
         (int) record.getRecordNumber()
