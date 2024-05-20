@@ -32,7 +32,7 @@ public final class ApplicationPropertyResolver {
   }
 
   public Path getWorkDir() {
-    String dirString = getPropertyValue("pace-cli.work-dir", (s) -> s);
+    String dirString = getPropertyValue("pace.work-dir", (s) -> s);
     if (StringUtils.isBlank(dirString)) {
       return Path.of(
           System.getProperty("user.home")
@@ -58,7 +58,7 @@ public final class ApplicationPropertyResolver {
   }
 
   public String getVersion(boolean includePatchVersion) {
-    String fullVersion = getPropertyValue("pace-cli.version", (s) -> s);
+    String fullVersion = getPropertyValue("pace.version", (s) -> s);
     if (includePatchVersion) {
       return fullVersion;
     }

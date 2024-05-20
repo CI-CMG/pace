@@ -21,8 +21,8 @@ public class Application {
       Object key = keys.nextElement();
       Object value = UIManager.get(key);
       if (value instanceof javax.swing.plaf.FontUIResource) {
-        String font = propertyResolver.getPropertyValue("pace-gui.font", (s) -> s);
-        Integer fontSize = propertyResolver.getPropertyValue("pace-gui.font-size", Integer::parseInt);
+        String font = propertyResolver.getPropertyValue("pace.gui.font", (s) -> s);
+        Integer fontSize = propertyResolver.getPropertyValue("pace.gui.font-size", Integer::parseInt);
 
         UIManager.put(key, new FontUIResource(font, Font.PLAIN, fontSize == null ? 12 : fontSize));
       }
