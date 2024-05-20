@@ -44,7 +44,6 @@ import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -223,7 +222,12 @@ final class DataPanelFactory {
         (t) -> new Object[] { t.getUuid(), t.getName(), t },
         (o) -> (ExcelTranslator) o[2],
         ExcelTranslatorForm::new
-    );
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID" , "Object");
+      }
+    };
   }
   
   public static DataPanel<CSVTranslator> createCSVTranslatorsPanel() {
@@ -233,7 +237,12 @@ final class DataPanelFactory {
         (t) -> new Object[] { t.getUuid(), t.getName(), t },
         (o) -> (CSVTranslator) o[2],
         CSVTranslatorForm::new
-    );
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID" , "Object");
+      }
+    };
   }
   
   public static DataPanel<Instrument> createInstrumentsPanel() {
