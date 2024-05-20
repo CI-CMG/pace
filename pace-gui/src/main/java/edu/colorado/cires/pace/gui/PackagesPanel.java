@@ -15,14 +15,15 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
 import java.awt.GridBagLayout;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -33,17 +34,15 @@ public class PackagesPanel extends TranslatePanel<Package> {
   private static final JProgressBar progressBar = new JProgressBar();
   private final CRUDRepository<?>[] dependencyRepositories;
   private final ObjectMapper objectMapper;
-  private final Path outputDir;
   private static final JButton packageButton = new JButton("Package");
 
   public PackagesPanel(CRUDRepository<Package> repository, String[] headers,
       Function<Package, Object[]> objectConversion,
       ExcelTranslatorRepository excelTranslatorRepository,
       CSVTranslatorRepository csvTranslatorRepository, Class<Package> clazz,
-      ObjectMapper objectMapper, Path outputDir,
+      ObjectMapper objectMapper,
       CRUDRepository<?>... dependencyRepositories) {
     super(repository, headers, objectConversion, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories);
-    this.outputDir = outputDir;
     this.dependencyRepositories = dependencyRepositories;
     this.objectMapper = objectMapper;
   }
@@ -100,30 +99,41 @@ public class PackagesPanel extends TranslatePanel<Package> {
   }
   
   private void processPackages(List<Package> packages) {
-    new Thread(() -> {
-      GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
-      
-      try {
-        PackageProcessor packageProcessor = new PackageProcessor(
-            objectMapper,
-            getRepository(Person.class).findAll().toList(),
-            getRepository(Organization.class).findAll().toList(),
-            getRepository(Project.class).findAll().toList(),
-            packages,
-            outputDir,
-            progressIndicator
-        );
 
-        packageProcessor.process();
-      } catch (DatastoreException | IOException | PackagingException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-      } finally {
-        progressIndicator.indicateStatus(0);
-        resetTable();
-        packageButton.setEnabled(true);
-      }
-      
-    }).start();
+    JFileChooser chooser = new JFileChooser();
+    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    chooser.setDialogTitle("Select Output Directory");
+    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+      File selectedFile = chooser.getSelectedFile();
+
+      new Thread(() -> {
+        GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
+
+        try {
+          PackageProcessor packageProcessor = new PackageProcessor(
+              objectMapper,
+              getRepository(Person.class).findAll().toList(),
+              getRepository(Organization.class).findAll().toList(),
+              getRepository(Project.class).findAll().toList(),
+              packages,
+              selectedFile.toPath(),
+              progressIndicator
+          );
+
+          packageProcessor.process();
+        } catch (DatastoreException | IOException | PackagingException e) {
+          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+          progressIndicator.indicateStatus(0);
+          resetTable();
+          packageButton.setEnabled(true);
+        }
+
+      }).start();
+    } else {
+      resetTable();
+      packageButton.setEnabled(true);
+    }
   }
   
   private <O extends ObjectWithUniqueField> CRUDRepository<O> getRepository(Class<O> clazz) {

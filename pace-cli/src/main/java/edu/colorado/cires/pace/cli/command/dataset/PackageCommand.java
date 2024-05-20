@@ -270,8 +270,11 @@ public class PackageCommand implements Runnable {
   @Command(name = "process", description = "Process packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Pack implements Runnable {
 
-    @Parameters(description = "file containing package job (- for stdin)")
+    @Parameters(description = "file containing package job(s) (- for stdin)")
     private File packageJob;
+    
+    @Parameters(description = "output directory")
+    private File outputDirectory;
 
     @Override
     public void run() {
@@ -283,7 +286,7 @@ public class PackageCommand implements Runnable {
         List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         List<Project> projects = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         
-        Path outputPath = new ApplicationPropertyResolver().getOutputDir();
+        Path outputPath = outputDirectory.toPath();
         
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
             new CLIProgressIndicator()

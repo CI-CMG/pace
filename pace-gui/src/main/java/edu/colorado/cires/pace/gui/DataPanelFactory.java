@@ -197,8 +197,6 @@ final class DataPanelFactory {
         csvTranslatorRepository,
         Package.class,
         objectMapper,
-        propertyResolver.getOutputDir(),
-        projectRepository,
         personRepository,
         organizationRepository,
         platformRepository,
@@ -206,7 +204,8 @@ final class DataPanelFactory {
         sensorRepository,
         detectionTypeRepository,
         seaRepository,
-        shipRepository
+        shipRepository,
+        projectRepository
     ) {
       @Override
       protected List<String> getHiddenColumns() {
