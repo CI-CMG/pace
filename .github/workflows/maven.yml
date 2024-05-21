@@ -47,6 +47,11 @@ jobs:
         with:
           name: build-resources
           path: build-resources
+      - name: Upload gui icons
+        uses: actions/upload-artifact@v4
+        with:
+          name: gui-icons
+          path: "pace-gui/icons/*"
           
   package-cli-osx:
     needs: build
@@ -150,6 +155,11 @@ jobs:
         with:
           name: gui-jar
           path: jars
+      - name: Download icons
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-icons
+          path: icons
       - name: Download Build Resources
         uses: actions/download-artifact@v4
         with:
@@ -167,6 +177,7 @@ jobs:
         run: >
           jpackage
           --verbose
+          --icon icons/pace.icns
           --vendor 'CIRES - University of Colorado'
           --name 'pace-gui'
           -i jars
