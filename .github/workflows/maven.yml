@@ -179,7 +179,7 @@ jobs:
           --verbose
           --icon icons/pace.icns
           --vendor 'CIRES - University of Colorado'
-          --name 'pace-gui'
+          --name 'pace'
           -i jars
           --main-class edu.colorado.cires.pace.gui.Application
           --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
