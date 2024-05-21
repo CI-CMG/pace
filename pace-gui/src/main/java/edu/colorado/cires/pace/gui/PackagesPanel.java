@@ -14,20 +14,27 @@ import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang3.StringUtils;
 
 public class PackagesPanel extends TranslatePanel<Package> {
   
@@ -79,7 +86,6 @@ public class PackagesPanel extends TranslatePanel<Package> {
   }
 
   private void packageSelectedRows() {
-    packageButton.setEnabled(false);
     List<Package> packages = new ArrayList<>();
     
     for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -99,41 +105,75 @@ public class PackagesPanel extends TranslatePanel<Package> {
   }
   
   private void processPackages(List<Package> packages) {
+    JPanel chooseDestinationPanel = new JPanel(new GridBagLayout());
+    chooseDestinationPanel.add(new JLabel("Destination"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
+    JTextField destinationField = new JTextField();
+    destinationField.setEditable(false);
+    chooseDestinationPanel.add(destinationField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
+    JButton chooseDestinationButton = new JButton("Choose Directory");
+    chooseDestinationPanel.add(chooseDestinationButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 1; c.weightx = 0; }));
+    
+    chooseDestinationPanel.add(new JPanel(), configureLayout((c) -> { c.gridy = 2; c.gridx = 0; c.weightx = c.weighty = 1; }));
+    
+    JPanel submitPanel = new JPanel(new BorderLayout());
+    JButton submitButton = new JButton("Submit");
+    submitPanel.add(submitButton, BorderLayout.EAST);
+    chooseDestinationPanel.add(submitPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
+    
+    chooseDestinationButton.addActionListener((e) -> {
+      JFileChooser chooser = new JFileChooser();
+      chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      chooser.setDialogTitle("Select Output Directory");
+      if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = chooser.getSelectedFile();
+        destinationField.setText(selectedFile.toString());
+      }
+    });
+    
+    JDialog chooseDestinationDialog = new JDialog();
+    chooseDestinationDialog.setTitle("Choose Destination");
+    chooseDestinationDialog.setModal(true);
+    chooseDestinationDialog.setLocationRelativeTo(this);
+    chooseDestinationDialog.add(chooseDestinationPanel);
 
-    JFileChooser chooser = new JFileChooser();
-    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-    chooser.setDialogTitle("Select Output Directory");
-    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-      File selectedFile = chooser.getSelectedFile();
+    submitButton.addActionListener((e) -> {
+      String destinationText = destinationField.getText();
+      if (StringUtils.isBlank(destinationText)) {
+        JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
+      } else {
+        packageButton.setEnabled(false);
+        
+        new Thread(() -> {
+          GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
 
-      new Thread(() -> {
-        GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
+          try {
+            PackageProcessor packageProcessor = new PackageProcessor(
+                objectMapper,
+                getRepository(Person.class).findAll().toList(),
+                getRepository(Organization.class).findAll().toList(),
+                getRepository(Project.class).findAll().toList(),
+                packages,
+                Paths.get(destinationField.getText()),
+                progressIndicator
+            );
 
-        try {
-          PackageProcessor packageProcessor = new PackageProcessor(
-              objectMapper,
-              getRepository(Person.class).findAll().toList(),
-              getRepository(Organization.class).findAll().toList(),
-              getRepository(Project.class).findAll().toList(),
-              packages,
-              selectedFile.toPath(),
-              progressIndicator
-          );
+            packageProcessor.process();
+          } catch (DatastoreException | IOException | PackagingException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          } finally {
+            progressIndicator.indicateStatus(0);
+            resetTable();
+            packageButton.setEnabled(true);
+          }
 
-          packageProcessor.process();
-        } catch (DatastoreException | IOException | PackagingException e) {
-          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-          progressIndicator.indicateStatus(0);
-          resetTable();
-          packageButton.setEnabled(true);
-        }
+        }).start();
 
-      }).start();
-    } else {
-      resetTable();
-      packageButton.setEnabled(true);
-    }
+        chooseDestinationDialog.dispose();
+      }
+    });
+    
+    chooseDestinationDialog.pack();
+    chooseDestinationDialog.setVisible(true);
   }
   
   private <O extends ObjectWithUniqueField> CRUDRepository<O> getRepository(Class<O> clazz) {
