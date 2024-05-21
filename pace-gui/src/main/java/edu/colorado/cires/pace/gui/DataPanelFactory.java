@@ -191,8 +191,17 @@ final class DataPanelFactory {
   public static DataPanel<Package> createPackagesPanel() throws IOException {
     return new PackagesPanel(
         new PackageRepository(new PackageJsonDatastore(propertyResolver.getWorkDir(), objectMapper)),
-        new String[] { "UUID", "Package ID", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
-        (p) -> new Object[] { p.getUuid(), p.getPackageId(), DatasetType.fromPackage(p).getName(), LocationType.fromLocationDetail(((Dataset) p).getLocationDetail()).getName(), false, p },
+        new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
+        (p) -> new Object[] { 
+            p.getUuid(),
+            ((Dataset) p).getSiteOrCruiseName(),
+            ((Dataset) p).getDeploymentId(),
+            String.join(", ", ((Dataset) p).getProjects().stream().map(Project::getName).toArray(String[]::new)),
+            DatasetType.fromPackage(p).getName(),
+            LocationType.fromLocationDetail(((Dataset) p).getLocationDetail()).getName(),
+            false,
+            p
+        },
         excelTranslatorRepository,
         csvTranslatorRepository,
         Package.class,

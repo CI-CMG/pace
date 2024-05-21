@@ -83,9 +83,9 @@ public class PackagesPanel extends TranslatePanel<Package> {
     List<Package> packages = new ArrayList<>();
     
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      Boolean selected = (Boolean) tableModel.getValueAt(i, 4);
+      Boolean selected = (Boolean) tableModel.getValueAt(i, 6);
       if (selected) {
-        packages.add((Package) tableModel.getValueAt(i, 5));
+        packages.add((Package) tableModel.getValueAt(i, 7));
       }
     }
     
@@ -94,7 +94,7 @@ public class PackagesPanel extends TranslatePanel<Package> {
   
   private void resetTable() {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      tableModel.setValueAt(false, i, 4);
+      tableModel.setValueAt(false, i, 6);
     }
   }
   
@@ -158,8 +158,8 @@ public class PackagesPanel extends TranslatePanel<Package> {
     public Class<?> getColumnClass(int columnIndex) {
       return switch (columnIndex) {
         case 0 -> UUID.class;
-        case 4 -> Boolean.class;
-        case 5 -> Package.class;
+        case 6 -> Boolean.class;
+        case 7 -> Package.class;
         default -> String.class;
       };
     }
