@@ -171,7 +171,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
     
     ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
 
-    Path outputDirectory = propertyResolver.getWorkDir().resolve("templates");
+    Path outputDirectory = propertyResolver.getDataDir().resolve("templates");
     Path outputPath = null;
     
     try {

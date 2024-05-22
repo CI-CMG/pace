@@ -31,8 +31,8 @@ public final class ApplicationPropertyResolver {
     return transform.apply(propertyValue);
   }
 
-  public Path getWorkDir() {
-    String dirString = getPropertyValue("pace.work-dir", (s) -> s);
+  public Path getDataDir() {
+    String dirString = getPropertyValue("pace.data-dir", (s) -> s);
     if (StringUtils.isBlank(dirString)) {
       return Path.of(
           System.getProperty("user.home")

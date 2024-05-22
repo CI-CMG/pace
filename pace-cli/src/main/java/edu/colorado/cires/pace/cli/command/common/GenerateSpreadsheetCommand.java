@@ -24,7 +24,7 @@ public abstract class GenerateSpreadsheetCommand<F extends TabularTranslationFie
   public void run() {
     try {
       CRUDRepository<T> repository = getRepositoryFactory().createRepository(
-          applicationPropertyResolver.getWorkDir(), SerializationUtils.createObjectMapper()
+          applicationPropertyResolver.getDataDir(), SerializationUtils.createObjectMapper()
       );
 
       T translator = repository.getByUniqueField(getTranslatorName());

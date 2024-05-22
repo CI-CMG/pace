@@ -42,7 +42,7 @@ public abstract class TranslateCommand<O> implements Runnable {
   protected abstract <T> Class<T> getJsonClass();
   
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
-  private final Path workDir = new ApplicationPropertyResolver().getWorkDir();
+  private final Path workDir = new ApplicationPropertyResolver().getDataDir();
   
   protected abstract RepositoryFactory[] getDependencyRepositoryFactories();
   

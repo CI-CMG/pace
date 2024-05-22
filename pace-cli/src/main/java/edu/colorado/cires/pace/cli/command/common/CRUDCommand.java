@@ -30,7 +30,7 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
       throws IOException, DatastoreException, NotFoundException, ConflictException, BadArgumentException, BatchWriteException;
 
   private Path getDatastoreDirectory() {
-    return new ApplicationPropertyResolver().getWorkDir();
+    return new ApplicationPropertyResolver().getDataDir();
   }
   
   private String writeObject(Object object) throws JsonProcessingException {

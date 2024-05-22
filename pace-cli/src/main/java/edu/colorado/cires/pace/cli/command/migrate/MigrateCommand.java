@@ -33,7 +33,7 @@ public class MigrateCommand implements Runnable {
 
   @Override
   public void run() {
-    Path datastoreDirectory = new ApplicationPropertyResolver().getWorkDir();
+    Path datastoreDirectory = new ApplicationPropertyResolver().getDataDir();
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
     
     MigrationException migrationException = new MigrationException("Migration failed");

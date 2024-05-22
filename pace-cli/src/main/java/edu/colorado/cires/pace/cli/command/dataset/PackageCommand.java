@@ -279,7 +279,7 @@ public class PackageCommand implements Runnable {
     @Override
     public void run() {
       try {
-        Path workDir = new ApplicationPropertyResolver().getWorkDir();
+        Path workDir = new ApplicationPropertyResolver().getDataDir();
         ObjectMapper objectMapper = createObjectMapper();
         
         List<Person> people = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();

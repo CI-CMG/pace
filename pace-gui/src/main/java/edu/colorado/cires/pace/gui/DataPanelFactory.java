@@ -69,22 +69,22 @@ final class DataPanelFactory {
   static {
     try {
       excelTranslatorRepository = new ExcelTranslatorRepository(
-          new ExcelTranslatorJsonDatastore(propertyResolver.getWorkDir(), objectMapper)
+          new ExcelTranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
       );
       csvTranslatorRepository = new CSVTranslatorRepository(
-          new CSVTranslatorJsonDatastore(propertyResolver.getWorkDir(), objectMapper)
+          new CSVTranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
       );
-      fileTypeJsonDatastore = new FileTypeJsonDatastore(propertyResolver.getWorkDir(), objectMapper);
+      fileTypeJsonDatastore = new FileTypeJsonDatastore(propertyResolver.getDataDir(), objectMapper);
       fileTypeRepository = new FileTypeRepository(fileTypeJsonDatastore);
-      projectRepository = new ProjectRepository(new ProjectJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      personRepository = new PersonRepository(new PersonJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      organizationRepository = new OrganizationRepository(new OrganizationJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      platformRepository = new PlatformRepository(new PlatformJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      instrumentRepository = new InstrumentRepository(new InstrumentJsonDatastore(propertyResolver.getWorkDir(), objectMapper), fileTypeJsonDatastore);
-      sensorRepository = new SensorRepository(new SensorJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      detectionTypeRepository = new DetectionTypeRepository(new DetectionTypeJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      seaRepository = new SeaRepository(new SeaJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
-      shipRepository = new ShipRepository(new ShipJsonDatastore(propertyResolver.getWorkDir(), objectMapper));
+      projectRepository = new ProjectRepository(new ProjectJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      personRepository = new PersonRepository(new PersonJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      organizationRepository = new OrganizationRepository(new OrganizationJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      platformRepository = new PlatformRepository(new PlatformJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      instrumentRepository = new InstrumentRepository(new InstrumentJsonDatastore(propertyResolver.getDataDir(), objectMapper), fileTypeJsonDatastore);
+      sensorRepository = new SensorRepository(new SensorJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      detectionTypeRepository = new DetectionTypeRepository(new DetectionTypeJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      seaRepository = new SeaRepository(new SeaJsonDatastore(propertyResolver.getDataDir(), objectMapper));
+      shipRepository = new ShipRepository(new ShipJsonDatastore(propertyResolver.getDataDir(), objectMapper));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -190,7 +190,7 @@ final class DataPanelFactory {
   
   public static DataPanel<Package> createPackagesPanel() throws IOException {
     return new PackagesPanel(
-        new PackageRepository(new PackageJsonDatastore(propertyResolver.getWorkDir(), objectMapper)),
+        new PackageRepository(new PackageJsonDatastore(propertyResolver.getDataDir(), objectMapper)),
         new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
         (p) -> new Object[] { 
             p.getUuid(),
