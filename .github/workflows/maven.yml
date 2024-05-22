@@ -258,6 +258,70 @@ jobs:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: "pace-cli"
           
+  
+  package-gui-linux:
+    needs: build
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=${RUNNER_OS}" >> $GITHUB_ENV
+          echo "arch=${RUNNER_ARCH}" >> $GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-jar
+          path: jars
+      - name: Download icons
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-icons
+          path: icons
+      - name: Package jar as deb
+        run: >
+          jpackage
+          --verbose
+          --type deb
+          --icon icons/pace.png
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace'
+          -i jars
+          --main-class edu.colorado.cires.pace.gui.Application
+          --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
+          --about-url https://github.com/CI-CMG/pace
+          --linux-shortcut
+      - name: Package jar as rpm
+        run: >
+          jpackage
+          --verbose
+          --type rpm
+          --icon icons/pace.png
+          --vendor 'CIRES - University of Colorado'
+          --name 'pace'
+          -i jars
+          --main-class edu.colorado.cires.pace.gui.Application
+          --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
+          --about-url https://github.com/CI-CMG/pace
+          --linux-shortcut
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-gui-${{ env.os }}-${{ env.arch }}-deb
+          path: "*.deb"
+      - name: Upload rpm
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-gui-${{ env.os }}-${{ env.arch }}-rpm
+          path: "*.rpm"
+  
   package-cli-windows:
     needs: build
     strategy:
@@ -295,6 +359,50 @@ jobs:
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: application
+          
+  package-gui-windows:
+    needs: build
+    strategy:
+      matrix:
+        os: [ windows-2019 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set os/arch environment variables
+        run: |
+          echo "os=$env:RUNNER_OS" >> $env:GITHUB_ENV
+          echo "arch=$env:RUNNER_ARCH" >> $env:GITHUB_ENV
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-jar
+          path: jars
+      - name: Download icons
+        uses: actions/download-artifact@v4
+        with:
+          name: gui-icons
+          path: icons
+      - name: Package jar as exe application
+        run: >
+          jpackage
+          --verbose
+          --dest application
+          --name "pace"
+          -i jars
+          --main-class edu.colorado.cires.pace.gui.Application
+          --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
+          -t app-image
+          --icon icons/pace.ico
+          --vendor "CIRES - University of Colorado"
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: pace-gui-${{ env.os }}-${{ env.arch }}
+          path: application
 
   release:
     needs: 
@@ -302,17 +410,22 @@ jobs:
       - package-cli-osx
       - package-gui-osx
       - package-cli-linux
+      - package-gui-linux
       - package-cli-windows
+      - package-gui-windows
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
-      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64 
+      - run: zip -r release/pace-cli-Linux-X64-${{ needs.build.outputs.version }}.zip pace-cli-Linux-X64
+      - run: cp pace-gui-Linux-X64-deb/*.deb release/pace-gui-Linux-X64-${{ needs.build.outputs.version }}.deb
+      - run: cp pace-gui-Linux-X64-rpm/*.rpm release/pace-gui-Linux-X64-${{ needs.build.outputs.version }}.rpm
       - run: cp pace-cli-macOS-ARM64/*.pkg release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.pkg
       - run: cp pace-cli-macOS-X64/*.pkg release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.pkg
       - run: cp pace-gui-macOS-ARM64/*.dmg release/pace-gui-macOS-ARM64-${{ needs.build.outputs.version }}.dmg
       - run: cp pace-gui-macOS-X64/*.dmg release/pace-gui-macOS-X64-${{ needs.build.outputs.version }}.dmg
       - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
+      - run: zip -r release/pace-gui-Windows-X64-${{ needs.build.outputs.version }}.zip pace-gui-Windows-X64
       - run: cp cli-jar/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
       - run: cp gui-jar/* release/pace-gui-${{ needs.build.outputs.version }}-exe.jar
       - name: Update branch release
