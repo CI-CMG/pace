@@ -77,7 +77,7 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
             field.getPropertyName(),
             new ValueWithColumnNumber(
                 Optional.ofNullable(row.row().getCellText(field.getColumnNumber())),
-                field.getColumnNumber()
+                field.getColumnNumber() + 1
             )
         );
       }
@@ -85,7 +85,7 @@ public class ExcelTranslatorExecutor<O> extends TranslatorExecutor<O, ExcelTrans
     
     return new MapWithRowNumber(
         objectMap,
-        rowNumber
+        Objects.requireNonNull(rowNumber) - 1
     );
   } 
 

@@ -28,23 +28,27 @@ import edu.colorado.cires.pace.utilities.TranslationType;
 import java.awt.Desktop;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -249,30 +253,52 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
       return;
     }
 
-    Consumer<O> saveAction = (o) -> {
+    Function<ObjectWithRowConversionException<O>, ObjectWithRowConversionException<O>> saveAction = (o) -> {
+      O object = o.object();
       try {
         if (updateCheckBox.isSelected()) {
-          repository.update(o.getUuid(), o);
+          return new ObjectWithRowConversionException<>(
+              repository.update(object.getUuid(), object),
+              o.row(),
+              null
+          );
         } else {
-          repository.create(o);
+          return new ObjectWithRowConversionException<>(
+              repository.create(object),
+              o.row(),
+              null
+          );
         }
-      } catch (DatastoreException | ConflictException | NotFoundException | BadArgumentException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException e) {
+        return new ObjectWithRowConversionException<>(
+            object,
+            o.row(),
+            new RowConversionException(e.getMessage(), o.row())
+        );
       }
     };
 
     try {
-      switch (translationType) {
+      List<Throwable> exceptions = switch (translationType) {
         case excel -> {
           try (InputStream inputStream = new FileInputStream(selectedFile)) {
-            postProcessStream(executor.translate(inputStream), saveAction, successAction);
+            yield postProcessStream(executor.translate(inputStream), saveAction, successAction);
           }
         }
         case csv -> {
           try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream)) {
-            postProcessStream(executor.translate(reader), saveAction, successAction);
+            yield postProcessStream(executor.translate(reader), saveAction, successAction);
           }
         }
+      };
+      
+      if (!exceptions.isEmpty()) {
+        JDialog errorDialog = new JDialog();
+        errorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        errorDialog.setLocationRelativeTo(this);
+        errorDialog.add(new ErrorSpreadsheetPanel(new File(selectedFile), exceptions));
+        errorDialog.pack();
+        errorDialog.setVisible(true);
       }
     } catch (Exception ex) {
       JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -280,19 +306,27 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
 
   }
   
-  private void postProcessStream(Stream<ObjectWithRowConversionException<O>> stream, Consumer<O> saveAction, Runnable successAction) {
+  private List<Throwable> postProcessStream(Stream<ObjectWithRowConversionException<O>> stream, Function<ObjectWithRowConversionException<O>, ObjectWithRowConversionException<O>> saveAction, Runnable successAction) {
+    List<Throwable> exceptions = new ArrayList<>(0);
     stream.peek(o -> {
       RowConversionException exception = o.rowConversionException();
       if (exception != null) {
-        String errorMessage = exception.getSuppressed().length == 0 ? exception.getMessage() : Arrays.stream(exception.getSuppressed())
-            .map(Throwable::getMessage)
-            .collect(Collectors.joining("\n"));
-        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+        if (exception.getSuppressed().length == 0) {
+          exceptions.add(exception);
+        } else {
+          exceptions.addAll(
+              Arrays.stream(exception.getSuppressed()).toList()
+          );
+        }
       }
-    }).map(ObjectWithRowConversionException::object)
+    }).filter(o -> Objects.nonNull(o.object()))
+        .map(saveAction)
+        .map(ObjectWithRowConversionException::rowConversionException)
         .filter(Objects::nonNull)
-        .forEach(saveAction);
+        .forEach(exceptions::add);
     
     successAction.run();
+    
+    return exceptions;
   }
 }
