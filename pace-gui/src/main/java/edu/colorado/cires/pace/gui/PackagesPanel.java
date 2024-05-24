@@ -206,7 +206,7 @@ public class PackagesPanel extends TranslatePanel<Package> {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-      return false;
+      return column == 6;
     }
   }
 }
