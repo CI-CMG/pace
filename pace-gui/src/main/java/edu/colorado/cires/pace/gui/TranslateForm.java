@@ -296,7 +296,7 @@ public class TranslateForm<O extends ObjectWithUniqueField> extends JPanel {
         JDialog errorDialog = new JDialog();
         errorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         errorDialog.setLocationRelativeTo(this);
-        errorDialog.add(new ErrorSpreadsheetPanel(new File(selectedFile), exceptions));
+        errorDialog.add(new ErrorSpreadsheetPanel(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName())));
         errorDialog.pack();
         errorDialog.setVisible(true);
       }

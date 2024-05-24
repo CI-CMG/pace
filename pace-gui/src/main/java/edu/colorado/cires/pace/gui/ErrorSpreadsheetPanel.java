@@ -35,8 +35,11 @@ import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
 public class ErrorSpreadsheetPanel extends JPanel {
+  
+  private final boolean autoResizeColumns;
 
-  public ErrorSpreadsheetPanel(File file, List<Throwable> exceptions) {
+  public ErrorSpreadsheetPanel(File file, List<Throwable> exceptions, boolean autoResizeColumns) {
+    this.autoResizeColumns = autoResizeColumns;
     TableData tableData = readSpreadsheet(file);
     setLayout(new BorderLayout());
     add(new JScrollPane(createTable(tableData, exceptions)), BorderLayout.CENTER);
@@ -77,7 +80,9 @@ public class ErrorSpreadsheetPanel extends JPanel {
     };
     table.setCellSelectionEnabled(false);
     table.setRowSelectionAllowed(false);
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    if (!autoResizeColumns) {
+      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    }
     table.setGridColor(Color.RED);
     
     table.addMouseListener(new MouseAdapter() {
