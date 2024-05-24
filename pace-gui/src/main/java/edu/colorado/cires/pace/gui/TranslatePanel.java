@@ -29,6 +29,7 @@ public abstract class TranslatePanel<O extends ObjectWithUniqueField> extends Da
       throws DatastoreException {
     JDialog dialog = new JDialog();
     dialog.add(new TranslateForm<>(this::loadData, repository, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories));
+    dialog.setLocationRelativeTo(this);
     dialog.pack();
     dialog.setVisible(true);
   }

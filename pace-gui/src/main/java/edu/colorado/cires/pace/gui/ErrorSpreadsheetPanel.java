@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +30,7 @@ import javax.swing.table.TableCellRenderer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
@@ -40,7 +43,7 @@ public class ErrorSpreadsheetPanel extends JPanel {
   }
   
   private JTable createTable(TableData tableData, List<Throwable> exceptions) {
-    DefaultTableModel tableModel = new DefaultTableModel(
+    DefaultTableModel tableModel = new TableModel(
         tableData.data().stream()
             .map(List::toArray)
             .toArray(Object[][]::new),
@@ -49,23 +52,6 @@ public class ErrorSpreadsheetPanel extends JPanel {
     JTable table = new JTable(tableModel) {
       public Class<?> getColumnClass(int column) {
         return getValueAt(0, column).getClass();
-      }
-
-      @Override
-      public String getToolTipText(MouseEvent event) {
-        Point p = event.getPoint();
-        int rowIndex = rowAtPoint(p);
-        int colIndex = columnAtPoint(p);
-        return exceptions.stream().filter(t -> {
-          if (t instanceof FieldException fieldException) {
-            return fieldException.getColumn() == colIndex && fieldException.getRow() == rowIndex;
-          } else if (t instanceof RowConversionException rowConversionException) {
-            return (rowConversionException.getRow() - 1) == rowIndex;
-          } else {
-            return false;
-          }
-        }).map(Throwable::getMessage)
-            .collect(Collectors.joining());
       }
 
       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -83,7 +69,7 @@ public class ErrorSpreadsheetPanel extends JPanel {
         })) {
           c.setBackground(getBackground());
         } else {
-          jc.setBorder(new MatteBorder(1, 0, 1, 0, Color.RED) );
+          jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED) );
         }
 
         return c;
@@ -93,6 +79,32 @@ public class ErrorSpreadsheetPanel extends JPanel {
     table.setRowSelectionAllowed(false);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.setGridColor(Color.RED);
+    
+    table.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        JTable table = (JTable) e.getSource();
+        Point point = e.getPoint();
+        int row = table.rowAtPoint(point);
+        int col = table.columnAtPoint(point);
+        if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+          String message = exceptions.stream().filter(t -> {
+                if (t instanceof FieldException fieldException) {
+                  return fieldException.getColumn() == col && fieldException.getRow() == row;
+                } else if (t instanceof RowConversionException rowConversionException) {
+                  return (rowConversionException.getRow() - 1) == row;
+                } else {
+                  return false;
+                }
+              }).map(Throwable::getMessage)
+              .collect(Collectors.joining());
+
+          if (!StringUtils.isBlank(message)) {
+            JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, message, "Error", JOptionPane.ERROR_MESSAGE);
+          }
+        }
+      }
+    });
     
     return table;
   }
@@ -155,4 +167,16 @@ public class ErrorSpreadsheetPanel extends JPanel {
   }
   
   private record TableData(List<String> headers, List<List<String>> data) {}
+
+  protected static class TableModel extends DefaultTableModel {
+
+    public TableModel(Object[][] data, Object[] columnNames) {
+      super(data, columnNames);
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+      return false;
+    }
+  }
 }

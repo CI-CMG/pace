@@ -203,5 +203,10 @@ public class PackagesPanel extends TranslatePanel<Package> {
         default -> String.class;
       };
     }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+      return false;
+    }
   }
 }
