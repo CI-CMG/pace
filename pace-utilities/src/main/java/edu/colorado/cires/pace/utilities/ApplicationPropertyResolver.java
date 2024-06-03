@@ -74,7 +74,7 @@ public final class ApplicationPropertyResolver {
   }
 
   public Path getDataDir() {
-    String dirString = getPropertyValue("pace.data-dir", (s) -> s);
+    String dirString = getPropertyValue("pace.metadata-directory", (s) -> s);
     if (StringUtils.isBlank(dirString)) {
       return APPLICATION_BASE_DIR.resolve("data").toAbsolutePath();
     }
