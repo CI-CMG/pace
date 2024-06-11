@@ -8,9 +8,9 @@ import lombok.extern.jackson.Jacksonized;
 @Builder(toBuilder = true)
 @Jacksonized
 public class DutyCycleTranslator {
-  
-  private final String startTime;
-  private final String endTime;
+
+  private final TimeTranslator startTimeTranslator;
+  private final TimeTranslator endTimeTranslator;
   private final String duration;
   private final String interval;
 

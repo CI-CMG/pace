@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DetectionsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
@@ -34,8 +35,12 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
         .funders(String.format("funders-%s", suffix))
         .platform(String.format("platform-%s", suffix))
         .instrument(String.format("instrument-%s", suffix))
-        .startTime(String.format("start-time-%s", suffix))
-        .endTime(String.format("end-time-%s", suffix))
+        .startTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("start-time-%s", suffix))
+            .build())
+        .endTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("end-time-%s", suffix))
+            .build())
         .preDeploymentCalibrationDate(String.format("pre-deployment-calibration-date-%s", suffix))
         .postDeploymentCalibrationDate(String.format("post-deployment-calibration-date-%s", suffix))
         .calibrationDescription(String.format("calibration-description-%s", suffix))
@@ -58,8 +63,12 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
             .qualityAnalysisMethod(String.format("analysis-method-%s", suffix))
             .qualityAssessmentDescription(String.format("quality-assessment-description-%s", suffix))
             .qualityEntryTranslators(Collections.singletonList(DataQualityEntryTranslator.builder()
-                .startTime(String.format("quality-start-time-%s", suffix))
-                .endTime(String.format("quality-end-time-%s", suffix))
+                .startTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("quality-start-time-%s", suffix))
+                    .build())
+                .endTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("quality-end-time-%s", suffix))
+                    .build())
                 .minFrequency(String.format("min-frequency-%s", suffix))
                 .maxFrequency(String.format("max-frequency-%s", suffix))
                 .qualityLevel(String.format("quality-level-%s", suffix))
@@ -114,8 +123,8 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());
-    assertEquals(expectedPackageTranslator.getStartTime(), actualPackageTranslator.getStartTime());
-    assertEquals(expectedPackageTranslator.getEndTime(), actualPackageTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedPackageTranslator.getPreDeploymentCalibrationDate(), actualPackageTranslator.getPreDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getPostDeploymentCalibrationDate(), actualPackageTranslator.getPostDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getCalibrationDescription(), actualPackageTranslator.getCalibrationDescription());
@@ -149,8 +158,8 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
 
     DataQualityEntryTranslator expectedEntryTranslator = expectedQCTranslator.getQualityEntryTranslators().get(0);
     DataQualityEntryTranslator actualEntryTranslator = actualQCTranslator.getQualityEntryTranslators().get(0);
-    assertEquals(expectedEntryTranslator.getStartTime(), actualEntryTranslator.getStartTime());
-    assertEquals(expectedEntryTranslator.getEndTime(), actualEntryTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedEntryTranslator.getMinFrequency(), actualEntryTranslator.getMinFrequency());
     assertEquals(expectedEntryTranslator.getMaxFrequency(), actualEntryTranslator.getMaxFrequency());
     assertEquals(expectedEntryTranslator.getQualityLevel(), actualEntryTranslator.getQualityLevel());

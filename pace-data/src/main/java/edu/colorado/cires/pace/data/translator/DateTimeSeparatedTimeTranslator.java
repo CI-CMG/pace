@@ -7,10 +7,9 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Builder(toBuilder = true)
 @Jacksonized
-public class GainTranslator {
-
-  private final TimeTranslator startTimeTranslator;
-  private final TimeTranslator endTimeTranslator;
-  private final String gain;
+public class DateTimeSeparatedTimeTranslator implements TimeTranslator {
+  
+  private final String date;
+  private final String time;
 
 }

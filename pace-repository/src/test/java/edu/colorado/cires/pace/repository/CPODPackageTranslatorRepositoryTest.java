@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.colorado.cires.pace.data.translator.CPODPackageTranslator;
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
 import edu.colorado.cires.pace.data.translator.GainTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
@@ -38,8 +39,12 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
         .funders(String.format("funders-%s", suffix))
         .platform(String.format("platform-%s", suffix))
         .instrument(String.format("instrument-%s", suffix))
-        .startTime(String.format("start-time-%s", suffix))
-        .endTime(String.format("end-time-%s", suffix))
+        .startTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("start-time-%s", suffix))
+            .build())
+        .endTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("end-time-%s", suffix))
+            .build())
         .preDeploymentCalibrationDate(String.format("pre-deployment-calibration-date-%s", suffix))
         .postDeploymentCalibrationDate(String.format("post-deployment-calibration-date-%s", suffix))
         .calibrationDescription(String.format("calibration-description-%s", suffix))
@@ -59,8 +64,12 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
         .hydrophoneSensitivity(String.format("hydrophoneSensitivity-%s", suffix))
         .frequencyRange(String.format("frequencyRange-%s", suffix))
         .gain(String.format("gain-%s", suffix))
-        .deploymentTime(String.format("deploymentTime-%s", suffix))
-        .recoveryTime(String.format("recoveryTime-%s", suffix))
+        .deploymentTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("deploymentTime-%s", suffix))
+            .build())
+        .recoveryTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("recoveryTime-%s", suffix))
+            .build())
         .comments(String.format("comments-%s", suffix))
         .sensors(String.format("sensors-%s", suffix))
         .qualityControlDetailTranslator(QualityControlDetailTranslator.builder()
@@ -69,8 +78,12 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
             .qualityAnalysisMethod(String.format("analysis-method-%s", suffix))
             .qualityAssessmentDescription(String.format("quality-assessment-description-%s", suffix))
             .qualityEntryTranslators(Collections.singletonList(DataQualityEntryTranslator.builder()
-                .startTime(String.format("quality-start-time-%s", suffix))
-                .endTime(String.format("quality-end-time-%s", suffix))
+                .startTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("quality-start-time-%s", suffix))
+                    .build())
+                .endTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("quality-end-time-%s", suffix))
+                    .build())
                 .minFrequency(String.format("min-frequency-%s", suffix))
                 .maxFrequency(String.format("max-frequency-%s", suffix))
                 .qualityLevel(String.format("quality-level-%s", suffix))
@@ -79,24 +92,40 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
             .build())
         .channelTranslators(Collections.singletonList(ChannelTranslator.builder()
             .sensor(String.format("channel-sensor-%s", suffix))
-            .startTime(String.format("channel-start-time-%s", suffix))
-            .endTime(String.format("channel-end-time-%s", suffix))
+            .startTimeTranslator(DefaultTimeTranslator.builder()
+                .time(String.format("channel-start-time-%s", suffix))
+                .build())
+            .endTimeTranslator(DefaultTimeTranslator.builder()
+                .time(String.format("channel-end-time-%s", suffix))
+                .build())
             .sampleRateTranslators(Collections.singletonList(SampleRateTranslator.builder()
-                .startTime(String.format("startTime-%s", suffix))
-                .endTime(String.format("endTime-%s", suffix))
+                .startTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("startTime-%s", suffix))
+                    .build())
+                .endTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("endTime-%s", suffix))
+                    .build())
                 .sampleRate(String.format("sampleRate-%s", suffix))
                 .sampleBits(String.format("sampleBits-%s", suffix))
                 .build()))
             .dutyCycleTranslators(Collections.singletonList(DutyCycleTranslator.builder()
-                .startTime(String.format("startTime-%s", suffix))
-                .endTime(String.format("endTime-%s", suffix))
+                .startTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("startTime-%s", suffix))
+                    .build())
+                .endTimeTranslator(DefaultTimeTranslator.builder()
+                    .time(String.format("endTime-%s", suffix))
+                    .build())
                 .duration(String.format("duration-%s", suffix))
                 .interval(String.format("interval-%s", suffix))
                 .build()))
             .gainTranslators(Collections.singletonList(
                 GainTranslator.builder()
-                    .startTime(String.format("startTime-%s", suffix))
-                    .endTime(String.format("endTime-%s", suffix))
+                    .startTimeTranslator(DefaultTimeTranslator.builder()
+                        .time(String.format("startTime-%s", suffix))
+                        .build())
+                    .endTimeTranslator(DefaultTimeTranslator.builder()
+                        .time(String.format("endTime-%s", suffix))
+                        .build())
                     .gain(String.format("gain-%s", suffix))
                     .build()
             ))
@@ -139,8 +168,8 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());
-    assertEquals(expectedPackageTranslator.getStartTime(), actualPackageTranslator.getStartTime());
-    assertEquals(expectedPackageTranslator.getEndTime(), actualPackageTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedPackageTranslator.getPreDeploymentCalibrationDate(), actualPackageTranslator.getPreDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getPostDeploymentCalibrationDate(), actualPackageTranslator.getPostDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getCalibrationDescription(), actualPackageTranslator.getCalibrationDescription());
@@ -156,8 +185,8 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
     assertEquals(expectedCPODTranslator.getHydrophoneSensitivity(), actualCPODTranslator.getHydrophoneSensitivity());
     assertEquals(expectedCPODTranslator.getFrequencyRange(), actualCPODTranslator.getFrequencyRange());
     assertEquals(expectedCPODTranslator.getGain(), actualCPODTranslator.getGain());
-    assertEquals(expectedCPODTranslator.getDeploymentTime(), actualCPODTranslator.getDeploymentTime());
-    assertEquals(expectedCPODTranslator.getRecoveryTime(), actualCPODTranslator.getRecoveryTime());
+    assertEquals(((DefaultTimeTranslator) expectedCPODTranslator.getDeploymentTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualCPODTranslator.getDeploymentTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedCPODTranslator.getRecoveryTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualCPODTranslator.getRecoveryTimeTranslator()).getTime());
     assertEquals(expectedCPODTranslator.getComments(), actualCPODTranslator.getComments());
     assertEquals(expectedCPODTranslator.getSensors(), actualCPODTranslator.getSensors());
 
@@ -170,8 +199,8 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
 
     DataQualityEntryTranslator expectedEntryTranslator = expectedQCTranslator.getQualityEntryTranslators().get(0);
     DataQualityEntryTranslator actualEntryTranslator = actualQCTranslator.getQualityEntryTranslators().get(0);
-    assertEquals(expectedEntryTranslator.getStartTime(), actualEntryTranslator.getStartTime());
-    assertEquals(expectedEntryTranslator.getEndTime(), actualEntryTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedEntryTranslator.getMinFrequency(), actualEntryTranslator.getMinFrequency());
     assertEquals(expectedEntryTranslator.getMaxFrequency(), actualEntryTranslator.getMaxFrequency());
     assertEquals(expectedEntryTranslator.getQualityLevel(), actualEntryTranslator.getQualityLevel());
@@ -180,27 +209,27 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
     ChannelTranslator expectedChannelTranslator = expectedCPODTranslator.getChannelTranslators().get(0);
     ChannelTranslator actualChannelTranslator = actualCPODTranslator.getChannelTranslators().get(0);
     assertEquals(expectedChannelTranslator.getSensor(), actualChannelTranslator.getSensor());
-    assertEquals(expectedChannelTranslator.getStartTime(), actualChannelTranslator.getStartTime());
-    assertEquals(expectedChannelTranslator.getEndTime(), actualChannelTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedChannelTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualChannelTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedChannelTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualChannelTranslator.getEndTimeTranslator()).getTime());
 
     SampleRateTranslator expectedSampleRateTranslator = expectedChannelTranslator.getSampleRateTranslators().get(0);
     SampleRateTranslator actualSampleRateTranslator = actualChannelTranslator.getSampleRateTranslators().get(0);
-    assertEquals(expectedSampleRateTranslator.getStartTime(), actualSampleRateTranslator.getStartTime());
-    assertEquals(expectedSampleRateTranslator.getEndTime(), actualSampleRateTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedSampleRateTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualSampleRateTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedSampleRateTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualSampleRateTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedSampleRateTranslator.getSampleRate(), actualSampleRateTranslator.getSampleRate());
     assertEquals(expectedSampleRateTranslator.getSampleBits(), actualSampleRateTranslator.getSampleBits());
 
     DutyCycleTranslator expectedDutyCycleTranslator = expectedChannelTranslator.getDutyCycleTranslators().get(0);
     DutyCycleTranslator actualDutyCycleTranslator = actualChannelTranslator.getDutyCycleTranslators().get(0);
-    assertEquals(expectedDutyCycleTranslator.getStartTime(), actualDutyCycleTranslator.getStartTime());
-    assertEquals(expectedDutyCycleTranslator.getEndTime(), actualDutyCycleTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedDutyCycleTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualDutyCycleTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedDutyCycleTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualDutyCycleTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedDutyCycleTranslator.getDuration(), actualDutyCycleTranslator.getDuration());
     assertEquals(expectedDutyCycleTranslator.getInterval(), actualDutyCycleTranslator.getInterval());
 
     GainTranslator expectedGainTranslator = expectedChannelTranslator.getGainTranslators().get(0);
     GainTranslator actualGainTranslator = actualChannelTranslator.getGainTranslators().get(0);
-    assertEquals(expectedGainTranslator.getStartTime(), actualGainTranslator.getStartTime());
-    assertEquals(expectedGainTranslator.getEndTime(), actualGainTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedGainTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualGainTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedGainTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualGainTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedGainTranslator.getGain(), actualGainTranslator.getGain());
   }
 }

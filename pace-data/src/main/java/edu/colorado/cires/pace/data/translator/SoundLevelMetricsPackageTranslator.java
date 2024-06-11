@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.data.translator;
 
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -11,9 +10,9 @@ import lombok.extern.jackson.Jacksonized;
 @SuperBuilder(toBuilder = true)
 @Jacksonized
 public class SoundLevelMetricsPackageTranslator extends PackageTranslator {
-  
-  private final String audioStartTime;
-  private final String audioEndTime;
+
+  private final TimeTranslator audioStartTimeTranslator;
+  private final TimeTranslator audioEndTimeTranslator;
   
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
   private final String analysisTimeZone;

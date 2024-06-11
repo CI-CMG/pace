@@ -1,6 +1,9 @@
 package edu.colorado.cires.pace.translator.converter;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
+import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.translator.TimeTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
@@ -10,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,8 +64,25 @@ final class ConversionUtils {
     return transformedPropertyFromMap(properties, propertyName, row, runtimeException, LocalDate::parse, "Invalid date format");
   }
   
-  public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, LocalDateTime::parse, "Invalid date time format");
+  public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+    if (timeTranslator instanceof DefaultTimeTranslator defaultTimeTranslator) {
+      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, LocalDateTime::parse, "Invalid date time format");
+    } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
+      return localDateTimeFromMap(properties, dateTimeSeparatedTimeTranslator, row, runtimeException);
+    }
+    return null;
+  }
+
+  private static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, DateTimeSeparatedTimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+    LocalDate date = localDateFromMap(properties, timeTranslator.getDate(), row, runtimeException);
+    if (date == null) {
+      return null;
+    }
+    LocalTime time = transformedPropertyFromMap(properties, timeTranslator.getTime(), row, runtimeException, LocalTime::parse, "Invalid time format");
+    if (time == null) {
+      return date.atTime(0, 0);
+    }
+    return date.atTime(time);
   }
   
   public static ValueWithColumnNumber propertyFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {

@@ -17,7 +17,8 @@ public class SoundPropagationModelsPackageTranslator extends PackageTranslator {
   private final String softwareProtocolCitation;
   private final String softwareDescription;
   private final String softwareProcessingDescription;
-  private final String audioStartTime;
-  private final String audioEndTime;
+  
+  private final TimeTranslator audioStartTimeTranslator;
+  private final TimeTranslator audioEndTimeTranslator;
 
 }

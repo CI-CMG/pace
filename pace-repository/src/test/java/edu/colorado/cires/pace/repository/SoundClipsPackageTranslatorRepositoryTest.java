@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.data.translator.SoundClipsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
@@ -31,8 +32,12 @@ public class SoundClipsPackageTranslatorRepositoryTest extends TranslatorReposit
         .funders(String.format("funders-%s", suffix))
         .platform(String.format("platform-%s", suffix))
         .instrument(String.format("instrument-%s", suffix))
-        .startTime(String.format("start-time-%s", suffix))
-        .endTime(String.format("end-time-%s", suffix))
+        .startTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("start-time-%s", suffix))
+            .build())
+        .endTimeTranslator(DefaultTimeTranslator.builder()
+            .time(String.format("end-time-%s", suffix))
+            .build())
         .preDeploymentCalibrationDate(String.format("pre-deployment-calibration-date-%s", suffix))
         .postDeploymentCalibrationDate(String.format("post-deployment-calibration-date-%s", suffix))
         .calibrationDescription(String.format("calibration-description-%s", suffix))
@@ -91,8 +96,8 @@ public class SoundClipsPackageTranslatorRepositoryTest extends TranslatorReposit
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());
-    assertEquals(expectedPackageTranslator.getStartTime(), actualPackageTranslator.getStartTime());
-    assertEquals(expectedPackageTranslator.getEndTime(), actualPackageTranslator.getEndTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTimeTranslator()).getTime());
     assertEquals(expectedPackageTranslator.getPreDeploymentCalibrationDate(), actualPackageTranslator.getPreDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getPostDeploymentCalibrationDate(), actualPackageTranslator.getPostDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getCalibrationDescription(), actualPackageTranslator.getCalibrationDescription());

@@ -18,9 +18,9 @@ public class AudioPackageTranslator extends PackageTranslator {
   private final String gain;
   
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
-  
-  private final String deploymentTime;
-  private final String recoveryTime;
+
+  private final TimeTranslator deploymentTimeTranslator;
+  private final TimeTranslator recoveryTimeTranslator;
   private final String comments;
   private final String sensors;
   private final List<ChannelTranslator> channelTranslators;

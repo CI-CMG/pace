@@ -5,6 +5,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
+import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.translator.TimeTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.ShipRepository;
@@ -136,13 +139,13 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of("2024-01-01T01:00:00"), 1));
 
-    LocalDateTime result = ConversionUtils.localDateTimeFromMap(map, "test-property", 2, new RuntimeException());
+    LocalDateTime result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder().time("test-property").build(), 2, new RuntimeException());
     assertEquals(result, LocalDateTime.parse("2024-01-01T01:00:00"));
 
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    result = ConversionUtils.localDateTimeFromMap(map, "test-property", 2, runtimeException);
+    result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder().time("test-property").build(), 2, runtimeException);
     assertNull(result);
 
     assertEquals(1, runtimeException.getSuppressed().length);
@@ -153,6 +156,58 @@ class ConversionUtilsTest {
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid date time format", fieldException.getMessage());
+    
+    map.put("test-property", new ValueWithColumnNumber(Optional.of("2024-01-01"), 1));
+    map.put("test-other-property", new ValueWithColumnNumber(Optional.of("12:00:00"), 2));
+
+    runtimeException = new RuntimeException();
+    result = ConversionUtils.localDateTimeFromMap(map, new TimeTranslator() {}, 2, runtimeException);
+    assertNull(result);
+    assertEquals(0, runtimeException.getSuppressed().length);
+    
+    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+            .date("test-property")
+            .time("test-other-property")
+        .build(), 2, new RuntimeException());
+    
+    assertEquals(LocalDateTime.parse("2024-01-01T12:00:00"), result);
+    
+    runtimeException = new RuntimeException();
+    map.put("test-other-property", new ValueWithColumnNumber(Optional.of("-"), 2));
+    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+        .date("test-property")
+        .time("test-other-property")
+        .build(), 2, runtimeException);
+    assertEquals(LocalDateTime.parse("2024-01-01T00:00:00"), result);
+
+    assertEquals(1, runtimeException.getSuppressed().length);
+    throwable = runtimeException.getSuppressed()[0];
+    assertInstanceOf(FieldException.class, throwable);
+    fieldException = (FieldException) throwable;
+    assertEquals("test-other-property", fieldException.getProperty());
+    assertEquals(2, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("Invalid time format", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    map.remove("test-other-property");
+    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+        .date("test-property")
+        .time("test-other-property")
+        .build(), 2, runtimeException);
+    assertEquals(LocalDateTime.parse("2024-01-01T00:00:00"), result);
+
+    assertEquals(0, runtimeException.getSuppressed().length);
+
+    runtimeException = new RuntimeException();
+    map.remove("test-property");
+    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+        .date("test-property")
+        .time("test-other-property")
+        .build(), 2, runtimeException);
+    assertNull(result);
+
+    assertEquals(0, runtimeException.getSuppressed().length);
   }
 
   @Test
