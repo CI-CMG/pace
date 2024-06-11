@@ -9,8 +9,8 @@ public class FieldException extends Exception {
   public FieldException(String property, String message, int column, int row) {
     super(message);
     this.property = property;
-    this.column = column - 1;
-    this.row = row - 1;
+    this.column = column;
+    this.row = row;
   }
 
   public int getColumn() {
