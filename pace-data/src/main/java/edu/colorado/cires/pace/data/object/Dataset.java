@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
     @Type(value = SoundLevelMetricsDataset.class, name = "sound level metrics"),
     @Type(value = SoundPropagationModelsDataset.class, name = "sound propagation models")
 })
-public interface Dataset extends PackageInfo, PeopleOrganizationsInfo, DatasetDetail, LocationDetail, CalibrationDetail, DatasetDescription {
+public interface Dataset extends PackageInfo, PeopleOrganizationsInfo, DatasetDetail, CalibrationDetail, DatasetDescription {
   @NotNull @Valid
   LocationDetail getLocationDetail();
 }
