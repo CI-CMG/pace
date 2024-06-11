@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ConversionUtilsTest {
 
@@ -115,12 +117,12 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of("2024-01-01"), 1));
 
-    LocalDate result = ConversionUtils.localDateFromMap(map, "test-property", 2, new RuntimeException());
+    RuntimeException runtimeException = new RuntimeException();
+    LocalDate result = ConversionUtils.localDateFromMap(map, "test-property", 2, runtimeException);
     assertEquals(result, LocalDate.parse("2024-01-01"));
 
-    RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
-
+    runtimeException = new RuntimeException();
     result = ConversionUtils.localDateFromMap(map, "test-property", 2, runtimeException);
     assertNull(result);
 
@@ -132,6 +134,58 @@ class ConversionUtilsTest {
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid date format", fieldException.getMessage());
+  }
+  
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "2024-01-01",
+      "2024-01-01T01:02:03",
+      "2024-01-01 01:02:03",
+      "2024-01-01T01:02:03Z",
+      "01/01/2024",
+      "01/01/2024 01:02:03",
+      "1/1/24",
+      "1/1/24 01:02:03",
+      "1/1/2024",
+      "1/1/2024 01:02:03"
+  })
+  void testDateFormats(String inputDate) {
+    RuntimeException runtimeException = new RuntimeException();
+    LocalDate result = ConversionUtils.localDateFromMap(
+        Map.of(
+            "date", new ValueWithColumnNumber(Optional.of(inputDate), 1)
+        ),
+        "date",
+        1,
+        runtimeException
+    );
+    assertNotNull(result);
+    assertEquals(LocalDate.parse("2024-01-01"), result);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "2024-01-01T01:02:03",
+      "2024-01-01 01:02:03",
+      "2024-01-01T01:02:03Z",
+      "01/01/2024 01:02:03",
+      "1/1/24 01:02:03",
+      "1/1/2024 01:02:03"
+  })
+  void testDateTimeFormats(String inputDate) {
+    RuntimeException runtimeException = new RuntimeException();
+    LocalDateTime result = ConversionUtils.localDateTimeFromMap(
+        Map.of(
+            "date", new ValueWithColumnNumber(Optional.of(inputDate), 1)
+        ),
+        DefaultTimeTranslator.builder()
+            .time("date")
+            .build(),
+        1,
+        runtimeException
+    );
+    assertNotNull(result);
+    assertEquals(LocalDateTime.parse("2024-01-01T01:02:03"), result);
   }
 
   @Test
