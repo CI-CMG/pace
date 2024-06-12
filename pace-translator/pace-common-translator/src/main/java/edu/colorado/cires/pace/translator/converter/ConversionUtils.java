@@ -209,7 +209,26 @@ final class ConversionUtils {
         .matcher(latitudeString);
     
     if (!matcher.matches()) {
-      return doubleFromMap(properties, propertyName, row, runtimeException);
+      matcher = Pattern.compile("^(?<degrees>\\d{1,2})[°Dd]\\s*(?<minutes>\\d{1,2}.\\d{1,})['Mm]\\s*(?<orientation>[NS])$")
+          .matcher(latitudeString);
+      
+      if (!matcher.matches()) {
+        return doubleFromMap(properties, propertyName, row, runtimeException);
+      } else {
+        String degreesString = matcher.group("degrees");
+        String minutesString = matcher.group("minutes");
+        String orientationString = matcher.group("orientation");
+
+        int degrees = Integer.parseInt(degreesString);
+        double minutes = Double.parseDouble(minutesString);
+
+        double result = Math.round((degrees + (minutes / 60)) * 1000000d) / 1000000d;
+        if (orientationString.equals("S")) {
+          result *= -1;
+        }
+
+        return result;
+      }
     } else {
       String degreesString = matcher.group("degrees");
       String minutesString = matcher.group("minutes");
@@ -237,7 +256,26 @@ final class ConversionUtils {
         .matcher(latitudeString);
 
     if (!matcher.matches()) {
-      return doubleFromMap(properties, propertyName, row, runtimeException);
+      matcher = Pattern.compile("^(?<degrees>\\d{1,3})[°Dd]\\s*(?<minutes>\\d{1,2}.\\d{1,})['Mm]\\s*(?<orientation>[EW])$")
+          .matcher(latitudeString);
+
+      if (!matcher.matches()) {
+        return doubleFromMap(properties, propertyName, row, runtimeException);
+      } else {
+        String degreesString = matcher.group("degrees");
+        String minutesString = matcher.group("minutes");
+        String orientationString = matcher.group("orientation");
+
+        int degrees = Integer.parseInt(degreesString);
+        double minutes = Double.parseDouble(minutesString);
+
+        double result = Math.round((degrees + (minutes / 60)) * 1000000d) / 1000000d;
+        if (orientationString.equals("W")) {
+          result *= -1;
+        }
+
+        return result;
+      }
     } else {
       String degreesString = matcher.group("degrees");
       String minutesString = matcher.group("minutes");

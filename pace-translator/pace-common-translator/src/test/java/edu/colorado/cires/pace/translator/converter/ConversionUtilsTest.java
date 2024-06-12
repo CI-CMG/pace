@@ -417,7 +417,19 @@ class ConversionUtilsTest {
       "150d 35m 21s E",
       "150d 35m 21s W",
       "150.589167",
-      "-150.589167"
+      "-150.589167",
+      "150°35.35'E",
+      "150°35.35'W",
+      "150° 35.35' E",
+      "150° 35.35' W",
+      "150D35.35ME",
+      "150D35.35MW",
+      "150D 35.35M E",
+      "150D 35.35M W",
+      "150d35.35mE",
+      "150d35.35mW",
+      "150d 35.35m E",
+      "150d 35.35m W",
   })
   void testConvertDMSToDecimalDegreesLongitude(String dmsString) {
     double expected = 150.589167;
@@ -448,7 +460,19 @@ class ConversionUtilsTest {
     "30d 35m 21s N",
     "30d 35m 21s S",
     "30.589167",
-    "-30.589167"
+    "-30.589167",
+    "30°35.35'N",
+    "30°35.35'S",
+    "30° 35.35' N",
+    "30° 35.35' S",
+    "30D35.35MN",
+    "30D35.35MS",
+    "30D 35.35M N",
+    "30D 35.35M S",
+    "30d35.35mN",
+    "30d35.35mS",
+    "30d 35.35m N",
+    "30d 35.35m S",
   })
   void testConvertDMSToDecimalDegreesLatitude(String dmsString) {
     double expected = 30.589167;
