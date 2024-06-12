@@ -16,8 +16,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
+  
+  private final Logger LOGGER;
   
   private final Path storageFile;
   private final ObjectMapper objectMapper;
@@ -28,6 +32,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
 
   protected JsonDatastore(Path storagePath, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
       TypeReference<List<O>> typeReference) throws IOException {
+    this.LOGGER = LoggerFactory.getLogger(this.getClass());
     this.storageFile = storagePath;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
@@ -38,6 +43,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   
   private void init() throws IOException {
     if (!storageFile.toFile().exists()) {
+      LOGGER.debug("Creating {}", storageFile);
       Files.createDirectories(storageFile.getParent());
       objectMapper.writeValue(storageFile.toFile(), Collections.emptyList());
     }
@@ -60,6 +66,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
       
       objectsMap.put(uniqueField, object);
       writeStorageFile();
+      LOGGER.debug("Wrote {} with {} = {}, uuid = {} to {}", getClassName(), getUniqueFieldName(), uniqueField, object.getUuid(), storageFile);
       return object;
     } catch (Exception e) {
       throw new DatastoreException(String.format(
@@ -73,6 +80,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
     String uniqueField = uniqueFieldGetter.apply(object);
     try {
       objectsMap.remove(uniqueField);
+      LOGGER.debug("Removed {} with {} = {} from objects", getClassName(), getUniqueFieldName(), uniqueField);
       writeStorageFile();
     } catch (IOException e) {
       throw new DatastoreException(String.format(
@@ -101,6 +109,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   }
 
   private void readStorageFile() throws IOException {
+    LOGGER.debug("Reading all {} objects from {}", getClassName(), storageFile);
     List<O> objects = objectMapper.readValue(storageFile.toFile(), typeReference);
     objects.forEach(o -> objectsMap.put(
         uniqueFieldGetter.apply(o), o
@@ -108,6 +117,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   }
   
   private void writeStorageFile() throws IOException {
+    LOGGER.debug("Writing {} objects to {}", getClassName(), storageFile);
     objectMapper.writerFor(typeReference).writeValue(
         storageFile.toFile(),
         objectsMap.values().stream().toList()

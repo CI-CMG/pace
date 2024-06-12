@@ -14,13 +14,18 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
+  
+  private final Logger LOGGER;
   
   private final Path sqliteFile;
   private final String tableName;
 
   protected SQLiteDatastore(Path sqliteFile, String tableName) {
+    LOGGER = LoggerFactory.getLogger(this.getClass());
     this.sqliteFile = sqliteFile;
     this.tableName = tableName;
   }
@@ -63,6 +68,7 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
 
   @Override
   public Stream<O> findAll() throws DatastoreException {
+    LOGGER.debug("Listing {} contents from {}", tableName, sqliteFile);
     try (Connection connection = DriverManager.getConnection(String.format("jdbc:sqlite:%s", sqliteFile.toString())); Statement statement = connection.createStatement()) {
       statement.setQueryTimeout(30);
       
