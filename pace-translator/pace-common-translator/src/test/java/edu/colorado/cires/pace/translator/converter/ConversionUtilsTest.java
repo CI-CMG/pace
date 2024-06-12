@@ -401,4 +401,65 @@ class ConversionUtilsTest {
     ships = ConversionUtils.delimitedObjectsFromMap(map, "test-other-property", 1, new RuntimeException(), repository);
     assertEquals(0, ships.size());
   }
+  
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "150°35'21\"E",
+      "150°35'21\"W",
+      "150° 35' 21\" E",
+      "150° 35' 21\" W",
+      "150D35M21SE",
+      "150D35M21SW",
+      "150D 35M 21S E",
+      "150D 35M 21S W",
+      "150d35m21sE",
+      "150d35m21sW",
+      "150d 35m 21s E",
+      "150d 35m 21s W",
+      "150.589167",
+      "-150.589167"
+  })
+  void testConvertDMSToDecimalDegreesLongitude(String dmsString) {
+    double expected = 150.589167;
+
+    assertEquals(
+        (dmsString.endsWith("W") || dmsString.startsWith("-")) ? expected * -1 : expected,
+        ConversionUtils.longitudeFromMap(
+            Map.of("lon", new ValueWithColumnNumber(Optional.of(dmsString), 2)),
+            "lon",
+            1,
+            new RuntimeException()
+        )
+    );
+  }
+  
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "30°35'21\"N",
+    "30°35'21\"S",
+    "30° 35' 21\" N",
+    "30° 35' 21\" S",
+    "30D35M21SN",
+    "30D35M21SS",
+    "30D 35M 21S N",
+    "30D 35M 21S S",
+    "30d35m21sN",
+    "30d35m21sS",
+    "30d 35m 21s N",
+    "30d 35m 21s S",
+    "30.589167",
+    "-30.589167"
+  })
+  void testConvertDMSToDecimalDegreesLatitude(String dmsString) {
+    double expected = 30.589167;
+    assertEquals(
+        (dmsString.endsWith("S") || dmsString.startsWith("-")) ? expected * -1 : expected,
+        ConversionUtils.latitudeFromMap(
+            Map.of("lat", new ValueWithColumnNumber(Optional.of(dmsString), 2)),
+            "lat",
+            1,
+            new RuntimeException()
+        )
+    );
+  }
 }

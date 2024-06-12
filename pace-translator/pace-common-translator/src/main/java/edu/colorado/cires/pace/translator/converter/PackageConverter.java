@@ -3,8 +3,10 @@ package edu.colorado.cires.pace.translator.converter;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.delimitedObjectsFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.floatFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.integerFromMap;
+import static edu.colorado.cires.pace.translator.converter.ConversionUtils.latitudeFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.localDateFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.localDateTimeFromMap;
+import static edu.colorado.cires.pace.translator.converter.ConversionUtils.longitudeFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.objectFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.propertyFromMap;
@@ -320,17 +322,17 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
 
   private static MarineInstrumentLocation marineInstrumentLocationFromMap(MarineInstrumentLocationTranslator marineInstrumentLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return MarineInstrumentLocation.builder()
+        .latitude(latitudeFromMap(properties, marineInstrumentLocationTranslator.getLatitude(), row, runtimeException))
+        .longitude(longitudeFromMap(properties, marineInstrumentLocationTranslator.getLongitude(), row, runtimeException))
         .instrumentDepth(floatFromMap(properties, marineInstrumentLocationTranslator.getInstrumentDepth(), row, runtimeException))
         .seaFloorDepth(floatFromMap(properties, marineInstrumentLocationTranslator.getSeaFloorDepth(), row, runtimeException))
-        .longitude(floatFromMap(properties, marineInstrumentLocationTranslator.getLongitude(), row, runtimeException))
-        .latitude(floatFromMap(properties, marineInstrumentLocationTranslator.getLatitude(), row, runtimeException))
         .build();
   }
 
   private static StationaryTerrestrialLocation stationaryTerrestrialLocationFromMap(StationaryTerrestrialLocationTranslator stationaryTerrestrialLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return StationaryTerrestrialLocation.builder()
-        .latitude(floatFromMap(properties, stationaryTerrestrialLocationTranslator.getLatitude(), row, runtimeException))
-        .longitude(floatFromMap(properties, stationaryTerrestrialLocationTranslator.getLongitude(), row, runtimeException))
+        .latitude(latitudeFromMap(properties, stationaryTerrestrialLocationTranslator.getLatitude(), row, runtimeException))
+        .longitude(longitudeFromMap(properties, stationaryTerrestrialLocationTranslator.getLongitude(), row, runtimeException))
         .instrumentElevation(floatFromMap(properties, stationaryTerrestrialLocationTranslator.getInstrumentElevation(), row, runtimeException))
         .surfaceElevation(floatFromMap(properties, stationaryTerrestrialLocationTranslator.getSurfaceElevation(), row, runtimeException))
         .build();

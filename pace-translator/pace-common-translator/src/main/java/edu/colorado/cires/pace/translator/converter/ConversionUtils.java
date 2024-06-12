@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 final class ConversionUtils {
@@ -54,6 +56,10 @@ final class ConversionUtils {
   
   public static Float floatFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
     return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Float::parseFloat, "Invalid float format");
+  }
+  
+  public static Double doubleFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Double::parseDouble, "Invalid double format");
   }
   
   public static Integer integerFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
@@ -193,6 +199,62 @@ final class ConversionUtils {
         .map(string -> objectFromUniqueField(propertyName, string.trim(), repository, row, valueWithColumnNumber.column(), runtimeException))
         .filter(Objects::nonNull)
         .toList();
+  }
+  
+  public static Double latitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
+    
+    String latitudeString = stringFromMap(properties, propertyName);
+
+    Matcher matcher = Pattern.compile("^(?<degrees>\\d{1,2}[°Dd])\\s*(?<minutes>\\d{1,2}['Mm])\\s*(?<seconds>\\d{1,2}[\"Ss])\\s*(?<orientation>[NS])$")
+        .matcher(latitudeString);
+    
+    if (!matcher.matches()) {
+      return doubleFromMap(properties, propertyName, row, runtimeException);
+    } else {
+      String degreesString = matcher.group("degrees");
+      String minutesString = matcher.group("minutes");
+      String secondsString = matcher.group("seconds");
+      String orientationString = matcher.group("orientation");
+
+      int degrees = Integer.parseInt(degreesString.substring(0, degreesString.length() - 1));
+      int minutes = Integer.parseInt(minutesString.substring(0, minutesString.length() - 1));
+      int seconds = Integer.parseInt(secondsString.substring(0, secondsString.length() - 1));
+
+      double result = Math.round((degrees + ((double) minutes / 60) + ((double) seconds / 3600)) * 1000000d) / 1000000d;
+      if (orientationString.equals("S")) {
+        result *= -1;
+      }
+      
+      return result;
+    }
+  }
+
+  public static Double longitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
+
+    String latitudeString = stringFromMap(properties, propertyName);
+
+    Matcher matcher = Pattern.compile("^(?<degrees>\\d{1,3}[°Dd])\\s*(?<minutes>\\d{1,2}['Mm])\\s*(?<seconds>\\d{1,2}[\"Ss])\\s*(?<orientation>[EW])$")
+        .matcher(latitudeString);
+
+    if (!matcher.matches()) {
+      return doubleFromMap(properties, propertyName, row, runtimeException);
+    } else {
+      String degreesString = matcher.group("degrees");
+      String minutesString = matcher.group("minutes");
+      String secondsString = matcher.group("seconds");
+      String orientationString = matcher.group("orientation");
+
+      int degrees = Integer.parseInt(degreesString.substring(0, degreesString.length() - 1));
+      int minutes = Integer.parseInt(minutesString.substring(0, minutesString.length() - 1));
+      int seconds = Integer.parseInt(secondsString.substring(0, secondsString.length() - 1));
+
+      double result = Math.round((degrees + ((double) minutes / 60) + ((double) seconds / 3600)) * 1000000d) / 1000000d;
+      if (orientationString.equals("W")) {
+        result *= -1;
+      }
+
+      return result;
+    }
   }
 
 
