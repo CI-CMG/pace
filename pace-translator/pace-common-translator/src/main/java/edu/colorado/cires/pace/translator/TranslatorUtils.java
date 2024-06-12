@@ -949,6 +949,23 @@ final class TranslatorUtils {
     );
   }
   
+  private static Double getPropertyAsDouble(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException, int row) {
+    ValueWithColumnNumber doubleCell = getProperty(map, property);
+
+    if (doubleCell.value().isEmpty()) {
+      return null;
+    }
+
+    try {
+      return Double.parseDouble(doubleCell.value().get());
+    } catch (NumberFormatException e) {
+      runtimeException.addSuppressed(
+          new FieldException(property, "invalid decimal format", doubleCell.column(), row)
+      );
+      return null;
+    }
+  }
+  
   private static Float getPropertyAsFloat(Map<String, ValueWithColumnNumber> map, String property, RuntimeException runtimeException, int row) {
     ValueWithColumnNumber floatCell = getProperty(map, property);
     
@@ -1117,14 +1134,14 @@ final class TranslatorUtils {
       return StationaryMarineLocation.builder()
           .seaArea(getPropertyAsResource("seaArea", getProperty(propertyMap, "seaArea"), seaRepository, runtimeException, row))
           .deploymentLocation(MarineInstrumentLocation.builder()
-              .latitude(getPropertyAsFloat(propertyMap, "deploymentLocation.latitude", runtimeException, row))
-              .longitude(getPropertyAsFloat(propertyMap, "deploymentLocation.longitude", runtimeException, row))
+              .latitude(getPropertyAsDouble(propertyMap, "deploymentLocation.latitude", runtimeException, row))
+              .longitude(getPropertyAsDouble(propertyMap, "deploymentLocation.longitude", runtimeException, row))
               .seaFloorDepth(getPropertyAsFloat(propertyMap, "deploymentLocation.seaFloorDepth", runtimeException, row))
               .instrumentDepth(getPropertyAsFloat(propertyMap, "deploymentLocation.instrumentDepth", runtimeException, row))
               .build())
           .recoveryLocation(MarineInstrumentLocation.builder()
-              .latitude(getPropertyAsFloat(propertyMap, "recoveryLocation.latitude", runtimeException, row))
-              .longitude(getPropertyAsFloat(propertyMap, "recoveryLocation.longitude", runtimeException, row))
+              .latitude(getPropertyAsDouble(propertyMap, "recoveryLocation.latitude", runtimeException, row))
+              .longitude(getPropertyAsDouble(propertyMap, "recoveryLocation.longitude", runtimeException, row))
               .seaFloorDepth(getPropertyAsFloat(propertyMap, "recoveryLocation.seaFloorDepth", runtimeException, row))
               .instrumentDepth(getPropertyAsFloat(propertyMap, "recoveryLocation.instrumentDepth", runtimeException, row))
               .build())
@@ -1137,8 +1154,8 @@ final class TranslatorUtils {
           .build();
     } else if (LocationType.STATIONARY_TERRESTRIAL.getName().equals(locationType)) {
       return StationaryTerrestrialLocation.builder()
-          .latitude(getPropertyAsFloat(propertyMap, "latitude", runtimeException, row))
-          .longitude(getPropertyAsFloat(propertyMap, "longitude", runtimeException, row))
+          .latitude(getPropertyAsDouble(propertyMap, "latitude", runtimeException, row))
+          .longitude(getPropertyAsDouble(propertyMap, "longitude", runtimeException, row))
           .surfaceElevation(getPropertyAsFloat(propertyMap, "surfaceElevation", runtimeException, row))
           .instrumentElevation(getPropertyAsFloat(propertyMap, "instrumentElevation", runtimeException, row))
           .build();
@@ -1154,10 +1171,10 @@ final class TranslatorUtils {
       locationMap.forEach((key, value) -> {
         Map<String, ValueWithColumnNumber> map = Map.ofEntries(value.toArray(Entry[]::new));
         marineInstrumentLocations.add(key, MarineInstrumentLocation.builder()
-            .latitude(getPropertyAsFloat(map, String.format(
+            .latitude(getPropertyAsDouble(map, String.format(
                 "locations[%s].latitude", key 
             ), runtimeException, row))
-            .longitude(getPropertyAsFloat(map, String.format(
+            .longitude(getPropertyAsDouble(map, String.format(
                 "locations[%s].longitude", key 
             ), runtimeException, row))
             .seaFloorDepth(getPropertyAsFloat(map, String.format(

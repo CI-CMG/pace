@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 public interface LatLonPair {
 
   @NotNull @Min(-90) @Max(90)
-  Float getLatitude();
+  Double getLatitude();
   @NotNull @Min(-180) @Max(180)
-  Float getLongitude();
+  Double getLongitude();
 
 }

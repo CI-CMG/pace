@@ -11,8 +11,8 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 public class MarineInstrumentLocation implements LatLonPair {
   
-  private final Float latitude;
-  private final Float longitude;
+  private final Double latitude;
+  private final Double longitude;
   private Float seaFloorDepth;
   private Float instrumentDepth;
 }

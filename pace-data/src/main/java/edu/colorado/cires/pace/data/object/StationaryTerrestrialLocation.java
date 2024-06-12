@@ -9,8 +9,8 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class StationaryTerrestrialLocation implements LocationDetail, LatLonPair, ElevationPair {
   
-  private final Float latitude;
-  private final Float longitude;
+  private final Double latitude;
+  private final Double longitude;
   private final Float surfaceElevation;
   private final Float instrumentElevation;
   

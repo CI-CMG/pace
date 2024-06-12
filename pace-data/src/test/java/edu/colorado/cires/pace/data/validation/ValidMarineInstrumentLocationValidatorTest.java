@@ -26,8 +26,8 @@ class ValidMarineInstrumentLocationValidatorTest {
     MarineInstrumentLocation marineInstrumentLocation = MarineInstrumentLocation.builder()
         .instrumentDepth(instrumentDepth)
         .seaFloorDepth(seaFloorDepth)
-        .latitude(10f)
-        .longitude(10f)
+        .latitude(10d)
+        .longitude(10d)
         .build();
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
