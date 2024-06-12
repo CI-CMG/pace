@@ -9,12 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class PackageInstructionFactory {
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(PackageInstructionFactory.class);
   
   public static long getInstructionCount(Package packingJob, Path outputDirectory) throws PackagingException {
     return getPackageInstructions(
@@ -92,7 +88,6 @@ class PackageInstructionFactory {
             try {
               return FileUtils.filterHidden(p);
             } catch (IOException e) {
-              LOGGER.error("Failed to determine is {} is hidden file", p);
               throw new RuntimeException(e);
             }
           })
@@ -105,7 +100,6 @@ class PackageInstructionFactory {
             try {
               return FileUtils.filterTimeSize(packageInstruction.source(), packageInstruction.target());
             } catch (IOException e) {
-              LOGGER.error("Failed to determine file equivalency between {} and {}", packageInstruction.source(), packageInstruction.target());
               throw new RuntimeException(e);
             }
           });

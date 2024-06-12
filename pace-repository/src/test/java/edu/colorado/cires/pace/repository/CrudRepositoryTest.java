@@ -106,7 +106,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O finalObject = object;
     Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(finalObject));
     assertEquals(String.format(
-        "uuid for new %s %s must not be defined", repository.getClassName(), uniqueFieldGetter().apply(finalObject)
+        "uuid for new %s must not be defined", repository.getClassName()
     ), exception.getMessage());
   }
   

@@ -8,12 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class Packager {
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(Packager.class);
   
   public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, ProgressIndicator... progressIndicators) throws PackagingException {
     mkdir(outputDir);
@@ -86,8 +82,6 @@ class Packager {
       ), e);
     }
     
-    LOGGER.info("Wrote manifest file to {}", outputFile);
-    
     incrementProgressFn.run();
     
     return outputFile;
@@ -109,8 +103,6 @@ class Packager {
       ), e);
     }
     
-    LOGGER.info("Wrote bag info file {}", bagInfoFile);
-    
     incrementProgressFn.run();
     
     return bagInfoFile;
@@ -129,8 +121,6 @@ class Packager {
           "Failed to write %s", bagitFile
       ), e);
     }
-    
-    LOGGER.info("Wrote bagit file {}", bagitFile);
     
     incrementProgressFn.run();
     

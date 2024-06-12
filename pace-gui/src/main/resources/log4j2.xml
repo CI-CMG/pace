@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+    </Console>
+    <File name="FileAppender" fileName="${sys:user.home}/.pace/logs/application.log" append="true">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="warn" additivity="false">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="FileAppender"/>
+    </Root>
+    <Logger name="edu.colorado.cires.pace" level="info" additivity="false">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="FileAppender"/>
+    </Logger>
+  </Loggers>
+</Configuration>

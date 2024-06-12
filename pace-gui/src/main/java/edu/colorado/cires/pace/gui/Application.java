@@ -7,8 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Application {
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
   
   public static void main(String[] args) {
     FlatIntelliJLaf.setup();
@@ -39,6 +43,8 @@ public class Application {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    
+    LOGGER.info("Started GUI");
   }
 
 }
