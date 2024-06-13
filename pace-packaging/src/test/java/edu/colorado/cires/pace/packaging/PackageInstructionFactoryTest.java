@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,7 +91,7 @@ class PackageInstructionFactoryTest {
     Path organizationsPath = TARGET_PATH.resolve("organizations.json");
     Path projectsPath = TARGET_PATH.resolve("projects.json");
     
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH, LogManager.getLogger("test"))
         .toList();
     
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -160,7 +161,7 @@ class PackageInstructionFactoryTest {
     Path organizationsPath = TARGET_PATH.resolve("organizations.json");
     Path projectsPath = TARGET_PATH.resolve("projects.json");
 
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH, LogManager.getLogger("test"))
         .toList();
 
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -230,7 +231,7 @@ class PackageInstructionFactoryTest {
     Path organizationsPath = TARGET_PATH.resolve("organizations.json");
     Path projectsPath = TARGET_PATH.resolve("projects.json");
 
-    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH)
+    List<PackageInstruction> packageInstructions = PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH, LogManager.getLogger("test"))
         .toList();
 
     Path baseExpectedOutputPath = Path.of("target").resolve("target").resolve("data");
@@ -266,7 +267,7 @@ class PackageInstructionFactoryTest {
     Path organizationsPath = TARGET_PATH.resolve("organizations.json");
     Path projectsPath = TARGET_PATH.resolve("projects.json");
     
-    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH));
+    Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH, LogManager.getLogger("test")));
     assertEquals(String.format(
         "Failed to compute packaging destinations for %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
     ), exception.getMessage());

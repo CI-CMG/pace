@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -211,6 +212,8 @@ class PackagerProcessorTest {
     )).toFile(), StandardCharsets.UTF_8);
     
     assertEquals(expectedMetadata, actualMetadata);
+    
+    assertTrue(baseExpectedOutputPath.getParent().resolve("process.log").toFile().exists());
     
     String actualPeople = FileUtils.readFileToString(baseExpectedOutputPath.resolve("people.json").toFile(), StandardCharsets.UTF_8);
     assertEquals(expectedPeople, actualPeople);

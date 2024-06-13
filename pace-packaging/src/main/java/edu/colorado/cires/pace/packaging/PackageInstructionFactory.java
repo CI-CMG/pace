@@ -9,51 +9,80 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.Logger;
 
 class PackageInstructionFactory {
   
-  public static long getInstructionCount(Package packingJob, Path outputDirectory) throws PackagingException {
+  public static long getInstructionCount(Package packingJob, Path outputDirectory, Logger logger) throws PackagingException {
     return getPackageInstructions(
         packingJob,
         Paths.get("metadata"),
         Paths.get("people"),
         Paths.get("organizations"),
         Paths.get("projects"),
-        outputDirectory
+        outputDirectory,
+        logger
     ).count() + 4L; // account for generated files
   }
   
-  public static Stream<PackageInstruction> getPackageInstructions(Package packingJob, Path metadataPath, Path peoplePath, Path organizationsPath, Path projectsPath, Path outputDirectory)
-      throws PackagingException {
+  public static Stream<PackageInstruction> getPackageInstructions(
+      Package packingJob,
+      Path metadataPath,
+      Path peoplePath,
+      Path organizationsPath,
+      Path projectsPath,
+      Path outputDirectory,
+      Logger logger
+  ) throws PackagingException {
     Path dataDirectory = outputDirectory.resolve("data");
     
+    logger.info("Scanning temperature files from {}", packingJob.getTemperaturePath());
     Stream<PackageInstruction> temperatureFiles = processPath(
         packingJob::getTemperaturePath,
-        dataDirectory.resolve("temperature")
+        dataDirectory.resolve("temperature"),
+        logger
     );
+
+    logger.info("Scanning biological files from {}", packingJob.getBiologicalPath());
     Stream<PackageInstruction> biologicalFiles = processPath(
         packingJob::getBiologicalPath,
-        dataDirectory.resolve("biological")
+        dataDirectory.resolve("biological"),
+        logger
     );
+    
+    logger.info("Scanning other files from {}", packingJob.getOtherPath());
     Stream<PackageInstruction> otherFiles = processPath(
         packingJob::getOtherPath,
-        dataDirectory.resolve("other")
+        dataDirectory.resolve("other"),
+        logger
     );
+    
+    logger.info("Scanning documentation files from {}", packingJob.getDocumentsPath());
     Stream<PackageInstruction> docsFiles = processPath(
         packingJob::getDocumentsPath, 
-        dataDirectory.resolve("docs")
+        dataDirectory.resolve("docs"),
+        logger
     );
+    
+    logger.info("Scanning calibration documentation from {} , files", packingJob.getCalibrationDocumentsPath());
     Stream<PackageInstruction> calibrationDocsFiles = processPath(
         packingJob::getCalibrationDocumentsPath,
-        dataDirectory.resolve("calibration")
+        dataDirectory.resolve("calibration"),
+        logger
     );
+    
+    logger.info("Scanning navigation files from {}", packingJob.getNavigationPath());
     Stream<PackageInstruction> navigationFiles = processPath(
         packingJob::getNavigationPath, 
-        dataDirectory.resolve("nav_files")
+        dataDirectory.resolve("nav_files"),
+        logger
     );
+    
+    logger.info("Scanning source files from {}", packingJob.getSourcePath());
     Stream<PackageInstruction> sourceFiles = processPath(
         packingJob::getSourcePath, 
-        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files")
+        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files"),
+        logger
     );
     
     Stream<PackageInstruction> additionalFiles = Stream.<PackageInstruction>builder()
@@ -75,7 +104,7 @@ class PackageInstructionFactory {
     ).flatMap(stream -> stream);
   }
   
-  private static Stream<PackageInstruction> processPath(Supplier<Path> pathGetter, Path outputDirectory) throws PackagingException {
+  private static Stream<PackageInstruction> processPath(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
     Path path = pathGetter.get();
     if (path == null) {
       return Stream.empty();
@@ -86,7 +115,11 @@ class PackageInstructionFactory {
           .filter(p -> p.toFile().isFile())
           .filter(p -> {
             try {
-              return FileUtils.filterHidden(p);
+              boolean regularFile = FileUtils.filterHidden(p);
+              if (!regularFile) {
+                logger.warn("Filtered file will not be moved: {}", p);
+              }
+              return regularFile;
             } catch (IOException e) {
               throw new RuntimeException(e);
             }
@@ -98,7 +131,11 @@ class PackageInstructionFactory {
               )
           ).filter(packageInstruction -> {
             try {
-              return FileUtils.filterTimeSize(packageInstruction.source(), packageInstruction.target());
+              boolean shouldMoveFile = FileUtils.filterTimeSize(packageInstruction.source(), packageInstruction.target());
+              if (!shouldMoveFile) {
+                logger.warn("Filtered file will not be moved: {}", packageInstruction.source());
+              }
+              return shouldMoveFile;
             } catch (IOException e) {
               throw new RuntimeException(e);
             }
