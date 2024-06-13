@@ -87,6 +87,8 @@ public class PackageProcessor {
 
       processPackage(aPackage, packageOutputDir, logger);
     }
+
+    Configurator.reconfigure();
   }
   
   private void initializeProgressIndicators() {
