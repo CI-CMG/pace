@@ -44,7 +44,7 @@ public class Application {
       throw new RuntimeException(e);
     }
     
-    LOGGER.info("Started GUI");
+    LOGGER.debug("Started GUI");
   }
 
 }
