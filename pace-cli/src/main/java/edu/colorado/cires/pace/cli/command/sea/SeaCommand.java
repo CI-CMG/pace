@@ -9,6 +9,9 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.SeaConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -192,7 +195,7 @@ public class SeaCommand implements Runnable {
   }
   
   @Command(name = "translate", description = "Translate sea area from spreadsheet")
-  static class Translate extends TranslateCommand<Sea> {
+  static class Translate extends TranslateCommand<Sea, SeaTranslator> {
 
     @Option(names = {"--translate-from", "-tf"}, description = "Input file format", required = true)
     private TranslationType translationType;
@@ -224,8 +227,13 @@ public class SeaCommand implements Runnable {
     }
 
     @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+    protected RepositoryFactory<Sea>[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[0];
+    }
+
+    @Override
+    protected Converter<SeaTranslator, Sea> getConverter() {
+      return new SeaConverter();
     }
 
   }

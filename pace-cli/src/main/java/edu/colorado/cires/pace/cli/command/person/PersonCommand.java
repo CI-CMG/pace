@@ -9,6 +9,9 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.data.translator.PersonTranslator;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.PersonConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -192,7 +195,7 @@ public class PersonCommand implements Runnable {
   }
   
   @Command(name = "translate", description = "Translate person from spreadsheet", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class Translate extends TranslateCommand<Person> {
+  static class Translate extends TranslateCommand<Person, PersonTranslator> {
     
     @Option(names = {"--translate-from", "-tf"}, description = "Input file format", required = true)
     private TranslationType translationType;
@@ -224,8 +227,13 @@ public class PersonCommand implements Runnable {
     }
 
     @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+    protected RepositoryFactory<Person>[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[0];
+    }
+
+    @Override
+    protected Converter<PersonTranslator, Person> getConverter() {
+      return new PersonConverter();
     }
   }
   

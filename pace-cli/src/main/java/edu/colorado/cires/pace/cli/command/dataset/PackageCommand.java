@@ -25,7 +25,10 @@ import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.translator.FieldNameFactory;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GenerateTranslator;
@@ -46,6 +49,7 @@ import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -220,7 +224,7 @@ public class PackageCommand implements Runnable {
   }
 
   @Command(name = "translate", description = "Translate packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class Translate extends TranslateCommand<Package> {
+  static class Translate extends TranslateCommand<Package, PackageTranslator> {
 
     @Parameters(description = "File to translate from")
     private File file;
@@ -252,7 +256,7 @@ public class PackageCommand implements Runnable {
     }
 
     @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+    protected RepositoryFactory<Package>[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[]{
           ProjectRepositoryFactory::createJsonRepository,
           PersonRepositoryFactory::createJsonRepository,
@@ -264,6 +268,21 @@ public class PackageCommand implements Runnable {
           SeaRepositoryFactory::createJsonRepository,
           ShipRepositoryFactory::createJsonRepository
       };
+    }
+
+    @Override
+    protected Converter<PackageTranslator, Package> getConverter() throws IOException {
+      return new PackageConverter(
+          PersonRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          PlatformRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          InstrumentRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          SeaRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          ShipRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          DetectionTypeRepositoryFactory.createJsonRepository(workDir, objectMapper),
+          SensorRepositoryFactory.createRepository(workDir, objectMapper)
+      );
     }
   }
   

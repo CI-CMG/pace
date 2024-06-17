@@ -9,6 +9,9 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.data.translator.ShipTranslator;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.ShipConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -192,7 +195,7 @@ public class ShipCommand implements Runnable {
   }
   
   @Command(name = "translate", description = "Translate ship from spreadsheet", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class Translate extends TranslateCommand<Ship> {
+  static class Translate extends TranslateCommand<Ship, ShipTranslator> {
     
     @Option(names = {"--translate-from", "-tf"}, description = "Input file format", required = true)
     private TranslationType translationType;
@@ -224,8 +227,13 @@ public class ShipCommand implements Runnable {
     }
 
     @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+    protected RepositoryFactory<Ship>[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[0];
+    }
+
+    @Override
+    protected Converter<ShipTranslator, Ship> getConverter() {
+      return new ShipConverter();
     }
   }
 

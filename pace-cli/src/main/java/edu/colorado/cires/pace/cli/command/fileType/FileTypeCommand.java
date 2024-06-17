@@ -9,6 +9,9 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -192,7 +195,7 @@ public class FileTypeCommand implements Runnable {
   }
   
   @Command(name = "translate", description = "Translate file type from spreadsheet", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class Translate extends TranslateCommand<FileType> {
+  static class Translate extends TranslateCommand<FileType, FileTypeTranslator> {
     
     @Option(names = {"--translate-from", "-tf"}, description = "Input file format", required = true)
     private TranslationType translationType;
@@ -224,8 +227,13 @@ public class FileTypeCommand implements Runnable {
     }
 
     @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
+    protected RepositoryFactory<FileType>[] getDependencyRepositoryFactories() {
       return new RepositoryFactory[0];
+    }
+
+    @Override
+    protected Converter<FileTypeTranslator, FileType> getConverter() {
+      return new FileTypeConverter();
     }
   }
   

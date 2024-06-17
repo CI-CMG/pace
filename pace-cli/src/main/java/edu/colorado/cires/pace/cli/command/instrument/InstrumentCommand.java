@@ -9,6 +9,9 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
+import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
+import edu.colorado.cires.pace.translator.converter.Converter;
+import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
@@ -23,6 +26,7 @@ import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Translat
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Update;
 import edu.colorado.cires.pace.data.object.Instrument;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -193,7 +197,7 @@ public class InstrumentCommand implements Runnable {
   }
   
   @Command(name = "translate", description = "Translate instrument from spreadsheet", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class Translate extends TranslateCommand<Instrument> {
+  static class Translate extends TranslateCommand<Instrument, InstrumentTranslator> {
     
     @Option(names = {"--translate-from", "-tf"}, description = "Input file format", required = true)
     private TranslationType translationType;
@@ -229,6 +233,13 @@ public class InstrumentCommand implements Runnable {
       return new RepositoryFactory[] {
           FileTypeRepositoryFactory::createJsonRepository
       };
+    }
+
+    @Override
+    protected Converter<InstrumentTranslator, Instrument> getConverter() throws IOException {
+      return new InstrumentConverter(
+          FileTypeRepositoryFactory.createJsonRepository(workDir, objectMapper)
+      );
     }
   }
   
