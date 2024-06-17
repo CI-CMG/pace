@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DetectionsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
@@ -29,7 +30,10 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
         .deploymentId(String.format("deployment-id-%s", suffix))
         .datasetPackager(String.format("dataset-packager-%s", suffix))
         .projects(String.format("projects-%s", suffix))
-        .publicReleaseDate(String.format("public-release-date-%s", suffix))
+        .publicReleaseDate(DateTranslator.builder()
+            .date(String.format("public-release-date-%s", suffix))
+            .timeZone(String.format("time-zone-%s", suffix))
+            .build())
         .scientists(String.format("scientists-%s", suffix))
         .sponsors(String.format("sponsors-%s", suffix))
         .funders(String.format("funders-%s", suffix))
@@ -41,8 +45,14 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
         .endTimeTranslator(DefaultTimeTranslator.builder()
             .time(String.format("end-time-%s", suffix))
             .build())
-        .preDeploymentCalibrationDate(String.format("pre-deployment-calibration-date-%s", suffix))
-        .postDeploymentCalibrationDate(String.format("post-deployment-calibration-date-%s", suffix))
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date(String.format("pre-deployment-calibration-date-%s", suffix))
+            .timeZone(String.format("time-zone-%s", suffix))
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date(String.format("post-deployment-calibration-date-%s", suffix))
+            .timeZone(String.format("time-zone-%s", suffix))
+            .build())
         .calibrationDescription(String.format("calibration-description-%s", suffix))
         .deploymentTitle(String.format("deployment-title-%s", suffix))
         .deploymentPurpose(String.format("deployment-purpose-%s", suffix))

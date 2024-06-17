@@ -23,7 +23,7 @@ public class PackageTranslator implements Translator {
   private final String deploymentId;
   private final String datasetPackager;
   private final String projects;
-  private final String publicReleaseDate;
+  private final DateTranslator publicReleaseDate;
   private final String scientists;
   private final String sponsors;
   private final String funders;
@@ -31,8 +31,8 @@ public class PackageTranslator implements Translator {
   private final String instrument;
   private final TimeTranslator startTimeTranslator;
   private final TimeTranslator endTimeTranslator;
-  private final String preDeploymentCalibrationDate;
-  private final String postDeploymentCalibrationDate;
+  private final DateTranslator preDeploymentCalibrationDate;
+  private final DateTranslator postDeploymentCalibrationDate;
   private final String calibrationDescription;
   private final String deploymentTitle;
   private final String deploymentPurpose;

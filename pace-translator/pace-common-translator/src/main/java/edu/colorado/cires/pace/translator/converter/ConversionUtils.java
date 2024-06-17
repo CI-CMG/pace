@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.translator.converter;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
+import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.TimeTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -11,11 +12,10 @@ import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslatorExecutor.ValueWithColumnNumber;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
@@ -70,48 +70,91 @@ final class ConversionUtils {
     return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Paths::get, "Invalid path format");
   }
   
-  public static LocalDate localDateFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, ConversionUtils::parseLocalDate, "Invalid date format");
+  public static LocalDate localDateFromMap(Map<String, ValueWithColumnNumber> properties, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
+    return parseLocalDate(properties, dateTranslator, row, runtimeException);
   }
   
-  private static LocalDate parseLocalDate(String input) {
-    if (input.endsWith("Z")) {
-      return Instant.parse(input)
-          .atOffset(ZoneOffset.UTC)
-          .toLocalDate();
+  private static LocalDate parseLocalDate(Map<String, ValueWithColumnNumber> properties, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
+    ValueWithColumnNumber timeZone = propertyFromMap(properties, dateTranslator.getTimeZone());
+    ValueWithColumnNumber date = propertyFromMap(properties, dateTranslator.getDate());
+    
+    String zoneValue = stringFromProperty(timeZone);
+    String inputValue = stringFromProperty(date);
+
+    DateTimeFormatter dateTimeFormatter;
+    
+    try {
+      dateTimeFormatter = new DateTimeFormatterBuilder()
+          .append(DateTimeFormatter.ofPattern(
+              "[yyyy-MM-dd'T'HH:mm:ssZ]" +
+                  "[yyyy-MM-dd'T'HH:mm:ss]" +
+                  "[yyyy-MM-dd HH:mm:ss]" +
+                  "[yyyy-MM-dd]" +
+                  "[d/M/yyyy HH:mm:ss]" +
+                  "[d/M/yy HH:mm:ss]" +
+                  "[d/M/yyyy]" +
+                  "[d/M/yy]"
+          )).toFormatter()
+          .withZone(ZoneId.of(zoneValue));
+    } catch (Throwable e) {
+      runtimeException.addSuppressed(new FieldException(
+          dateTranslator.getTimeZone(), "Invalid time zone", timeZone.column(), row
+      ));
+      return null;
     }
     
-    DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-        .append(DateTimeFormatter.ofPattern(
-           "[yyyy-MM-dd'T'HH:mm:ssZ]" +
-           "[yyyy-MM-dd'T'HH:mm:ss]" +
-           "[yyyy-MM-dd HH:mm:ss]" +
-           "[yyyy-MM-dd]" +
-           "[d/M/yyyy HH:mm:ss]" +
-           "[d/M/yy HH:mm:ss]" +
-           "[d/M/yyyy]" +
-           "[d/M/yy]"
-        )).toFormatter();
-    
-    return LocalDate.parse(input, dateTimeFormatter);
+    try {
+      return LocalDate.parse(inputValue, dateTimeFormatter);
+    } catch (NullPointerException e) {
+      return null;
+    } catch (Throwable e) {
+      runtimeException.addSuppressed(new FieldException(
+          dateTranslator.getDate(), "Invalid date format", date.column(), row 
+      ));
+      return null;
+    }
   }
   
   public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+    String timeZone = stringFromMap(properties, timeTranslator.getTimeZone());
     if (timeTranslator instanceof DefaultTimeTranslator defaultTimeTranslator) {
-      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, ConversionUtils::parseLocalDateTime, "Invalid date time format");
+      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, timeZone), "Invalid date time format");
     } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
       return localDateTimeFromMap(properties, dateTimeSeparatedTimeTranslator, row, runtimeException);
     }
     return null;
   }
 
-  private static LocalDateTime parseLocalDateTime(String input) {
-    if (input.endsWith("Z")) {
-      return Instant.parse(input)
-          .atOffset(ZoneOffset.UTC)
-          .toLocalDateTime();
-    }
-    
+  // ACT
+  // AET
+  // AGT
+  // ART
+  // AST
+  // BET
+  // BST
+  // CAT
+  // CNT
+  // CST
+  // CTT
+  // EAT
+  // ECT
+  // IET
+  // IST
+  // JST
+  // MIT
+  // NET
+  // NST
+  // PLT
+  // PNT
+  // PRT
+  // PST
+  // SST
+  // VST
+  // EST
+  // MST
+  // HST
+  // UTC
+  private static LocalDateTime parseLocalDateTime(String input, String zoneId) {
     DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
         .append(DateTimeFormatter.ofPattern(
             "[yyyy-MM-dd'T'HH:mm:ss]" +
@@ -119,17 +162,32 @@ final class ConversionUtils {
             "[d/M/yyyy HH:mm:ss]" +
             "[d/M/yy HH:mm:ss]"
         )).toFormatter()
-        .withZone(ZoneOffset.UTC);
+        .withZone(ZoneId.of(zoneId));
 
     return LocalDateTime.parse(input, dateTimeFormatter);
   }
+  
+  private static LocalTime parseLocalTime(String input, String zoneId) {
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+        .append(DateTimeFormatter.ofPattern("HH:mm:ss"))
+        .toFormatter()
+        .withZone(ZoneId.of(zoneId));
+    return LocalTime.parse(input, formatter);
+  }
 
   private static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, DateTimeSeparatedTimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
-    LocalDate date = localDateFromMap(properties, timeTranslator.getDate(), row, runtimeException);
+    String zoneId = stringFromMap(properties, timeTranslator.getTimeZone());
+    
+    LocalDate date = parseLocalDate(
+        properties,
+        timeTranslator,
+        row,
+        runtimeException
+    );
     if (date == null) {
       return null;
     }
-    LocalTime time = transformedPropertyFromMap(properties, timeTranslator.getTime(), row, runtimeException, LocalTime::parse, "Invalid time format");
+    LocalTime time = transformedPropertyFromMap(properties, timeTranslator.getTime(), row, runtimeException, (s) -> parseLocalTime(s, zoneId), "Invalid time format");
     if (time == null) {
       return date.atTime(0, 0);
     }

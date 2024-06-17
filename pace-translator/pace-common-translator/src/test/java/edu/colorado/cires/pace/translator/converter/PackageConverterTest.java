@@ -41,6 +41,7 @@ import edu.colorado.cires.pace.data.translator.AudioPackageTranslator;
 import edu.colorado.cires.pace.data.translator.CPODPackageTranslator;
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DetectionsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
@@ -362,16 +363,25 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
-        .startTimeTranslator(DefaultTimeTranslator.builder().time("startTime").build())
-        .endTimeTranslator(DefaultTimeTranslator.builder().time("endTime").build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("startTime").build())
+        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("endTime").build())
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -406,16 +416,16 @@ class PackageConverterTest {
             .qualityAssessmentDescription("qualityAssessmentDescription")
             .qualityEntryTranslators(List.of(
                 DataQualityEntryTranslator.builder()
-                    .startTimeTranslator(DefaultTimeTranslator.builder().time("quality-entry-startTime-1").build())
-                    .endTimeTranslator(DefaultTimeTranslator.builder().time("quality-entry-endTime-1").build())
+                    .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("quality-entry-startTime-1").build())
+                    .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("quality-entry-endTime-1").build())
                     .minFrequency("quality-entry-minFrequency-1")
                     .maxFrequency("quality-entry-maxFrequency-1")
                     .qualityLevel("quality-entry-qualityLevel-1")
                     .comments("quality-entry-comments-1")
                     .build(),
                 DataQualityEntryTranslator.builder()
-                    .startTimeTranslator(DefaultTimeTranslator.builder().time("quality-entry-startTime-2").build())
-                    .endTimeTranslator(DefaultTimeTranslator.builder().time("quality-entry-endTime-2").build())
+                    .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("quality-entry-startTime-2").build())
+                    .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("quality-entry-endTime-2").build())
                     .minFrequency("quality-entry-minFrequency-2")
                     .maxFrequency("quality-entry-maxFrequency-2")
                     .qualityLevel("quality-entry-qualityLevel-2")
@@ -423,97 +433,97 @@ class PackageConverterTest {
                     .build()
             ))
             .build())
-        .deploymentTimeTranslator(DefaultTimeTranslator.builder().time("deploymentTime").build())
-        .recoveryTimeTranslator(DefaultTimeTranslator.builder().time("recoveryTime").build())
+        .deploymentTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("deploymentTime").build())
+        .recoveryTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("recoveryTime").build())
         .comments("comments")
         .sensors("sensors")
         .channelTranslators(List.of(
             ChannelTranslator.builder()
                 .sensor("channel-sensor-1")
-                .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-startTime-1").build())
-                .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-endTime-1").build())
+                .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-startTime-1").build())
+                .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-endTime-1").build())
                 .sampleRateTranslators(List.of(
                     SampleRateTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-sample-rate-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-sample-rate-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-sample-rate-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-sample-rate-1-endTime").build())
                         .sampleRate("channel-1-sample-rate-1-sampleRate")
                         .sampleBits("channel-1-sample-rate-1-sampleBits")
                         .build(),
                     SampleRateTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-sample-rate-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-sample-rate-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-sample-rate-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-sample-rate-2-endTime").build())
                         .sampleRate("channel-1-sample-rate-2-sampleRate")
                         .sampleBits("channel-1-sample-rate-2-sampleBits")
                         .build()
                 ))
                 .dutyCycleTranslators(List.of(
                     DutyCycleTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-duty-cycle-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-duty-cycle-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-duty-cycle-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-duty-cycle-1-endTime").build())
                         .duration("channel-1-duty-cycle-1-duration")
                         .interval("channel-1-duty-cycle-1-interval")
                         .build(),
                     DutyCycleTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-duty-cycle-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-duty-cycle-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-duty-cycle-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-duty-cycle-2-endTime").build())
                         .duration("channel-1-duty-cycle-2-duration")
                         .interval("channel-1-duty-cycle-2-interval")
                         .build()
                 ))
                 .gainTranslators(List.of(
                     GainTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-gain-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-gain-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-gain-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-gain-1-endTime").build())
                         .gain("channel-1-gain-1-gain")
                         .build(),
                     GainTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-gain-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-1-gain-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-gain-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-1-gain-2-endTime").build())
                         .gain("channel-1-gain-2-gain")
                         .build()
                 ))
                 .build(),
             ChannelTranslator.builder()
                 .sensor("channel-sensor-2")
-                .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-startTime-2").build())
-                .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-endTime-2").build())
+                .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-startTime-2").build())
+                .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-endTime-2").build())
                 .sampleRateTranslators(List.of(
                     SampleRateTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-sample-rate-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-sample-rate-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-sample-rate-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-sample-rate-1-endTime").build())
                         .sampleRate("channel-2-sample-rate-1-sampleRate")
                         .sampleBits("channel-2-sample-rate-1-sampleBits")
                         .build(),
                     SampleRateTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-sample-rate-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-sample-rate-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-sample-rate-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-sample-rate-2-endTime").build())
                         .sampleRate("channel-2-sample-rate-2-sampleRate")
                         .sampleBits("channel-2-sample-rate-2-sampleBits")
                         .build()
                 ))
                 .dutyCycleTranslators(List.of(
                     DutyCycleTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-duty-cycle-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-duty-cycle-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-duty-cycle-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-duty-cycle-1-endTime").build())
                         .duration("channel-2-duty-cycle-1-duration")
                         .interval("channel-2-duty-cycle-1-interval")
                         .build(),
                     DutyCycleTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-duty-cycle-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-duty-cycle-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-duty-cycle-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-duty-cycle-2-endTime").build())
                         .duration("channel-2-duty-cycle-2-duration")
                         .interval("channel-2-duty-cycle-2-interval")
                         .build()
                 ))
                 .gainTranslators(List.of(
                     GainTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-gain-1-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-gain-1-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-gain-1-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-gain-1-endTime").build())
                         .gain("channel-2-gain-1-gain")
                         .build(),
                     GainTranslator.builder()
-                        .startTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-gain-2-startTime").build())
-                        .endTimeTranslator(DefaultTimeTranslator.builder().time("channel-2-gain-2-endTime").build())
+                        .startTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-gain-2-startTime").build())
+                        .endTimeTranslator(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-2-gain-2-endTime").build())
                         .gain("channel-2-gain-2-gain")
                         .build()
                 ))
@@ -534,7 +544,8 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentId()), 10));
     map.put(audioPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(audioPackage.getDatasetPackager().getName()), 11));
     map.put(audioPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(audioPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(audioPackageTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPublicReleaseDate().toString()), 13));
+    map.put(audioPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPublicReleaseDate().toString()), 13));
+    map.put(audioPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(audioPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(audioPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(audioPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(audioPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(audioPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(audioPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -542,8 +553,10 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) audioPackageTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) audioPackageTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getEndTime().toString()), 20));
-    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(audioPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDescription()), 23));
     map.put(audioPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTitle()), 24));
     map.put(audioPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentPurpose()), 25));
@@ -1031,7 +1044,10 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
@@ -1039,12 +1055,20 @@ class PackageConverterTest {
         .instrument("instrument")
         .startTimeTranslator(DefaultTimeTranslator.builder()
             .time("startTime")
+            .timeZone("timeZone")
             .build())
         .endTimeTranslator(DefaultTimeTranslator.builder()
         .time("endTime")
+            .timeZone("timeZone")
             .build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -1069,9 +1093,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-1")
                     .maxFrequency("quality-entry-maxFrequency-1")
@@ -1081,9 +1107,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-2")
                     .maxFrequency("quality-entry-maxFrequency-2")
@@ -1094,9 +1122,11 @@ class PackageConverterTest {
             .build())
         .deploymentTimeTranslator(DefaultTimeTranslator.builder()
             .time("deploymentTime")
+            .timeZone("timeZone")
             .build())
         .recoveryTimeTranslator(DefaultTimeTranslator.builder()
             .time("recoveryTime")
+            .timeZone("timeZone")
             .build())
         .comments("comments")
         .sensors("sensors")
@@ -1105,17 +1135,21 @@ class PackageConverterTest {
                 .sensor("channel-sensor-1")
                 .startTimeTranslator(DefaultTimeTranslator.builder()
                     .time("channel-startTime-1")
+                    .timeZone("timeZone")
                     .build())
                 .endTimeTranslator(DefaultTimeTranslator.builder()
                     .time("channel-endTime-1")
+                    .timeZone("timeZone")
                     .build())
                 .sampleRateTranslators(List.of(
                     SampleRateTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-sample-rate-1-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-sample-rate-1-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .sampleRate("channel-1-sample-rate-1-sampleRate")
                         .sampleBits("channel-1-sample-rate-1-sampleBits")
@@ -1123,9 +1157,11 @@ class PackageConverterTest {
                     SampleRateTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-sample-rate-2-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-sample-rate-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .sampleRate("channel-1-sample-rate-2-sampleRate")
                         .sampleBits("channel-1-sample-rate-2-sampleBits")
@@ -1135,19 +1171,23 @@ class PackageConverterTest {
                     DutyCycleTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-duty-cycle-1-startTime")
+                            .timeZone("timeZone")
                         .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-duty-cycle-1-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .duration("channel-1-duty-cycle-1-duration")
                         .interval("channel-1-duty-cycle-1-interval")
                         .build(),
                     DutyCycleTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
-                            .time("channel-1-duty-cycle-2-startTime")                        
+                            .time("channel-1-duty-cycle-2-startTime")         
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("channel-1-duty-cycle-2-endTime")
+                            .time("channel-1-duty-cycle-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .duration("channel-1-duty-cycle-2-duration")
                         .interval("channel-1-duty-cycle-2-interval")
@@ -1157,18 +1197,22 @@ class PackageConverterTest {
                     GainTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-gain-1-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-gain-1-endTime")
+                            .timeZone("timeZone")
                         .build())
                         .gain("channel-1-gain-1-gain")
                         .build(),
                     GainTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-gain-2-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-1-gain-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .gain("channel-1-gain-2-gain")
                         .build()
@@ -1178,17 +1222,21 @@ class PackageConverterTest {
                 .sensor("channel-sensor-2")
                 .startTimeTranslator(DefaultTimeTranslator.builder()
                     .time("channel-startTime-2")                
+                    .timeZone("timeZone")
                     .build())
                 .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("channel-endTime-2")
+                    .time("channel-endTime-2")
+                    .timeZone("timeZone")
                     .build())
                 .sampleRateTranslators(List.of(
                     SampleRateTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
-                            .time("channel-2-sample-rate-1-startTime")                        
+                            .time("channel-2-sample-rate-1-startTime")   
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-sample-rate-1-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .sampleRate("channel-2-sample-rate-1-sampleRate")
                         .sampleBits("channel-2-sample-rate-1-sampleBits")
@@ -1196,9 +1244,11 @@ class PackageConverterTest {
                     SampleRateTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-sample-rate-2-startTime")
+                            .timeZone("timeZone")
                         .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-sample-rate-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .sampleRate("channel-2-sample-rate-2-sampleRate")
                         .sampleBits("channel-2-sample-rate-2-sampleBits")
@@ -1208,9 +1258,11 @@ class PackageConverterTest {
                     DutyCycleTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-duty-cycle-1-startTime")
+                            .timeZone("timeZone")
                         .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-duty-cycle-1-endTime")
+                            .timeZone("timeZone")
                         .build())
                         .duration("channel-2-duty-cycle-1-duration")
                         .interval("channel-2-duty-cycle-1-interval")
@@ -1218,9 +1270,11 @@ class PackageConverterTest {
                     DutyCycleTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-duty-cycle-2-startTime")
+                            .timeZone("timeZone")
                         .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("channel-2-duty-cycle-2-endTime")
+                            .time("channel-2-duty-cycle-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .duration("channel-2-duty-cycle-2-duration")
                         .interval("channel-2-duty-cycle-2-interval")
@@ -1229,19 +1283,23 @@ class PackageConverterTest {
                 .gainTranslators(List.of(
                     GainTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
-                            .time("channel-2-gain-1-startTime")                        
+                            .time("channel-2-gain-1-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
-                            .time("channel-2-gain-1-endTime")                        
+                            .time("channel-2-gain-1-endTime") 
+                            .timeZone("timeZone")
                             .build())
                         .gain("channel-2-gain-1-gain")
                         .build(),
                     GainTranslator.builder()
                         .startTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-gain-2-startTime")
+                            .timeZone("timeZone")
                             .build())
                         .endTimeTranslator(DefaultTimeTranslator.builder()
                             .time("channel-2-gain-2-endTime")
+                            .timeZone("timeZone")
                             .build())
                         .gain("channel-2-gain-2-gain")
                         .build()
@@ -1263,7 +1321,8 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentId()), 10));
     map.put(cpodPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDatasetPackager().getName()), 11));
     map.put(cpodPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(cpodPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(cpodPackageTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPublicReleaseDate().toString()), 13));
+    map.put(cpodPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPublicReleaseDate().toString()), 13));
+    map.put(cpodPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(cpodPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(cpodPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(cpodPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(cpodPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(cpodPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -1271,8 +1330,10 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) cpodPackageTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) cpodPackageTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getEndTime().toString()), 20));
-    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(cpodPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDescription()), 23));
     map.put(cpodPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentTitle()), 24));
     map.put(cpodPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentPurpose()), 25));
@@ -1644,7 +1705,10 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
@@ -1652,12 +1716,20 @@ class PackageConverterTest {
         .instrument("instrument")
         .startTimeTranslator(DefaultTimeTranslator.builder()
             .time("startTime")
+            .timeZone("timeZone")
             .build())
         .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("endTime")
+            .time("endTime")
+        .timeZone("timeZone")
             .build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -1679,9 +1751,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-1")
                     .maxFrequency("quality-entry-maxFrequency-1")
@@ -1691,9 +1765,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-2")
                     .maxFrequency("quality-entry-maxFrequency-2")
@@ -1728,7 +1804,8 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentId()), 10));
     map.put(detectionsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDatasetPackager().getName()), 11));
     map.put(detectionsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(detectionsPackageTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(detectionsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(detectionsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(detectionsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(detectionsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(detectionsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -1736,8 +1813,10 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) detectionsPackageTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) detectionsPackageTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getEndTime().toString()), 20));
-    map.put(detectionsPackageTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(detectionsPackageTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(detectionsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(detectionsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(detectionsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(detectionsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(detectionsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getCalibrationDescription()), 23));
     map.put(detectionsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentTitle()), 24));
     map.put(detectionsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentPurpose()), 25));
@@ -1983,7 +2062,10 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
@@ -1991,12 +2073,20 @@ class PackageConverterTest {
         .instrument("instrument")
         .startTimeTranslator(DefaultTimeTranslator.builder()
             .time("startTime")
+            .timeZone("timeZone")
             .build())
         .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("endTime")
+            .time("endTime")
+            .timeZone("timeZone")
             .build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -2040,7 +2130,8 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentId()), 10));
     map.put(soundClipsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDatasetPackager().getName()), 11));
     map.put(soundClipsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(soundClipsPackageTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundClipsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundClipsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundClipsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(soundClipsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(soundClipsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -2048,8 +2139,10 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) soundClipsPackageTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) soundClipsPackageTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getEndTime().toString()), 20));
-    map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundClipsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getCalibrationDescription()), 23));
     map.put(soundClipsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentTitle()), 24));
     map.put(soundClipsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentPurpose()), 25));
@@ -2318,6 +2411,8 @@ class PackageConverterTest {
         .softwareProtocolCitation("softwareProtocolCitation")
         .softwareDescription("softwareDescription")
         .softwareProcessingDescription("softwareProcessingDescription")
+        .audioStartTime(LocalDateTime.parse("2020-01-01T05:00:01"))
+        .audioEndTime(LocalDateTime.parse("2020-01-01T06:00:01"))
         .build();
 
     SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator = SoundLevelMetricsPackageTranslator.builder()
@@ -2333,20 +2428,31 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
         .startTimeTranslator(DefaultTimeTranslator.builder()
+            .timeZone("timeZone")
             .time("startTime")
             .build())
         .endTimeTranslator(DefaultTimeTranslator.builder()
-        .time("endTime")
+            .time("endTime")
+            .timeZone("timeZone")
             .build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -2379,9 +2485,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-1")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-1")
                     .maxFrequency("quality-entry-maxFrequency-1")
@@ -2391,9 +2499,11 @@ class PackageConverterTest {
                 DataQualityEntryTranslator.builder()
                     .startTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-startTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .endTimeTranslator(DefaultTimeTranslator.builder()
                         .time("quality-entry-endTime-2")
+                        .timeZone("timeZone")
                         .build())
                     .minFrequency("quality-entry-minFrequency-2")
                     .maxFrequency("quality-entry-maxFrequency-2")
@@ -2412,6 +2522,14 @@ class PackageConverterTest {
         .softwareProtocolCitation("softwareProtocolCitation")
         .softwareDescription("softwareDescription")
         .softwareProcessingDescription("softwareProcessingDescription")
+        .audioStartTimeTranslator(DefaultTimeTranslator.builder()
+            .time("audio-start-time")
+            .timeZone("timeZone")
+            .build())
+        .audioEndTimeTranslator(DefaultTimeTranslator.builder()
+            .timeZone("audio-end-time")
+            .timeZone("timeZone")
+            .build())
         .build();
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
@@ -2427,7 +2545,8 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentId()), 10));
     map.put(soundLevelMetricsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDatasetPackager().getName()), 11));
     map.put(soundLevelMetricsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundLevelMetricsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(soundLevelMetricsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(soundLevelMetricsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -2435,14 +2554,20 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getEndTime().toString()), 20));
-    map.put(soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundLevelMetricsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getCalibrationDescription()), 23));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentTitle()), 24));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentPurpose()), 25));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentDescription()), 26));
     map.put(soundLevelMetricsPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAlternateSiteName()), 27));
     map.put(soundLevelMetricsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAlternateDeploymentName()), 28));
+    map.put(((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAudioStartTime().toString()), 27));
+    map.put(soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 27));
+    map.put(((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getAudioEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAudioEndTime().toString()), 28));
+    map.put(soundLevelMetricsPackageTranslator.getAudioEndTimeTranslator().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 28));
 
     MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator = (MultipointStationaryMarineLocationTranslator) soundLevelMetricsPackageTranslator.getLocationDetailTranslator();
     map.put(multipointStationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) soundLevelMetricsPackage.getLocationDetail()).getSeaArea().getName()), 29));
@@ -2715,7 +2840,10 @@ class PackageConverterTest {
         .deploymentId("deploymentId")
         .datasetPackager("datasetPackager")
         .projects("projects")
-        .publicReleaseDate("publicReleaseDate")
+        .publicReleaseDate(DateTranslator.builder()
+            .date("publicReleaseDate")
+            .timeZone("timeZone")
+            .build())
         .scientists("scientists")
         .sponsors("sponsors")
         .funders("funders")
@@ -2723,12 +2851,20 @@ class PackageConverterTest {
         .instrument("instrument")
         .startTimeTranslator(DefaultTimeTranslator.builder()
             .time("startTime")
+            .timeZone("timeZone")
             .build())
         .endTimeTranslator(DefaultTimeTranslator.builder()
             .time("endTime")
+            .timeZone("timeZone")
             .build())
-        .preDeploymentCalibrationDate("preDeploymentCalibrationDate")
-        .postDeploymentCalibrationDate("postDeploymentCalibrationDate")
+        .preDeploymentCalibrationDate(DateTranslator.builder()
+            .date("preDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
+        .postDeploymentCalibrationDate(DateTranslator.builder()
+            .date("postDeploymentCalibrationDate")
+            .timeZone("timeZone")
+            .build())
         .calibrationDescription("calibrationDescription")
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
@@ -2758,9 +2894,11 @@ class PackageConverterTest {
         .softwareProcessingDescription("softwareProcessingDescription")
         .audioStartTimeTranslator(DefaultTimeTranslator.builder()
             .time("audioStartTime")
+            .timeZone("timeZone")
             .build())
         .audioEndTimeTranslator(DefaultTimeTranslator.builder()
             .time("audioEndTime")
+            .timeZone("timeZone")
             .build())
         .build();
 
@@ -2777,7 +2915,8 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentId()), 10));
     map.put(soundPropagationModelsTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDatasetPackager().getName()), 11));
     map.put(soundPropagationModelsTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getProjects().stream().map(Project::getName).collect(Collectors.joining(";"))), 12));
-    map.put(soundPropagationModelsTranslator.getPublicReleaseDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundPropagationModelsTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getScientists().stream().map(Person::getName).collect(Collectors.joining(";"))), 14));
     map.put(soundPropagationModelsTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSponsors().stream().map(Organization::getName).collect(Collectors.joining(";"))), 15));
     map.put(soundPropagationModelsTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getFunders().stream().map(Organization::getName).collect(Collectors.joining(";"))), 16));
@@ -2785,8 +2924,10 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getInstrument().getName()), 18));
     map.put(((DefaultTimeTranslator) soundPropagationModelsTranslator.getStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getStartTime().toString()), 19));
     map.put(((DefaultTimeTranslator) soundPropagationModelsTranslator.getEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getEndTime().toString()), 20));
-    map.put(soundPropagationModelsTranslator.getPreDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(soundPropagationModelsTranslator.getPostDeploymentCalibrationDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundPropagationModelsTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPreDeploymentCalibrationDate().toString()), 21));
+    map.put(soundPropagationModelsTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
+    map.put(soundPropagationModelsTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPostDeploymentCalibrationDate().toString()), 22));
+    map.put(soundPropagationModelsTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundPropagationModelsTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getCalibrationDescription()), 23));
     map.put(soundPropagationModelsTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentTitle()), 24));
     map.put(soundPropagationModelsTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentPurpose()), 25));
