@@ -114,16 +114,16 @@ class TranslatorExecutorTest {
         )
     );
     
-    List<ObjectWithRowConversionException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRowException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null).toList();
     assertEquals(2, results.size());
     assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
-    assertNull(results.get(0).rowConversionException());
+    assertNull(results.get(0).throwable());
     assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
     assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
-    assertNull(results.get(1).rowConversionException());
+    assertNull(results.get(1).throwable());
     assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
   }
 
@@ -146,16 +146,16 @@ class TranslatorExecutorTest {
         )
     );
 
-    List<ObjectWithRowConversionException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRowException<ObjectWithName>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((Reader) null).toList();
     assertEquals(2, results.size());
     assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
-    assertNull(results.get(0).rowConversionException());
+    assertNull(results.get(0).throwable());
     assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
     assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
-    assertNull(results.get(1).rowConversionException());
+    assertNull(results.get(1).throwable());
     assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
   }
 
@@ -174,18 +174,18 @@ class TranslatorExecutorTest {
         )
     );
 
-    List<ObjectWithRowConversionException<DetectionType>> results = createExecutor(new TestTranslator(List.of(
+    List<ObjectWithRowException<DetectionType>> results = createExecutor(new TestTranslator(List.of(
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("source", 2),
         new TestTranslatorField("scienceName", 3)
     )), maps, DetectionType.class).translate((InputStream) null).toList();
     assertEquals(2, results.size());
     assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
-    assertNull(results.get(0).rowConversionException());
+    assertNull(results.get(0).throwable());
     assertEquals(maps.get(0).get("source").value().orElseThrow(), results.get(0).object().getSource());
     assertEquals(maps.get(0).get("scienceName").value().orElseThrow(), results.get(0).object().getScienceName());
     assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
-    assertNull(results.get(1).rowConversionException());
+    assertNull(results.get(1).throwable());
     assertEquals(maps.get(1).get("source").value().orElseThrow(), results.get(1).object().getSource());
     assertEquals(maps.get(1).get("scienceName").value().orElseThrow(), results.get(1).object().getScienceName());
   }
@@ -240,24 +240,24 @@ class TranslatorExecutorTest {
         new TestTranslatorField("sensorType", 11)
     ));
 
-    List<ObjectWithRowConversionException<Sensor>> results = createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList();
+    List<ObjectWithRowException<Sensor>> results = createExecutor(new TestTranslator(fields), maps, Sensor.class).translate((InputStream) null).toList();
     assertEquals(3, results.size());
     assertEquals(maps.get(0).get("uuid").value().orElseThrow(), results.get(0).object().getUuid().toString());
-    assertNull(results.get(0).rowConversionException());
+    assertNull(results.get(0).throwable());
     assertEquals(maps.get(0).get("name").value().orElseThrow(), results.get(0).object().getName());
     assertEquals(maps.get(0).get("description").value().orElseThrow(), results.get(0).object().getDescription());
     assertEquals(maps.get(0).get("position.x").value().orElseThrow(), results.get(0).object().getPosition().getX().toString());
     assertEquals(maps.get(0).get("position.y").value().orElseThrow(), results.get(0).object().getPosition().getY().toString());
     assertEquals(maps.get(0).get("position.z").value().orElseThrow(), results.get(0).object().getPosition().getZ().toString());
     assertEquals(maps.get(1).get("uuid").value().orElseThrow(), results.get(1).object().getUuid().toString());
-    assertNull(results.get(1).rowConversionException());
+    assertNull(results.get(1).throwable());
     assertEquals(maps.get(1).get("name").value().orElseThrow(), results.get(1).object().getName());
     assertEquals(maps.get(1).get("description").value().orElseThrow(), results.get(1).object().getDescription());
     assertEquals(maps.get(1).get("position.x").value().orElseThrow(), results.get(1).object().getPosition().getX().toString());
     assertEquals(maps.get(1).get("position.y").value().orElseThrow(), results.get(1).object().getPosition().getY().toString());
     assertEquals(maps.get(1).get("position.z").value().orElseThrow(), results.get(1).object().getPosition().getZ().toString());
     assertEquals(maps.get(2).get("uuid").value().orElseThrow(), results.get(2).object().getUuid().toString());
-    assertNull(results.get(2).rowConversionException());
+    assertNull(results.get(2).throwable());
     assertEquals(maps.get(2).get("name").value().orElseThrow(), results.get(2).object().getName());
     assertEquals(maps.get(2).get("description").value().orElseThrow(), results.get(2).object().getDescription());
     assertEquals(maps.get(2).get("position.x").value().orElseThrow(), results.get(2).object().getPosition().getX().toString());
@@ -301,7 +301,7 @@ class TranslatorExecutorTest {
         new TestTranslatorField("uuid", 1),
         new TestTranslatorField("name", 2)
     )), maps, clazz).translate((InputStream) null)
-        .map(ObjectWithRowConversionException::rowConversionException)
+        .map(ObjectWithRowException::throwable)
         .filter(Objects::nonNull)
         .map(e -> (Exception) e)
         .reduce(new Exception("Object conversions failed"), (o1, o2) -> {
@@ -339,7 +339,7 @@ class TranslatorExecutorTest {
         new TestTranslatorField("source", 2),
         new TestTranslatorField("scienceName", 3)
     )), maps, DetectionType.class).translate((InputStream) null)
-        .map(ObjectWithRowConversionException::rowConversionException)
+        .map(ObjectWithRowException::throwable)
         .filter(Objects::nonNull)
         .map(e -> (Exception) e)
         .reduce(new Exception("Object conversions failed"), (o1, o2) -> {

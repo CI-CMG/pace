@@ -11,7 +11,7 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
-import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
+import edu.colorado.cires.pace.translator.ObjectWithRowException;
 import edu.colorado.cires.pace.translator.RowConversionException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
@@ -97,7 +97,7 @@ public abstract class TranslateCommand<O> implements Runnable {
         InputStream inputStream = new FileInputStream(inputFile);
         Reader reader = new InputStreamReader(inputStream)
     ) {
-      Stream<ObjectWithRowConversionException<Object>> translated = new CSVTranslatorExecutor<>(
+      Stream<ObjectWithRowException<Object>> translated = new CSVTranslatorExecutor<>(
           getCSVTranslator(translatorName),
           getJsonClass(),
           getDependencyRepositories()
@@ -110,7 +110,7 @@ public abstract class TranslateCommand<O> implements Runnable {
   private List<O> translateExcel(String translatorName, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
     try (InputStream inputStream = new FileInputStream(inputFile)) {
-      Stream<ObjectWithRowConversionException<Object>> translated = new ExcelTranslatorExecutor<>(
+      Stream<ObjectWithRowException<Object>> translated = new ExcelTranslatorExecutor<>(
           getExcelTranslator(translatorName),
           getJsonClass(),
           getDependencyRepositories()
@@ -120,19 +120,19 @@ public abstract class TranslateCommand<O> implements Runnable {
     }
   }
   
-  private List<O> postProcessTranslation(Stream<ObjectWithRowConversionException<Object>> translated) throws TranslationException {
+  private List<O> postProcessTranslation(Stream<ObjectWithRowException<Object>> translated) throws TranslationException {
     List<O> objects = new ArrayList<>(0);
         
-    List<RowConversionException> exceptions = translated
+    List<Throwable> exceptions = translated
         .peek(o -> objects.add((O) o.object()))
-        .map(ObjectWithRowConversionException::rowConversionException)
+        .map(ObjectWithRowException::throwable)
         .filter(Objects::nonNull)
         .toList();
     
     if (!exceptions.isEmpty()) {
       
       TranslationException translationException = new TranslationException("Translation failed");
-      for (RowConversionException rowConversionException : exceptions) {
+      for (Throwable rowConversionException : exceptions) {
         translationException.addSuppressed(rowConversionException);
       }
       throw translationException;

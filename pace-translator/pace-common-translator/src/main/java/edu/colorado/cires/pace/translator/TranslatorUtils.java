@@ -78,7 +78,7 @@ final class TranslatorUtils {
     if (runtimeException.getSuppressed().length > 0) {
       RowConversionException exception = new RowConversionException("Translation failed", row);
 
-      for (Throwable throwable : runtimeException.getSuppressed()) {
+      for (java.lang.Throwable throwable : runtimeException.getSuppressed()) {
         exception.addSuppressed(throwable);
       }
 
@@ -220,7 +220,7 @@ final class TranslatorUtils {
     if (runtimeException.getSuppressed().length > 0) {
       RowConversionException exception = new RowConversionException("Translation failed", row);
 
-      for (Throwable throwable : runtimeException.getSuppressed()) {
+      for (java.lang.Throwable throwable : runtimeException.getSuppressed()) {
         exception.addSuppressed(throwable);
       }
       

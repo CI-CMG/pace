@@ -1,11 +1,17 @@
 package edu.colorado.cires.pace.gui;
 
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.BadArgumentException;
+import edu.colorado.cires.pace.repository.ConflictException;
+import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
-import edu.colorado.cires.pace.translator.RowConversionException;
+import edu.colorado.cires.pace.translator.ObjectWithRowException;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +24,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -29,23 +38,22 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
-public class ErrorSpreadsheetPanel extends JPanel {
+public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPanel {
   
   private final boolean autoResizeColumns;
 
-  public ErrorSpreadsheetPanel(File file, List<Throwable> exceptions, boolean autoResizeColumns) {
+  public ErrorSpreadsheetPanel(File file, List<ObjectWithRowException<O>> exceptions, boolean autoResizeColumns) {
     this.autoResizeColumns = autoResizeColumns;
-    TableData tableData = readSpreadsheet(file);
+    TableData tableData = readSpreadsheet(file, exceptions);
     setLayout(new BorderLayout());
     add(new JScrollPane(createTable(tableData, exceptions)), BorderLayout.CENTER);
   }
   
-  private JTable createTable(TableData tableData, List<Throwable> exceptions) {
+  private JTable createTable(TableData tableData, List<ObjectWithRowException<O>> exceptions) {
     DefaultTableModel tableModel = new TableModel(
         tableData.data().stream()
             .map(List::toArray)
@@ -53,27 +61,20 @@ public class ErrorSpreadsheetPanel extends JPanel {
         tableData.headers().toArray()
     );
     JTable table = new JTable(tableModel) {
-      public Class<?> getColumnClass(int column) {
-        return getValueAt(0, column).getClass();
-      }
-
       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
         JComponent jc = (JComponent)c;
 
-        if (exceptions.stream().noneMatch(t -> {
+        exceptions.forEach(o -> {
+          java.lang.Throwable t = o.throwable();
           if (t instanceof FieldException fieldException) {
-            return fieldException.getColumn() == column && fieldException.getRow() == row;
-          } else if (t instanceof RowConversionException rowConversionException) {
-            return (rowConversionException.getRow() - 1) == row;
+            if (fieldException.getColumn() == (column + 1) && fieldException.getRow() == (row + 1)) {
+              jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED));
+            }
           } else {
-            return false;
+            c.setBackground(getBackground());
           }
-        })) {
-          c.setBackground(getBackground());
-        } else {
-          jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED) );
-        }
+        });
 
         return c;
       }
@@ -93,15 +94,16 @@ public class ErrorSpreadsheetPanel extends JPanel {
         int row = table.rowAtPoint(point);
         int col = table.columnAtPoint(point);
         if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-          String message = exceptions.stream().filter(t -> {
+          String message = exceptions.stream().filter(o -> {
+            java.lang.Throwable t = o.throwable();
                 if (t instanceof FieldException fieldException) {
-                  return fieldException.getColumn() == col && fieldException.getRow() == row;
-                } else if (t instanceof RowConversionException rowConversionException) {
-                  return (rowConversionException.getRow() - 1) == row;
+                  return fieldException.getColumn() == (col + 1) && fieldException.getRow() == (row + 1);
+                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
+                  return (row + 1) == o.row() && col == 0;
                 } else {
                   return false;
                 }
-              }).map(Throwable::getMessage)
+              }).map(ObjectWithRowException::throwable).map(java.lang.Throwable::getMessage)
               .collect(Collectors.joining());
 
           if (!StringUtils.isBlank(message)) {
@@ -114,7 +116,7 @@ public class ErrorSpreadsheetPanel extends JPanel {
     return table;
   }
   
-  private TableData readSpreadsheet(File file) {
+  private TableData readSpreadsheet(File file, List<ObjectWithRowException<O>> exceptions) {
     TranslationType fileType = file.getName().endsWith("csv") ? TranslationType.csv : TranslationType.excel;
     
     return switch (fileType) {
@@ -133,10 +135,10 @@ public class ErrorSpreadsheetPanel extends JPanel {
             headerNames.add(row.getCell(i).getText());
           }
           
-          List<List<String>> data = new ArrayList<>(0);
+          List<List<Object>> data = new ArrayList<>(0);
           for (int i = 1; i < rows.size(); i++) {
             Row currentRow = rows.get(i);
-            List<String> rowValues = new ArrayList<>(0);
+            List<Object> rowValues = new ArrayList<>(0);
             for (int j = 0; j < currentRow.getCellCount(); j++) {
               rowValues.add(currentRow.getCell(j).getText());
             }
@@ -158,12 +160,37 @@ public class ErrorSpreadsheetPanel extends JPanel {
         
         try (InputStream inputStream = new FileInputStream(file); Reader reader = new InputStreamReader(inputStream) ) {
           CSVParser parser = format.parse(reader);
-          yield new TableData(
-              parser.getHeaderNames(),
-              parser.stream()
-                  .map(CSVRecord::toList)
-                  .toList()
-          );
+          
+          List<String> headers = new ArrayList<>(parser.getHeaderNames());
+          headers.add(0, "Status");
+          List<List<Object>> data = parser.stream()
+              .map(record -> {
+                List<Object> values  = new ArrayList<>(record.toList());
+                Throwable t = exceptions.stream()
+                    .filter(oObjectWithRowException -> record.getRecordNumber() == oObjectWithRowException.row())
+                    .findFirst().map(ObjectWithRowException::throwable).orElse(null);
+                if (t == null) {
+                  Image image = readImage("check_20dp_FILL0_wght400_GRAD0_opsz20.png");
+                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
+                  ImageIcon imageIcon = new ImageIcon(newImg);
+                  values.add(0, imageIcon);
+                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
+                  Image image = readImage("close_20dp_FILL0_wght400_GRAD0_opsz20.png");
+                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
+                  ImageIcon imageIcon = new ImageIcon(newImg);
+                  values.add(0, imageIcon);
+                } else if (t instanceof FieldException) {
+                  Image image = readImage("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png");
+                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
+                  ImageIcon imageIcon = new ImageIcon(newImg);
+                  values.add(0, imageIcon);
+                } else {
+                  values.add(0, null);
+                }
+                return values;
+              }).toList();
+          
+          yield new TableData(headers, data);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -171,7 +198,19 @@ public class ErrorSpreadsheetPanel extends JPanel {
     };
   }
   
-  private record TableData(List<String> headers, List<List<String>> data) {}
+  private Image readImage(String fileName) {
+    try {
+      return ImageIO.read(
+          Objects.requireNonNull(
+              getClass().getResourceAsStream(String.format("/%s", fileName))
+          )
+      );
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private record TableData(List<String> headers, List<List<Object>> data) {}
 
   protected static class TableModel extends DefaultTableModel {
 
@@ -182,6 +221,14 @@ public class ErrorSpreadsheetPanel extends JPanel {
     @Override
     public boolean isCellEditable(int row, int column) {
       return false;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+      if (columnIndex == 0) {
+        return ImageIcon.class;
+      }
+      return super.getColumnClass(columnIndex);
     }
   }
 }

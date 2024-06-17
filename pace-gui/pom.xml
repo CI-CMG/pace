@@ -75,6 +75,9 @@
         <includes>
           <include>application.properties</include>
           <include>log4j2.xml</include>
+          <include>check_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
+          <include>close_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
+          <include>exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
         </includes>
       </resource>
     </resources>

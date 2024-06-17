@@ -112,7 +112,7 @@ class TranslatorUtilsTest {
     assertEquals("Translation failed", exception.getMessage());
     
     assertEquals(1, exception.getSuppressed().length);
-    Throwable suppressed = exception.getSuppressed()[0];
+    java.lang.Throwable suppressed = exception.getSuppressed()[0];
     assertInstanceOf(TranslatorValidationException.class, suppressed);
     TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
     assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
@@ -146,7 +146,7 @@ class TranslatorUtilsTest {
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
-    Throwable suppressed = exception.getSuppressed()[0];
+    java.lang.Throwable suppressed = exception.getSuppressed()[0];
     assertInstanceOf(TranslatorValidationException.class, suppressed);
     TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
     assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
@@ -238,7 +238,7 @@ class TranslatorUtilsTest {
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
-    Throwable suppressed = exception.getSuppressed()[0];
+    java.lang.Throwable suppressed = exception.getSuppressed()[0];
     assertInstanceOf(TranslatorValidationException.class, suppressed);
     TranslatorValidationException translatorValidationException = (TranslatorValidationException) suppressed;
     assertEquals(String.format("Translator missing required field '%s'", removedFieldName), translatorValidationException.getMessage());
@@ -692,7 +692,8 @@ class TranslatorUtilsTest {
         "scienceName", new ValueWithColumnNumber(Optional.of(""), 2)
     );
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
@@ -739,7 +740,8 @@ class TranslatorUtilsTest {
       );
     }
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
@@ -788,7 +790,8 @@ class TranslatorUtilsTest {
         "scienceName", new ValueWithColumnNumber(Optional.of(""), 2)
     );
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, DetectionType.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
@@ -835,7 +838,8 @@ class TranslatorUtilsTest {
       );
     }
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(1, exception.getSuppressed().length);
@@ -882,7 +886,8 @@ class TranslatorUtilsTest {
       );
     }
 
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, Sensor.class, 1));
     assertEquals("Translation failed", exception.getMessage());
 
     assertEquals(3, exception.getSuppressed().length);
@@ -944,7 +949,8 @@ class TranslatorUtilsTest {
             i -> new ValueWithColumnNumber(Optional.of(""), i)
         ));
     
-    RowConversionException exception = assertThrows(RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, TestSensor.class, 1));
+    RowConversionException exception = assertThrows(
+        RowConversionException.class, () -> TranslatorUtils.convertMapToObject(propertyMap, TestSensor.class, 1));
     assertEquals(String.format(
         "Translation not supported for %s", TestSensor.class.getSimpleName()
     ), exception.getMessage());
@@ -1031,9 +1037,9 @@ class TranslatorUtilsTest {
     ), Instrument.class, 1, fileTypeRepository));
     
     assertEquals("Translation failed", exception.getMessage());
-    Throwable[] exceptionCauses = exception.getSuppressed();
+    java.lang.Throwable[] exceptionCauses = exception.getSuppressed();
     assertEquals(1, exceptionCauses.length);
-    Throwable exceptionCause = exceptionCauses[0];
+    java.lang.Throwable exceptionCause = exceptionCauses[0];
     assertInstanceOf(FieldException.class, exceptionCause);
     FieldException fieldException = (FieldException) exceptionCause;
     assertEquals("uuid", fieldException.getProperty());
@@ -1066,9 +1072,9 @@ class TranslatorUtilsTest {
         )), 2)
     ), Instrument.class, 1, fileTypeRepository));
     assertEquals("Translation failed", exception.getMessage());
-    Throwable[] exceptionCauses = exception.getSuppressed();
+    java.lang.Throwable[] exceptionCauses = exception.getSuppressed();
     assertEquals(1, exceptionCauses.length);
-    Throwable exceptionCause = exceptionCauses[0];
+    java.lang.Throwable exceptionCause = exceptionCauses[0];
     assertInstanceOf(FieldException.class, exceptionCause);
     FieldException notFoundException = (FieldException) exceptionCause;
     assertEquals(String.format(
@@ -1102,9 +1108,9 @@ class TranslatorUtilsTest {
         )), 2)
     ), Instrument.class, 1, fileTypeRepository));
     assertEquals("Translation failed", exception.getMessage());
-    Throwable[] exceptionCauses = exception.getSuppressed();
+    java.lang.Throwable[] exceptionCauses = exception.getSuppressed();
     assertEquals(1, exceptionCauses.length);
-    Throwable exceptionCause = exceptionCauses[0];
+    java.lang.Throwable exceptionCause = exceptionCauses[0];
     assertInstanceOf(FieldException.class, exceptionCause);
     FieldException notFoundException = (FieldException) exceptionCause;
     assertEquals(String.format(

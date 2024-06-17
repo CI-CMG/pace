@@ -26,7 +26,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
 
   @Override
   public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) throws Exception {
-    Throwable reportedException = e.getCause() == null ? e : e.getCause();
+    java.lang.Throwable reportedException = e.getCause() == null ? e : e.getCause();
     
     commandLine.getErr().println(commandLine.getColorScheme().errorText(getExceptionText(reportedException)));
     String errorDetail = getErrorDetail(reportedException);
@@ -39,7 +39,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
         : commandLine.getCommandSpec().exitCodeOnExecutionException();
   }
   
-  private String getErrorDetail(Throwable e) throws JsonProcessingException {
+  private String getErrorDetail(java.lang.Throwable e) throws JsonProcessingException {
     ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
     
     if (e instanceof ConstraintViolationException) {
@@ -87,7 +87,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
         .collect(Collectors.toSet());
   }
   
-  private static String getExceptionText(Throwable throwable) {
+  private static String getExceptionText(java.lang.Throwable throwable) {
     return throwable.getMessage();
   }
 }

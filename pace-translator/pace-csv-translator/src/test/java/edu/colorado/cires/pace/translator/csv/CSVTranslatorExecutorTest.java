@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.CSVTranslatorField;
 import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.translator.ObjectWithRowConversionException;
+import edu.colorado.cires.pace.translator.ObjectWithRowException;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,16 +83,16 @@ public class CSVTranslatorExecutorTest {
         InputStream inputStream = new FileInputStream(prepareCSVFile(recordsMap));
         Reader reader = new InputStreamReader(inputStream)
     ) {
-      Map<String, ObjectWithRowConversionException<Ship>> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
+      Map<String, ObjectWithRowException<Ship>> result = createExecutor(translator).translate(reader).collect(Collectors.toMap(
           ship -> ship.object().getUuid().toString(),
           ship -> ship
       ));
       
       for (Entry<String, String> entry : recordsMap.entrySet()) {
-        ObjectWithRowConversionException<Ship> actual = result.get(entry.getKey());
+        ObjectWithRowException<Ship> actual = result.get(entry.getKey());
         assertEquals(entry.getKey(), actual.object().getUuid().toString());
         assertEquals(entry.getValue(), actual.object().getName());
-        assertNull(actual.rowConversionException());
+        assertNull(actual.throwable());
       }
     }
   }

@@ -22,22 +22,22 @@ public abstract class TranslatorExecutor<O, T extends TabularTranslator<? extend
     this.dependencyRepositories = dependencyRepositories;
   }
 
-  public Stream<ObjectWithRowConversionException<O>> translate(InputStream inputStream) throws IOException {
+  public Stream<ObjectWithRowException<O>> translate(InputStream inputStream) throws IOException {
     return translate(getPropertyStream(inputStream, translatorDefinition));
   }
   
-  public Stream<ObjectWithRowConversionException<O>> translate(Reader reader) throws IOException {
+  public Stream<ObjectWithRowException<O>> translate(Reader reader) throws IOException {
     return translate(getPropertyStream(reader, translatorDefinition));
   }
   
-  private Stream<ObjectWithRowConversionException<O>> translate(Stream<MapWithRowNumber> propertyStream) {
+  private Stream<ObjectWithRowException<O>> translate(Stream<MapWithRowNumber> propertyStream) {
     return propertyStream
         .map(m -> {
           try {
             O object = TranslatorUtils.convertMapToObject(m.map(), clazz, m.row(), dependencyRepositories);
-            return new ObjectWithRowConversionException<>(object, m.row(), null);
+            return new ObjectWithRowException<>(object, m.row(), null);
           } catch (RowConversionException e) {
-            return new ObjectWithRowConversionException<>(null, m.row(), e);
+            return new ObjectWithRowException<>(null, m.row(), e);
           }
         });
   }
