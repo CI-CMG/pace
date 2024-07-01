@@ -9,6 +9,6 @@ public class ApplicationTabs extends JTabbedPane {
     setTabPlacement(JTabbedPane.LEFT);
     add("Packages", DataPanelFactory.createPackagesPanel());
     add("Metadata", new MetadataTabbedPane());
-    add("Translators", new TranslatorsTabbedPane());
+    add("Translators", DataPanelFactory.createTranslatorsPanel());
   }
 }

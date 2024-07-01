@@ -8,9 +8,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 
-public class ExcelTranslatorForm extends TranslatorForm<ExcelTranslatorField, ExcelTranslator> {
+public class ExcelTranslatorFormOld extends TranslatorFormOld<ExcelTranslatorField, ExcelTranslator> {
 
-  public ExcelTranslatorForm(ExcelTranslator initialTranslator) {
+  public ExcelTranslatorFormOld(ExcelTranslator initialTranslator) {
     super(initialTranslator, (s) -> ExcelTranslatorFactory.createTranslator(null, s));
   }
 

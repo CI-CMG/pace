@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -38,7 +39,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
@@ -68,7 +68,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
         exceptions.forEach(o -> {
           java.lang.Throwable t = o.throwable();
           if (t instanceof FieldException fieldException) {
-            if (fieldException.getColumn() == (column + 1) && fieldException.getRow() == (row + 1)) {
+            if (fieldException.getColumn() == (column - 1) && fieldException.getRow() == (row + 2)) {
               jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED));
             }
           } else {
@@ -94,20 +94,20 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
         int row = table.rowAtPoint(point);
         int col = table.columnAtPoint(point);
         if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
-          String message = exceptions.stream().filter(o -> {
+          Set<String> messages = exceptions.stream().filter(o -> {
             java.lang.Throwable t = o.throwable();
                 if (t instanceof FieldException fieldException) {
-                  return fieldException.getColumn() == (col + 1) && fieldException.getRow() == (row + 1);
+                  return fieldException.getColumn() == (col - 1) && fieldException.getRow() == (row + 2);
                 } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
-                  return (row + 1) == o.row() && col == 0;
+                  return (row + 2) == o.row() && col == 0;
                 } else {
                   return false;
                 }
               }).map(ObjectWithRowException::throwable).map(java.lang.Throwable::getMessage)
-              .collect(Collectors.joining());
+              .collect(Collectors.toSet());
 
-          if (!StringUtils.isBlank(message)) {
-            JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, message, "Error", JOptionPane.ERROR_MESSAGE);
+          if (!messages.isEmpty()) {
+            JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, messages.iterator().next(), "Error", JOptionPane.ERROR_MESSAGE);
           }
         }
       }
@@ -167,7 +167,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
               .map(record -> {
                 List<Object> values  = new ArrayList<>(record.toList());
                 Throwable t = exceptions.stream()
-                    .filter(oObjectWithRowException -> record.getRecordNumber() == oObjectWithRowException.row())
+                    .filter(oObjectWithRowException -> record.getRecordNumber() == oObjectWithRowException.row() - 1)
                     .findFirst().map(ObjectWithRowException::throwable).orElse(null);
                 if (t == null) {
                   Image image = readImage("check_20dp_FILL0_wght400_GRAD0_opsz20.png");

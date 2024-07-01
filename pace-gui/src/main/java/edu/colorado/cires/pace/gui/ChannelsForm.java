@@ -1,0 +1,84 @@
+package edu.colorado.cires.pace.gui;
+
+import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+
+import edu.colorado.cires.pace.data.translator.ChannelTranslator;
+import java.awt.GridBagLayout;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+
+public class ChannelsForm extends JPanel {
+  
+  private final JPanel channelsPanel = new JPanel(new GridBagLayout());
+  private final JButton addButton;
+
+  public ChannelsForm(String[] headerOptions, List<ChannelTranslator> initialTranslators) {
+    this.addButton = getAddButton(headerOptions);
+    addFields();
+    initializeFields(headerOptions, initialTranslators);
+  }
+  
+  private void addFields() {
+    setLayout(new GridBagLayout());
+    
+    channelsPanel.setBorder(new TitledBorder("Channels"));
+    add(channelsPanel, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 0; c.weightx = 1;
+    }));
+    add(addButton, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 1; c.weightx = 1;
+    }));
+    add(new JPanel(), configureLayout(c -> {
+      c.gridx = 0; c.gridy = 2; c.weighty = 1;
+    }));
+  }
+  
+  private void initializeFields(String[] headerOptions, List<ChannelTranslator> initialTranslators) {
+    if (initialTranslators != null) {
+      initialTranslators.forEach(
+          t -> addChannel(headerOptions, t)
+      );
+    }
+  }
+  
+  private JButton getAddButton(String[] headerOptions) {
+    JButton button = new JButton("Add");
+    button.addActionListener(e -> addChannel(headerOptions, null));
+    return button;
+  }
+  
+  private void addChannel(String[] headerOptions, ChannelTranslator initialTranslator) {
+    ChannelTranslatorForm channelTranslatorForm = new ChannelTranslatorForm(headerOptions, initialTranslator, f -> {
+      channelsPanel.remove(f);
+      revalidate();
+    });
+    
+    channelsPanel.add(channelTranslatorForm, configureLayout(c -> {
+      c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1;
+    }));
+    revalidate();
+  }
+  
+  public void updateHeaderOptions(String[] headerOptions) {
+    Arrays.stream(channelsPanel.getComponents())
+        .filter(p -> p instanceof ChannelTranslatorForm)
+        .map(p -> (ChannelTranslatorForm) p)
+        .forEach(p -> p.updateHeaderOptions(headerOptions));
+
+    Arrays.stream(addButton.getActionListeners()).forEach(
+        addButton::removeActionListener
+    );
+    addButton.addActionListener(e -> addChannel(headerOptions, null));
+  }
+  
+  public List<ChannelTranslator> toTranslator() {
+    return Arrays.stream(channelsPanel.getComponents())
+        .filter(p -> p instanceof ChannelTranslatorForm)
+        .map(p -> (ChannelTranslatorForm) p)
+        .map(ChannelTranslatorForm::toTranslator)
+        .toList();
+  }
+}

@@ -839,7 +839,9 @@ class ConversionUtilsTest {
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder().time("test-property").build(), 2, runtimeException);
+    result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder()
+        .timeZone("test-zone")
+        .time("test-property").build(), 2, runtimeException);
     assertNull(result);
 
     assertEquals(1, runtimeException.getSuppressed().length);

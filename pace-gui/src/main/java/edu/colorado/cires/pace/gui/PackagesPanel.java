@@ -3,17 +3,17 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
-import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
+import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -36,22 +35,28 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 
-public class PackagesPanel extends TranslatePanel<Package> {
+public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
   private static final JProgressBar progressBar = new JProgressBar();
-  private final CRUDRepository<?>[] dependencyRepositories;
   private final ObjectMapper objectMapper;
   private static final JButton packageButton = new JButton("Package");
+  
+  private final PersonRepository personRepository;
+  private final OrganizationRepository organizationRepository;
+  private final ProjectRepository projectRepository;
 
   public PackagesPanel(CRUDRepository<Package> repository, String[] headers,
       Function<Package, Object[]> objectConversion,
-      ExcelTranslatorRepository excelTranslatorRepository,
-      CSVTranslatorRepository csvTranslatorRepository, Class<Package> clazz,
+      Class<Package> clazz,
       ObjectMapper objectMapper,
-      CRUDRepository<?>... dependencyRepositories) {
-    super(repository, headers, objectConversion, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories);
-    this.dependencyRepositories = dependencyRepositories;
+      TranslatorRepository translatorRepository,
+      Converter<PackageTranslator, Package> converter, PersonRepository personRepository, OrganizationRepository organizationRepository,
+      ProjectRepository projectRepository) {
+    super(repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
     this.objectMapper = objectMapper;
+    this.personRepository = personRepository;
+    this.organizationRepository = organizationRepository;
+    this.projectRepository = projectRepository;
   }
 
   @Override
@@ -149,9 +154,9 @@ public class PackagesPanel extends TranslatePanel<Package> {
           try {
             PackageProcessor packageProcessor = new PackageProcessor(
                 objectMapper,
-                getRepository(Person.class).findAll().toList(),
-                getRepository(Organization.class).findAll().toList(),
-                getRepository(Project.class).findAll().toList(),
+                personRepository.findAll().toList(),
+                organizationRepository.findAll().toList(),
+                projectRepository.findAll().toList(),
                 packages,
                 Paths.get(destinationField.getText()),
                 progressIndicator
@@ -174,18 +179,6 @@ public class PackagesPanel extends TranslatePanel<Package> {
     
     chooseDestinationDialog.pack();
     chooseDestinationDialog.setVisible(true);
-  }
-  
-  private <O extends ObjectWithUniqueField> CRUDRepository<O> getRepository(Class<O> clazz) {
-    return Arrays.stream(dependencyRepositories)
-        .map(r -> (CRUDRepository<?>) r)
-        .filter(r -> r.getClassName().equals(clazz.getSimpleName()))
-        .map(r ->(CRUDRepository<O>) r)
-        .findFirst().orElseThrow(
-            () -> new IllegalStateException(String.format(
-                "Repository not found for %s", clazz.getSimpleName()
-            ))
-        );
   }
   
   private static class PackageTableModel extends DefaultTableModel {

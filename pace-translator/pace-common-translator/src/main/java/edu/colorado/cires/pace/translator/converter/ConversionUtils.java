@@ -116,9 +116,29 @@ final class ConversionUtils {
   }
   
   public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
-    String timeZone = stringFromMap(properties, timeTranslator.getTimeZone());
+    ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, timeTranslator.getTimeZone());
+    String timeZone = valueWithColumnNumber.value().orElse(null);
+    if (timeZone == null) {
+      return null;
+    }
     if (timeTranslator instanceof DefaultTimeTranslator defaultTimeTranslator) {
-      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, timeZone), "Invalid date time format");
+      DateTimeFormatter dateTimeFormatter;
+      try {
+        dateTimeFormatter = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ofPattern(
+                "[yyyy-MM-dd'T'HH:mm:ss]" +
+                    "[yyyy-MM-dd HH:mm:ss]" +
+                    "[d/M/yyyy HH:mm:ss]" +
+                    "[d/M/yy HH:mm:ss]"
+            )).toFormatter()
+            .withZone(ZoneId.of(timeZone));
+      } catch (Exception e) {
+        runtimeException.addSuppressed(new FieldException(
+            timeTranslator.getTimeZone(), "Invalid time zone", valueWithColumnNumber.column(), row
+        ));
+        return null;
+      }
+      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, dateTimeFormatter), "Invalid date time format");
     } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
       return localDateTimeFromMap(properties, dateTimeSeparatedTimeTranslator, row, runtimeException);
     }
@@ -154,16 +174,7 @@ final class ConversionUtils {
   // MST
   // HST
   // UTC
-  private static LocalDateTime parseLocalDateTime(String input, String zoneId) {
-    DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-        .append(DateTimeFormatter.ofPattern(
-            "[yyyy-MM-dd'T'HH:mm:ss]" +
-            "[yyyy-MM-dd HH:mm:ss]" +
-            "[d/M/yyyy HH:mm:ss]" +
-            "[d/M/yy HH:mm:ss]"
-        )).toFormatter()
-        .withZone(ZoneId.of(zoneId));
-
+  private static LocalDateTime parseLocalDateTime(String input, DateTimeFormatter dateTimeFormatter) {
     return LocalDateTime.parse(input, dateTimeFormatter);
   }
   

@@ -13,6 +13,15 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
+import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
+import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
+import edu.colorado.cires.pace.data.translator.PersonTranslator;
+import edu.colorado.cires.pace.data.translator.PlatformTranslator;
+import edu.colorado.cires.pace.data.translator.ProjectTranslator;
+import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
@@ -26,6 +35,7 @@ import edu.colorado.cires.pace.datastore.json.ProjectJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.SeaJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.SensorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ShipJsonDatastore;
+import edu.colorado.cires.pace.datastore.json.TranslatorJsonDatastore;
 import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
@@ -39,8 +49,18 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SeaRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.ShipRepository;
+import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
+import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
+import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
+import edu.colorado.cires.pace.translator.converter.OrganizationConverter;
+import edu.colorado.cires.pace.translator.converter.PackageConverter;
+import edu.colorado.cires.pace.translator.converter.PersonConverter;
+import edu.colorado.cires.pace.translator.converter.PlatformConverter;
+import edu.colorado.cires.pace.translator.converter.ProjectConverter;
+import edu.colorado.cires.pace.translator.converter.SeaConverter;
+import edu.colorado.cires.pace.translator.converter.SensorConverter;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
@@ -65,9 +85,13 @@ final class DataPanelFactory {
   private static final ShipRepository shipRepository;
   private static final FileTypeJsonDatastore fileTypeJsonDatastore;
   private static final FileTypeRepository fileTypeRepository;
+  private static final TranslatorRepository translatorRepository;
 
   static {
     try {
+      translatorRepository = new TranslatorRepository(
+          new TranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
+      );
       excelTranslatorRepository = new ExcelTranslatorRepository(
           new ExcelTranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
       );
@@ -96,10 +120,10 @@ final class DataPanelFactory {
         "UUID", "Name"
     }, (project -> new Object[] {
         project.getUuid(), project.getName()
-    }), excelTranslatorRepository, csvTranslatorRepository, Project.class, (o) -> Project.builder()
+    }), Project.class, (o) -> Project.builder()
         .uuid((UUID) o[0])
         .name((String) o[1])
-        .build(), ProjectForm::new);
+        .build(), ProjectForm::new, translatorRepository, new ProjectConverter(), ProjectTranslator.class);
   }
   
   public static DataPanel<Platform> createPlatformPanel() {
@@ -107,14 +131,15 @@ final class DataPanelFactory {
         platformRepository,
         new String[]{"UUID", "Name"},
         (platform) -> new Object[]{platform.getUuid(), platform.getName()},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Platform.class,
         (o) -> Platform.builder()
             .uuid((UUID) o[0])
             .name((String) o[1])
             .build(),
-        PlatformForm::new
+        PlatformForm::new,
+        translatorRepository,
+        new PlatformConverter(),
+        PlatformTranslator.class
     );
   }
   
@@ -123,15 +148,16 @@ final class DataPanelFactory {
         fileTypeRepository,
         new String[]{"UUID", "Type", "Comment"},
         (fileType) -> new Object[]{fileType.getUuid(), fileType.getType(), fileType.getComment()},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         FileType.class,
         (objects) -> FileType.builder()
             .uuid((UUID) objects[0])
             .type((String) objects[1])
             .comment((String) objects[2])
             .build(),
-        FileTypeForm::new
+        FileTypeForm::new,
+        translatorRepository,
+        new FileTypeConverter(),
+        FileTypeTranslator.class
     );
   }
   
@@ -143,8 +169,6 @@ final class DataPanelFactory {
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getOrganization(), person.getPosition(),
             person.getStreet(), person.getCity(), person.getState(), person.getZip(), person.getCountry(), person.getEmail(),
             person.getPhone(), person.getOrcid()},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Person.class,
         (objects) -> Person.builder()
             .uuid((UUID) objects[0])
@@ -160,7 +184,10 @@ final class DataPanelFactory {
             .phone((String) objects[10])
             .orcid((String) objects[11])
             .build(),
-        PersonForm::new
+        PersonForm::new,
+        translatorRepository,
+        new PersonConverter(),
+        PersonTranslator.class
     );
   }
   
@@ -170,8 +197,6 @@ final class DataPanelFactory {
         new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getStreet(), person.getCity(),
             person.getState(), person.getZip(), person.getCountry(), person.getEmail(), person.getPhone()},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Organization.class,
         (objects) -> Organization.builder()
             .uuid((UUID) objects[0])
@@ -184,7 +209,10 @@ final class DataPanelFactory {
             .email((String) objects[7])
             .phone((String) objects[8])
             .build(),
-        OrganizationForm::new
+        OrganizationForm::new,
+        translatorRepository,
+        new OrganizationConverter(),
+        OrganizationTranslator.class
     );
   }
   
@@ -202,18 +230,22 @@ final class DataPanelFactory {
             false,
             p
         },
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Package.class,
         objectMapper,
+        translatorRepository,
+        new PackageConverter(
+            personRepository,
+            projectRepository,
+            organizationRepository,
+            platformRepository,
+            instrumentRepository,
+            seaRepository,
+            shipRepository,
+            detectionTypeRepository,
+            sensorRepository
+        ),
         personRepository,
         organizationRepository,
-        platformRepository,
-        instrumentRepository,
-        sensorRepository,
-        detectionTypeRepository,
-        seaRepository,
-        shipRepository,
         projectRepository
     ) {
       @Override
@@ -229,7 +261,7 @@ final class DataPanelFactory {
         new String[] { "UUID", "Name", "Object" },
         (t) -> new Object[] { t.getUuid(), t.getName(), t },
         (o) -> (ExcelTranslator) o[2],
-        ExcelTranslatorForm::new
+        ExcelTranslatorFormOld::new
     ) {
       @Override
       protected List<String> getHiddenColumns() {
@@ -244,11 +276,26 @@ final class DataPanelFactory {
         new String[] { "UUID", "Name", "Object" },
         (t) -> new Object[] { t.getUuid(), t.getName(), t },
         (o) -> (CSVTranslator) o[2],
-        CSVTranslatorForm::new
+        CSVTranslatorFormOld::new
     ) {
       @Override
       protected List<String> getHiddenColumns() {
         return List.of("UUID" , "Object");
+      }
+    };
+  }
+  
+  public static DataPanel<Translator> createTranslatorsPanel() {
+    return new TranslatorPanel(
+        translatorRepository,
+        new String[] { "UUID", "Name", "Object" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t },
+        (o) -> (Translator) o[2],
+        TranslatorForm::new
+    ) {
+      @Override
+      protected List<String> getHiddenColumns() {
+        return List.of("UUID", "Object");
       }
     };
   }
@@ -260,12 +307,12 @@ final class DataPanelFactory {
         (i) -> new Object[]{i.getUuid(), i.getName(), i.getFileTypes().stream()
             .map(FileType::getType)
             .collect(Collectors.joining(", ")), i},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Instrument.class,
         (o) -> (Instrument) o[3],
         (i) -> new InstrumentForm(i, fileTypeRepository),
-        fileTypeRepository
+        translatorRepository,
+        new InstrumentConverter(fileTypeRepository),
+        InstrumentTranslator.class
     ) {
       @Override
       protected List<String> getHiddenColumns() {
@@ -279,11 +326,12 @@ final class DataPanelFactory {
         sensorRepository,
         new String[]{"UUID", "Name", "Position", "Description", "Object"},
         (s) -> new Object[]{s.getUuid(), s.getName(), String.format("(%s, %s, %s)", s.getPosition().getX(), s.getPosition().getY(), s.getPosition().getZ()), s.getDescription(), s},
-        excelTranslatorRepository,
-        csvTranslatorRepository,
         Sensor.class,
         (o) -> (Sensor) o[4],
-        SensorForm::new
+        SensorForm::new,
+        translatorRepository,
+        new SensorConverter(),
+        SensorTranslator.class
     ) {
       @Override
       protected List<String> getHiddenColumns() {
@@ -298,10 +346,9 @@ final class DataPanelFactory {
         "UUID", "Name"
     }, (sea -> new Object[]{
         sea.getUuid(), sea.getName()
-    }), excelTranslatorRepository, csvTranslatorRepository, Sea.class, (o) -> Sea.builder()
+    }), Sea.class, (o) -> Sea.builder()
         .uuid((UUID) o[0])
         .name((String) o[1])
-        .build(), SeaForm::new);
+        .build(), SeaForm::new, translatorRepository, new SeaConverter(), SeaTranslator.class);
   }
-
 }

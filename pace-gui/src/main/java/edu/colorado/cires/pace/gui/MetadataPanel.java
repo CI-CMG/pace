@@ -1,10 +1,11 @@
 package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
-import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
+import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -17,15 +18,16 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-public class MetadataPanel<O extends ObjectWithUniqueField> extends TranslatePanel<O> {
+public class MetadataPanel<O extends ObjectWithUniqueField, T extends Translator> extends TranslatePanel<O, T> {
 
   private final Function<Object[], O> rowConversion;
   private final Function<O, Form<O>> formSupplier;
 
   public MetadataPanel(CRUDRepository<O> repository, String[] headers, Function<O, Object[]> objectConversion,
-      ExcelTranslatorRepository excelTranslatorRepository, CSVTranslatorRepository csvTranslatorRepository, Class<O> clazz, 
-      Function<Object[], O> rowConversion, Function<O, Form<O>> formSupplier, CRUDRepository<?>... dependencyRepositories) {
-    super(repository, headers, objectConversion, excelTranslatorRepository, csvTranslatorRepository, clazz, dependencyRepositories);
+      Class<O> clazz, 
+      Function<Object[], O> rowConversion, Function<O, Form<O>> formSupplier, TranslatorRepository translatorRepository, Converter<T, O> converter,
+      Class<T> translatorClazz) {
+    super(repository, headers, objectConversion, clazz, translatorRepository, converter, translatorClazz);
     this.rowConversion = rowConversion;
     this.formSupplier = formSupplier;
   }

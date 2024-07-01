@@ -9,21 +9,45 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class DetectionsPackageTranslator extends PackageTranslator {
+public class DetectionsPackageTranslator extends SoundAnalysisPackageTranslator {
   
   private final String soundSource;
   
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
   
-  private final String softwareNames;
-  private final String softwareVersions;
-  private final String softwareProtocolCitation;
-  private final String softwareDescription;
-  private final String softwareProcessingDescription;
-  private final String analysisTimeZone;
-  private final String analysisEffort;
-  private final String sampleRate;
-  private final String minFrequency;
-  private final String maxFrequency;
+  public static DetectionsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
+    return DetectionsPackageTranslator.builder()
+        .uuid(packageTranslator.getUuid())
+        .name(packageTranslator.getName())
+        .packageUUID(packageTranslator.getPackageUUID())
+        .temperaturePath(packageTranslator.getTemperaturePath())
+        .biologicalPath(packageTranslator.getBiologicalPath())
+        .otherPath(packageTranslator.getOtherPath())
+        .documentsPath(packageTranslator.getDocumentsPath())
+        .calibrationDocumentsPath(packageTranslator.getCalibrationDocumentsPath())
+        .navigationPath(packageTranslator.getNavigationPath())
+        .sourcePath(packageTranslator.getSourcePath())
+        .siteOrCruiseName(packageTranslator.getSiteOrCruiseName())
+        .deploymentId(packageTranslator.getDeploymentId())
+        .datasetPackager(packageTranslator.getDatasetPackager())
+        .projects(packageTranslator.getProjects())
+        .publicReleaseDate(packageTranslator.getPublicReleaseDate())
+        .scientists(packageTranslator.getScientists())
+        .sponsors(packageTranslator.getSponsors())
+        .funders(packageTranslator.getFunders())
+        .platform(packageTranslator.getPlatform())
+        .instrument(packageTranslator.getInstrument())
+        .startTimeTranslator(packageTranslator.getStartTimeTranslator())
+        .endTimeTranslator(packageTranslator.getEndTimeTranslator())
+        .preDeploymentCalibrationDate(packageTranslator.getPreDeploymentCalibrationDate())
+        .postDeploymentCalibrationDate(packageTranslator.getPostDeploymentCalibrationDate())
+        .calibrationDescription(packageTranslator.getCalibrationDescription())
+        .deploymentTitle(packageTranslator.getDeploymentTitle())
+        .deploymentPurpose(packageTranslator.getDeploymentPurpose())
+        .deploymentDescription(packageTranslator.getDeploymentDescription())
+        .alternateSiteName(packageTranslator.getAlternateSiteName())
+        .alternateDeploymentName(packageTranslator.getAlternateDeploymentName())
+        .locationDetailTranslator(packageTranslator.getLocationDetailTranslator());
+  }
 
 }
