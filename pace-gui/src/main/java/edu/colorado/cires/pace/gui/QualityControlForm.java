@@ -1,17 +1,18 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class QualityControlForm extends JPanel {
   
@@ -40,9 +41,18 @@ public class QualityControlForm extends JPanel {
     add(qualityAnalysisMethodField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("Quality Assessment Description"), configureLayout(c -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(qualityAssessmentDescriptionField, configureLayout(c -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-    qualityEntryTranslatorsPanel.setBorder(new TitledBorder("Entries"));
-    add(qualityEntryTranslatorsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-    add(addEntryButton, configureLayout(c -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
+    
+    JPanel entriesPanel = new JPanel(new GridBagLayout());
+    entriesPanel.add(qualityEntryTranslatorsPanel, configureLayout(c -> { 
+      c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    entriesPanel.add(addEntryButton, configureLayout(c -> { 
+      c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    entriesPanel.setBorder(createEtchedBorder("Entries"));
+    add(entriesPanel, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
     add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 10; c.weighty = 1; }));
   }
   
@@ -77,7 +87,7 @@ public class QualityControlForm extends JPanel {
     
     CollapsiblePanel<QualityEntryForm> collapsiblePanel = new CollapsiblePanel<>(
         String.format(
-            "#%s", qualityEntryTranslatorsPanel.getComponentCount() + 1
+            "Entry %s", qualityEntryTranslatorsPanel.getComponentCount() + 1
         ),
         qualityEntryForm
     );

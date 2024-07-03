@@ -2,7 +2,6 @@ package edu.colorado.cires.pace.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.Image;
-import java.awt.Insets;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,10 +36,6 @@ final class UIUtils {
     TitledBorder border = createTitledBorder(title);
     border.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
     return border;
-  }
-  
-  public static Insets createSquareInsets(int insetSize) {
-    return new Insets(insetSize, insetSize, insetSize, insetSize);
   }
   
   public static ImageIcon getImageIcon(String fileName, Class<?> clazz) {

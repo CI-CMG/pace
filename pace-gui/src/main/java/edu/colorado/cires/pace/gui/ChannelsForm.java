@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
-import static edu.colorado.cires.pace.gui.UIUtils.createSquareInsets;
 
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
 import java.awt.GridBagLayout;
@@ -11,9 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class ChannelsForm extends JPanel {
-  
-  private static final int INSET_SIZE = 10;
-  
+
   private final JPanel channelsPanel = new JPanel(new GridBagLayout());
   private final JButton addButton;
 
@@ -58,14 +55,14 @@ public class ChannelsForm extends JPanel {
     
     CollapsiblePanel<ChannelTranslatorForm> collapsiblePanel = new CollapsiblePanel<>(
         String.format(
-            "#%s", channelsPanel.getComponentCount() + 1
+            "Channel %s", channelsPanel.getComponentCount() + 1
         ),
         channelTranslatorForm
     );
     collapsiblePanel.getContentPanel().setVisible(false);
     
     channelsPanel.add(collapsiblePanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
+      c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1;
     }));
     revalidate();
   }
