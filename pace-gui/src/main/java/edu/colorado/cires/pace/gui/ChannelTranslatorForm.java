@@ -11,7 +11,6 @@ import edu.colorado.cires.pace.data.translator.GainTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import javax.swing.JButton;
@@ -115,14 +114,19 @@ public class ChannelTranslatorForm extends JPanel {
   
   private void addSampleRate(String[] headerOptions, SampleRateTranslator initialTranslator) {
     SampleRateForm sampleRateForm = new SampleRateForm(headerOptions, initialTranslator, f -> {
-      sampleRateTranslatorsPanel.remove(f);
+      sampleRateTranslatorsPanel.remove(f.getParent());
       revalidate();
     });
-    sampleRateForm.setBorder(createEtchedBorder(String.format(
-        "#%s", sampleRateTranslatorsPanel.getComponentCount() + 1
-    )));
     
-    sampleRateTranslatorsPanel.add(sampleRateForm, configureLayout(c -> {
+    CollapsiblePanel<SampleRateForm> collapsiblePanel = new CollapsiblePanel<>(
+        String.format(
+            "#%s", sampleRateTranslatorsPanel.getComponentCount() + 1
+        ),
+        sampleRateForm
+    );
+    collapsiblePanel.getContentPanel().setVisible(false);
+    
+    sampleRateTranslatorsPanel.add(collapsiblePanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = sampleRateTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
@@ -130,14 +134,19 @@ public class ChannelTranslatorForm extends JPanel {
   
   private void addDutyCycle(String[] headerOptions, DutyCycleTranslator initialTranslator) {
     DutyCycleForm dutyCycleForm = new DutyCycleForm(headerOptions, initialTranslator, f -> {
-      dutyCycleTranslatorsPanel.remove(f);
+      dutyCycleTranslatorsPanel.remove(f.getParent());
       revalidate();
     });
-    dutyCycleForm.setBorder(createEtchedBorder(String.format(
-        "#%s", dutyCycleTranslatorsPanel.getComponentCount() + 1
-    )));
     
-    dutyCycleTranslatorsPanel.add(dutyCycleForm, configureLayout(c -> {
+    CollapsiblePanel<DutyCycleForm> collapsiblePanel = new CollapsiblePanel<>(
+        String.format(
+            "#%s", dutyCycleTranslatorsPanel.getComponentCount() + 1
+        ),
+        dutyCycleForm
+    );
+    collapsiblePanel.getContentPanel().setVisible(false);
+    
+    dutyCycleTranslatorsPanel.add(collapsiblePanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = dutyCycleTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
@@ -145,14 +154,19 @@ public class ChannelTranslatorForm extends JPanel {
   
   private void addGain(String[] headerOptions, GainTranslator initialTranslator) {
     GainForm gainForm = new GainForm(headerOptions, initialTranslator, f -> {
-      gainTranslatorsPanel.remove(f);
+      gainTranslatorsPanel.remove(f.getParent());
       revalidate();
     });
-    gainForm.setBorder(createEtchedBorder(String.format(
-        "#%s", gainTranslatorsPanel.getComponentCount() + 1
-    )));
     
-    gainTranslatorsPanel.add(gainForm, configureLayout(c -> {
+    CollapsiblePanel<GainForm> collapsiblePanel = new CollapsiblePanel<>(
+        String.format(
+            "#%s", gainTranslatorsPanel.getComponentCount() + 1
+        ),
+        gainForm
+    );
+    collapsiblePanel.getContentPanel().setVisible(false);
+    
+    gainTranslatorsPanel.add(collapsiblePanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = gainTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
@@ -163,16 +177,19 @@ public class ChannelTranslatorForm extends JPanel {
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
     Arrays.stream(sampleRateTranslatorsPanel.getComponents())
-        .filter(p -> p instanceof SampleRateForm)
-        .map(p -> (SampleRateForm) p)
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (SampleRateForm) p.getContentPanel())
         .forEach(p -> p.updateHeaderOptions(headerOptions));
     Arrays.stream(dutyCycleTranslatorsPanel.getComponents())
-        .filter(p -> p instanceof DutyCycleForm)
-        .map(p -> (DutyCycleForm) p)
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (DutyCycleForm) p.getContentPanel())
         .forEach(p -> p.updateHeaderOptions(headerOptions));
     Arrays.stream(gainTranslatorsPanel.getComponents())
-        .filter(p -> p instanceof GainForm)
-        .map(p -> (GainForm) p)
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (GainForm) p.getContentPanel())
         .forEach(p -> p.updateHeaderOptions(headerOptions));
 
     Arrays.stream(addSampleRateButton.getActionListeners())
@@ -193,18 +210,21 @@ public class ChannelTranslatorForm extends JPanel {
         .startTimeTranslator(startTimeForm.toTranslator())
         .endTimeTranslator(endTimeForm.toTranslator())
         .sampleRateTranslators(Arrays.stream(sampleRateTranslatorsPanel.getComponents())
-            .filter(p -> p instanceof SampleRateForm)
-            .map(p -> (SampleRateForm) p)
+            .filter(p -> p instanceof CollapsiblePanel<?>)
+            .map(p -> (CollapsiblePanel<?>) p)
+            .map(p -> (SampleRateForm) p.getContentPanel())
             .map(SampleRateForm::toTranslator)
             .toList()
         ).dutyCycleTranslators(Arrays.stream(dutyCycleTranslatorsPanel.getComponents())
-            .filter(p -> p instanceof DutyCycleForm)
-            .map(p -> (DutyCycleForm) p)
+            .filter(p -> p instanceof CollapsiblePanel<?>)
+            .map(p -> (CollapsiblePanel<?>) p)
+            .map(p -> (DutyCycleForm) p.getContentPanel())
             .map(DutyCycleForm::toTranslator)
             .toList()
         ).gainTranslators(Arrays.stream(gainTranslatorsPanel.getComponents())
-            .filter(p -> p instanceof GainForm)
-            .map(p -> (GainForm) p)
+            .filter(p -> p instanceof CollapsiblePanel<?>)
+            .map(p -> (CollapsiblePanel<?>) p)
+            .map(p -> (GainForm) p.getContentPanel())
             .map(GainForm::toTranslator)
             .toList()
         )

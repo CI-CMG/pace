@@ -1,9 +1,14 @@
 package edu.colorado.cires.pace.gui;
 
 import java.awt.GridBagConstraints;
+import java.awt.Image;
 import java.awt.Insets;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Consumer;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -36,6 +41,24 @@ final class UIUtils {
   
   public static Insets createSquareInsets(int insetSize) {
     return new Insets(insetSize, insetSize, insetSize, insetSize);
+  }
+  
+  public static ImageIcon getImageIcon(String fileName, Class<?> clazz) {
+    Image image = readImage(fileName, clazz);
+    Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
+    return new ImageIcon(newImg);
+  }
+
+  private static Image readImage(String fileName, Class<?> clazz) {
+    try {
+      return ImageIO.read(
+          Objects.requireNonNull(
+              clazz.getResourceAsStream(String.format("/%s", fileName))
+          )
+      );
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }

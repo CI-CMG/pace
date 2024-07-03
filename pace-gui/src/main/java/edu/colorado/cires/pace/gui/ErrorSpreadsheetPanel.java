@@ -1,5 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
+import static edu.colorado.cires.pace.gui.UIUtils.getImageIcon;
+
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -11,7 +13,6 @@ import edu.colorado.cires.pace.utilities.TranslationType;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,10 +25,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -170,20 +169,11 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
                     .filter(oObjectWithRowException -> record.getRecordNumber() == oObjectWithRowException.row() - 1)
                     .findFirst().map(ObjectWithRowException::throwable).orElse(null);
                 if (t == null) {
-                  Image image = readImage("check_20dp_FILL0_wght400_GRAD0_opsz20.png");
-                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
-                  ImageIcon imageIcon = new ImageIcon(newImg);
-                  values.add(0, imageIcon);
+                  values.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
                 } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
-                  Image image = readImage("close_20dp_FILL0_wght400_GRAD0_opsz20.png");
-                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
-                  ImageIcon imageIcon = new ImageIcon(newImg);
-                  values.add(0, imageIcon);
+                  values.add(0, getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
                 } else if (t instanceof FieldException) {
-                  Image image = readImage("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png");
-                  Image newImg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH);
-                  ImageIcon imageIcon = new ImageIcon(newImg);
-                  values.add(0, imageIcon);
+                  values.add(0, getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
                 } else {
                   values.add(0, null);
                 }
@@ -196,18 +186,6 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
         }
       }
     };
-  }
-  
-  private Image readImage(String fileName) {
-    try {
-      return ImageIO.read(
-          Objects.requireNonNull(
-              getClass().getResourceAsStream(String.format("/%s", fileName))
-          )
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
   
   private record TableData(List<String> headers, List<List<Object>> data) {}

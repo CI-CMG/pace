@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
-import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.createSquareInsets;
 
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
@@ -53,14 +52,19 @@ public class ChannelsForm extends JPanel {
   
   private void addChannel(String[] headerOptions, ChannelTranslator initialTranslator) {
     ChannelTranslatorForm channelTranslatorForm = new ChannelTranslatorForm(headerOptions, initialTranslator, f -> {
-      channelsPanel.remove(f);
+      channelsPanel.remove(f.getParent());
       revalidate();
     });
-    channelTranslatorForm.setBorder(createEtchedBorder(String.format(
-        "#%s", channelsPanel.getComponentCount() + 1
-    )));
     
-    channelsPanel.add(channelTranslatorForm, configureLayout(c -> {
+    CollapsiblePanel<ChannelTranslatorForm> collapsiblePanel = new CollapsiblePanel<>(
+        String.format(
+            "#%s", channelsPanel.getComponentCount() + 1
+        ),
+        channelTranslatorForm
+    );
+    collapsiblePanel.getContentPanel().setVisible(false);
+    
+    channelsPanel.add(collapsiblePanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
@@ -68,8 +72,9 @@ public class ChannelsForm extends JPanel {
   
   public void updateHeaderOptions(String[] headerOptions) {
     Arrays.stream(channelsPanel.getComponents())
-        .filter(p -> p instanceof ChannelTranslatorForm)
-        .map(p -> (ChannelTranslatorForm) p)
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (ChannelTranslatorForm) p.getContentPanel())
         .forEach(p -> p.updateHeaderOptions(headerOptions));
 
     Arrays.stream(addButton.getActionListeners()).forEach(
@@ -80,8 +85,9 @@ public class ChannelsForm extends JPanel {
   
   public List<ChannelTranslator> toTranslator() {
     return Arrays.stream(channelsPanel.getComponents())
-        .filter(p -> p instanceof ChannelTranslatorForm)
-        .map(p -> (ChannelTranslatorForm) p)
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (ChannelTranslatorForm) p.getContentPanel())
         .map(ChannelTranslatorForm::toTranslator)
         .toList();
   }
