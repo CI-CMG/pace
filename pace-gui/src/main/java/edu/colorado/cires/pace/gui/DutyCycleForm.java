@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
@@ -11,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class DutyCycleForm extends JPanel {
   
@@ -45,11 +45,11 @@ public class DutyCycleForm extends JPanel {
     add(intervalField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    startTimeForm.setBorder(new TitledBorder("Start Time"));
+    startTimeForm.setBorder(createEtchedBorder("Start Time"));
     add(startTimeForm, configureLayout(c -> {
       c.gridx = 0; c.gridy = 4; c.weightx = 1;
     }));
-    endTimeForm.setBorder(new TitledBorder("End Time"));
+    endTimeForm.setBorder(createEtchedBorder("End Time"));
     add(endTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 4; c.weightx = 1;
     }));

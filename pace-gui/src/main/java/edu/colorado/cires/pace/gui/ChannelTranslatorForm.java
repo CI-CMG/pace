@@ -1,6 +1,8 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
+import static edu.colorado.cires.pace.gui.UIUtils.createSquareInsets;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
@@ -9,15 +11,17 @@ import edu.colorado.cires.pace.data.translator.GainTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class ChannelTranslatorForm extends JPanel {
+  
+  private static final int INSET_SIZE = 10;
   
   private final JComboBox<String> sensorField = new JComboBox<>();
   private final TimeTranslatorForm startTimeForm;
@@ -47,28 +51,28 @@ public class ChannelTranslatorForm extends JPanel {
     setLayout(new GridBagLayout());
     
     add(new JLabel("Sensor"), configureLayout(c -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    add(sensorField, configureLayout(c -> { 
+    add(sensorField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    startTimeForm.setBorder(new TitledBorder("Start Time"));
+    startTimeForm.setBorder(createEtchedBorder("Start Time"));
     add(startTimeForm, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    endTimeForm.setBorder(new TitledBorder("End Time"));
+    endTimeForm.setBorder(createEtchedBorder("End Time"));
     add(endTimeForm, configureLayout(c -> { c.gridx = 1; c.gridy = 2; c.weightx = 1; }));
-    sampleRateTranslatorsPanel.setBorder(new TitledBorder("Sample Rates"));
+    sampleRateTranslatorsPanel.setBorder(createEtchedBorder("Sample Rates"));
     add(sampleRateTranslatorsPanel, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(addSampleRateButton, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    dutyCycleTranslatorsPanel.setBorder(new TitledBorder("Duty Cycles"));
+    dutyCycleTranslatorsPanel.setBorder(createEtchedBorder("Duty Cycles"));
     add(dutyCycleTranslatorsPanel, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(addDutyCycleButton, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 6; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    gainTranslatorsPanel.setBorder(new TitledBorder("Gain Translators"));
+    gainTranslatorsPanel.setBorder(createEtchedBorder("Gain Translators"));
     add(gainTranslatorsPanel, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 7; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -114,9 +118,12 @@ public class ChannelTranslatorForm extends JPanel {
       sampleRateTranslatorsPanel.remove(f);
       revalidate();
     });
+    sampleRateForm.setBorder(createEtchedBorder(String.format(
+        "#%s", sampleRateTranslatorsPanel.getComponentCount() + 1
+    )));
     
     sampleRateTranslatorsPanel.add(sampleRateForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = sampleRateTranslatorsPanel.getComponentCount(); c.weightx = 1;
+      c.gridx = 0; c.gridy = sampleRateTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
   }
@@ -126,9 +133,12 @@ public class ChannelTranslatorForm extends JPanel {
       dutyCycleTranslatorsPanel.remove(f);
       revalidate();
     });
+    dutyCycleForm.setBorder(createEtchedBorder(String.format(
+        "#%s", dutyCycleTranslatorsPanel.getComponentCount() + 1
+    )));
     
     dutyCycleTranslatorsPanel.add(dutyCycleForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = dutyCycleTranslatorsPanel.getComponentCount(); c.weightx = 1;
+      c.gridx = 0; c.gridy = dutyCycleTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
   }
@@ -138,9 +148,12 @@ public class ChannelTranslatorForm extends JPanel {
       gainTranslatorsPanel.remove(f);
       revalidate();
     });
+    gainForm.setBorder(createEtchedBorder(String.format(
+        "#%s", gainTranslatorsPanel.getComponentCount() + 1
+    )));
     
     gainTranslatorsPanel.add(gainForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = gainTranslatorsPanel.getComponentCount(); c.weightx = 1;
+      c.gridx = 0; c.gridy = gainTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
   }

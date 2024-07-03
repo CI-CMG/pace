@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
@@ -116,7 +117,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     formPanel.add(nameField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     formPanel.add(new JLabel("Description"), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     formPanel.add(descriptionField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
-    positionTranslatorForm.setBorder(new TitledBorder("Position"));
+    positionTranslatorForm.setBorder(createEtchedBorder("Position"));
     formPanel.add(positionTranslatorForm, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 6; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));

@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.MarineInstrumentLocationTranslator;
@@ -30,7 +31,7 @@ public class MultipointStationaryMarineLocationForm extends BaseLocationDetailTr
     
     add(new JLabel("Sea Area"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(seaAreaField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    locationsPanel.setBorder(new TitledBorder("Locations"));
+    locationsPanel.setBorder(createEtchedBorder("Locations"));
     add(locationsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(getAddLocationButton(headerOptions), configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
   }

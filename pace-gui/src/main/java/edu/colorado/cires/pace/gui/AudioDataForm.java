@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.AudioDataPackageTranslator;
@@ -70,11 +71,11 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     add(sensorsField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    deploymentTimeForm.setBorder(new TitledBorder("Deployment Time"));
+    deploymentTimeForm.setBorder(createEtchedBorder("Deployment Time"));
     add(deploymentTimeForm, configureLayout(c -> {
       c.gridx = 0; c.gridy = 12; c.weightx = 1;
     }));
-    recoveryTimeForm.setBorder(new TitledBorder("Recovery Time"));
+    recoveryTimeForm.setBorder(createEtchedBorder("Recovery Time"));
     add(recoveryTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 12; c.weightx = 1;
     }));

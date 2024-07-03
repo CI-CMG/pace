@@ -1,6 +1,8 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
+import static edu.colorado.cires.pace.gui.UIUtils.createSquareInsets;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
@@ -11,9 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class QualityControlForm extends JPanel {
+  
+  private static final int INSET_SIZE = 10;
   
   private final JComboBox<String> qualityAnalystField = new JComboBox<>();
   private final JComboBox<String> qualityAnalysisObjectivesField = new JComboBox<>();
@@ -40,7 +43,7 @@ public class QualityControlForm extends JPanel {
     add(qualityAnalysisMethodField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("Quality Assessment Description"), configureLayout(c -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(qualityAssessmentDescriptionField, configureLayout(c -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-    qualityEntryTranslatorsPanel.setBorder(new TitledBorder("Entries"));
+    qualityEntryTranslatorsPanel.setBorder(createEtchedBorder("Entries"));
     add(qualityEntryTranslatorsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
     add(addEntryButton, configureLayout(c -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
     add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 10; c.weighty = 1; }));
@@ -74,9 +77,12 @@ public class QualityControlForm extends JPanel {
       qualityEntryTranslatorsPanel.remove(p);
       revalidate();
     });
+    qualityEntryForm.setBorder(createEtchedBorder(String.format(
+        "#%s", qualityEntryTranslatorsPanel.getComponentCount() + 1
+    )));
     
     qualityEntryTranslatorsPanel.add(qualityEntryForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = qualityEntryTranslatorsPanel.getComponentCount(); c.weightx = 1;
+      c.gridx = 0; c.gridy = qualityEntryTranslatorsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
   }

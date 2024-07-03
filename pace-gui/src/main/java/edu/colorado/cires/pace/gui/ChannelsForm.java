@@ -1,6 +1,8 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
+import static edu.colorado.cires.pace.gui.UIUtils.createSquareInsets;
 
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
 import java.awt.GridBagLayout;
@@ -8,9 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class ChannelsForm extends JPanel {
+  
+  private static final int INSET_SIZE = 10;
   
   private final JPanel channelsPanel = new JPanel(new GridBagLayout());
   private final JButton addButton;
@@ -23,8 +26,6 @@ public class ChannelsForm extends JPanel {
   
   private void addFields() {
     setLayout(new GridBagLayout());
-    
-    channelsPanel.setBorder(new TitledBorder("Channels"));
     add(channelsPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1;
     }));
@@ -55,9 +56,12 @@ public class ChannelsForm extends JPanel {
       channelsPanel.remove(f);
       revalidate();
     });
+    channelTranslatorForm.setBorder(createEtchedBorder(String.format(
+        "#%s", channelsPanel.getComponentCount() + 1
+    )));
     
     channelsPanel.add(channelTranslatorForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1;
+      c.gridx = 0; c.gridy = channelsPanel.getComponentCount(); c.weightx = 1; c.insets = createSquareInsets(INSET_SIZE);
     }));
     revalidate();
   }

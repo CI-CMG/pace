@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 
 import edu.colorado.cires.pace.data.translator.SoundLevelMetricsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.TimeTranslator;
@@ -22,11 +23,11 @@ public class SoundLevelMetricsForm extends JPanel {
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    audioStartTimeForm.setBorder(new TitledBorder("Audio Start Time"));
+    audioStartTimeForm.setBorder(createEtchedBorder("Audio Start Time"));
     add(audioStartTimeForm, configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1;
     }));
-    audioEndTimeForm.setBorder(new TitledBorder("Audio End Time"));
+    audioEndTimeForm.setBorder(createEtchedBorder("Audio End Time"));
     add(audioEndTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 0; c.weightx = 1;
     }));

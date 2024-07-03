@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
@@ -32,9 +33,9 @@ public class StationaryMarineLocationForm extends BaseLocationDetailTranslatorFo
     add(seaAreaField, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    deploymentLocationForm.setBorder(new TitledBorder("Deployment Location"));
+    deploymentLocationForm.setBorder(createEtchedBorder("Deployment Location"));
     add(deploymentLocationForm, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    recoveryLocationForm.setBorder(new TitledBorder("Recovery Location"));
+    recoveryLocationForm.setBorder(createEtchedBorder("Recovery Location"));
     add(recoveryLocationForm, configureLayout(c -> { c.gridx = 1; c.gridy = 2; c.weightx = 1; }));
   }
   

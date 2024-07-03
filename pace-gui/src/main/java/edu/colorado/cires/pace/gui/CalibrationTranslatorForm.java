@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.DateTranslator;
@@ -38,9 +39,9 @@ public class CalibrationTranslatorForm extends JPanel {
     add(calibrationDescriptionField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    preDeploymentCalibrationDateForm.setBorder(new TitledBorder("Pre-Deployment Calibration Date"));
+    preDeploymentCalibrationDateForm.setBorder(createEtchedBorder("Pre-Deployment Calibration Date"));
     add(preDeploymentCalibrationDateForm, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
-    postDeploymentCalibrationDateForm.setBorder(new TitledBorder("Post-Deployment Calibration Date"));
+    postDeploymentCalibrationDateForm.setBorder(createEtchedBorder("Post-Deployment Calibration Date"));
     add(postDeploymentCalibrationDateForm, configureLayout((c) -> { c.gridx = 1; c.gridy = 4; c.weightx = 1; }));
 
     add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weighty = 1; }));
