@@ -9,6 +9,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +101,11 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing all {} objects", getClassName());
-    return datastore.findAll();
+    Function<O, String> uniqueFieldGetter = datastore.getUniqueFieldGetter();
+    return datastore.findAll()
+        .sorted((o1, o2) -> uniqueFieldGetter.apply(o1).compareToIgnoreCase(
+            uniqueFieldGetter.apply(o2)
+        ));
   }
 
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
