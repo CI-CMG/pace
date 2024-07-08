@@ -15,9 +15,9 @@ import org.dhatim.fastexcel.reader.Row;
 
 public class ExcelReader {
   
-  public static Stream<MapWithRowNumber> read(InputStream inputStream, int sheetNumber) throws IOException {
+  public static Stream<MapWithRowNumber> read(InputStream inputStream, int sheetIndex) throws IOException {
     try (ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
-      return workbook.getSheet(sheetNumber).map(
+      return workbook.getSheet(sheetIndex).map(
           sheet -> {
             try {
               List<Row> rows = sheet.read();
