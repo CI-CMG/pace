@@ -108,7 +108,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
       Stream<O> translated = SpreadsheetConverter.execute(
           () -> {
             try {
-              return ExcelReader.read(inputStream, 1);
+              return ExcelReader.read(inputStream, 0);
             } catch (IOException e) {
               throw new RuntimeException(e);
             }

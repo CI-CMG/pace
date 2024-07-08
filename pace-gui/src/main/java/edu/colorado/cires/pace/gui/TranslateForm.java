@@ -174,7 +174,7 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
         case excel -> {
           try (InputStream inputStream = new FileInputStream(selectedFile)) {
             yield postProcessStream(
-                ExcelReader.read(inputStream, 1)
+                ExcelReader.read(inputStream, 0)
                     .map(mapWithRowNumber -> {
                       try {
                         O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), new RuntimeException());
