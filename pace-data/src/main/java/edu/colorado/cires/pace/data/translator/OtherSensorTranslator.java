@@ -14,4 +14,13 @@ public class OtherSensorTranslator extends SensorTranslator {
   private final String sensorType;
   private final String properties;
 
+  public static OtherSensorTranslatorBuilder<?, ?> toBuilder(SensorTranslator sensorTranslator) {
+    return OtherSensorTranslator.builder()
+        .uuid(sensorTranslator.getUuid())
+        .name(sensorTranslator.getName())
+        .sensorUUID(sensorTranslator.getSensorUUID())
+        .sensorName(sensorTranslator.getSensorName())
+        .description(sensorTranslator.getDescription())
+        .positionTranslator(sensorTranslator.getPositionTranslator());
+  }
 }

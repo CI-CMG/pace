@@ -13,5 +13,15 @@ public class AudioSensorTranslator extends SensorTranslator {
   
   private final String hydrophoneId;
   private final String preampId;
+  
+  public static AudioSensorTranslatorBuilder<?, ?> toBuilder(SensorTranslator sensorTranslator) {
+    return AudioSensorTranslator.builder()
+        .uuid(sensorTranslator.getUuid())
+        .name(sensorTranslator.getName())
+        .sensorUUID(sensorTranslator.getSensorUUID())
+        .sensorName(sensorTranslator.getSensorName())
+        .description(sensorTranslator.getDescription())
+        .positionTranslator(sensorTranslator.getPositionTranslator());
+  }
 
 }
