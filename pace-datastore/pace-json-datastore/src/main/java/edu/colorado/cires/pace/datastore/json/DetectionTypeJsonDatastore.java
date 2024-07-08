@@ -9,7 +9,7 @@ import java.nio.file.Path;
 public class DetectionTypeJsonDatastore extends JsonDatastore<DetectionType> {
 
   public DetectionTypeJsonDatastore(Path workDirectory, ObjectMapper objectMapper) throws IOException {
-    super(workDirectory.resolve("data-types.json"), objectMapper, DetectionType.class, DetectionType::getSource, new TypeReference<>() {});
+    super(workDirectory.resolve("detection-types.json"), objectMapper, DetectionType.class, DetectionType::getSource, new TypeReference<>() {});
   }
 
   @Override
