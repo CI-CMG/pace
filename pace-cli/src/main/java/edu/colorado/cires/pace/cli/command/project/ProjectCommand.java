@@ -96,7 +96,7 @@ public class ProjectCommand implements Runnable {
     }
   }
   
-  @Command(name = "uuid", description = "Get project by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
+  @Command(name = "get-by-uuid", description = "Get project by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class GetByUUID extends GetByUUIDCommand<Project> {
     
     @Parameters(description = "Project uuid")
