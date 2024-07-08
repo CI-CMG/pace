@@ -2,12 +2,10 @@ package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorRepositoryFactory;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
@@ -25,7 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -41,18 +38,9 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   protected final Path workDir = new ApplicationPropertyResolver().getDataDir();
   
   protected abstract RepositoryFactory<O>[] getDependencyRepositoryFactories();
-  protected abstract Converter<T, O> getConverter() throws IOException; 
+  protected abstract Converter<T, O> getConverter() throws IOException;
   
-  protected CRUDRepository<?>[] getDependencyRepositories() {
-    return Arrays.stream(getDependencyRepositoryFactories())
-        .map(f -> {
-          try {
-            return f.createRepository(workDir, objectMapper);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        }).toArray(CRUDRepository<?>[]::new);
-  }
+  protected abstract TypeReference<List<O>> getTypeReference();
 
   @Override
   public void run() {
@@ -70,7 +58,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
       }
 
       System.out.println(
-          objectMapper.writerFor(new TypeReference<List<Package>>() {})
+          objectMapper.writerFor(getTypeReference())
             .withDefaultPrettyPrinter()
             .writeValueAsString(translations)
       );

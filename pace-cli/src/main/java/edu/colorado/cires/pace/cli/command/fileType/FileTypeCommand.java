@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.Create;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.Delete;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.GetByType;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByType.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class FileTypeCommand implements Runnable {
   
   private static final RepositoryFactory<FileType> repositoryFactory = FileTypeRepositoryFactory::createJsonRepository;
   private static final Class<FileType> clazz = FileType.class;
+  private static final TypeReference<List<FileType>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class FileTypeCommand implements Runnable {
 
     @Override
     public TypeReference<List<FileType>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class FileTypeCommand implements Runnable {
 
     @Override
     public TypeReference<List<FileType>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -235,22 +233,10 @@ public class FileTypeCommand implements Runnable {
     protected Converter<FileTypeTranslator, FileType> getConverter() {
       return new FileTypeConverter();
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<FileType> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<FileType>> getTypeReference() {
+      return typeReference;
     }
   }
 }

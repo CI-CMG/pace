@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.cli.command.translation;
+package edu.colorado.cires.pace.cli.command.translator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.datastore.json.TranslatorJsonDatastore;

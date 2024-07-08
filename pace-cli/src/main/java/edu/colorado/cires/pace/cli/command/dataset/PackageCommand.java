@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -26,12 +25,10 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
-import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Translate;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
@@ -45,8 +42,6 @@ import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
-import edu.colorado.cires.pace.translator.DatasetType;
-import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.File;
 import java.io.IOException;
@@ -68,13 +63,13 @@ subcommands = {
     Update.class,
     Delete.class,
     Translate.class,
-    Pack.class,
-    GenerateTranslator.class
+    Pack.class
 })
 public class PackageCommand implements Runnable {
   
   private static final RepositoryFactory<Package> repositoryFactory = PackageRepositoryFactory::createRepository;
   private static final Class<Package> clazz = Package.class;
+  private static final TypeReference<List<Package>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -97,7 +92,7 @@ public class PackageCommand implements Runnable {
 
     @Override
     public TypeReference<List<Package>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -187,7 +182,7 @@ public class PackageCommand implements Runnable {
 
     @Override
     public TypeReference<List<Package>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -284,6 +279,11 @@ public class PackageCommand implements Runnable {
           SensorRepositoryFactory.createRepository(workDir, objectMapper)
       );
     }
+
+    @Override
+    protected TypeReference<List<Package>> getTypeReference() {
+      return typeReference;
+    }
   }
   
   @Command(name = "process", description = "Process packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -318,7 +318,7 @@ public class PackageCommand implements Runnable {
               objectMapper,
               packageJob,
               Package.class,
-              new TypeReference<>() {},
+              typeReference,
               (deserializedObject) -> {
                 packages.add(deserializedObject);
                 return deserializedObject;
@@ -336,41 +336,6 @@ public class PackageCommand implements Runnable {
       } catch (Throwable e) {
         throw new IllegalStateException("Packaging failed", e);
       }
-    }
-  }
-
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Package> {
-    
-    @Option(names = {"--dataset-type", "-dt"}, description = "Dataset type", required = true, converter = DatasetTypeConverter.class)
-    private DatasetType datasetType;
-    
-    @Option(names = {"--location-type", "-lt"}, description = "Deployment location type", required = true, converter = LocationTypeConverter.class)
-    private LocationType locationType;
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
-
-    @Override
-    protected Class<Package> getClazz() {
-      return Package.class;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
-    }
-
-    @Override
-    protected List<String> getFieldNames() {
-      return FieldNameFactory.getDatasetDeclaredFields(datasetType, locationType);
-    }
-
-    @Override
-    protected String getTranslatorName() {
-      return String.format(
-          "%s-%s-%s", super.getTranslatorName(), datasetType.getName(), locationType.getName() 
-      );
     }
   }
   

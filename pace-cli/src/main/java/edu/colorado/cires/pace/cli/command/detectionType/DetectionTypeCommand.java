@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.Create;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.Delete;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.GetBySource;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetBySource.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class DetectionTypeCommand implements Runnable {
   
   private static final RepositoryFactory<DetectionType> repositoryFactory = DetectionTypeRepositoryFactory::createJsonRepository;
   private static final Class<DetectionType> clazz = DetectionType.class;
+  private static final TypeReference<List<DetectionType>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class DetectionTypeCommand implements Runnable {
 
     @Override
     public TypeReference<List<DetectionType>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class DetectionTypeCommand implements Runnable {
 
     @Override
     public TypeReference<List<DetectionType>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -235,22 +233,10 @@ public class DetectionTypeCommand implements Runnable {
     protected Converter<DetectionTypeTranslator, DetectionType> getConverter() {
       return new DetectionTypeConverter();
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel Translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<DetectionType> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<DetectionType> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<DetectionType>> getTypeReference() {
+      return typeReference;
     }
   }
 }

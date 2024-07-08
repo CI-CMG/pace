@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -19,7 +18,6 @@ import edu.colorado.cires.pace.cli.command.fileType.FileTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Create;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Delete;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Translate;
@@ -41,13 +39,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class InstrumentCommand implements Runnable {
   
   private static final RepositoryFactory<Instrument> repositoryFactory = InstrumentRepositoryFactory::createJsonRepository;
   private static final Class<Instrument> clazz = Instrument.class;
+  private static final TypeReference<List<Instrument>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -70,7 +68,7 @@ public class InstrumentCommand implements Runnable {
 
     @Override
     public TypeReference<List<Instrument>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -160,7 +158,7 @@ public class InstrumentCommand implements Runnable {
 
     @Override
     public TypeReference<List<Instrument>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -241,22 +239,10 @@ public class InstrumentCommand implements Runnable {
           FileTypeRepositoryFactory.createJsonRepository(workDir, objectMapper)
       );
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Instrument> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<Instrument>> getTypeReference() {
+      return typeReference;
     }
   }
 }

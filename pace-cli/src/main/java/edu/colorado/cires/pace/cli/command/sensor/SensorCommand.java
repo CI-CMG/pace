@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
-import edu.colorado.cires.pace.translator.FieldNameFactory;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.SensorConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -19,19 +17,12 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Create;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Delete;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Translate;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand.Update;
-import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.translator.SensorType;
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -46,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class SensorCommand implements Runnable {
   
   private static final RepositoryFactory<Sensor> repositoryFactory = SensorRepositoryFactory::createRepository;
   private static final Class<Sensor> clazz = Sensor.class;
+  private static final TypeReference<List<Sensor>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -75,7 +66,7 @@ public class SensorCommand implements Runnable {
 
     @Override
     public TypeReference<List<Sensor>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -165,7 +156,7 @@ public class SensorCommand implements Runnable {
 
     @Override
     public TypeReference<List<Sensor>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -242,41 +233,10 @@ public class SensorCommand implements Runnable {
     protected Converter<SensorTranslator, Sensor> getConverter() {
       return new SensorConverter();
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Sensor> {
-
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
-    
-    @Parameters(description = "Sensor type")
-    private SensorType sensorType;
-    
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
-    }
 
     @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
-    }
-    
-    private List<String> getDeclaredFields(SensorType sensorType) {
-      return FieldNameFactory.getSensorDeclaredFields(sensorType);
-    }
-
-    @Override
-    protected List<String> getFieldNames() {
-      return getDeclaredFields(sensorType);
-    }
-
-    @Override
-    protected String getTranslatorName() {
-      return String.format(
-          "%s-%s", super.getTranslatorName(), sensorType.name()
-      );
+    protected TypeReference<List<Sensor>> getTypeReference() {
+      return typeReference;
     }
   }
 }

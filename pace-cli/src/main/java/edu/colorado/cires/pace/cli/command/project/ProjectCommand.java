@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.Create;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.Delete;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.project.ProjectCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class ProjectCommand implements Runnable {
   
   private static final RepositoryFactory<Project> repositoryFactory = ProjectRepositoryFactory::createJsonRepository;
   private static final Class<Project> clazz = Project.class;
+  private static final TypeReference<List<Project>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class ProjectCommand implements Runnable {
 
     @Override
     public TypeReference<List<Project>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class ProjectCommand implements Runnable {
 
     @Override
     public TypeReference<List<Project>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -235,22 +233,10 @@ public class ProjectCommand implements Runnable {
     protected Converter<ProjectTranslator, Project> getConverter() {
       return new ProjectConverter();
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Project> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<Project> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<Project>> getTypeReference() {
+      return typeReference;
     }
   }
   

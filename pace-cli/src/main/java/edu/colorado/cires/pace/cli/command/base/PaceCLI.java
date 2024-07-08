@@ -13,7 +13,7 @@ import edu.colorado.cires.pace.cli.command.project.ProjectCommand;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand;
 import edu.colorado.cires.pace.cli.command.sensor.SensorCommand;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand;
 import picocli.CommandLine.Command;
 
 @Command(

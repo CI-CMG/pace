@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.Create;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.Delete;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.sea.SeaCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.sea.SeaCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class SeaCommand implements Runnable {
   
   private static final RepositoryFactory<Sea> repositoryFactory = SeaRepositoryFactory::createJsonRepository;
   private static final Class<Sea> clazz = Sea.class;
+  private static final TypeReference<List<Sea>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class SeaCommand implements Runnable {
 
     @Override
     public TypeReference<List<Sea>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class SeaCommand implements Runnable {
 
     @Override
     public TypeReference<List<Sea>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -236,22 +234,10 @@ public class SeaCommand implements Runnable {
       return new SeaConverter();
     }
 
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Sea> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
-
     @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
+    protected TypeReference<List<Sea>> getTypeReference() {
+      return typeReference;
     }
 
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
-    }
   }
 }

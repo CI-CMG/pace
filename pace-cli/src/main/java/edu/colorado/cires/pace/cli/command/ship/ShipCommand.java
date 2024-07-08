@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.Create;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.Delete;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.ship.ShipCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class ShipCommand implements Runnable {
   
   private static final RepositoryFactory<Ship> repositoryFactory = ShipRepositoryFactory::createJsonRepository;
   private static final Class<Ship> clazz = Ship.class;
+  private static final TypeReference<List<Ship>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class ShipCommand implements Runnable {
 
     @Override
     public TypeReference<List<Ship>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class ShipCommand implements Runnable {
 
     @Override
     public TypeReference<List<Ship>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -235,22 +233,10 @@ public class ShipCommand implements Runnable {
     protected Converter<ShipTranslator, Ship> getConverter() {
       return new ShipConverter();
     }
-  }
-
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Ship> {
-
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<Ship>> getTypeReference() {
+      return typeReference;
     }
   }
 }

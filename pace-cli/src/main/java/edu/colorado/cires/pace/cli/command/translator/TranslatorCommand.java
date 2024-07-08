@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.cli.command.translation;
+package edu.colorado.cires.pace.cli.command.translator;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
@@ -9,12 +9,12 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.Create;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.Delete;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.GetByName;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.GetByUUID;
-import edu.colorado.cires.pace.cli.command.translation.TranslatorCommand.Update;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Create;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Delete;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.FindAll;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByName;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByUUID;
+import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Update;
 import edu.colorado.cires.pace.data.translator.Translator;
 import java.io.File;
 import java.util.List;

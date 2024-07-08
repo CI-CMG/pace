@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.common.CreateCommand;
 import edu.colorado.cires.pace.cli.command.common.DeleteCommand;
 import edu.colorado.cires.pace.cli.command.common.FindAllCommand;
-import edu.colorado.cires.pace.cli.command.common.GenerateTranslatorCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
@@ -18,7 +17,6 @@ import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.Create;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.Delete;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.FindAll;
-import edu.colorado.cires.pace.cli.command.person.PersonCommand.GenerateTranslator;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.Translate;
@@ -39,13 +37,13 @@ import picocli.CommandLine.Parameters;
     GetByName.class,
     Update.class,
     Delete.class,
-    Translate.class,
-    GenerateTranslator.class
+    Translate.class
 })
 public class PersonCommand implements Runnable {
   
   private static final RepositoryFactory<Person> repositoryFactory = PersonRepositoryFactory::createJsonRepository;
   private static final Class<Person> clazz = Person.class;
+  private static final TypeReference<List<Person>> typeReference = new TypeReference<>() {};
 
   @Override
   public void run() {}
@@ -68,7 +66,7 @@ public class PersonCommand implements Runnable {
 
     @Override
     public TypeReference<List<Person>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class PersonCommand implements Runnable {
 
     @Override
     public TypeReference<List<Person>> getTypeReference() {
-      return new TypeReference<>() {};
+      return typeReference;
     }
 
     @Override
@@ -235,22 +233,10 @@ public class PersonCommand implements Runnable {
     protected Converter<PersonTranslator, Person> getConverter() {
       return new PersonConverter();
     }
-  }
-  
-  @Command(name = "generate-translator", description = "Generate default CSV or Excel translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-  static class GenerateTranslator extends GenerateTranslatorCommand<Person> {
-    
-    @Parameters(description = "Translator type")
-    private TranslationType translatorType;
 
     @Override
-    protected Class<Person> getClazz() {
-      return clazz;
-    }
-
-    @Override
-    protected TranslationType getTranslatorType() {
-      return translatorType;
+    protected TypeReference<List<Person>> getTypeReference() {
+      return typeReference;
     }
   }
 }
