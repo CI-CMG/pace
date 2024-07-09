@@ -41,18 +41,19 @@
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-csv-translator</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-excel-translator</artifactId>
+      <artifactId>pace-translator</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
       <artifactId>pace-sqlite-datastore</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel</artifactId>
+      <version>0.17.0</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>

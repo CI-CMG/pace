@@ -35,12 +35,7 @@
     </dependency>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-csv-translator</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-excel-translator</artifactId>
+      <artifactId>pace-translator</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

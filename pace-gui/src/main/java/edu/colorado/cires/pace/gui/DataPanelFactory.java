@@ -1,9 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.CSVTranslator;
 import edu.colorado.cires.pace.data.object.Dataset;
-import edu.colorado.cires.pace.data.object.ExcelTranslator;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.Organization;
@@ -22,9 +20,7 @@ import edu.colorado.cires.pace.data.translator.ProjectTranslator;
 import edu.colorado.cires.pace.data.translator.SeaTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import edu.colorado.cires.pace.data.translator.Translator;
-import edu.colorado.cires.pace.datastore.json.CSVTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
-import edu.colorado.cires.pace.datastore.json.ExcelTranslatorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.FileTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.InstrumentJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.OrganizationJsonDatastore;
@@ -36,9 +32,7 @@ import edu.colorado.cires.pace.datastore.json.SeaJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.SensorJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.ShipJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.TranslatorJsonDatastore;
-import edu.colorado.cires.pace.repository.CSVTranslatorRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.ExcelTranslatorRepository;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
@@ -72,8 +66,6 @@ final class DataPanelFactory {
 
   private static final ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
   private static final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
-  private static final ExcelTranslatorRepository excelTranslatorRepository;
-  private static final CSVTranslatorRepository csvTranslatorRepository;
   private static final ProjectRepository projectRepository;
   private static final PersonRepository personRepository;
   private static final OrganizationRepository organizationRepository;
@@ -91,12 +83,6 @@ final class DataPanelFactory {
     try {
       translatorRepository = new TranslatorRepository(
           new TranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
-      );
-      excelTranslatorRepository = new ExcelTranslatorRepository(
-          new ExcelTranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
-      );
-      csvTranslatorRepository = new CSVTranslatorRepository(
-          new CSVTranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
       );
       fileTypeJsonDatastore = new FileTypeJsonDatastore(propertyResolver.getDataDir(), objectMapper);
       fileTypeRepository = new FileTypeRepository(fileTypeJsonDatastore);
@@ -254,37 +240,7 @@ final class DataPanelFactory {
       }
     };
   }
-  
-  public static DataPanel<ExcelTranslator> createExcelTranslatorsPanel() {
-    return new TranslatorsPanel<>(
-        excelTranslatorRepository,
-        new String[] { "UUID", "Name", "Object" },
-        (t) -> new Object[] { t.getUuid(), t.getName(), t },
-        (o) -> (ExcelTranslator) o[2],
-        ExcelTranslatorFormOld::new
-    ) {
-      @Override
-      protected List<String> getHiddenColumns() {
-        return List.of("UUID" , "Object");
-      }
-    };
-  }
-  
-  public static DataPanel<CSVTranslator> createCSVTranslatorsPanel() {
-    return new TranslatorsPanel<>(
-        csvTranslatorRepository,
-        new String[] { "UUID", "Name", "Object" },
-        (t) -> new Object[] { t.getUuid(), t.getName(), t },
-        (o) -> (CSVTranslator) o[2],
-        CSVTranslatorFormOld::new
-    ) {
-      @Override
-      protected List<String> getHiddenColumns() {
-        return List.of("UUID" , "Object");
-      }
-    };
-  }
-  
+
   public static DataPanel<Translator> createTranslatorsPanel() {
     return new TranslatorPanel(
         translatorRepository,
