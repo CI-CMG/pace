@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.data.translator;
 
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -34,8 +33,8 @@ public class CPODPackageTranslator extends AudioDataPackageTranslator {
         .funders(packageTranslator.getFunders())
         .platform(packageTranslator.getPlatform())
         .instrument(packageTranslator.getInstrument())
-        .startTimeTranslator(packageTranslator.getStartTimeTranslator())
-        .endTimeTranslator(packageTranslator.getEndTimeTranslator())
+        .startTime(packageTranslator.getStartTime())
+        .endTime(packageTranslator.getEndTime())
         .preDeploymentCalibrationDate(packageTranslator.getPreDeploymentCalibrationDate())
         .postDeploymentCalibrationDate(packageTranslator.getPostDeploymentCalibrationDate())
         .calibrationDescription(packageTranslator.getCalibrationDescription())

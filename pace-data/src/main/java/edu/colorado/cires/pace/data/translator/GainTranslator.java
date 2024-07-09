@@ -9,8 +9,8 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class GainTranslator {
 
-  private final TimeTranslator startTimeTranslator;
-  private final TimeTranslator endTimeTranslator;
+  private final TimeTranslator startTime;
+  private final TimeTranslator endTime;
   private final String gain;
 
 }

@@ -33,11 +33,11 @@ class SoundClipsPackageTranslatorTest {
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
-        .startTimeTranslator(DefaultTimeTranslator.builder()
+        .startTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
-        .endTimeTranslator(DefaultTimeTranslator.builder()
+        .endTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
@@ -86,10 +86,10 @@ class SoundClipsPackageTranslatorTest {
     assertEquals(packageTranslator.getFunders(), soundClipsPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), soundClipsPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), soundClipsPackageTranslator.getInstrument());
-    assertEquals(packageTranslator.getStartTimeTranslator().getTimeZone(), soundClipsPackageTranslator.getStartTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) soundClipsPackageTranslator.getStartTimeTranslator()).getTime());
-    assertEquals(packageTranslator.getEndTimeTranslator().getTimeZone(), soundClipsPackageTranslator.getEndTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) soundClipsPackageTranslator.getEndTimeTranslator()).getTime());
+    assertEquals(packageTranslator.getStartTime().getTimeZone(), soundClipsPackageTranslator.getStartTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) soundClipsPackageTranslator.getStartTime()).getTime());
+    assertEquals(packageTranslator.getEndTime().getTimeZone(), soundClipsPackageTranslator.getEndTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) soundClipsPackageTranslator.getEndTime()).getTime());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getDate(), soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getDate());
     assertEquals(packageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone());

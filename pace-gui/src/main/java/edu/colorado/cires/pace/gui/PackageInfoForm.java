@@ -12,7 +12,6 @@ import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class PackageInfoForm extends JPanel {
   
@@ -32,8 +31,8 @@ public class PackageInfoForm extends JPanel {
   private final DateTranslatorForm publicReleaseDateForm;
 
   public PackageInfoForm(String[] headerOptions, PackageTranslator initialTranslator) {
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     this.publicReleaseDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPublicReleaseDate());
     addFields();
     initializeFields(headerOptions, initialTranslator);

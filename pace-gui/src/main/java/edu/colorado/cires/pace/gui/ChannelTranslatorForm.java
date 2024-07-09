@@ -37,8 +37,8 @@ public class ChannelTranslatorForm extends JPanel {
     this.addDutyCycleButton = getAddButton(() -> addDutyCycle(headerOptions, null));
     this.addGainButton = getAddButton(() -> addGain(headerOptions, null));
     this.removeAction = removeAction;
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -110,13 +110,13 @@ public class ChannelTranslatorForm extends JPanel {
     
     if (initialTranslator != null) {
       sensorField.setSelectedItem(initialTranslator.getSensor());
-      initialTranslator.getSampleRateTranslators().forEach(
+      initialTranslator.getSampleRates().forEach(
           t -> addSampleRate(headerOptions, t)
       );
-      initialTranslator.getDutyCycleTranslators().forEach(
+      initialTranslator.getDutyCycles().forEach(
           t -> addDutyCycle(headerOptions, t)
       );
-      initialTranslator.getGainTranslators().forEach(
+      initialTranslator.getGains().forEach(
           t -> addGain(headerOptions, t)
       );
     }
@@ -217,21 +217,21 @@ public class ChannelTranslatorForm extends JPanel {
   public ChannelTranslator toTranslator() {
     return ChannelTranslator.builder()
         .sensor((String) sensorField.getSelectedItem())
-        .startTimeTranslator(startTimeForm.toTranslator())
-        .endTimeTranslator(endTimeForm.toTranslator())
-        .sampleRateTranslators(Arrays.stream(sampleRateTranslatorsPanel.getComponents())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
+        .sampleRates(Arrays.stream(sampleRateTranslatorsPanel.getComponents())
             .filter(p -> p instanceof CollapsiblePanel<?>)
             .map(p -> (CollapsiblePanel<?>) p)
             .map(p -> (SampleRateForm) p.getContentPanel())
             .map(SampleRateForm::toTranslator)
             .toList()
-        ).dutyCycleTranslators(Arrays.stream(dutyCycleTranslatorsPanel.getComponents())
+        ).dutyCycles(Arrays.stream(dutyCycleTranslatorsPanel.getComponents())
             .filter(p -> p instanceof CollapsiblePanel<?>)
             .map(p -> (CollapsiblePanel<?>) p)
             .map(p -> (DutyCycleForm) p.getContentPanel())
             .map(DutyCycleForm::toTranslator)
             .toList()
-        ).gainTranslators(Arrays.stream(gainTranslatorsPanel.getComponents())
+        ).gains(Arrays.stream(gainTranslatorsPanel.getComponents())
             .filter(p -> p instanceof CollapsiblePanel<?>)
             .map(p -> (CollapsiblePanel<?>) p)
             .map(p -> (GainForm) p.getContentPanel())

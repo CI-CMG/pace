@@ -24,8 +24,8 @@ public class DutyCycleForm extends JPanel {
 
   public DutyCycleForm(String[] headerOptions, DutyCycleTranslator initialTranslator, Consumer<DutyCycleForm> removeAction) {
     this.removeAction = removeAction;
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -83,8 +83,8 @@ public class DutyCycleForm extends JPanel {
   
   public DutyCycleTranslator toTranslator() {
     return DutyCycleTranslator.builder()
-        .startTimeTranslator(startTimeForm.toTranslator())
-        .endTimeTranslator(endTimeForm.toTranslator())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
         .duration((String) durationField.getSelectedItem())
         .interval((String) intervalField.getSelectedItem())
         .build();

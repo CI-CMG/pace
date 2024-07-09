@@ -9,8 +9,8 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class DataQualityEntryTranslator {
   
-  private final TimeTranslator startTimeTranslator;
-  private final TimeTranslator endTimeTranslator;
+  private final TimeTranslator startTime;
+  private final TimeTranslator endTime;
   private final String minFrequency;
   private final String maxFrequency;
   private final String qualityLevel;

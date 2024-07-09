@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class QualityEntryForm extends JPanel {
   
@@ -27,8 +26,8 @@ public class QualityEntryForm extends JPanel {
 
   public QualityEntryForm(String[] headerOptions, DataQualityEntryTranslator initialTranslator, Consumer<QualityEntryForm> removeAction) {
     this.removeAction = removeAction;
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     
     addFields();
     initializeFields(headerOptions, initialTranslator);
@@ -94,8 +93,8 @@ public class QualityEntryForm extends JPanel {
   
   public DataQualityEntryTranslator toTranslator() {
     return DataQualityEntryTranslator.builder()
-        .startTimeTranslator(startTimeForm.toTranslator())
-        .endTimeTranslator(endTimeForm.toTranslator())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
         .minFrequency((String) minFrequencyField.getSelectedItem())
         .maxFrequency((String) maxFrequencyField.getSelectedItem())
         .qualityLevel((String) qualityLevelField.getSelectedItem())

@@ -24,8 +24,8 @@ public class SampleRateForm extends JPanel {
 
   public SampleRateForm(String[] headerOptions, SampleRateTranslator initialTranslator, Consumer<SampleRateForm> removeAction) {
     this.removeAction = removeAction;
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -80,8 +80,8 @@ public class SampleRateForm extends JPanel {
   
   public SampleRateTranslator toTranslator() {
     return SampleRateTranslator.builder()
-        .startTimeTranslator(startTimeForm.toTranslator())
-        .endTimeTranslator(endTimeForm.toTranslator())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
         .sampleRate((String) sampleRateField.getSelectedItem())
         .sampleBits((String) sampleBitsField.getSelectedItem())
         .build();

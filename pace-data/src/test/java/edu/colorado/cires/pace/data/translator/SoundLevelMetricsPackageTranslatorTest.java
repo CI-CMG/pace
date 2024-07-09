@@ -33,11 +33,11 @@ class SoundLevelMetricsPackageTranslatorTest {
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
-        .startTimeTranslator(DefaultTimeTranslator.builder()
+        .startTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
-        .endTimeTranslator(DefaultTimeTranslator.builder()
+        .endTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
@@ -86,10 +86,10 @@ class SoundLevelMetricsPackageTranslatorTest {
     assertEquals(packageTranslator.getFunders(), soundLevelMetricsPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), soundLevelMetricsPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), soundLevelMetricsPackageTranslator.getInstrument());
-    assertEquals(packageTranslator.getStartTimeTranslator().getTimeZone(), soundLevelMetricsPackageTranslator.getStartTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getStartTimeTranslator()).getTime());
-    assertEquals(packageTranslator.getEndTimeTranslator().getTimeZone(), soundLevelMetricsPackageTranslator.getEndTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getEndTimeTranslator()).getTime());
+    assertEquals(packageTranslator.getStartTime().getTimeZone(), soundLevelMetricsPackageTranslator.getStartTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getStartTime()).getTime());
+    assertEquals(packageTranslator.getEndTime().getTimeZone(), soundLevelMetricsPackageTranslator.getEndTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) soundLevelMetricsPackageTranslator.getEndTime()).getTime());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getDate(), soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate().getDate());
     assertEquals(packageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone());

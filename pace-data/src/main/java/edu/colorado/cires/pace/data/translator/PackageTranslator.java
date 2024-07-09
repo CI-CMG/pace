@@ -29,8 +29,8 @@ public class PackageTranslator implements Translator {
   private final String funders;
   private final String platform;
   private final String instrument;
-  private final TimeTranslator startTimeTranslator;
-  private final TimeTranslator endTimeTranslator;
+  private final TimeTranslator startTime;
+  private final TimeTranslator endTime;
   private final DateTranslator preDeploymentCalibrationDate;
   private final DateTranslator postDeploymentCalibrationDate;
   private final String calibrationDescription;

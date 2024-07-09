@@ -19,8 +19,8 @@ public abstract class AudioDataPackageTranslator extends PackageTranslator {
 
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
 
-  private final TimeTranslator deploymentTimeTranslator;
-  private final TimeTranslator recoveryTimeTranslator;
+  private final TimeTranslator deploymentTime;
+  private final TimeTranslator recoveryTime;
   private final String comments;
   private final String sensors;
   @Builder.Default

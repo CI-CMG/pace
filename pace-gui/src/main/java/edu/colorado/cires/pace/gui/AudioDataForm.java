@@ -11,7 +11,6 @@ import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel {
   
@@ -26,8 +25,8 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
   private final TimeTranslatorForm recoveryTimeForm;
 
   public AudioDataForm(String[] headerOptions, T initialTranslator) {
-    this.deploymentTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getDeploymentTimeTranslator());
-    this.recoveryTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getRecoveryTimeTranslator());
+    this.deploymentTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getDeploymentTime());
+    this.recoveryTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getRecoveryTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

@@ -23,8 +23,8 @@ public class GainForm extends JPanel {
 
   public GainForm(String[] headerOptions, GainTranslator initialTranslator, Consumer<GainForm> removeAction) {
     this.removeAction = removeAction;
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTimeTranslator());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTimeTranslator());
+    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -74,8 +74,8 @@ public class GainForm extends JPanel {
   
   public GainTranslator toTranslator() {
     return GainTranslator.builder()
-        .startTimeTranslator(startTimeForm.toTranslator())
-        .endTimeTranslator(endTimeForm.toTranslator())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
         .gain((String) gainField.getSelectedItem())
         .build();
   }

@@ -36,10 +36,10 @@ public class SoundPropagationModelsPackageTranslatorRepositoryTest extends Trans
         .funders(String.format("funders-%s", suffix))
         .platform(String.format("platform-%s", suffix))
         .instrument(String.format("instrument-%s", suffix))
-        .startTimeTranslator(DefaultTimeTranslator.builder()
+        .startTime(DefaultTimeTranslator.builder()
             .time(String.format("start-time-%s", suffix))
             .build())
-        .endTimeTranslator(DefaultTimeTranslator.builder()
+        .endTime(DefaultTimeTranslator.builder()
             .time(String.format("end-time-%s", suffix))
             .build())
         .preDeploymentCalibrationDate(DateTranslator.builder()
@@ -113,8 +113,8 @@ public class SoundPropagationModelsPackageTranslatorRepositoryTest extends Trans
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());
-    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTimeTranslator()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTimeTranslator()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTime()).getTime());
+    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTime()).getTime());
     assertEquals(expectedPackageTranslator.getPreDeploymentCalibrationDate(), actualPackageTranslator.getPreDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getPostDeploymentCalibrationDate(), actualPackageTranslator.getPostDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getCalibrationDescription(), actualPackageTranslator.getCalibrationDescription());

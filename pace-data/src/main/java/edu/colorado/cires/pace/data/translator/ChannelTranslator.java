@@ -11,10 +11,10 @@ import lombok.extern.jackson.Jacksonized;
 public class ChannelTranslator {
   
   private final String sensor;
-  private final TimeTranslator startTimeTranslator;
-  private final TimeTranslator endTimeTranslator;
-  private final List<SampleRateTranslator> sampleRateTranslators;
-  private final List<DutyCycleTranslator> dutyCycleTranslators;
-  private final List<GainTranslator> gainTranslators;
+  private final TimeTranslator startTime;
+  private final TimeTranslator endTime;
+  private final List<SampleRateTranslator> sampleRates;
+  private final List<DutyCycleTranslator> dutyCycles;
+  private final List<GainTranslator> gains;
 
 }

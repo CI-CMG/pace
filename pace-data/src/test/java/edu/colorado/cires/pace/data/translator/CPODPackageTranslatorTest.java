@@ -33,11 +33,11 @@ class CPODPackageTranslatorTest {
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
-        .startTimeTranslator(DefaultTimeTranslator.builder()
+        .startTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
-        .endTimeTranslator(DefaultTimeTranslator.builder()
+        .endTime(DefaultTimeTranslator.builder()
             .time("time")
             .timeZone("timeZone")
             .build())
@@ -86,10 +86,10 @@ class CPODPackageTranslatorTest {
     assertEquals(packageTranslator.getFunders(), cpodPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), cpodPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), cpodPackageTranslator.getInstrument());
-    assertEquals(packageTranslator.getStartTimeTranslator().getTimeZone(), cpodPackageTranslator.getStartTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTimeTranslator()).getTime(), ((DefaultTimeTranslator) cpodPackageTranslator.getStartTimeTranslator()).getTime());
-    assertEquals(packageTranslator.getEndTimeTranslator().getTimeZone(), cpodPackageTranslator.getEndTimeTranslator().getTimeZone());
-    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTimeTranslator()).getTime(), ((DefaultTimeTranslator) cpodPackageTranslator.getEndTimeTranslator()).getTime());
+    assertEquals(packageTranslator.getStartTime().getTimeZone(), cpodPackageTranslator.getStartTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) cpodPackageTranslator.getStartTime()).getTime());
+    assertEquals(packageTranslator.getEndTime().getTimeZone(), cpodPackageTranslator.getEndTime().getTimeZone());
+    assertEquals(((DefaultTimeTranslator) packageTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) cpodPackageTranslator.getEndTime()).getTime());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), cpodPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone());
     assertEquals(packageTranslator.getPreDeploymentCalibrationDate().getDate(), cpodPackageTranslator.getPreDeploymentCalibrationDate().getDate());
     assertEquals(packageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), cpodPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone());

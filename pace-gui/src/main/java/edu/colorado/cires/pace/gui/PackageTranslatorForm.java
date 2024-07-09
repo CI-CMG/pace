@@ -244,8 +244,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     addDateTranslatorFields(initialTranslator.getPreDeploymentCalibrationDate(), headerOptions);
     addDateTranslatorFields(initialTranslator.getPostDeploymentCalibrationDate(), headerOptions);
     
-    addTimeTranslatorFields(initialTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(initialTranslator.getEndTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(initialTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(initialTranslator.getEndTime(), headerOptions);
     
     addLocationDetailTranslatorFields(initialTranslator.getLocationDetailTranslator(), headerOptions);
     
@@ -310,8 +310,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(audioDataPackageTranslator.getGain());
     headerOptions.add(audioDataPackageTranslator.getComments());
     headerOptions.add(audioDataPackageTranslator.getSensors());
-    addTimeTranslatorFields(audioDataPackageTranslator.getDeploymentTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(audioDataPackageTranslator.getRecoveryTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(audioDataPackageTranslator.getDeploymentTime(), headerOptions);
+    addTimeTranslatorFields(audioDataPackageTranslator.getRecoveryTime(), headerOptions);
     addQualityDetailFields(audioDataPackageTranslator.getQualityControlDetailTranslator(), headerOptions);
     audioDataPackageTranslator.getChannelTranslators().forEach(
         t -> addChannelFields(t, headerOptions)
@@ -320,35 +320,35 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
 
   private void addChannelFields(ChannelTranslator channelTranslator, List<String> headerOptions) {
     headerOptions.add(channelTranslator.getSensor());
-    addTimeTranslatorFields(channelTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(channelTranslator.getEndTimeTranslator(), headerOptions);
-    channelTranslator.getSampleRateTranslators().forEach(
+    addTimeTranslatorFields(channelTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(channelTranslator.getEndTime(), headerOptions);
+    channelTranslator.getSampleRates().forEach(
         t -> addSampleRateFields(t, headerOptions)
     );
-    channelTranslator.getDutyCycleTranslators().forEach(
+    channelTranslator.getDutyCycles().forEach(
         t -> addDutyCycleFields(t, headerOptions)
     );
-    channelTranslator.getGainTranslators().forEach(
+    channelTranslator.getGains().forEach(
         t -> addGainFields(t, headerOptions)
     );
   }
 
   private void addGainFields(GainTranslator gainTranslator, List<String> headerOptions) {
-    addTimeTranslatorFields(gainTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(gainTranslator.getEndTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(gainTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(gainTranslator.getEndTime(), headerOptions);
     headerOptions.add(gainTranslator.getGain());
   }
 
   private void addDutyCycleFields(DutyCycleTranslator dutyCycleTranslator, List<String> headerOptions) {
-    addTimeTranslatorFields(dutyCycleTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(dutyCycleTranslator.getEndTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(dutyCycleTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(dutyCycleTranslator.getEndTime(), headerOptions);
     headerOptions.add(dutyCycleTranslator.getDuration());
     headerOptions.add(dutyCycleTranslator.getInterval());
   }
 
   private void addSampleRateFields(SampleRateTranslator sampleRateTranslator, List<String> headerOptions) {
-    addTimeTranslatorFields(sampleRateTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(sampleRateTranslator.getEndTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(sampleRateTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(sampleRateTranslator.getEndTime(), headerOptions);
     headerOptions.add(sampleRateTranslator.getSampleRate());
     headerOptions.add(sampleRateTranslator.getSampleBits());
   }
@@ -369,8 +369,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   }
 
   private void addQualityEntryFields(DataQualityEntryTranslator dataQualityEntryTranslator, List<String> headerOptions) {
-    addTimeTranslatorFields(dataQualityEntryTranslator.getStartTimeTranslator(), headerOptions);
-    addTimeTranslatorFields(dataQualityEntryTranslator.getEndTimeTranslator(), headerOptions);
+    addTimeTranslatorFields(dataQualityEntryTranslator.getStartTime(), headerOptions);
+    addTimeTranslatorFields(dataQualityEntryTranslator.getEndTime(), headerOptions);
     headerOptions.add(dataQualityEntryTranslator.getMinFrequency());
     headerOptions.add(dataQualityEntryTranslator.getMaxFrequency());
     headerOptions.add(dataQualityEntryTranslator.getQualityLevel());
@@ -600,8 +600,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .deploymentDescription(packageInfoForm.getDeploymentDescriptionValue())
         .alternateSiteName(packageInfoForm.getAlternateSiteNameValue())
         .alternateDeploymentName(packageInfoForm.getAlternateDeploymentNameValue())
-        .startTimeTranslator(packageInfoForm.getStartTimeTranslator())
-        .endTimeTranslator(packageInfoForm.getEndTimeTranslator())
+        .startTime(packageInfoForm.getStartTimeTranslator())
+        .endTime(packageInfoForm.getEndTimeTranslator())
         .publicReleaseDate(packageInfoForm.getPublicReleaseDateTranslator())
         .locationDetailTranslator(locationDetailForm.toTranslator())
         .build();
@@ -650,8 +650,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .gain(audioDataForm.getGainValue())
         .comments(audioDataForm.getCommentsValue())
         .sensors(audioDataForm.getSensorsValue())
-        .deploymentTimeTranslator(audioDataForm.getDeploymentTimeTranslator())
-        .recoveryTimeTranslator(audioDataForm.getRecoveryTimeTranslator())
+        .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
+        .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }
@@ -666,8 +666,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .gain(audioDataForm.getGainValue())
         .comments(audioDataForm.getCommentsValue())
         .sensors(audioDataForm.getSensorsValue())
-        .deploymentTimeTranslator(audioDataForm.getDeploymentTimeTranslator())
-        .recoveryTimeTranslator(audioDataForm.getRecoveryTimeTranslator())
+        .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
+        .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }
