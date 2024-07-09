@@ -36,11 +36,15 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
   private String writeObject(Object object) throws JsonProcessingException {
     Class<?> clazz = object.getClass();
     ObjectWriter objectWriter;
-    if (object instanceof List<?>) {
-      clazz = ((List<?>) object).get(0).getClass();
-      objectWriter = objectMapper.writerFor(
-          objectMapper.getTypeFactory().constructCollectionType(List.class, clazz)
-      );
+    if (object instanceof List<?> objects) {
+      if (objects.isEmpty()) {
+        objectWriter = objectMapper.writer();
+      } else {
+        clazz = objects.get(0).getClass();
+        objectWriter = objectMapper.writerFor(
+            objectMapper.getTypeFactory().constructCollectionType(List.class, clazz)
+        );
+      }
     } else {
       objectWriter = objectMapper.writerFor(clazz);
     }

@@ -136,6 +136,16 @@ public abstract class CommandTest<T extends ObjectWithUniqueField> {
   }
   
   @Test
+  void testFindAllNoResults() throws JsonProcessingException {
+    execute(getCommandPrefix(), "list");
+    
+    String output = getCommandOutput();
+    
+    List<?> list = objectMapper.readValue(output, List.class);
+    assertTrue(list.isEmpty());
+  }
+  
+  @Test
   void testGetByUniqueField() throws IOException {
     T object = createObject("test");
     
