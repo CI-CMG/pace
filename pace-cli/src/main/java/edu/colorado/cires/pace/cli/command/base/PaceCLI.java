@@ -37,9 +37,4 @@ import picocli.CommandLine.Command;
         MigrateCommand.class
     }
 )
-public class PaceCLI implements Runnable {
-
-  @Override
-  public void run() {}
-
-}
+public class PaceCLI {}
