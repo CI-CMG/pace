@@ -7,8 +7,10 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
+import edu.colorado.cires.pace.translator.ObjectWithRowException;
 import edu.colorado.cires.pace.translator.SpreadsheetConverter;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
@@ -23,7 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -32,12 +36,10 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   protected abstract Supplier<TranslationType> getTranslationTypeSupplier();
   protected abstract Supplier<String> getTranslatorNameSupplier();
   protected abstract Supplier<File> getInputSupplier();
-  protected abstract Class<O> getJsonClass();
   
   protected final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   protected final Path workDir = new ApplicationPropertyResolver().getDataDir();
   
-  protected abstract RepositoryFactory<O>[] getDependencyRepositoryFactories();
   protected abstract Converter<T, O> getConverter() throws IOException;
   
   protected abstract TypeReference<List<O>> getTypeReference();
@@ -48,13 +50,10 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
       TranslationType translationType = getTranslationTypeSupplier().get();
       String translatorName = getTranslatorNameSupplier().get();
       File inputFile = getInputSupplier().get();
-      List<O> translations;
+      List<O> translations = new ArrayList<>(0);
       switch (translationType) {
         case csv -> translations = translateCSV(translatorName, inputFile);
         case excel -> translations = translateExcel(translatorName, inputFile);
-        default -> throw new IllegalArgumentException(String.format(
-            "Translation type not supported: %s", translationType
-        ));
       }
 
       System.out.println(
@@ -70,11 +69,8 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   
   private List<O> translateCSV(String translatorName, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
-    try (
-        InputStream inputStream = new FileInputStream(inputFile);
-        Reader reader = new InputStreamReader(inputStream)
-    ) {
-      Stream<O> translated = SpreadsheetConverter.execute(
+    try (InputStream inputStream = new FileInputStream(inputFile); Reader reader = new InputStreamReader(inputStream)) {
+      Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
           () -> {
             try {
               return CSVReader.read(reader);
@@ -93,7 +89,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   private List<O> translateExcel(String translatorName, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
     try (InputStream inputStream = new FileInputStream(inputFile)) {
-      Stream<O> translated = SpreadsheetConverter.execute(
+      Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
           () -> {
             try {
               return ExcelReader.read(inputStream, 0);
@@ -109,18 +105,38 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
     }
   }
   
-  private List<O> postProcessTranslation(Stream<O> translated) throws TranslationException {
-    return translated.toList();
+  private List<O> postProcessTranslation(Stream<ObjectWithRowException<O>> translated) throws TranslationException {
+    List<ObjectWithRowException<O>> results = translated.toList();
+    TranslationException exception = (TranslationException) results.stream()
+        .map(ObjectWithRowException::throwable)
+        .filter(Objects::nonNull)
+        .reduce(new TranslationException("Translation failed"), (rte1, rte2) -> {
+          for (Throwable throwable : rte2.getSuppressed()) {
+            rte1.addSuppressed(throwable);
+          }
+          return rte1;
+        });
+    
+    if (exception.getSuppressed().length > 0) {
+      throw exception;
+    }
+    
+    return results.stream()
+        .map(ObjectWithRowException::object)
+        .toList();
   }
   
   private T getTranslator(String translatorName) throws IOException, NotFoundException, DatastoreException {
+    TranslatorRepository repository = TranslatorRepositoryFactory.createRepository(
+        workDir, objectMapper
+    );
     try {
       return (T) TranslatorRepositoryFactory.createRepository(
         workDir, objectMapper
     ).getByUniqueField(translatorName);
     } catch (ClassCastException e) {
       throw new NotFoundException(String.format(
-          "Translator %s not applicable to %s objects", translatorName, getJsonClass().getSimpleName()
+          "Translator %s not applicable to %s objects", translatorName, repository.getClassName()
       ));
     }
   }

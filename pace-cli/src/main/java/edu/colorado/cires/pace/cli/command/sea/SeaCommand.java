@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class SeaCommand implements Runnable {
+public class SeaCommand {
   
   private static final RepositoryFactory<Sea> repositoryFactory = SeaRepositoryFactory::createJsonRepository;
   private static final Class<Sea> clazz = Sea.class;
   private static final TypeReference<List<Sea>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create sea area", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Sea> {
@@ -73,11 +70,6 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List sea areas", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get sea area by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class SeaCommand implements Runnable {
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete sea area", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class SeaCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sea> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sea> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class SeaCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Sea> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Sea>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

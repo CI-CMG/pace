@@ -41,14 +41,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class InstrumentCommand implements Runnable {
+public class InstrumentCommand {
   
   private static final RepositoryFactory<Instrument> repositoryFactory = InstrumentRepositoryFactory::createJsonRepository;
   private static final Class<Instrument> clazz = Instrument.class;
   private static final TypeReference<List<Instrument>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create instrument", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Instrument> {
@@ -75,11 +72,6 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List instruments", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -88,11 +80,6 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
     }
   }
   
@@ -111,11 +98,6 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get instrument by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -132,11 +114,6 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
     }
   }
   
@@ -165,11 +142,6 @@ public class InstrumentCommand implements Runnable {
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete instrument", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -186,11 +158,6 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected RepositoryFactory<Instrument> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Instrument> getClazz() {
-      return clazz;
     }
   }
   
@@ -219,18 +186,6 @@ public class InstrumentCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Instrument> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[] {
-          FileTypeRepositoryFactory::createJsonRepository
-      };
     }
 
     @Override

@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class OrganizationCommand implements Runnable {
+public class OrganizationCommand {
   
   private static final RepositoryFactory<Organization> repositoryFactory = OrganizationRepositoryFactory::createJsonRepository;
   private static final Class<Organization> clazz = Organization.class;
   private static final TypeReference<List<Organization>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create organization", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Organization> {
@@ -73,11 +70,6 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List organizations", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get organization by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class OrganizationCommand implements Runnable {
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete organization", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Organization> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class OrganizationCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Organization> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

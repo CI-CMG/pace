@@ -9,7 +9,7 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.translator.PlatformTranslator;
 import java.util.List;
 
-class PlatformCommandTest extends TranslateCommandTest<Platform, PlatformTranslator> {
+public class PlatformCommandTest extends TranslateCommandTest<Platform, PlatformTranslator> {
 
   @Override
   public Platform createObject(String uniqueField) {
@@ -45,6 +45,10 @@ class PlatformCommandTest extends TranslateCommandTest<Platform, PlatformTransla
 
   @Override
   protected void assertObjectsEqual(Platform expected, Platform actual, boolean checkUUID) {
+    assertPlatformsEqual(expected, actual, checkUUID);
+  }
+
+  public static void assertPlatformsEqual(Platform expected, Platform actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());

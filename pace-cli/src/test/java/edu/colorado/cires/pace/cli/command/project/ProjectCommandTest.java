@@ -9,7 +9,7 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.ProjectTranslator;
 import java.util.List;
 
-class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTranslator> {
+public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTranslator> {
 
   @Override
   public Project createObject(String uniqueField) {
@@ -45,6 +45,10 @@ class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTranslator
 
   @Override
   protected void assertObjectsEqual(Project expected, Project actual, boolean checkUUID) {
+    assertProjectsEqual(expected, actual, checkUUID);
+  }
+
+  public static void assertProjectsEqual(Project expected, Project actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());

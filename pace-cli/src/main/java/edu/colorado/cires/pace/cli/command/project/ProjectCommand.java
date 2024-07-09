@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class ProjectCommand implements Runnable {
+public class ProjectCommand {
   
   private static final RepositoryFactory<Project> repositoryFactory = ProjectRepositoryFactory::createJsonRepository;
   private static final Class<Project> clazz = Project.class;
   private static final TypeReference<List<Project>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create project", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Project> {
@@ -73,11 +70,6 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List projects", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get project by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class ProjectCommand implements Runnable {
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete project", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class ProjectCommand implements Runnable {
     @Override
     protected RepositoryFactory<Project> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Project> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class ProjectCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Project> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Project>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

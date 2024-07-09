@@ -3,11 +3,12 @@ package edu.colorado.cires.pace.cli.command.detectionType;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.CommandTest;
+import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.DetectionType;
+import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
 import java.util.List;
 
-class DetectionTypeCommandTest extends CommandTest<DetectionType> {
+class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, DetectionTypeTranslator> {
 
   @Override
   public DetectionType createObject(String uniqueField) {
@@ -63,5 +64,33 @@ class DetectionTypeCommandTest extends CommandTest<DetectionType> {
     return original.toBuilder()
         .source(uniqueField)
         .build();
+  }
+
+  @Override
+  protected String[] getTranslatorFields() {
+    return new String[] {
+        "detectionTypeUUID",
+        "source",
+        "scienceName"
+    };
+  }
+
+  @Override
+  protected DetectionTypeTranslator createTranslator(String name) {
+    return DetectionTypeTranslator.builder()
+        .name(name)
+        .detectionTypeUUID("detectionTypeUUID")
+        .source("source")
+        .scienceName("scienceName")
+        .build();
+  }
+
+  @Override
+  protected String[] objectToRow(DetectionType object) {
+    return new String[] {
+        object.getUuid() == null ? "" : object.getUuid().toString(),
+        object.getSource(),
+        object.getScienceName()
+    };
   }
 }

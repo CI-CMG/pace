@@ -3,17 +3,19 @@ package edu.colorado.cires.pace.cli.command.instrument;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.CommandTest;
+import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommandTest;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-class InstrumentCommandTest extends CommandTest<Instrument> {
+public class InstrumentCommandTest extends TranslateCommandTest<Instrument, InstrumentTranslator> {
   
   private final FileTypeCommandTest fileTypeCommandTest = new FileTypeCommandTest();
   
@@ -74,6 +76,10 @@ class InstrumentCommandTest extends CommandTest<Instrument> {
 
   @Override
   protected void assertObjectsEqual(Instrument expected, Instrument actual, boolean checkUUID) {
+    assertInstrumentsEqual(expected, actual, checkUUID);
+  }
+
+  public static void assertInstrumentsEqual(Instrument expected, Instrument actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     for (int i = 0; i < expected.getFileTypes().size(); i++) {
       FileTypeCommandTest.assertFileTypesEqual(
@@ -99,5 +105,35 @@ class InstrumentCommandTest extends CommandTest<Instrument> {
     return original.toBuilder()
         .name(uniqueField)
         .build();
+  }
+
+  @Override
+  protected String[] getTranslatorFields() {
+    return new String[] {
+        "instrumentUUID",
+        "instrumentName",
+        "fileTypes"
+    };
+  }
+
+  @Override
+  protected InstrumentTranslator createTranslator(String name) {
+    return InstrumentTranslator.builder()
+        .name(name)
+        .instrumentUUID("instrumentUUID")
+        .instrumentName("instrumentName")
+        .fileTypes("fileTypes")
+        .build();
+  }
+
+  @Override
+  protected String[] objectToRow(Instrument object) {
+    return new String[] {
+        object.getUuid() == null ? "" : object.getUuid().toString(),
+        object.getName(),
+        object.getFileTypes().stream()
+            .map(FileType::getType)
+            .collect(Collectors.joining(";"))
+    };
   }
 }

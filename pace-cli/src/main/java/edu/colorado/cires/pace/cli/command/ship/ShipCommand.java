@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class ShipCommand implements Runnable {
+public class ShipCommand {
   
   private static final RepositoryFactory<Ship> repositoryFactory = ShipRepositoryFactory::createJsonRepository;
   private static final Class<Ship> clazz = Ship.class;
   private static final TypeReference<List<Ship>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create ship", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Ship> {
@@ -73,11 +70,6 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List ships", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get ship by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class ShipCommand implements Runnable {
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete ship", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class ShipCommand implements Runnable {
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Ship> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class ShipCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Ship> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Ship>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

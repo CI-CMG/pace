@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class FileTypeCommand implements Runnable {
+public class FileTypeCommand {
   
   private static final RepositoryFactory<FileType> repositoryFactory = FileTypeRepositoryFactory::createJsonRepository;
   private static final Class<FileType> clazz = FileType.class;
   private static final TypeReference<List<FileType>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<FileType> {
@@ -73,11 +70,6 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List file types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-type", description = "Get file type by type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class FileTypeCommand implements Runnable {
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete file type", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<FileType> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class FileTypeCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<FileType> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<FileType>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

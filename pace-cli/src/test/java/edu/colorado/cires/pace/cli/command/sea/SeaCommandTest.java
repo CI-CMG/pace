@@ -9,7 +9,7 @@ import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.translator.SeaTranslator;
 import java.util.List;
 
-class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
+public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
 
   @Override
   public Sea createObject(String uniqueField) {
@@ -45,6 +45,10 @@ class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
 
   @Override
   protected void assertObjectsEqual(Sea expected, Sea actual, boolean checkUUID) {
+    assertSeasEqual(expected, actual, checkUUID);
+  }
+
+  public static void assertSeasEqual(Sea expected, Sea actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());

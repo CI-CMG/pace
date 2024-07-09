@@ -31,13 +31,10 @@ import picocli.CommandLine.Parameters;
     Update.class,
     Delete.class,
 })
-public class TranslatorCommand implements Runnable {
+public class TranslatorCommand {
 
   private static final RepositoryFactory<Translator> repositoryFactory = TranslatorRepositoryFactory::createRepository;
   private static final Class<Translator> clazz = Translator.class;
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Translator> {
@@ -64,11 +61,6 @@ public class TranslatorCommand implements Runnable {
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -77,11 +69,6 @@ public class TranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
     }
   }
   
@@ -100,11 +87,6 @@ public class TranslatorCommand implements Runnable {
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-uuid", description = "Get translator by uuid", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -121,11 +103,6 @@ public class TranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
     }
   }
   
@@ -154,11 +131,6 @@ public class TranslatorCommand implements Runnable {
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete translator", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -175,11 +147,6 @@ public class TranslatorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Translator> getClazz() {
-      return clazz;
     }
   }
 }

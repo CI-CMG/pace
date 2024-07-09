@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import edu.colorado.cires.pace.cli.command.common.BatchWriteException;
 import edu.colorado.cires.pace.migrator.MigrationException;
 import edu.colorado.cires.pace.translator.FieldException;
-import edu.colorado.cires.pace.translator.RowConversionException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import jakarta.validation.ConstraintViolation;
@@ -46,10 +45,10 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
       return objectWriter
           .writeValueAsString(toViolations(((ConstraintViolationException) e).getConstraintViolations()));
     } else if (e instanceof TranslationException) {
-      Map<Integer, List<RowConversionException>> exceptions = Arrays.stream(e.getSuppressed())
-          .map(ex -> (RowConversionException) ex)
+      Map<Integer, List<FieldException>> exceptions = Arrays.stream(e.getSuppressed())
+          .map(ex -> (FieldException) ex)
           .collect(Collectors.groupingBy(
-              RowConversionException::getRow
+              FieldException::getRow
           ));
       
       return objectWriter.writeValueAsString(
@@ -58,10 +57,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
                   new TranslateRowException(
                       entry.getKey(),
                       entry.getValue().stream()
-                          .map(re -> Arrays.stream(re.getSuppressed()).toList())
-                          .flatMap(List::stream)
-                          .map(fe -> (FieldException) fe)
-                          .map(fe -> new Violation(fe.getProperty(), fe.getMessage()))
+                          .map(fe -> new RowViolation(fe.getColumn(), fe.getProperty(), fe.getMessage()))
                           .toList()
                   )
               ).toList()
@@ -77,9 +73,11 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
     return null;
   }
   
+  private record RowViolation(int column, String field, String message) {}
+  
   private record Violation(String field, String message) {}
   
-  private record TranslateRowException(int row, List<Violation> violations) {}
+  private record TranslateRowException(int row, List<RowViolation> violations) {}
   
   private Set<Violation> toViolations(Set<ConstraintViolation<?>> violations) {
     return violations.stream()

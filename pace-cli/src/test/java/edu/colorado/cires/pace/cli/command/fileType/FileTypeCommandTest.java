@@ -3,11 +3,12 @@ package edu.colorado.cires.pace.cli.command.fileType;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.CommandTest;
+import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
 import java.util.List;
 
-public class FileTypeCommandTest extends CommandTest<FileType> {
+public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileTypeTranslator> {
 
   @Override
   public FileType createObject(String uniqueField) {
@@ -69,4 +70,31 @@ public class FileTypeCommandTest extends CommandTest<FileType> {
         .build();
   }
 
+  @Override
+  protected String[] getTranslatorFields() {
+    return new String[] {
+        "fileTypeUUID",
+        "type",
+        "comment"
+    };
+  }
+
+  @Override
+  protected FileTypeTranslator createTranslator(String name) {
+    return FileTypeTranslator.builder()
+        .name(name)
+        .fileTypeUUID("fileTypeUUID")
+        .type("type")
+        .comment("comment")
+        .build();
+  }
+
+  @Override
+  protected String[] objectToRow(FileType object) {
+    return new String[] {
+        object.getUuid() == null ? "" : object.getUuid().toString(),
+        object.getType(),
+        object.getComment()
+    };
+  }
 }

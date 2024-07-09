@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class PersonCommand implements Runnable {
+public class PersonCommand {
   
   private static final RepositoryFactory<Person> repositoryFactory = PersonRepositoryFactory::createJsonRepository;
   private static final Class<Person> clazz = Person.class;
   private static final TypeReference<List<Person>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create person", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Person> {
@@ -73,11 +70,6 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List people", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get person by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class PersonCommand implements Runnable {
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete person", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class PersonCommand implements Runnable {
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Person> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class PersonCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Person> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Person>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

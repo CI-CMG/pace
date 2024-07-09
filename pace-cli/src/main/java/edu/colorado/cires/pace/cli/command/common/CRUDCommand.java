@@ -34,9 +34,10 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
   }
   
   private String writeObject(Object object) throws JsonProcessingException {
-    Class<O> clazz = getClazz();
+    Class<?> clazz = object.getClass();
     ObjectWriter objectWriter;
     if (object instanceof List<?>) {
+      clazz = ((List<?>) object).get(0).getClass();
       objectWriter = objectMapper.writerFor(
           objectMapper.getTypeFactory().constructCollectionType(List.class, clazz)
       );
@@ -48,27 +49,13 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
     );
   }
   
-  protected abstract Class<O> getClazz();
-  
   @Override
   public void run() {
     try {
       System.out.println(
           writeObject(runCommand())
       );
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    } catch (ConflictException e) {
-      throw new RuntimeException(e);
-    } catch (NotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (DatastoreException e) {
-      throw new RuntimeException(e);
-    } catch (BadArgumentException e) {
-      throw new RuntimeException(e);
-    } catch (BatchWriteException e) {
+    } catch (ConflictException | NotFoundException | IOException | DatastoreException | BadArgumentException | BatchWriteException e) {
       throw new RuntimeException(e);
     }
   }

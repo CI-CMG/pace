@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class PlatformCommand implements Runnable {
+public class PlatformCommand {
   
   private static final RepositoryFactory<Platform> repositoryFactory = PlatformRepositoryFactory::createJsonRepository;
   private static final Class<Platform> clazz = Platform.class;
   private static final TypeReference<List<Platform>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create platform", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Platform> {
@@ -73,11 +70,6 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List platforms", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get platform by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class PlatformCommand implements Runnable {
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete platform", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class PlatformCommand implements Runnable {
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Platform> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class PlatformCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Platform> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Platform>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

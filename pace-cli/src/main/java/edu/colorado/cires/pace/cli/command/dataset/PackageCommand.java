@@ -65,14 +65,11 @@ subcommands = {
     Translate.class,
     Pack.class
 })
-public class PackageCommand implements Runnable {
+public class PackageCommand {
   
   private static final RepositoryFactory<Package> repositoryFactory = PackageRepositoryFactory::createRepository;
   private static final Class<Package> clazz = Package.class;
   private static final TypeReference<List<Package>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Package> {
@@ -99,11 +96,6 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -112,11 +104,6 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
     }
   }
   
@@ -135,11 +122,6 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-package-id", description = "Get package by packageId", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -156,11 +138,6 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
     }
   }
   
@@ -189,11 +166,6 @@ public class PackageCommand implements Runnable {
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete package", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -210,11 +182,6 @@ public class PackageCommand implements Runnable {
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Package> getClazz() {
-      return clazz;
     }
   }
 
@@ -243,26 +210,6 @@ public class PackageCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Package> getJsonClass() {
-      return Package.class;
-    }
-
-    @Override
-    protected RepositoryFactory<Package>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[]{
-          ProjectRepositoryFactory::createJsonRepository,
-          PersonRepositoryFactory::createJsonRepository,
-          OrganizationRepositoryFactory::createJsonRepository,
-          PlatformRepositoryFactory::createJsonRepository,
-          InstrumentRepositoryFactory::createJsonRepository,
-          SensorRepositoryFactory::createRepository,
-          DetectionTypeRepositoryFactory::createJsonRepository,
-          SeaRepositoryFactory::createJsonRepository,
-          ShipRepositoryFactory::createJsonRepository
-      };
     }
 
     @Override

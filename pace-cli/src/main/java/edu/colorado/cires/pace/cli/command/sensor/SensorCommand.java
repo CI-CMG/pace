@@ -39,14 +39,11 @@ import picocli.CommandLine.Parameters;
     Delete.class,
     Translate.class
 })
-public class SensorCommand implements Runnable {
+public class SensorCommand {
   
   private static final RepositoryFactory<Sensor> repositoryFactory = SensorRepositoryFactory::createRepository;
   private static final Class<Sensor> clazz = Sensor.class;
   private static final TypeReference<List<Sensor>> typeReference = new TypeReference<>() {};
-
-  @Override
-  public void run() {}
   
   @Command(name = "create", description = "Create sensor", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class Create extends CreateCommand<Sensor> {
@@ -73,11 +70,6 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return SensorRepositoryFactory::createRepository;
     }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "list", description = "List sensors", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -86,11 +78,6 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
     }
   }
   
@@ -109,11 +96,6 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "get-by-name", description = "Get sensor by name", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -130,11 +112,6 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
     }
   }
   
@@ -163,11 +140,6 @@ public class SensorCommand implements Runnable {
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
     }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
-    }
   }
   
   @Command(name = "delete", description = "Delete sensor", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -184,11 +156,6 @@ public class SensorCommand implements Runnable {
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
       return repositoryFactory;
-    }
-
-    @Override
-    protected Class<Sensor> getClazz() {
-      return clazz;
     }
   }
   
@@ -217,16 +184,6 @@ public class SensorCommand implements Runnable {
     @Override
     protected Supplier<File> getInputSupplier() {
       return () -> file;
-    }
-
-    @Override
-    protected Class<Sensor> getJsonClass() {
-      return clazz;
-    }
-
-    @Override
-    protected RepositoryFactory<Sensor>[] getDependencyRepositoryFactories() {
-      return new RepositoryFactory[0];
     }
 
     @Override

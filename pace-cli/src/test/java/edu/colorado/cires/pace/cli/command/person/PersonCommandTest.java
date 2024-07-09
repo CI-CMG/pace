@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.CommandTest;
+import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.translator.PersonTranslator;
 import java.util.List;
 
-class PersonCommandTest extends CommandTest<Person> {
+public class PersonCommandTest extends TranslateCommandTest<Person, PersonTranslator> {
 
   @Override
   public Person createObject(String uniqueField) {
@@ -54,12 +55,16 @@ class PersonCommandTest extends CommandTest<Person> {
 
   @Override
   protected void assertObjectsEqual(Person expected, Person actual, boolean checkUUID) {
+    assertPeopleEqual(expected, actual, checkUUID);
+  }
+  
+  public static void assertPeopleEqual(Person expected, Person actual, boolean checkUUID) {
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());
     } else {
       assertNotNull(actual.getUuid());
     }
-    
+
     assertEquals(expected.getName(), actual.getName());
     assertEquals(expected.getOrganization(), actual.getOrganization());
     assertEquals(expected.getPosition(), actual.getPosition());
@@ -83,5 +88,60 @@ class PersonCommandTest extends CommandTest<Person> {
     return original.toBuilder()
         .name(uniqueField)
         .build();
+  }
+
+  @Override
+  protected String[] getTranslatorFields() {
+    return new String[] {
+        "personUUID",
+        "personName",
+        "organization",
+        "position",
+        "street",
+        "city",
+        "state",
+        "zip",
+        "country",
+        "email",
+        "phone",
+        "orcid"
+    };
+  }
+
+  @Override
+  protected PersonTranslator createTranslator(String name) {
+    return PersonTranslator.builder()
+        .name(name)
+        .personUUID("personUUID")
+        .personName("personName")
+        .organization("organization")
+        .position("position")
+        .street("street")
+        .city("city")
+        .state("state")
+        .zip("zip")
+        .country("country")
+        .email("email")
+        .phone("phone")
+        .orcid("orcid")
+        .build();
+  }
+
+  @Override
+  protected String[] objectToRow(Person object) {
+    return new String[] {
+        object.getUuid() == null ? "" : object.getUuid().toString(),
+        object.getName(),
+        object.getOrganization(),
+        object.getPosition(),
+        object.getStreet(),
+        object.getCity(),
+        object.getState(),
+        object.getZip(),
+        object.getCountry(),
+        object.getEmail(),
+        object.getPhone(),
+        object.getOrcid()
+    };
   }
 }

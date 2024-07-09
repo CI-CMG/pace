@@ -34,7 +34,7 @@ public abstract class CommandTest<T extends ObjectWithUniqueField> {
   protected abstract TypeReference<List<T>> getTypeReference();
   protected abstract Class<T> getClazz();
   protected abstract String getUniqueFieldName();
-  protected abstract void assertObjectsEqual(T expected, T actual, boolean checkUUID);
+  protected abstract void assertObjectsEqual(T expected, T actual, boolean checkUUID) throws JsonProcessingException;
   protected abstract String getUniqueField(T object);
   protected abstract T updateObject(T original, String uniqueField);
 
@@ -144,12 +144,16 @@ public abstract class CommandTest<T extends ObjectWithUniqueField> {
     clearOut();
     
     execute(getCommandPrefix(), String.format(
-        "get-by-%s", getUniqueFieldName()
+        "get-by-%s", getUniqueFieldCommandSuffix()
     ), getUniqueField(object));
     
     assertStdoutEqualsCreated(created);
   }
-  
+
+  protected String getUniqueFieldCommandSuffix() {
+    return getUniqueFieldName();
+  }
+
   @Test
   void testGetByUUID() throws IOException {
     T object = createObject("test");
