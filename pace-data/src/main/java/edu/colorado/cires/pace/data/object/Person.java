@@ -14,6 +14,7 @@ public class Person implements Contact {
   final UUID uuid;
   @NotBlank
   final String name;
+  @NotBlank
   final String organization;
   final String position;
   final String street;
