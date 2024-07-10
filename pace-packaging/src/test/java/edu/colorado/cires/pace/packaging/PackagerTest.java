@@ -216,7 +216,7 @@ class PackagerTest {
       ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
 
       Exception exception = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, LogManager.getLogger("test"), progressIndicator));
-      assertEquals("Packing failed", exception.getMessage());
+      assertEquals("Packaging failed", exception.getMessage());
       for (Throwable throwable : exception.getSuppressed()) {
         assertEquals("java.io.IOException: test file error", throwable.getMessage());
       }
