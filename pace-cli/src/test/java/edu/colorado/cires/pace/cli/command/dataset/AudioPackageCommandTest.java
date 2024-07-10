@@ -38,7 +38,6 @@ import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -486,13 +485,13 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   @Override
   public AudioPackage createObject(String uniqueField) {
     return AudioPackage.builder()
-        .temperaturePath(Path.of("temperaturePath").toAbsolutePath())
-        .biologicalPath(Path.of("biologicalPath").toAbsolutePath())
-        .otherPath(Path.of("otherPath").toAbsolutePath())
-        .documentsPath(Path.of("documentsPath").toAbsolutePath())
-        .calibrationDocumentsPath(Path.of("calibrationDocumentsPath").toAbsolutePath())
-        .navigationPath(Path.of("navigationPath").toAbsolutePath())
-        .sourcePath(Path.of("sourcePath").toAbsolutePath())
+        .temperaturePath(testPath.resolve("temperaturePath").toAbsolutePath())
+        .biologicalPath(testPath.resolve("biologicalPath").toAbsolutePath())
+        .otherPath(testPath.resolve("otherPath").toAbsolutePath())
+        .documentsPath(testPath.resolve("documentsPath").toAbsolutePath())
+        .calibrationDocumentsPath(testPath.resolve("calibrationDocumentsPath").toAbsolutePath())
+        .navigationPath(testPath.resolve("navigationPath").toAbsolutePath())
+        .sourcePath(testPath.resolve("sourcePath").toAbsolutePath())
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId(uniqueField)
         .datasetPackager(datasetPackager)

@@ -25,6 +25,8 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -277,11 +279,11 @@ public class PackageCommand {
           );
           
           packageProcessor.process();
-        } catch (RuntimeException exception) {
-          throw exception.getCause();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
         }
-      } catch (Throwable e) {
-        throw new IllegalStateException("Packaging failed", e);
+      } catch (PackagingException | DatastoreException | IOException e) {
+        throw new RuntimeException(e);
       }
     }
   }

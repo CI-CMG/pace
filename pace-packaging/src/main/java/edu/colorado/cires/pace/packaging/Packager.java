@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.packaging;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -72,11 +73,15 @@ class Packager {
               
               incrementProgressFn.run();
               return null;
+            } catch (FileAlreadyExistsException e) {
+              return new RuntimeException(String.format(
+                  "Path already exists: %s", packageInstruction.target()
+              ));
             } catch (IOException e) {
               return new RuntimeException(e);
             }
           }).filter(Objects::nonNull)
-          .reduce(new RuntimeException("Packing failed"), (o1, o2) -> {
+          .reduce(new RuntimeException("Packaging failed"), (o1, o2) -> {
             o1.addSuppressed(o2);
             return o1;
           });

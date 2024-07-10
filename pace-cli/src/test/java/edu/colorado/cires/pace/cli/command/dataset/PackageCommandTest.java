@@ -24,10 +24,16 @@ import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Test;
 
 abstract class PackageCommandTest<P extends Package, T extends PackageTranslator, L extends LocationDetailTranslator> extends TranslateCommandTest<P, T> {
   
@@ -302,5 +308,61 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   @Override
   protected String getUniqueField(P object) {
     return object.getPackageId();
+  }
+  
+  @Test
+  void testPackage() throws IOException {
+
+    Package p = writeObject(
+        createObject("test")
+    );
+    createDirectoryAndWriteFile(p.getTemperaturePath());
+    createDirectoryAndWriteFile(p.getBiologicalPath());
+    createDirectoryAndWriteFile(p.getOtherPath());
+    createDirectoryAndWriteFile(p.getDocumentsPath());
+    createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
+    createDirectoryAndWriteFile(p.getNavigationPath());
+    createDirectoryAndWriteFile(p.getSourcePath());
+    
+    File outputDirectory = testPath.resolve("output").toFile();
+    
+    execute("package", "process", testPath.resolve("test.json").toFile().toString(), outputDirectory.toString());
+
+    Set<String> expectedPaths = Set.of(
+      "target/test-dir/output/project 1_siteOrCruiseName_test/bagit.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/bag-info.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/process.log",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/tagmanifest-sha256.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/nav_files/navigationPath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/calibration/calibrationDocumentsPath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/project 1_siteOrCruiseName_test.json",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/other/otherPath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/organizations.json",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/docs/documentsPath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/projects.json",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/acoustic_files/sourcePath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/biological/biologicalPath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/people.json",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/data/temperature/temperaturePath.txt",
+      "target/test-dir/output/project 1_siteOrCruiseName_test/manifest-sha256.txt"
+    );
+
+    Set<String> actualPaths = Files.walk(outputDirectory.toPath())
+        .filter(path -> path.toFile().isFile())
+        .map(Path::toString)
+        .collect(Collectors.toSet());
+    
+    assertEquals(expectedPaths, actualPaths);
+  }
+  
+  private void createDirectoryAndWriteFile(Path path) throws IOException {
+    File directory = path.toFile();
+    FileUtils.forceMkdir(directory);
+    
+    File file = path.resolve(String.format(
+        "%s.txt", path.getFileName()
+    )).toFile();
+    
+    FileUtils.writeStringToFile(file, "test", StandardCharsets.UTF_8);
   }
 }
