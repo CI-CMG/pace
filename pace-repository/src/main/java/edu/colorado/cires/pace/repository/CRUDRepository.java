@@ -133,7 +133,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       ));
     }
 
-    if (object.getUuid() != uuid && writableUUID) {
+    if (!object.getUuid().equals(uuid) && writableUUID) {
       if (datastore.findByUUID(object.getUuid()).isPresent()) {
         LOGGER.error("{} with uuid = {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
@@ -150,7 +150,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
         newUniqueField, object.getUuid()
     );
     
-    if (writableUUID && (uuid != objectUUID)) {
+    if (writableUUID && (!uuid.equals(objectUUID))) {
       if (datastore.findByUUID(existingObject.getUuid()).isPresent()) {
         LOGGER.debug("{} with outdated uuid = {} will be removed", getClassName(), existingObject.getUuid());
         datastore.delete(existingObject);
