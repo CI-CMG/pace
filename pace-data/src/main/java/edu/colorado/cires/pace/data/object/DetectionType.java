@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,10 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class DetectionType implements ObjectWithUniqueField {
 
-  final UUID uuid;
+  private final UUID uuid;
   @NotBlank
-  final String source;
-  final String scienceName;
+  private final String source;
+  @Size(min = 1, message = "must not be blank")
+  private final String scienceName;
 
 }

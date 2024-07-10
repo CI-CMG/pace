@@ -1,5 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;
@@ -13,6 +15,7 @@ public class Instrument implements ObjectWithName {
   
   private final UUID uuid;
   private final String name;
-  private final List<FileType> fileTypes;
+  @NotEmpty
+  private final List<@Valid FileType> fileTypes;
 
 }
