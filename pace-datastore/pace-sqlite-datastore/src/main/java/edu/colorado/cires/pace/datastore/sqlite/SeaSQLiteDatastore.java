@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class SeaSQLiteDatastore extends SQLiteDatastore<Sea> {
 
   public SeaSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "SEAS");
+    super(sqliteFile, "SEAS", Sea::getName, Sea.class);
   }
 
   @Override

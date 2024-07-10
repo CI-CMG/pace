@@ -23,8 +23,12 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
   
   private final Path sqliteFile;
   private final String tableName;
+  private final Function<O, String> uniqueFieldGetter;
+  private final Class<O> clazz;
 
-  protected SQLiteDatastore(Path sqliteFile, String tableName) {
+  protected SQLiteDatastore(Path sqliteFile, String tableName, Function<O, String> uniqueFieldGetter, Class<O> clazz) {
+    this.uniqueFieldGetter = uniqueFieldGetter;
+    this.clazz = clazz;
     LOGGER = LoggerFactory.getLogger(this.getClass());
     this.sqliteFile = sqliteFile;
     this.tableName = tableName;
@@ -89,11 +93,11 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
 
   @Override
   public String getClassName() {
-    return null;
+    return clazz.getSimpleName();
   }
 
   @Override
   public Function<O, String> getUniqueFieldGetter() {
-    return null;
+    return uniqueFieldGetter;
   }
 }

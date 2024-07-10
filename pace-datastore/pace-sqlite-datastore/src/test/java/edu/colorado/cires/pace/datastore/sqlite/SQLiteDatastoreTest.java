@@ -62,16 +62,6 @@ abstract class SQLiteDatastoreTest<O extends ObjectWithUniqueField> {
   void getUniqueFieldName() {
     assertNull(datastore.getUniqueFieldName());
   }
-
-  @Test
-  void getClassName() {
-    assertNull(datastore.getClassName());
-  }
-
-  @Test
-  void getUniqueFieldGetter() {
-    assertNull(datastore.getUniqueFieldGetter());
-  }
   
   @Test
   void invalidDBFile() {

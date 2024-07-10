@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class PlatformSQLiteDatastore extends SQLiteDatastore<Platform> {
 
   public PlatformSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "PLATFORMS");
+    super(sqliteFile, "PLATFORMS", Platform::getName, Platform.class);
   }
 
   @Override

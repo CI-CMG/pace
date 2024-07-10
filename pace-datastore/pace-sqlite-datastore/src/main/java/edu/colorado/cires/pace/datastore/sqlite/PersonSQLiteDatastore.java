@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class PersonSQLiteDatastore extends SQLiteDatastore<Person> {
 
   public PersonSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "PEOPLE");
+    super(sqliteFile, "PEOPLE", Person::getName, Person.class);
   }
 
   @Override

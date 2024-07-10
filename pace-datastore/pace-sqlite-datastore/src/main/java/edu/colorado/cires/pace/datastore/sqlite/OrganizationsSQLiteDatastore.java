@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class OrganizationsSQLiteDatastore extends SQLiteDatastore<Organization> {
 
   public OrganizationsSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "ORGANIZATIONS");
+    super(sqliteFile, "ORGANIZATIONS", Organization::getName, Organization.class);
   }
 
   @Override
