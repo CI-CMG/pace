@@ -14,7 +14,7 @@ import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.junit.jupiter.api.Test;
 
-public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T extends Translator> extends CommandTest<O> {
+public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T extends Translator> extends CRUDCommandTest<O> {
   
   protected abstract String[] getTranslatorFields();
   protected abstract T createTranslator(String name);

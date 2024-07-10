@@ -5,28 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.cli.command.base.PaceCLI;
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import picocli.CommandLine;
 
-public abstract class CommandTest<T extends ObjectWithUniqueField> {
+public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends CLITest {
   
   public abstract T createObject(String uniqueField);
   protected abstract String getRepositoryFileName();
@@ -37,58 +23,6 @@ public abstract class CommandTest<T extends ObjectWithUniqueField> {
   protected abstract void assertObjectsEqual(T expected, T actual, boolean checkUUID) throws JsonProcessingException;
   protected abstract String getUniqueField(T object);
   protected abstract T updateObject(T original, String uniqueField);
-
-  private final CommandLine CLI = new CommandLine(new PaceCLI())
-      .setExecutionExceptionHandler(new ExecutionErrorHandler());
-
-  protected final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
-
-  protected final Path testPath = Paths.get("target").resolve("test-dir");
-
-  private final InputStream in = System.in;
-  private final PrintStream out = System.out;
-  private final PrintStream err = System.err;
-
-  private final ByteArrayOutputStream commandOut = new ByteArrayOutputStream();
-  private final ByteArrayOutputStream commandErr = new ByteArrayOutputStream();
-
-  @BeforeEach
-  public void beforeEach() throws IOException {
-    FileUtils.deleteQuietly(testPath.toFile());
-    FileUtils.forceMkdir(testPath.toFile());
-    System.setOut(new PrintStream(commandOut));
-    System.setErr(new PrintStream(commandErr));
-  }
-
-  @AfterEach
-  public void afterEach() {
-    FileUtils.deleteQuietly(testPath.toFile());
-    System.setIn(in);
-    System.setOut(out);
-    System.setErr(err);
-    commandOut.reset();
-    commandErr.reset();
-  }
-
-  protected void execute(String... arguments) {
-    CLI.execute(arguments);
-  }
-
-  protected String getCommandOutput() {
-    return getStreamContent(commandOut);
-  }
-
-  protected String getCommandErr() {
-    return getStreamContent(commandErr);
-  }
-
-  private String getStreamContent(ByteArrayOutputStream outputStream) {
-    return outputStream.toString(StandardCharsets.UTF_8);
-  }
-
-  protected void clearOut() {
-    commandOut.reset();
-  }
   
   @Test
   void testCreateFromFile() throws IOException {

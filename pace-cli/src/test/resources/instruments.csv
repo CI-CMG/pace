@@ -1,0 +1,9 @@
+HARP,"wav,aif,aiff",Y
+EAR,"wav,aif,aiff",Y
+DMON,"wav,aif,aiff",Y
+AUH,"wav,aif,aiff",Y
+MARU,"wav,aif,aiff",Y
+SoundTrap 300,"wav,aif,aiff",Y
+SoundTrap 500,"wav,aif,aiff",Y
+C-POD,.csv,Y
+BoomBox,"wav,aif,aiff",Y

@@ -112,8 +112,8 @@ public class MigrateCommand implements Runnable {
     }
     try {
       Migrator.migrate(new MigrationRepositoryPair<>(
-          ProjectRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper),
-          ProjectRepositoryFactory.createSQLiteRepository(localDataFile.toPath())
+          ProjectRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
+          ProjectRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ));
     } catch (MigrationException e) {
       for (Throwable throwable : e.getSuppressed()) {

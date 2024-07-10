@@ -3,11 +3,11 @@ package edu.colorado.cires.pace.cli.command.translator;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.CommandTest;
+import edu.colorado.cires.pace.cli.command.CRUDCommandTest;
 import edu.colorado.cires.pace.data.translator.Translator;
 import java.util.List;
 
-abstract class TranslatorCommandTest<T extends Translator> extends CommandTest<T> {
+abstract class TranslatorCommandTest<T extends Translator> extends CRUDCommandTest<T> {
 
   @Override
   protected String getRepositoryFileName() {
