@@ -24,6 +24,11 @@ public class FileTypeForm extends Form<FileType> {
   private final JTextField commentField = new JTextField();
 
   public FileTypeForm(FileType initialFileType) {
+    setName("fileTypeForm");
+    uuidField.setName("uuid");
+    typeField.setName("type");
+    commentField.setName("comment");
+    
     setLayout(new BorderLayout());
     
     JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -74,8 +79,6 @@ public class FileTypeForm extends Form<FileType> {
   protected void delete(CRUDRepository<FileType> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

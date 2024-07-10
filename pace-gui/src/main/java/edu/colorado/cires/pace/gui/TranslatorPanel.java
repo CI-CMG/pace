@@ -22,7 +22,7 @@ public class TranslatorPanel extends DataPanel<Translator> {
   public TranslatorPanel(CRUDRepository<Translator> repository, String[] headers,
       Function<Translator, Object[]> objectConversion, Function<Object[], Translator> rowConversion,
       Function<Translator, Form<Translator>> formSupplier) {
-    super(repository, headers, objectConversion);
+    super("translatorsPanel", repository, headers, objectConversion);
     this.rowConversion = rowConversion;
     this.formSupplier = formSupplier;
   }

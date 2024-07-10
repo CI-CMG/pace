@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public class InstrumentRepository extends CRUDRepository<Instrument> {
   
-  private final FileTypeRepository fileTypeRepository;
+  private final Datastore<FileType> fileTypeDatastore;
 
   public InstrumentRepository(Datastore<Instrument> datastore, Datastore<FileType> fileTypeDatastore) {
     super(datastore);
-    this.fileTypeRepository = new FileTypeRepository(fileTypeDatastore);
+    this.fileTypeDatastore = fileTypeDatastore;
   }
 
   @Override
@@ -36,13 +36,12 @@ public class InstrumentRepository extends CRUDRepository<Instrument> {
 
   private void checkFileTypes(Instrument instrument) throws DatastoreException, BadArgumentException {
     for (FileType fileType : instrument.getFileTypes()) {
-      try {
-        fileTypeRepository.getByUUID(fileType.getUuid());
-      } catch (NotFoundException e) {
-        throw new BadArgumentException(String.format(
-            "File type does not exist: %s", fileType.getType()
-        ));
-      }
+      fileTypeDatastore.findByUUID(fileType.getUuid())
+          .orElseThrow(
+              () -> new BadArgumentException(String.format(
+                  "File type does not exist: %s", fileType.getType()
+              ))
+          );
     }
   }
 }

@@ -54,7 +54,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     CLIException exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
-        "%s with %s %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(created)
+        "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(created)
     ), exception.message());
   }
   

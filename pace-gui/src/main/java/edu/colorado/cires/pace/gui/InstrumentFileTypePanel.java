@@ -49,10 +49,7 @@ public class InstrumentFileTypePanel extends JPanel {
   }
   
   public FileType toFileType() {
-    Object selectedItem = comboBox.getSelectedItem();
-    if (selectedItem != null) {
-      return fileTypeOptions.get((String) selectedItem);
-    }
-    return null;
+    String selectedItem = (String) comboBox.getSelectedItem();
+    return fileTypeOptions.get(selectedItem);
   }
 }

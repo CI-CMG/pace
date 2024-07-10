@@ -18,16 +18,16 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-public class MetadataPanel<O extends ObjectWithUniqueField, T extends Translator> extends TranslatePanel<O, T> {
+abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translator> extends TranslatePanel<O, T> {
 
   private final Function<Object[], O> rowConversion;
   private final Function<O, Form<O>> formSupplier;
 
-  public MetadataPanel(CRUDRepository<O> repository, String[] headers, Function<O, Object[]> objectConversion,
+  public MetadataPanel(String name, CRUDRepository<O> repository, String[] headers, Function<O, Object[]> objectConversion,
       Class<O> clazz, 
       Function<Object[], O> rowConversion, Function<O, Form<O>> formSupplier, TranslatorRepository translatorRepository, Converter<T, O> converter,
       Class<T> translatorClazz) {
-    super(repository, headers, objectConversion, clazz, translatorRepository, converter, translatorClazz);
+    super(name, repository, headers, objectConversion, clazz, translatorRepository, converter, translatorClazz);
     this.rowConversion = rowConversion;
     this.formSupplier = formSupplier;
   }
@@ -76,6 +76,8 @@ public class MetadataPanel<O extends ObjectWithUniqueField, T extends Translator
 
   private void createFormDialog(O object) {
     JDialog dialog = new JDialog();
+    dialog.setName("formDialog");
+    dialog.setModal(true);
 
     FormPanel<O> formPanel = new FormPanel<>(formSupplier.apply(object), repository, (s) -> {
       while (tableModel.getRowCount() > 0) {

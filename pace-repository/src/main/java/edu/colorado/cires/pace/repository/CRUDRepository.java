@@ -48,7 +48,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     if (datastore.findByUniqueField(uniqueField).isPresent()) {
       LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), uniqueField);
       throw new ConflictException(String.format(
-          "%s with %s %s already exists", getClassName(), getUniqueFieldName(), uniqueField
+          "%s with %s = %s already exists", getClassName(), getUniqueFieldName(), uniqueField
       ));
     }
     

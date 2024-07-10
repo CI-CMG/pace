@@ -1,8 +1,11 @@
 package edu.colorado.cires.pace.gui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
+import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -10,14 +13,23 @@ import javax.swing.plaf.FontUIResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Application {
+public class Application extends JFrame {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-  
+
+  public Application() throws HeadlessException {
+    createGUI();
+  }
+
   public static void main(String[] args) {
+    new Application();
+  }
+  
+  private void createGUI() {
     FlatIntelliJLaf.setup();
-    
+
     ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
+    ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
 
     java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
     while (keys.hasMoreElements()) {
@@ -32,18 +44,17 @@ public class Application {
     }
 
     try {
-      ApplicationTabs applicationTabs = new ApplicationTabs();
-      JFrame frame = new JFrame();
-      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      frame.setContentPane(applicationTabs);
-      frame.setTitle("PACE");
-      frame.setSize(1000, 1000);
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(true);
+      ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper, propertyResolver);
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      setContentPane(applicationTabs);
+      setTitle("PACE");
+      setSize(1000, 1000);
+      setLocationRelativeTo(null);
+      setVisible(true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    
+
     LOGGER.debug("Started GUI");
   }
 

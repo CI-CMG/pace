@@ -23,6 +23,10 @@ public class PlatformForm extends Form<Platform> {
   private final JTextField nameField = new JTextField();
 
   public PlatformForm(Platform initialPlatform) {
+    setName("platformForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    
     setLayout(new BorderLayout());
     
     JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -69,8 +73,6 @@ public class PlatformForm extends Form<Platform> {
   protected void delete(CRUDRepository<Platform> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

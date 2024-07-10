@@ -23,6 +23,10 @@ public class SeaForm extends Form<Sea> {
   private final JTextField nameField = new JTextField();
 
   public SeaForm(Sea initialSea) {
+    setName("seaForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    
     setLayout(new BorderLayout());
 
     JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -70,8 +74,6 @@ public class SeaForm extends Form<Sea> {
   protected void delete(CRUDRepository<Sea> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

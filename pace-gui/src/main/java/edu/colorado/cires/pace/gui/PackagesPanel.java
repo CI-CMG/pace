@@ -52,7 +52,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       TranslatorRepository translatorRepository,
       Converter<PackageTranslator, Package> converter, PersonRepository personRepository, OrganizationRepository organizationRepository,
       ProjectRepository projectRepository) {
-    super(repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
+    super("packagesPanel", repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
     this.objectMapper = objectMapper;
     this.personRepository = personRepository;
     this.organizationRepository = organizationRepository;

@@ -15,9 +15,11 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.SensorType;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.util.Arrays;
 import java.util.UUID;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -40,24 +42,22 @@ public class SensorForm extends Form<Sensor> {
   private final JTextField sensorTypeField = new JTextField();
   private final JTextField propertiesField = new JTextField();
   
-  private final SensorType sensorType;
+  private SensorType sensorType;
+  
+  private final JPanel specificFieldsPanel = new JPanel(new GridBagLayout());
 
   public SensorForm(Sensor initialSensor) {
-    SensorType sensorType;
-    sensorType = initialSensor == null ? null : SensorType.fromSensor(initialSensor);
-    if (sensorType == null) {
-      sensorType = (SensorType) JOptionPane.showInputDialog(
-          this,
-          null,
-          "Choose sensor type",
-          JOptionPane.PLAIN_MESSAGE,
-          null,
-          SensorType.values(),
-          null
-      ); 
-    }
-    
-    this.sensorType = sensorType;
+    setName("sensorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    descriptionField.setName("description");
+    xField.setName("x");
+    yField.setName("y");
+    zField.setName("z");
+    hydrophoneIdField.setName("hydrophoneId");
+    preampIdField.setName("preampId");
+    sensorTypeField.setName("sensorType");
+    propertiesField.setName("properties");
     
     setLayout(new BorderLayout());
     
@@ -66,7 +66,19 @@ public class SensorForm extends Form<Sensor> {
     contentPanel.add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     contentPanel.add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     contentPanel.add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
+    
+    if (initialSensor == null) {
+      JPanel sensorTypePanel = new JPanel(new GridBagLayout());
+      sensorTypePanel.add(new JLabel("Sensor Type"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+      sensorTypePanel.add(createSensorTypeComboBox(), configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
+      contentPanel.add(sensorTypePanel, configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    } else {
+      setSensorType(initialSensor);
+      addSpecificFields(sensorType);
+    }
+    
     JPanel positionPanel = new JPanel(new GridBagLayout());
+    positionPanel.setName("positionForm");
     JPanel xPanel = new JPanel(new GridBagLayout());
     xPanel.add(new JLabel("Position (X)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     xPanel.add(xField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
@@ -79,33 +91,64 @@ public class SensorForm extends Form<Sensor> {
     zPanel.add(new JLabel("Position (Z)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     zPanel.add(zField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     positionPanel.add(zPanel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 1; }));
-    contentPanel.add(positionPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
-    contentPanel.add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
-    contentPanel.add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
-    
-    switch (sensorType) {
-      case audio -> {
-        contentPanel.add(new JLabel("Hydrophone ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-        contentPanel.add(hydrophoneIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-        contentPanel.add(new JLabel("Preamp ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
-        contentPanel.add(preampIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
-        contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
-      }
-      case depth -> contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weighty = 1; }));
-      case other -> {
-        contentPanel.add(new JLabel("Sensor Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-        contentPanel.add(sensorTypeField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-        contentPanel.add(new JLabel("Properties"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
-        contentPanel.add(propertiesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
-        contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
-      } 
-    }
+    contentPanel.add(positionPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
+    contentPanel.add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
+    contentPanel.add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+    contentPanel.add(specificFieldsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+    contentPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 9; c.weighty = 1; }));
     
     uuidField.setEnabled(false);
     
     add(new JScrollPane(contentPanel), BorderLayout.CENTER);
     
     initializeFields(initialSensor);
+  }
+  
+  private JComboBox<String> createSensorTypeComboBox() {
+    
+    JComboBox<String> comboBox = new JComboBox<>(new DefaultComboBoxModel<>(
+        Arrays.stream(SensorType.values())
+            .map(SensorType::name)
+            .toArray(String[]::new)
+    ));
+    comboBox.setSelectedItem(null);
+    
+    comboBox.addItemListener(e -> {
+      specificFieldsPanel.removeAll();
+      
+      String sensorType = (String) e.getItem();
+      addSpecificFields(SensorType.valueOf(sensorType));
+      
+      revalidate();
+      repaint();
+    });
+    
+    return comboBox;
+  }
+  
+  private void addSpecificFields(SensorType sensorType) {
+    this.sensorType = sensorType;
+    switch (sensorType) {
+      case audio -> {
+        specificFieldsPanel.add(new JLabel("Hydrophone ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+        specificFieldsPanel.add(hydrophoneIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+        specificFieldsPanel.add(new JLabel("Preamp ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
+        specificFieldsPanel.add(preampIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+        specificFieldsPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
+      }
+      case depth -> specificFieldsPanel.add(new JPanel(), configureLayout((c) -> {
+        c.gridx = 0;
+        c.gridy = 7;
+        c.weighty = 1;
+      }));
+      case other -> {
+        specificFieldsPanel.add(new JLabel("Sensor Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+        specificFieldsPanel.add(sensorTypeField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+        specificFieldsPanel.add(new JLabel("Properties"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
+        specificFieldsPanel.add(propertiesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+        specificFieldsPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
+      }
+    }
   }
 
   @Override
@@ -118,17 +161,23 @@ public class SensorForm extends Form<Sensor> {
       zField.setText(String.valueOf(object.getPosition().getZ()));
       descriptionField.setText(object.getDescription());
 
-      switch (sensorType) {
-        case depth -> {}
-        case audio -> {
-          hydrophoneIdField.setText(((AudioSensor) object).getHydrophoneId());
-          preampIdField.setText(((AudioSensor) object).getPreampId());
-        }
-        case other -> {
-          sensorTypeField.setText(((OtherSensor) object).getSensorType());
-          propertiesField.setText(((OtherSensor) object).getProperties());
-        }
+      if (object instanceof AudioSensor audioSensor) {
+        hydrophoneIdField.setText((audioSensor).getHydrophoneId());
+        preampIdField.setText((audioSensor).getPreampId());
+      } else if (object instanceof OtherSensor otherSensor) {
+        sensorTypeField.setText((otherSensor).getSensorType());
+        propertiesField.setText((otherSensor).getProperties());
       }
+    }
+  }
+  
+  private void setSensorType(Sensor object) {
+    if (object instanceof AudioSensor) {
+      sensorType = SensorType.audio;
+    } else if (object instanceof OtherSensor) {
+      sensorType = SensorType.other;
+    } else {
+      sensorType = SensorType.depth;
     }
   }
 
@@ -186,8 +235,6 @@ public class SensorForm extends Form<Sensor> {
   protected void delete(CRUDRepository<Sensor> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

@@ -4,14 +4,17 @@ import javax.swing.JTabbedPane;
 
 public class MetadataTabbedPane extends JTabbedPane {
 
-  public MetadataTabbedPane() {
-    add("Projects", DataPanelFactory.createProjectsPanel());
-    add("People", DataPanelFactory.createPeoplePanel());
-    add("Organizations", DataPanelFactory.createOrganizationsPanel());
-    add("Platforms", DataPanelFactory.createPlatformPanel());
-    add("File Types", DataPanelFactory.createFileTypesPanel());
-    add("Instruments", DataPanelFactory.createInstrumentsPanel());
-    add("Sensors", DataPanelFactory.createSensorsPanel());
-    add("Sea Areas", DataPanelFactory.createSeaAreasPanel());
+  public MetadataTabbedPane(DataPanelFactory dataPanelFactory) {
+    setName("metadataTabs");
+    
+    add("Projects", dataPanelFactory.createProjectsPanel());
+    add("People", dataPanelFactory.createPeoplePanel());
+    add("Organizations", dataPanelFactory.createOrganizationsPanel());
+    add("Platforms", dataPanelFactory.createPlatformPanel());
+    add("File Types", dataPanelFactory.createFileTypesPanel());
+    add("Instruments", dataPanelFactory.createInstrumentsPanel());
+    add("Sensors", dataPanelFactory.createSensorsPanel());
+    add("Sea Areas", dataPanelFactory.createSeaAreasPanel());
+    add("Detection Types", dataPanelFactory.createDetectionTypesPanel());
   }
 }

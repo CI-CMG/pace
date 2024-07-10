@@ -32,6 +32,17 @@ public class OrganizationForm extends Form<Organization> {
   private final Organization initialOrganization;
 
   public OrganizationForm(Organization initialOrganization) {
+    setName("organizationForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    streetField.setName("street");
+    cityField.setName("city");
+    stateField.setName("state");
+    zipField.setName("zip");
+    countryField.setName("country");
+    emailField.setName("email");
+    phoneField.setName("phone");
+    
     this.initialOrganization = initialOrganization;
     
     setLayout(new BorderLayout());
@@ -107,8 +118,6 @@ public class OrganizationForm extends Form<Organization> {
   protected void delete(CRUDRepository<Organization> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

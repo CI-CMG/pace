@@ -31,6 +31,11 @@ public class InstrumentForm extends Form<Instrument> {
   private final JPanel fluff = new JPanel();
 
   public InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
+    setName("instrumentForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    fileTypesPanel.setName("fileTypeListingsPanel");
+    
     this.fileTypeRepository = fileTypeRepository;
     
     setLayout(new GridBagLayout());
@@ -41,6 +46,7 @@ public class InstrumentForm extends Form<Instrument> {
     add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     
     JPanel controlPanel = new JPanel(new GridBagLayout());
+    controlPanel.setName("controlPanel");
     controlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
     controlPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
     JButton addFileTypeButton = new JButton("Add File Type");
@@ -58,12 +64,17 @@ public class InstrumentForm extends Form<Instrument> {
   private void addFileType(FileType initialFileType) {
     try {
       fileTypesPanel.remove(fluff);
-      fileTypesPanel.add(new InstrumentFileTypePanel(
+      InstrumentFileTypePanel instrumentFileTypePanel = new InstrumentFileTypePanel(
           initialFileType, fileTypeRepository, (p) -> {
             fileTypesPanel.remove(p);
             revalidate();
+            repaint();
           }
-      ), configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; }));
+      );
+      if (initialFileType != null) {
+        instrumentFileTypePanel.setName(initialFileType.getType());
+      }
+      fileTypesPanel.add(instrumentFileTypePanel, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; }));
       fileTypesPanel.add(fluff, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; c.weighty = 1; }));
       revalidate();
     } catch (DatastoreException e) {
@@ -109,8 +120,6 @@ public class InstrumentForm extends Form<Instrument> {
   protected void delete(CRUDRepository<Instrument> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
 
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

@@ -36,6 +36,20 @@ public class PersonForm extends Form<Person> {
   private final Person initialPerson;
 
   public PersonForm(Person initialPerson) {
+    setName("personForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    organizationField.setName("organization");
+    positionField.setName("position");
+    streetField.setName("street");
+    cityField.setName("city");
+    stateField.setName("state");
+    zipField.setName("zip");
+    countryField.setName("country");
+    emailField.setName("email");
+    phoneField.setName("phone");
+    orcidField.setName("orcid");
+    
     this.initialPerson = initialPerson;
    setLayout(new BorderLayout());
 

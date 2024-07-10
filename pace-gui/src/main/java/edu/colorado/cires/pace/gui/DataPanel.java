@@ -26,10 +26,12 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   }
 
   public DataPanel(
+      String name,
       CRUDRepository<O> repository,
       String[] headers,
       Function<O, Object[]> objectConversion
   ) {
+    setName(name);
     this.headers = headers;
     this.objectConversion = objectConversion;
     this.repository = repository;
@@ -79,6 +81,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   
   protected JTable createTable() {
     JTable table = new JTable();
+    table.setName("dataTable");
     table.setModel(tableModel);
     table.setAutoCreateRowSorter(true);
 

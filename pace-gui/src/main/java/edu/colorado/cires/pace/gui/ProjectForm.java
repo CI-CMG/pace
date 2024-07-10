@@ -24,6 +24,10 @@ public class ProjectForm extends Form<Project> {
   private final JTextField nameField = new JTextField();
 
   public ProjectForm(Project initialProject) {
+    setName("projectForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    
     setLayout(new BorderLayout());
 
     JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -71,8 +75,6 @@ public class ProjectForm extends Form<Project> {
   protected void delete(CRUDRepository<Project> repository) throws NotFoundException, DatastoreException {
     String uuidText = uuidField.getText();
     
-    if (!StringUtils.isBlank(uuidText)) {
-      repository.delete(UUID.fromString(uuidText));
-    }
+    repository.delete(UUID.fromString(uuidText));
   }
 }

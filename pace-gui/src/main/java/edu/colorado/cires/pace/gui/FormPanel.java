@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
   
   public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, boolean isEdit) {
+    setName("formPanel");
     setLayout(new BorderLayout());
     add(form, BorderLayout.CENTER);
     add(createControlPanel(form, repository, updatedObjectsConsumer, isEdit), BorderLayout.SOUTH);

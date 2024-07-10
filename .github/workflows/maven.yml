@@ -27,7 +27,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B clean package -Pdep-check -Pcoverage
+        run: xvfb-run mvn -B clean package -Pdep-check -Pcoverage
       - id: version
         run: |
           echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
@@ -133,7 +133,7 @@ jobs:
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: "*.pkg"
-          
+
   package-gui-osx:
     needs: build
     strategy:
@@ -220,7 +220,7 @@ jobs:
         with:
           name: pace-gui-${{ env.os }}-${{ env.arch }}
           path: "*.dmg"
-    
+
   package-cli-linux:
     needs: build
     strategy:
@@ -257,8 +257,8 @@ jobs:
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: "pace-cli"
-          
-  
+
+
   package-gui-linux:
     needs: build
     strategy:
@@ -321,7 +321,7 @@ jobs:
         with:
           name: pace-gui-${{ env.os }}-${{ env.arch }}-rpm
           path: "*.rpm"
-  
+
   package-cli-windows:
     needs: build
     strategy:
@@ -359,7 +359,7 @@ jobs:
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
           path: application
-          
+
   package-gui-windows:
     needs: build
     strategy:
@@ -435,4 +435,4 @@ jobs:
           rm: true
           token: ${{ secrets.RELEASE_PAT }}
           files: release/*
-    
+

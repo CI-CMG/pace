@@ -16,10 +16,10 @@ public abstract class TranslatePanel<O extends ObjectWithUniqueField, T extends 
   private final Converter<T, O> converter;
   private final Class<T> translatorClazz;
 
-  public TranslatePanel(CRUDRepository<O> repository, String[] headers,
+  public TranslatePanel(String name, CRUDRepository<O> repository, String[] headers,
       Function<O, Object[]> objectConversion,
       Class<O> clazz, TranslatorRepository translatorRepository, Converter<T, O> converter, Class<T> translatorClazz) {
-    super(repository, headers, objectConversion);
+    super(name, repository, headers, objectConversion);
     this.clazz = clazz;
     this.translatorRepository = translatorRepository;
     this.converter = converter;

@@ -118,7 +118,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O two = createNewObject(1);
     Exception exception = assertThrows(ConflictException.class, () -> repository.create(two));
     assertEquals(String.format(
-        "%s with %s %s already exists", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(two) 
+        "%s with %s = %s already exists", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(two) 
     ), exception.getMessage());
   }
   
