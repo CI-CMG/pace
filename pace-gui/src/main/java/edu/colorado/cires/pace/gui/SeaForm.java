@@ -8,10 +8,12 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,15 +23,18 @@ public class SeaForm extends Form<Sea> {
   private final JTextField nameField = new JTextField();
 
   public SeaForm(Sea initialSea) {
-    setLayout(new GridBagLayout());
+    setLayout(new BorderLayout());
 
-    add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
-    add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weighty = 1; }));
+    JPanel contentPanel = new JPanel(new GridBagLayout());
+    contentPanel.add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
+    contentPanel.add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
+    contentPanel.add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    contentPanel.add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
+    contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weighty = 1; }));
 
     uuidField.setEnabled(false);
+    
+    add(new JScrollPane(contentPanel), BorderLayout.CENTER);
     
     initializeFields(initialSea);
   }

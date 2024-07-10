@@ -13,11 +13,13 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.SensorType;
+import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,12 +59,13 @@ public class SensorForm extends Form<Sensor> {
     
     this.sensorType = sensorType;
     
-    setLayout(new GridBagLayout());
+    setLayout(new BorderLayout());
     
-    add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
-    add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
+    JPanel contentPanel = new JPanel(new GridBagLayout());
+    contentPanel.add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+    contentPanel.add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
+    contentPanel.add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    contentPanel.add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     JPanel positionPanel = new JPanel(new GridBagLayout());
     JPanel xPanel = new JPanel(new GridBagLayout());
     xPanel.add(new JLabel("Position (X)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
@@ -76,29 +79,31 @@ public class SensorForm extends Form<Sensor> {
     zPanel.add(new JLabel("Position (Z)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     zPanel.add(zField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     positionPanel.add(zPanel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 1; }));
-    add(positionPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
-    add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
-    add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
+    contentPanel.add(positionPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    contentPanel.add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
+    contentPanel.add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     
     switch (sensorType) {
       case audio -> {
-        add(new JLabel("Hydrophone ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-        add(hydrophoneIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-        add(new JLabel("Preamp ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
-        add(preampIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
-        add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
+        contentPanel.add(new JLabel("Hydrophone ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+        contentPanel.add(hydrophoneIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+        contentPanel.add(new JLabel("Preamp ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
+        contentPanel.add(preampIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+        contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
       }
-      case depth -> add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weighty = 1; }));
+      case depth -> contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weighty = 1; }));
       case other -> {
-        add(new JLabel("Sensor Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-        add(sensorTypeField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-        add(new JLabel("Properties"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
-        add(propertiesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
-        add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
+        contentPanel.add(new JLabel("Sensor Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+        contentPanel.add(sensorTypeField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+        contentPanel.add(new JLabel("Properties"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
+        contentPanel.add(propertiesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+        contentPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weighty = 1; }));
       } 
     }
     
     uuidField.setEnabled(false);
+    
+    add(new JScrollPane(contentPanel), BorderLayout.CENTER);
     
     initializeFields(initialSensor);
   }

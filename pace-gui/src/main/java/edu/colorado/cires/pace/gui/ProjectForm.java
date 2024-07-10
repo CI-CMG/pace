@@ -1,5 +1,8 @@
 package edu.colorado.cires.pace.gui;
 
+import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -7,10 +10,11 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,13 +26,13 @@ public class ProjectForm extends Form<Project> {
   public ProjectForm(Project initialProject) {
     setLayout(new BorderLayout());
 
-    JPanel contentPanel = new JPanel();
-    contentPanel.setLayout(new GridLayout(4, 1));
-    contentPanel.add(new JLabel("UUID"));
-    contentPanel.add(uuidField);
-    contentPanel.add(new JLabel("Name"));
-    contentPanel.add(nameField);
-    add(contentPanel, BorderLayout.NORTH);
+    JPanel contentPanel = new JPanel(new GridBagLayout());
+    contentPanel.add(new JLabel("UUID"), configureFormLayout(0, 0));
+    contentPanel.add(uuidField, configureFormLayout(0, 1));
+    contentPanel.add(new JLabel("Name"), configureFormLayout(0, 2));
+    contentPanel.add(nameField, configureFormLayout(0, 3));
+    contentPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weighty = 1; }));
+    add(new JScrollPane(contentPanel), BorderLayout.CENTER);
     
     uuidField.setEnabled(false);
     

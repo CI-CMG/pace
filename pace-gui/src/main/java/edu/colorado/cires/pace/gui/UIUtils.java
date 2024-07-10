@@ -22,6 +22,15 @@ final class UIUtils {
     return constraints;
   }
 
+  public static GridBagConstraints configureFormLayout(int x, int y) {
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+    constraints.gridx = x;
+    constraints.gridy = y;
+    constraints.weightx = 1;
+    return constraints;
+  }
+
   public static void updateComboBoxModel(JComboBox<String> comboBox, String[] options) {
     String currentSelectedItem = (String) comboBox.getSelectedItem();
     comboBox.setModel(new DefaultComboBoxModel<>(options));

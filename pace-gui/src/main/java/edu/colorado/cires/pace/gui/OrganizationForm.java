@@ -1,5 +1,8 @@
 package edu.colorado.cires.pace.gui;
 
+import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -7,10 +10,11 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,27 +36,27 @@ public class OrganizationForm extends Form<Organization> {
     
     setLayout(new BorderLayout());
 
-    JPanel contentPanel = new JPanel();
-    contentPanel.setLayout(new GridLayout(18, 1));
-    contentPanel.add(new JLabel("UUID"));
-    contentPanel.add(uuidField);
-    contentPanel.add(new JLabel("Name"));
-    contentPanel.add(nameField);
-    contentPanel.add(new JLabel("Street"));
-    contentPanel.add(streetField);
-    contentPanel.add(new JLabel("City"));
-    contentPanel.add(cityField);
-    contentPanel.add(new JLabel("State"));
-    contentPanel.add(stateField);
-    contentPanel.add(new JLabel("Zip"));
-    contentPanel.add(zipField);
-    contentPanel.add(new JLabel("Country"));
-    contentPanel.add(countryField);
-    contentPanel.add(new JLabel("Email"));
-    contentPanel.add(emailField);
-    contentPanel.add(new JLabel("Phone"));
-    contentPanel.add(phoneField);
-    add(contentPanel, BorderLayout.NORTH);
+    JPanel contentPanel = new JPanel(new GridBagLayout());
+    contentPanel.add(new JLabel("UUID"), configureFormLayout(0, 0));
+    contentPanel.add(uuidField, configureFormLayout(0, 1));
+    contentPanel.add(new JLabel("Name"), configureFormLayout(0, 2));
+    contentPanel.add(nameField, configureFormLayout(0, 3));
+    contentPanel.add(new JLabel("Street"), configureFormLayout(0, 4));
+    contentPanel.add(streetField, configureFormLayout(0, 5));
+    contentPanel.add(new JLabel("City"), configureFormLayout(0, 6));
+    contentPanel.add(cityField, configureFormLayout(0, 7));
+    contentPanel.add(new JLabel("State"), configureFormLayout(0, 8));
+    contentPanel.add(stateField, configureFormLayout(0, 9));
+    contentPanel.add(new JLabel("Zip"), configureFormLayout(0, 10));
+    contentPanel.add(zipField, configureFormLayout(0, 11));
+    contentPanel.add(new JLabel("Country"), configureFormLayout(0, 12));
+    contentPanel.add(countryField, configureFormLayout(0, 13));
+    contentPanel.add(new JLabel("Email"), configureFormLayout(0, 14));
+    contentPanel.add(emailField, configureFormLayout(0, 15));
+    contentPanel.add(new JLabel("Phone"), configureFormLayout(0, 16));
+    contentPanel.add(phoneField, configureFormLayout(0, 17));
+    contentPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 18; c.weighty = 1; }));
+    add(new JScrollPane(contentPanel), BorderLayout.CENTER);
     
     initializeFields(initialOrganization);
   }
