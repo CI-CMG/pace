@@ -59,7 +59,7 @@ public class DutyCycleForm extends JPanel {
   }
   
   private JButton getRemoveButton() {
-    JButton button = new JButton("Remove");
+    JButton button = new JButton("Remove Duty Cycle");
     button.addActionListener(e -> removeAction.accept(this));
     return button;
   }

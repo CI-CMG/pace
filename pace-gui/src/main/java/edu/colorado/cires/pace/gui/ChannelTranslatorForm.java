@@ -33,9 +33,9 @@ public class ChannelTranslatorForm extends JPanel {
   private final Consumer<ChannelTranslatorForm> removeAction;
 
   public ChannelTranslatorForm(String[] headerOptions, ChannelTranslator initialTranslator, Consumer<ChannelTranslatorForm> removeAction) {
-    this.addSampleRateButton = getAddButton(() -> addSampleRate(headerOptions, null));
-    this.addDutyCycleButton = getAddButton(() -> addDutyCycle(headerOptions, null));
-    this.addGainButton = getAddButton(() -> addGain(headerOptions, null));
+    this.addSampleRateButton = getAddButton("Add Sample Rate", () -> addSampleRate(headerOptions, null));
+    this.addDutyCycleButton = getAddButton("Add Duty Cycle", () -> addDutyCycle(headerOptions, null));
+    this.addGainButton = getAddButton("Add Gain", () -> addGain(headerOptions, null));
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
@@ -88,19 +88,19 @@ public class ChannelTranslatorForm extends JPanel {
     add(gainsPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(getRemoveButton(), configureLayout(c -> {
+    add(getRemoveButton("Remove Channel"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
   }
   
-  private JButton getRemoveButton() {
-    JButton button = new JButton("Remove");
+  private JButton getRemoveButton(String buttonTitle) {
+    JButton button = new JButton(buttonTitle);
     button.addActionListener(e -> removeAction.accept(this));
     return button;
   }
   
-  private JButton getAddButton(Runnable addAction) {
-    JButton button = new JButton("Add");
+  private JButton getAddButton(String buttonTitle, Runnable addAction) {
+    JButton button = new JButton(buttonTitle);
     button.addActionListener(e -> addAction.run());
     return button;
   }

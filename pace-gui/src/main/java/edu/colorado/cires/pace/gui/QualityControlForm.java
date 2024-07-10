@@ -74,7 +74,7 @@ public class QualityControlForm extends JPanel {
   }
   
   private JButton getAddEntryButton(String[] headerOptions) {
-    JButton button = new JButton("Add");
+    JButton button = new JButton("Add Entry");
     button.addActionListener(e -> addQualityEntry(headerOptions, null));
     return button;
   }

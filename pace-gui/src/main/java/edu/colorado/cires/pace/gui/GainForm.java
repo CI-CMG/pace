@@ -52,7 +52,7 @@ public class GainForm extends JPanel {
   }
   
   private JButton getRemoveButton() {
-    JButton button = new JButton("Remove");
+    JButton button = new JButton("Remove Gain");
     button.addActionListener(e -> removeAction.accept(this));
     return button;
   }

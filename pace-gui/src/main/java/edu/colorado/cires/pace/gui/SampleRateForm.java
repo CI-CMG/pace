@@ -55,7 +55,7 @@ public class SampleRateForm extends JPanel {
   }
   
   private JButton getRemoveButton() {
-    JButton button = new JButton("Remove");
+    JButton button = new JButton("Remove Sample Rate");
     button.addActionListener(e -> removeAction.accept(this));
     return button;
   }

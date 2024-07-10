@@ -42,7 +42,7 @@ public class ChannelsForm extends JPanel {
   }
   
   private JButton getAddButton(String[] headerOptions) {
-    JButton button = new JButton("Add");
+    JButton button = new JButton("Add Channel");
     button.addActionListener(e -> addChannel(headerOptions, null));
     return button;
   }
