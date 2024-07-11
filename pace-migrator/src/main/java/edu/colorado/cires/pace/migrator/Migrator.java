@@ -15,11 +15,11 @@ public final class Migrator {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Migrator.class);
   
-  public static <O extends ObjectWithUniqueField> void migrate(MigrationRepositoryPair<O> migrationRepositoryPair) throws MigrationException {
-    RuntimeException runtimeException;
+  public static <O extends ObjectWithUniqueField> void migrate(MigrationRepositoryPair<O> migrationRepositoryPair, RuntimeException runtimeException) {
+    RuntimeException rte;
     try {
       LOGGER.info("Migrating {} objects", migrationRepositoryPair.getInputRepository().getClassName());
-      runtimeException = migrationRepositoryPair.getInputRepository().findAll().map(
+      rte = migrationRepositoryPair.getInputRepository().findAll().map(
               (objectWithUniqueField -> {
                 try {
                   migrationRepositoryPair.getOutputRepository().create(objectWithUniqueField);
@@ -45,24 +45,22 @@ public final class Migrator {
             return e1;
           });
     } catch (DatastoreException e) {
-      runtimeException = new RuntimeException(String.format(
+      rte = new RuntimeException(String.format(
           "Migration failed for %s", migrationRepositoryPair.getOutputRepository().getClassName()
       ));
       for (Throwable throwable : e.getCause().getSuppressed()) {
+        rte.addSuppressed(throwable);
+      }
+    }
+    
+    LOGGER.info("Migrated {} objects", migrationRepositoryPair.getInputRepository().getClassName());
+    
+    if (rte.getSuppressed().length > 0) {
+      LOGGER.error("Migrating {} object produced {} errors", migrationRepositoryPair.getInputRepository().getClassName(), rte.getSuppressed().length);
+      for (Throwable throwable : rte.getSuppressed()) {
         runtimeException.addSuppressed(throwable);
       }
     }
-
-    if (runtimeException.getSuppressed().length > 0) {
-      MigrationException migrationException = new MigrationException(runtimeException.getMessage());
-
-      for (Throwable throwable : runtimeException.getSuppressed()) {
-        migrationException.addSuppressed(throwable);
-      }
-      
-      throw migrationException;
-    }
-    LOGGER.info("Successfully migrated {} objects", migrationRepositoryPair.getInputRepository().getClassName());
   }
 
 }
