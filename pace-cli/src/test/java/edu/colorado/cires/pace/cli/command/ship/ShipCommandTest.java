@@ -8,13 +8,15 @@ import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.translator.ShipTranslator;
 import java.util.List;
+import java.util.UUID;
 
 class ShipCommandTest extends TranslateCommandTest<Ship, ShipTranslator> {
 
 
   @Override
-  public Ship createObject(String uniqueField) {
+  public Ship createObject(String uniqueField, boolean withUUID) {
     return Ship.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .build();
   }
@@ -69,7 +71,7 @@ class ShipCommandTest extends TranslateCommandTest<Ship, ShipTranslator> {
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "shipUUID",
+        "UUID",
         "shipName"
     };
   }
@@ -78,7 +80,7 @@ class ShipCommandTest extends TranslateCommandTest<Ship, ShipTranslator> {
   protected ShipTranslator createTranslator(String name) {
     return ShipTranslator.builder()
         .name(name)
-        .shipUUID("shipUUID")
+        .shipUUID("UUID")
         .shipName("shipName")
         .build();
   }

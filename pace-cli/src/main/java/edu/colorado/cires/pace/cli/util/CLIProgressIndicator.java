@@ -8,9 +8,9 @@ public class CLIProgressIndicator extends ProgressIndicator {
 
   @Override
   protected void indicateStatus(int percentComplete) {
-    boolean usePercentCompleteArgument = percentComplete == Integer.MAX_VALUE;
+    boolean usePercentCompleteArgument = percentComplete != Integer.MAX_VALUE;
     int usablePercentComplete = !usePercentCompleteArgument ? 0 : percentComplete; 
-    String message = !usePercentCompleteArgument ? "Initializing..." : (percentComplete + "%s"); 
+    String message = !usePercentCompleteArgument ? "Initializing..." : (percentComplete + "%"); 
     
     sb.setLength(0);
     sb.append("█".repeat(usablePercentComplete));

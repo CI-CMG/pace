@@ -60,7 +60,10 @@ public final class SerializationUtils {
 
       List<T> processedList = new ArrayList<>(deserializedList.size());
       for (T deserializedObject : deserializedList) {
-        processedList.add(processor.apply(deserializedObject));
+        T processed = processor.apply(deserializedObject);
+        if (processed != null) {
+          processedList.add(processed);
+        }
       }
 
       return processedList;

@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PositionTranslator;
+import java.util.UUID;
 
 class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorTranslator> {
 
@@ -16,8 +17,9 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
   }
 
   @Override
-  public AudioSensor createObject(String uniqueField) {
+  public AudioSensor createObject(String uniqueField, boolean withUUID) {
     return AudioSensor.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .description("description")
         .position(Position.builder()
@@ -40,7 +42,7 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "sensorUUID",
+        "UUID",
         "sensorName",
         "description",
         "position (X)",
@@ -55,7 +57,7 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
   protected AudioSensorTranslator createTranslator(String name) {
     return AudioSensorTranslator.builder()
         .name(name)
-        .sensorUUID("sensorUUID")
+        .sensorUUID("UUID")
         .sensorName("sensorName")
         .description("description")
         .positionTranslator(PositionTranslator.builder()

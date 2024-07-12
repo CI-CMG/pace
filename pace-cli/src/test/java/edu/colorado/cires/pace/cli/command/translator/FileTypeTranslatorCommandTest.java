@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
+import java.util.UUID;
 
 class FileTypeTranslatorCommandTest extends TranslatorCommandTest<FileTypeTranslator> {
 
@@ -14,8 +15,9 @@ class FileTypeTranslatorCommandTest extends TranslatorCommandTest<FileTypeTransl
   }
 
   @Override
-  public FileTypeTranslator createObject(String uniqueField) {
+  public FileTypeTranslator createObject(String uniqueField, boolean withUUID) {
     return FileTypeTranslator.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .type("type")
         .comment("comment")

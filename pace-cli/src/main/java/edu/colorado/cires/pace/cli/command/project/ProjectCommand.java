@@ -195,6 +195,11 @@ public class ProjectCommand {
     protected TypeReference<List<Project>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Project> getClazz() {
+      return clazz;
+    }
   }
   
 }

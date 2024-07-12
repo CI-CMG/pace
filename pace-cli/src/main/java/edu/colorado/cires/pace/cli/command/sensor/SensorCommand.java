@@ -195,5 +195,10 @@ public class SensorCommand {
     protected TypeReference<List<Sensor>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Sensor> getClazz() {
+      return clazz;
+    }
   }
 }

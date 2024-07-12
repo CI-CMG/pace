@@ -233,6 +233,11 @@ public class PackageCommand {
     protected TypeReference<List<Package>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Package> getClazz() {
+      return clazz;
+    }
   }
   
   @Command(name = "process", description = "Process packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
@@ -282,7 +287,7 @@ public class PackageCommand {
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
-      } catch (PackagingException | DatastoreException | IOException e) {
+      } catch (PackagingException | DatastoreException | IOException | RuntimeException e) {
         throw new RuntimeException(e);
       }
     }

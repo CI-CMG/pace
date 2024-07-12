@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.PlatformTranslator;
+import java.util.UUID;
 
 class PlatformTranslatorCommandTest extends TranslatorCommandTest<PlatformTranslator> {
 
@@ -13,8 +14,9 @@ class PlatformTranslatorCommandTest extends TranslatorCommandTest<PlatformTransl
   }
 
   @Override
-  public PlatformTranslator createObject(String uniqueField) {
+  public PlatformTranslator createObject(String uniqueField, boolean withUUID) {
     return PlatformTranslator.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .platformUUID("platformUUID")
         .platformName("platformName")

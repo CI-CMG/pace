@@ -1,20 +1,26 @@
 package edu.colorado.cires.pace.cli.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends CLITest {
   
-  public abstract T createObject(String uniqueField);
+  
+  public abstract T createObject(String uniqueField, boolean withUUID);
   protected abstract String getRepositoryFileName();
   protected abstract String getCommandPrefix();
   protected abstract TypeReference<List<T>> getTypeReference();
@@ -24,6 +30,10 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   protected abstract String getUniqueField(T object);
   protected abstract T updateObject(T original, String uniqueField);
   
+  public T createObject(String uniqueField) {
+    return createObject(uniqueField, false);
+  }
+  
   @Test
   void testCreateFromFile() throws IOException {
     T object = createObject("test");
@@ -31,6 +41,50 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     T created = writeObject(object);
 
     assertObjects(object, created);
+  }
+  
+  @Test
+  void testCreateAlreadyExists() throws IOException {
+    T object = createObject("test");
+    T created = writeObject(object);
+    clearOut();
+    
+    writeObject(createObject("test"));
+    
+    CLIException exception = getCLIException();
+    assertNull(exception.detail());
+    assertEquals(String.format(
+        "%s with %s %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(created)
+    ), exception.message());
+  }
+  
+  @Test
+  void testCreateUUIDDefined() throws IOException {
+    T object = createObject("test", true);
+    writeObject(object);
+    
+    CLIException exception = getCLIException();
+    assertNull(exception.detail());
+    assertEquals(String.format(
+        "uuid for new %s must not be defined", getClazz().getSimpleName()
+    ), exception.message());
+  }
+  
+  @Test
+  void testCreateValidationException() throws IOException {
+    T object = createObject("");
+    writeObject(object);
+
+    CLIException exception = getCLIException();
+    assertEquals(String.format(
+        "%s validation failed", getClazz().getSimpleName()
+    ), exception.message());
+
+    ArrayList<?> detail = (ArrayList<?>) exception.detail();
+    assertEquals(1, detail.size());
+    Map<String, Object> map = (Map<String, Object>) detail.get(0);
+    assertEquals(getUniqueFieldName(), map.get("field"));
+    assertEquals("must not be blank", map.get("message"));
   }
   
   @Test
@@ -60,6 +114,10 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     String output = getCommandOutput();
     
     List<T> results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
     assertEquals(2, results.size());
 
     for (int i = 0; i < results.size(); i++) {
@@ -93,6 +151,21 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     assertStdoutEqualsCreated(created);
   }
+  
+  @Test
+  void testGetByUniqueFieldNotFound() throws JsonProcessingException {
+    T object = createObject("test");
+    
+    execute(getCommandPrefix(), String.format(
+        "get-by-%s", getUniqueFieldCommandSuffix()
+    ), getUniqueField(object));
+    
+    CLIException cliException = getCLIException();
+    assertNull(cliException.detail());
+    assertEquals(String.format(
+        "%s with %s = %s not found", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(object)
+    ), cliException.message());
+  }
 
   protected String getUniqueFieldCommandSuffix() {
     return getUniqueFieldName();
@@ -111,6 +184,19 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   }
   
   @Test
+  void testGetByUUIDNotFound() throws JsonProcessingException {
+    UUID uuid = UUID.randomUUID();
+    
+    execute(getCommandPrefix(), "get-by-uuid", uuid.toString());
+    
+    CLIException exception = getCLIException();
+    assertNull(exception.detail());
+    assertEquals(String.format(
+        "%s with uuid = %s not found", getClazz().getSimpleName(), uuid
+    ), exception.message());
+  }
+  
+  @Test
   void testUpdateFromFile() throws IOException {
     T object = createObject("test");
     T created = writeObject(object);
@@ -125,6 +211,69 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     T updated = getWrittenObject(toUpdate);
     assertStdoutEqualsCreated(updated);
+  }
+  
+  @Test
+  void testUpdateNullUUID() throws IOException {
+    T object = createObject("test");
+    
+    File file = testPath.resolve("test.json").toFile();
+    objectMapper.writeValue(
+        file,
+        object
+    );
+    
+    execute(getCommandPrefix(), "update", file.toString());
+    
+    CLIException cliException = getCLIException();
+    assertNull(cliException.detail());
+    assertEquals(String.format(
+        "%s uuid must be defined", getClazz().getSimpleName()
+    ), cliException.message());
+  }
+
+  @Test
+  void testUpdateNotFound() throws IOException {
+    T object = createObject("test", true);
+
+    File file = testPath.resolve("test.json").toFile();
+    objectMapper.writeValue(
+        file,
+        object
+    );
+
+    execute(getCommandPrefix(), "update", file.toString());
+
+    CLIException cliException = getCLIException();
+    assertNull(cliException.detail());
+    assertEquals(String.format(
+        "%s with uuid = %s not found", getClazz().getSimpleName(), object.getUuid().toString()
+    ), cliException.message());
+  }
+  
+  @Test
+  void testUpdateNameCollision() throws IOException {
+    T object1 = writeObject(
+        createObject("test1")
+    );
+    writeObject(
+        createObject("test2")
+    );
+    clearOut();
+
+    object1 = updateObject(object1, "test2");
+    File file = testPath.resolve(String.format(
+        "%s.json", UUID.randomUUID()
+    )).toFile();
+    objectMapper.writeValue(file, object1);
+    
+    execute(getCommandPrefix(), "update", file.toString());
+    
+    CLIException cliException = getCLIException();
+    assertNull(cliException.detail());
+    assertEquals(String.format(
+        "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(object1)
+    ), cliException.message());
   }
   
   @Test
@@ -154,6 +303,19 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     assertEquals(0, getWrittenObjects().size());
   }
   
+  @Test
+  void testDeleteNotFound() throws IOException {
+    UUID uuid = UUID.randomUUID();
+    
+    execute(getCommandPrefix(), "delete", uuid.toString());
+    
+    CLIException cliException = getCLIException();
+    assertNull(cliException.detail());
+    assertEquals(String.format(
+        "%s with uuid = %s not found", getClazz().getSimpleName(), uuid 
+    ), cliException.message());
+  }
+  
   public T writeObject(T object) throws IOException {
     File file = testPath.resolve("test.json").toFile();
 
@@ -168,7 +330,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     return getWrittenObjects().stream()
         .filter(o -> getUniqueField(o).equals(getUniqueField(object)))
         .findFirst()
-        .orElseThrow();
+        .orElse(null);
   }
   
   private List<T> getWrittenObjects() throws IOException {
@@ -181,24 +343,12 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   private void assertObjects(T original, T created) throws IOException {
     assertObjectsEqual(original, created, false);
     assertStdoutEqualsCreated(created);
-//    assertLogMessage(created); // TODO
   }
 
   private void assertStdoutEqualsCreated(T created) throws JsonProcessingException {
     String output = getCommandOutput();
     T object = objectMapper.readValue(output, getClazz());
     assertObjectsEqual(created, object, true);
-  }
-  
-  private void assertLogMessage(T created) {
-    String logMessage = getCommandErr();
-    assertTrue(logMessage.contains(String.format(
-        "Created %s with %s = %s, uuid = %s",
-        getClazz().getSimpleName(),
-        getUniqueFieldName(),
-        getUniqueField(created),
-        created.getUuid()
-    )));
   }
 
 }

@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -483,8 +484,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   }
 
   @Override
-  public AudioPackage createObject(String uniqueField) {
+  public AudioPackage createObject(String uniqueField, boolean withUUID) {
     return AudioPackage.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .temperaturePath(testPath.resolve("temperaturePath").toAbsolutePath())
         .biologicalPath(testPath.resolve("biologicalPath").toAbsolutePath())
         .otherPath(testPath.resolve("otherPath").toAbsolutePath())

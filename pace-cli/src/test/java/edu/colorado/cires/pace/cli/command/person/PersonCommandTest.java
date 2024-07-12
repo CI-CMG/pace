@@ -4,16 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
+import edu.colorado.cires.pace.cli.command.ObjectWithEditableUUIDCommandTest;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.translator.PersonTranslator;
 import java.util.List;
+import java.util.UUID;
 
-public class PersonCommandTest extends TranslateCommandTest<Person, PersonTranslator> {
+public class PersonCommandTest extends ObjectWithEditableUUIDCommandTest<Person, PersonTranslator> {
 
   @Override
-  public Person createObject(String uniqueField) {
+  public Person createObject(String uniqueField, boolean withUUID) {
     return Person.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .organization("org")
         .position("position")
@@ -93,7 +95,7 @@ public class PersonCommandTest extends TranslateCommandTest<Person, PersonTransl
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "personUUID",
+        "UUID",
         "personName",
         "organization",
         "position",
@@ -112,7 +114,7 @@ public class PersonCommandTest extends TranslateCommandTest<Person, PersonTransl
   protected PersonTranslator createTranslator(String name) {
     return PersonTranslator.builder()
         .name(name)
-        .personUUID("personUUID")
+        .personUUID("UUID")
         .personName("personName")
         .organization("organization")
         .position("position")

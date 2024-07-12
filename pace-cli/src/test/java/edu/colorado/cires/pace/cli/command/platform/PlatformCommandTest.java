@@ -8,12 +8,14 @@ import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.translator.PlatformTranslator;
 import java.util.List;
+import java.util.UUID;
 
 public class PlatformCommandTest extends TranslateCommandTest<Platform, PlatformTranslator> {
 
   @Override
-  public Platform createObject(String uniqueField) {
+  public Platform createObject(String uniqueField, boolean withUUID) {
     return Platform.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .build();
   }
@@ -72,7 +74,7 @@ public class PlatformCommandTest extends TranslateCommandTest<Platform, Platform
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-      "platformUUID",
+      "UUID",
       "platformName"  
     };
   }
@@ -81,7 +83,7 @@ public class PlatformCommandTest extends TranslateCommandTest<Platform, Platform
   protected PlatformTranslator createTranslator(String name) {
     return PlatformTranslator.builder()
         .name(name)
-        .platformUUID("platformUUID")
+        .platformUUID("UUID")
         .platformName("platformName")
         .build();
   }

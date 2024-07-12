@@ -5,18 +5,10 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 abstract class VoidCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
 
   protected abstract void runVoidCommand() throws Exception;
-  
-  @Override
-  public void run() {
-    try {
-      runVoidCommand();
-    } catch (Exception e) {
-      throw new IllegalStateException("Command failed", e);
-    }
-  }
 
   @Override
-  protected Object runCommand() {
-    return null; // no-op
+  protected Object runCommand() throws Exception {
+    runVoidCommand();
+    return null;
   }
 }

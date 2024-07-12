@@ -196,5 +196,10 @@ public class SeaCommand {
       return typeReference;
     }
 
+    @Override
+    protected Class<Sea> getClazz() {
+      return clazz;
+    }
+
   }
 }

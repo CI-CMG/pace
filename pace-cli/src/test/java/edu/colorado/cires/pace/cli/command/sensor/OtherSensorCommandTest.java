@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PositionTranslator;
+import java.util.UUID;
 
 class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorTranslator> {
 
@@ -16,8 +17,9 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
   }
 
   @Override
-  public OtherSensor createObject(String uniqueField) {
+  public OtherSensor createObject(String uniqueField, boolean withUUID) {
     return OtherSensor.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .sensorType("sensorType")
         .properties("properties")
@@ -40,7 +42,7 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "sensorUUID",
+        "UUID",
         "sensorName",
         "description",
         "position (X)",
@@ -55,7 +57,7 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
   protected OtherSensorTranslator createTranslator(String name) {
     return OtherSensorTranslator.builder()
         .name(name)
-        .sensorUUID("sensorUUID")
+        .sensorUUID("UUID")
         .sensorName("sensorName")
         .description("description")
         .positionTranslator(PositionTranslator.builder()

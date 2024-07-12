@@ -136,7 +136,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O object = createNewObject(1);
     Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUniqueField(uniqueFieldGetter().apply(object)));
     assertEquals(String.format(
-        "%s with %s %s not found", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(object)
+        "%s with %s = %s not found", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(object)
     ), exception.getMessage());
   }
   
@@ -155,7 +155,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     
     Exception exception = assertThrows(NotFoundException.class, () -> repository.getByUUID(uuid));
     assertEquals(String.format(
-        "%s with uuid %s not found", repository.getClassName(), uuid
+        "%s with uuid = %s not found", repository.getClassName(), uuid
     ), exception.getMessage());
   }
   
@@ -217,7 +217,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O finalObject = object;
     Exception exception = assertThrows(NotFoundException.class, () ->  repository.update(finalObject.getUuid(), finalObject));
     assertEquals(String.format(
-        "%s with uuid %s not found", repository.getClassName(), object.getUuid()
+        "%s with uuid = %s not found", repository.getClassName(), object.getUuid()
     ), exception.getMessage());
   }
   
@@ -232,7 +232,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O finalUpdated = updated;
     Exception exception = assertThrows(ConflictException.class, () -> repository.update(finalUpdated.getUuid(), finalUpdated));
     assertEquals(String.format(
-        "%s with %s %s already exists", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(updated)
+        "%s with %s = %s already exists", repository.getClassName(), repository.getUniqueFieldName(), uniqueFieldGetter().apply(updated)
     ), exception.getMessage());
   }
   
@@ -248,7 +248,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     UUID uuid = UUID.randomUUID();
     Exception exception = assertThrows(NotFoundException.class, () -> repository.delete(uuid));
     assertEquals(String.format(
-        "%s with uuid %s not found", repository.getClassName(), uuid
+        "%s with uuid = %s not found", repository.getClassName(), uuid
     ), exception.getMessage());
   }
   

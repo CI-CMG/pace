@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import java.util.UUID;
 
 class SeaTranslatorCommandTest extends TranslatorCommandTest<SeaTranslator> {
 
@@ -13,8 +14,9 @@ class SeaTranslatorCommandTest extends TranslatorCommandTest<SeaTranslator> {
   }
 
   @Override
-  public SeaTranslator createObject(String uniqueField) {
+  public SeaTranslator createObject(String uniqueField, boolean withUUID) {
     return SeaTranslator.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .seaName("seaName")
         .seaUUID("seaUUID")

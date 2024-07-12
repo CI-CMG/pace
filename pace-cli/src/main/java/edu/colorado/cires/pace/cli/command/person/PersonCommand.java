@@ -195,5 +195,10 @@ public class PersonCommand {
     protected TypeReference<List<Person>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Person> getClazz() {
+      return clazz;
+    }
   }
 }

@@ -7,12 +7,14 @@ import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
 import java.util.List;
+import java.util.UUID;
 
 class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, DetectionTypeTranslator> {
 
   @Override
-  public DetectionType createObject(String uniqueField) {
+  public DetectionType createObject(String uniqueField, boolean withUUID) {
     return DetectionType.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .source(uniqueField)
         .scienceName("science-name")
         .build();
@@ -69,7 +71,7 @@ class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, Detec
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "detectionTypeUUID",
+        "UUID",
         "source",
         "scienceName"
     };
@@ -79,7 +81,7 @@ class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, Detec
   protected DetectionTypeTranslator createTranslator(String name) {
     return DetectionTypeTranslator.builder()
         .name(name)
-        .detectionTypeUUID("detectionTypeUUID")
+        .detectionTypeUUID("UUID")
         .source("source")
         .scienceName("scienceName")
         .build();

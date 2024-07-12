@@ -102,8 +102,10 @@ public class PackageProcessor {
           );
         }
       }
-    } catch (IOException | PackagingException exception) {
-      throw new RuntimeException("Failed to establish total records for packaging job");
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to establish total records for packaging job", e);
+    } catch (PackagingException e) {
+      throw new RuntimeException("Failed to establish total records for packaging job", e.getCause());
     }
   }
 

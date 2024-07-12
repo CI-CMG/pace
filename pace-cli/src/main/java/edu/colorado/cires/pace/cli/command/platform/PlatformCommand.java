@@ -195,5 +195,10 @@ public class PlatformCommand {
     protected TypeReference<List<Platform>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Platform> getClazz() {
+      return clazz;
+    }
   }
 }

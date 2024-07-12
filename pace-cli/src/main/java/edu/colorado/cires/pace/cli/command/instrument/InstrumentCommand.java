@@ -199,5 +199,10 @@ public class InstrumentCommand {
     protected TypeReference<List<Instrument>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Instrument> getClazz() {
+      return clazz;
+    }
   }
 }

@@ -8,12 +8,14 @@ import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.translator.SeaTranslator;
 import java.util.List;
+import java.util.UUID;
 
 public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
 
   @Override
-  public Sea createObject(String uniqueField) {
+  public Sea createObject(String uniqueField, boolean withUUID) {
     return Sea.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .build();
   }
@@ -72,7 +74,7 @@ public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "seaUUID",
+        "UUID",
         "seaName"
     };
   }
@@ -81,7 +83,7 @@ public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
   protected SeaTranslator createTranslator(String name) {
     return SeaTranslator.builder()
         .name(name)
-        .seaUUID("seaUUID")
+        .seaUUID("UUID")
         .seaName("seaName")
         .build();
   }

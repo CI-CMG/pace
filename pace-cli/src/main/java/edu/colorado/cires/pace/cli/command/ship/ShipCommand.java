@@ -195,5 +195,10 @@ public class ShipCommand {
     protected TypeReference<List<Ship>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Ship> getClazz() {
+      return clazz;
+    }
   }
 }

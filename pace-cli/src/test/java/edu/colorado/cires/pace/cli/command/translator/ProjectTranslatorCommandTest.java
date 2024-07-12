@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.ProjectTranslator;
+import java.util.UUID;
 
 class ProjectTranslatorCommandTest extends TranslatorCommandTest<ProjectTranslator> {
 
@@ -13,8 +14,9 @@ class ProjectTranslatorCommandTest extends TranslatorCommandTest<ProjectTranslat
   }
 
   @Override
-  public ProjectTranslator createObject(String uniqueField) {
+  public ProjectTranslator createObject(String uniqueField, boolean withUUID) {
     return ProjectTranslator.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .projectName("projectName")
         .projectUUID("projectUUID")

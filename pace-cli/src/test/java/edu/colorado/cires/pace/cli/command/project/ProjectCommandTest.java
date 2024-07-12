@@ -7,13 +7,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.ProjectTranslator;
+import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import edu.colorado.cires.pace.data.translator.Translator;
 import java.util.List;
+import java.util.UUID;
 
 public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTranslator> {
 
   @Override
-  public Project createObject(String uniqueField) {
+  public Project createObject(String uniqueField, boolean withUUID) {
     return Project.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .build();
   }
@@ -72,7 +76,7 @@ public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTra
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "projectUUID",
+        "UUID",
         "projectName"
     };
   }
@@ -81,7 +85,7 @@ public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTra
   protected ProjectTranslator createTranslator(String name) {
     return ProjectTranslator.builder()
         .name(name)
-        .projectUUID("projectUUID")
+        .projectUUID("UUID")
         .projectName("projectName")
         .build();
   }
@@ -92,5 +96,14 @@ public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTra
         object.getUuid() == null ? "" : object.getUuid().toString(),
         object.getName()
     };
+  }
+
+  @Override
+  protected Translator createInvalidTranslator(String name) {
+    return SeaTranslator.builder()
+        .name(name)
+        .seaUUID("UUID")
+        .seaName("NAME")
+        .build();
   }
 }

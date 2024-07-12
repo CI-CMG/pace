@@ -9,7 +9,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
         () -> {
           LOGGER.error("{} with {} = {} not found", getClassName(), getUniqueFieldName(), uniqueField);
           return new NotFoundException(String.format(
-              "%s with %s %s not found", getClassName(), getUniqueFieldName(), uniqueField
+              "%s with %s = %s not found", getClassName(), getUniqueFieldName(), uniqueField
           ));
         }
     );
@@ -91,7 +90,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
         () -> {
           LOGGER.error("{} with uuid = {} not found", getClassName(), uuid);
           return new NotFoundException(String.format(
-              "%s with uuid %s not found", getClassName(), uuid
+              "%s with uuid = %s not found", getClassName(), uuid
           ));
         }
     );
@@ -101,11 +100,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing all {} objects", getClassName());
-    Function<O, String> uniqueFieldGetter = datastore.getUniqueFieldGetter();
-    return datastore.findAll()
-        .sorted((o1, o2) -> uniqueFieldGetter.apply(o1).compareToIgnoreCase(
-            uniqueFieldGetter.apply(o2)
-        ));
+    return datastore.findAll();
   }
 
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
@@ -129,7 +124,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
       LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), newUniqueField);
       throw new ConflictException(String.format(
-          "%s with %s %s already exists", getClassName(), getUniqueFieldName(), newUniqueField
+          "%s with %s = %s already exists", getClassName(), getUniqueFieldName(), newUniqueField
       ));
     }
 
@@ -137,7 +132,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       if (datastore.findByUUID(object.getUuid()).isPresent()) {
         LOGGER.error("{} with uuid = {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
-            "%s with uuid %s already exists", getClassName(), object.getUuid()
+            "%s with uuid = %s already exists", getClassName(), object.getUuid()
         ));
       }
     }

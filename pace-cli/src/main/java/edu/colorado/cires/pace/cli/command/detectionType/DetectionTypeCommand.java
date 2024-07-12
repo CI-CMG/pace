@@ -195,5 +195,10 @@ public class DetectionTypeCommand {
     protected TypeReference<List<DetectionType>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<DetectionType> getClazz() {
+      return clazz;
+    }
   }
 }

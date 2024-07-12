@@ -195,5 +195,10 @@ public class FileTypeCommand {
     protected TypeReference<List<FileType>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<FileType> getClazz() {
+      return clazz;
+    }
   }
 }

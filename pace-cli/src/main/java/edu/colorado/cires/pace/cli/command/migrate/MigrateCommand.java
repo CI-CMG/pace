@@ -80,6 +80,7 @@ public class MigrateCommand implements Runnable {
         for (Throwable throwable : runtimeException.getSuppressed()) {
           migrationException.addSuppressed(throwable);
         }
+        throw migrationException;
       }
     } catch (Exception e) {
       throw new RuntimeException(e);

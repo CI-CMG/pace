@@ -3,12 +3,8 @@ package edu.colorado.cires.pace.cli.command.common;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.repository.ConflictException;
-import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.IOException;
@@ -27,7 +23,7 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
   }
 
   protected abstract Object runCommand()
-      throws IOException, DatastoreException, NotFoundException, ConflictException, BadArgumentException, BatchWriteException;
+      throws Exception;
 
   private Path getDatastoreDirectory() {
     return new ApplicationPropertyResolver().getDataDir();
@@ -56,10 +52,13 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
   @Override
   public void run() {
     try {
-      System.out.println(
-          writeObject(runCommand())
-      );
-    } catch (ConflictException | NotFoundException | IOException | DatastoreException | BadArgumentException | BatchWriteException e) {
+      Object object = runCommand();
+      if (object != null) {
+        System.out.println(
+            writeObject(object)
+        );
+      }
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }

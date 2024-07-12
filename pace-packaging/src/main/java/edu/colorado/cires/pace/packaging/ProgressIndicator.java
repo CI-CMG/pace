@@ -28,11 +28,7 @@ public abstract class ProgressIndicator {
 
     previousPercentComplete = percentComplete;
 
-    if (percentComplete == Integer.MAX_VALUE) {
-      indicateStatus(0);
-    } else {
-      indicateStatus(percentComplete);
-    }
+    indicateStatus(percentComplete);
   }
   
   protected abstract void indicateStatus(int percentComplete);

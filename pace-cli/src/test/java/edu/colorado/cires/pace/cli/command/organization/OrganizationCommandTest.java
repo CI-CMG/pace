@@ -3,16 +3,18 @@ package edu.colorado.cires.pace.cli.command.organization;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
+import edu.colorado.cires.pace.cli.command.ObjectWithEditableUUIDCommandTest;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
 import java.util.List;
+import java.util.UUID;
 
-public class OrganizationCommandTest extends TranslateCommandTest<Organization, OrganizationTranslator> {
+public class OrganizationCommandTest extends ObjectWithEditableUUIDCommandTest<Organization, OrganizationTranslator> {
 
   @Override
-  public Organization createObject(String uniqueField) {
+  public Organization createObject(String uniqueField, boolean withUUID) {
     return Organization.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .street("street")
         .city("city")
@@ -86,7 +88,7 @@ public class OrganizationCommandTest extends TranslateCommandTest<Organization, 
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "organizationUUID",
+        "UUID",
         "organizationName",
         "street",
         "city",
@@ -102,7 +104,7 @@ public class OrganizationCommandTest extends TranslateCommandTest<Organization, 
   protected OrganizationTranslator createTranslator(String name) {
     return OrganizationTranslator.builder()
         .name(name)
-        .organizationUUID("organizationUUID")
+        .organizationUUID("UUID")
         .organizationName("organizationName")
         .street("street")
         .city("city")

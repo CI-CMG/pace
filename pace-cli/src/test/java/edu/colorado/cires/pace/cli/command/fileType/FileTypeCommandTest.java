@@ -7,12 +7,14 @@ import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
 import java.util.List;
+import java.util.UUID;
 
 public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileTypeTranslator> {
 
   @Override
-  public FileType createObject(String uniqueField) {
+  public FileType createObject(String uniqueField, boolean withUUID) {
     return FileType.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .type(uniqueField)
         .comment("comment")
         .build();
@@ -73,7 +75,7 @@ public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileType
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "fileTypeUUID",
+        "UUID",
         "type",
         "comment"
     };
@@ -83,7 +85,7 @@ public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileType
   protected FileTypeTranslator createTranslator(String name) {
     return FileTypeTranslator.builder()
         .name(name)
-        .fileTypeUUID("fileTypeUUID")
+        .fileTypeUUID("UUID")
         .type("type")
         .comment("comment")
         .build();

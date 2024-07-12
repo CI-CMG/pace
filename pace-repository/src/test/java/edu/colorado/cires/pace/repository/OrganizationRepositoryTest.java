@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.util.UUID;
 import java.util.function.Function;
@@ -114,7 +113,7 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
 
     Exception exception = assertThrows(ConflictException.class, () -> repository.update(originalUUID, updated));
     assertEquals(String.format(
-        "%s with uuid %s already exists", repository.getClassName(), one.getUuid()
+        "%s with uuid = %s already exists", repository.getClassName(), one.getUuid()
     ), exception.getMessage());
   }
 }

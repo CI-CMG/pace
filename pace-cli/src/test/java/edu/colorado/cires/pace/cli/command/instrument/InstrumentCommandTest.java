@@ -11,6 +11,7 @@ import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +23,9 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
   private final List<FileType> fileTypes = new ArrayList<>(0);
 
   @Override
-  public Instrument createObject(String uniqueField) {
+  public Instrument createObject(String uniqueField, boolean withUUID) {
     return Instrument.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .fileTypes(fileTypes)
         .build();
@@ -110,7 +112,7 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "instrumentUUID",
+        "UUID",
         "instrumentName",
         "fileTypes"
     };
@@ -120,7 +122,7 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
   protected InstrumentTranslator createTranslator(String name) {
     return InstrumentTranslator.builder()
         .name(name)
-        .instrumentUUID("instrumentUUID")
+        .instrumentUUID("UUID")
         .instrumentName("instrumentName")
         .fileTypes("fileTypes")
         .build();

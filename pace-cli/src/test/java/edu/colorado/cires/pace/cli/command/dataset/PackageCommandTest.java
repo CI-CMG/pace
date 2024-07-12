@@ -11,6 +11,7 @@ import edu.colorado.cires.pace.cli.command.organization.OrganizationCommandTest;
 import edu.colorado.cires.pace.cli.command.person.PersonCommandTest;
 import edu.colorado.cires.pace.cli.command.platform.PlatformCommandTest;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommandTest;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.LocationDetail;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
@@ -29,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,8 +67,8 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   @Override
   protected String[] getTranslatorFields() {
     List<String> fields = new ArrayList<>(List.of(
+        "UUID",
         "timeZone",
-        "packageUUID",
         "temperaturePath",
         "biologicalPath",
         "otherPath",
@@ -104,7 +106,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected T createTranslator(String name) {
     PackageTranslator packageTranslator = PackageTranslator.builder()
         .name(name)
-        .packageUUID("packageUUID")
+        .packageUUID("UUID")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -156,8 +158,8 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected String[] objectToRow(P object) {
     Dataset dataset = (Dataset) object;
     List<String> fields = new ArrayList<>(List.of(
-        "UTC",
         object.getUuid() == null ? "" : object.getUuid().toString(),
+        "UTC",
         object.getTemperaturePath().toString(),
         object.getBiologicalPath().toString(),
         object.getOtherPath().toString(),
@@ -364,5 +366,47 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     )).toFile();
     
     FileUtils.writeStringToFile(file, "test", StandardCharsets.UTF_8);
+  }
+  
+  @Test
+  void testPackageError() throws IOException {
+    Package p = writeObject(
+        createObject("test")
+    );
+    createDirectoryAndWriteFile(p.getTemperaturePath());
+    createDirectoryAndWriteFile(p.getBiologicalPath());
+    createDirectoryAndWriteFile(p.getOtherPath());
+    createDirectoryAndWriteFile(p.getDocumentsPath());
+    createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
+    createDirectoryAndWriteFile(p.getNavigationPath());
+
+    File outputDirectory = testPath.resolve("output").toFile();
+    clearOut();
+    execute("package", "process", testPath.resolve("test.json").toFile().toString(), outputDirectory.toString());
+
+    CLIException exception = getCLIException();
+    assertEquals(String.format(
+        "Failed to read file or directory: %s", p.getSourcePath().toAbsolutePath()
+    ), exception.detail());
+    assertEquals(String.format(
+        "Failed to compute packaging destinations for %s", p.getSourcePath().toAbsolutePath()
+    ), exception.message());
+  }
+  
+  @Test
+  void testCreateValidationException() throws IOException {
+    P object = createObject("");
+    writeObject(object);
+
+    CLIException exception = getCLIException();
+    assertEquals(String.format(
+        "%s validation failed", getClazz().getSimpleName()
+    ), exception.message());
+
+    ArrayList<?> detail = (ArrayList<?>) exception.detail();
+    assertEquals(1, detail.size());
+    Map<String, Object> map = (Map<String, Object>) detail.get(0);
+    assertEquals("deploymentId", map.get("field"));
+    assertEquals("must not be blank", map.get("message"));
   }
 }

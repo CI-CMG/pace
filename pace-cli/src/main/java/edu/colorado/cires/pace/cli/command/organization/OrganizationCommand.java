@@ -195,5 +195,10 @@ public class OrganizationCommand {
     protected TypeReference<List<Organization>> getTypeReference() {
       return typeReference;
     }
+
+    @Override
+    protected Class<Organization> getClazz() {
+      return clazz;
+    }
   }
 }

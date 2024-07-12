@@ -7,7 +7,6 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
-import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
 import edu.colorado.cires.pace.translator.ObjectWithRowException;
@@ -46,14 +45,16 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
 
   @Override
   public void run() {
+    String translatorName = getTranslatorNameSupplier().get();
     try {
       TranslationType translationType = getTranslationTypeSupplier().get();
-      String translatorName = getTranslatorNameSupplier().get();
       File inputFile = getInputSupplier().get();
       List<O> translations = new ArrayList<>(0);
+      T translator = getTranslator(translatorName);
+      
       switch (translationType) {
-        case csv -> translations = translateCSV(translatorName, inputFile);
-        case excel -> translations = translateExcel(translatorName, inputFile);
+        case csv -> translations = translateCSV(translator, inputFile);
+        case excel -> translations = translateExcel(translator, inputFile);
       }
 
       System.out.println(
@@ -64,10 +65,16 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
 
     } catch (NotFoundException | IOException | DatastoreException | TranslatorValidationException e) {
       throw new RuntimeException(e);
+    } catch (ClassCastException e) {
+      throw new RuntimeException(String.format(
+          "Translator with name = %s is not applicable to %s objects", translatorName, getClazz().getSimpleName()
+      ));
     }
   }
-  
-  private List<O> translateCSV(String translatorName, File inputFile)
+
+  protected abstract Class<O> getClazz();
+
+  private List<O> translateCSV(T translator, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
     try (InputStream inputStream = new FileInputStream(inputFile); Reader reader = new InputStreamReader(inputStream)) {
       Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
@@ -78,7 +85,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
               throw new RuntimeException(e);
             }
           },
-          getTranslator(translatorName),
+          translator,
           getConverter()
       );
       
@@ -86,7 +93,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
     }
   }
   
-  private List<O> translateExcel(String translatorName, File inputFile)
+  private List<O> translateExcel(T translator, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
     try (InputStream inputStream = new FileInputStream(inputFile)) {
       Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
@@ -97,7 +104,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
               throw new RuntimeException(e);
             }
           },
-          getTranslator(translatorName),
+          translator,
           getConverter()
       );
       
@@ -127,17 +134,8 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   }
   
   private T getTranslator(String translatorName) throws IOException, NotFoundException, DatastoreException {
-    TranslatorRepository repository = TranslatorRepositoryFactory.createRepository(
-        workDir, objectMapper
-    );
-    try {
-      return (T) TranslatorRepositoryFactory.createRepository(
+    return (T) TranslatorRepositoryFactory.createRepository(
         workDir, objectMapper
     ).getByUniqueField(translatorName);
-    } catch (ClassCastException e) {
-      throw new NotFoundException(String.format(
-          "Translator %s not applicable to %s objects", translatorName, repository.getClassName()
-      ));
-    }
   }
 }

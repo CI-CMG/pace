@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import java.util.UUID;
 
 abstract class SensorTranslatorCommandTest<S extends SensorTranslator> extends TranslatorCommandTest<S> {
 
@@ -23,9 +24,10 @@ abstract class SensorTranslatorCommandTest<S extends SensorTranslator> extends T
   }
 
   @Override
-  public S createObject(String uniqueField) {
+  public S createObject(String uniqueField, boolean withUUID) {
     return addSensorTypeSpecificFields(
         SensorTranslator.builder()
+            .uuid(withUUID ? UUID.randomUUID() : null)
             .name(uniqueField)
             .description("description")
             .sensorName("sensorName")

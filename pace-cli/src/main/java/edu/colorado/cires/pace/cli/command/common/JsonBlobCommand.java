@@ -20,46 +20,21 @@ abstract class JsonBlobCommand<O extends ObjectWithUniqueField> extends CRUDComm
 
   @Override
   protected Object runCommand()
-      throws IOException, ConflictException, NotFoundException, DatastoreException, BadArgumentException, BatchWriteException {
-    try {
-      return SerializationUtils.deserializeAndProcess(
-          objectMapper,
-          getJsonBlobProvider().get(),
-          getJsonClass(),
-          getTypeReference(),
-          (o) -> {
-            try {
-              return runCommandWithDeserializedObject(o);
-            } catch (IOException | ConflictException | NotFoundException | DatastoreException | BadArgumentException e) {
-              throw new RuntimeException(e);
-            }
+      throws IOException {
+
+    return SerializationUtils.deserializeAndProcess(
+        objectMapper,
+        getJsonBlobProvider().get(),
+        getJsonClass(),
+        getTypeReference(),
+        (o) -> {
+          try {
+            return runCommandWithDeserializedObject(o);
+          } catch (IOException | ConflictException | NotFoundException | DatastoreException | BadArgumentException e) {
+            throw new RuntimeException(e.getMessage());
           }
-      );
-    } catch (RuntimeException e) {
-      Throwable throwable = e.getCause();
-      
-      if (throwable instanceof ConflictException) {
-        throw (ConflictException) throwable;
-      }
-
-      if (throwable instanceof NotFoundException) {
-        throw (NotFoundException) throwable;
-      }
-
-      if (throwable instanceof DatastoreException) {
-        throw (DatastoreException) throwable;
-      }
-
-      if (throwable instanceof BadArgumentException) {
-        throw (BadArgumentException) throwable;
-      }
-
-      if (throwable instanceof BatchWriteException) {
-        throw (BatchWriteException) throwable;
-      }
-      
-      throw new IllegalStateException(e);
-    }
+        }
+    );
   }
   
   protected abstract O runCommandWithDeserializedObject(O object)

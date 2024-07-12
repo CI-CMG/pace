@@ -4,12 +4,14 @@ import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PositionTranslator;
+import java.util.UUID;
 
 class DepthSensorCommandTest extends SensorCommandTest<DepthSensor, DepthSensorTranslator> {
 
   @Override
-  public DepthSensor createObject(String uniqueField) {
+  public DepthSensor createObject(String uniqueField, boolean withUUID) {
     return DepthSensor.builder()
+        .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .position(Position.builder()
             .x(1f)
@@ -35,7 +37,7 @@ class DepthSensorCommandTest extends SensorCommandTest<DepthSensor, DepthSensorT
   @Override
   protected String[] getTranslatorFields() {
     return new String[] {
-        "sensorUUID",
+        "UUID",
         "sensorName",
         "description",
         "position (X)",
@@ -48,7 +50,7 @@ class DepthSensorCommandTest extends SensorCommandTest<DepthSensor, DepthSensorT
   protected DepthSensorTranslator createTranslator(String name) {
     return DepthSensorTranslator.builder()
         .name(name)
-        .sensorUUID("sensorUUID")
+        .sensorUUID("UUID")
         .sensorName("sensorName")
         .description("description")
         .positionTranslator(PositionTranslator.builder()
