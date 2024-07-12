@@ -40,7 +40,8 @@ public class ExcelReader {
         IntStream.range(0, headers.size()).boxed().collect(Collectors.toMap(
             headers::get,
             i -> new ValueWithColumnNumber(
-                Optional.ofNullable(row.getCell(i).getRawValue()),
+                Optional.ofNullable(row.getCell(i))
+                    .map(Cell::getRawValue),
                 i
             )
         )),
