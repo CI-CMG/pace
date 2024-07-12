@@ -76,7 +76,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   public O getByUniqueField(String uniqueField) throws DatastoreException, NotFoundException {
     O object = datastore.findByUniqueField(uniqueField).orElseThrow(
         () -> {
-          LOGGER.error("{} with {} {} not found", getClassName(), getUniqueFieldName(), uniqueField);
+          LOGGER.error("{} with {} = {} not found", getClassName(), getUniqueFieldName(), uniqueField);
           return new NotFoundException(String.format(
               "%s with %s %s not found", getClassName(), getUniqueFieldName(), uniqueField
           ));
@@ -89,13 +89,13 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   public O getByUUID(UUID uuid) throws DatastoreException, NotFoundException {
     O object = datastore.findByUUID(uuid).orElseThrow(
         () -> {
-          LOGGER.error("{} with uuid {} not found", getClassName(), uuid);
+          LOGGER.error("{} with uuid = {} not found", getClassName(), uuid);
           return new NotFoundException(String.format(
               "%s with uuid %s not found", getClassName(), uuid
           ));
         }
     );
-    LOGGER.debug("Found {} with uuid {}", getClassName(), uuid);
+    LOGGER.debug("Found {} with uuid = {}", getClassName(), uuid);
     return object;
   }
   
