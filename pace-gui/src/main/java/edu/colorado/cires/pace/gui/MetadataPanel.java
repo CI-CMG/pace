@@ -9,7 +9,6 @@ import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
 
   private void createFormDialog(O object) {
     JDialog dialog = new JDialog();
-    Dimension size = getFormSize();
+    Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     dialog.setSize(size);
     dialog.setPreferredSize(size);
     dialog.setName("formDialog");
@@ -98,10 +97,4 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
     dialog.setVisible(true);
   }
   
-  private Dimension getFormSize() {
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    int width = (int) (screenSize.width * 0.5);
-    int height = (int) (screenSize.height * 0.4);
-    return new Dimension(width, height);
-  }
 }

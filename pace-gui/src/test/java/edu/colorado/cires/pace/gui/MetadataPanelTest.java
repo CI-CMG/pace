@@ -67,7 +67,8 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
     Application application = GuiActionRunner.execute(Application::new);
     window = new FrameFixture(robot, application)
-        .requireTitle("PACE");
+        .requireTitle("PACE")
+        .requireSize(UIUtils.getPercentageOfWindowDimension(0.75, 0.65));
     window.show();
   }
   

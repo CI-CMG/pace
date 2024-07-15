@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import javax.swing.JFrame;
@@ -44,11 +45,14 @@ public class Application extends JFrame {
     }
 
     try {
+      Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
+      
       ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper, propertyResolver);
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       setContentPane(applicationTabs);
       setTitle("PACE");
-      setSize(1000, 1000);
+      setSize(size);
+      setPreferredSize(size);
       setLocationRelativeTo(null);
       setVisible(true);
     } catch (Exception e) {

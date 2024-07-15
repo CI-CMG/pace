@@ -1,7 +1,9 @@
 package edu.colorado.cires.pace.gui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -14,6 +16,14 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 final class UIUtils {
+  
+  public static Dimension getPercentageOfWindowDimension(double percentWidth, double percentHeight) {
+    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+    return new Dimension(
+        (int) (dimension.width * percentWidth),
+        (int) (dimension.height * percentHeight)
+    );
+  }
 
   public static GridBagConstraints configureLayout(Consumer<GridBagConstraints> constraintsConsumer) {
     GridBagConstraints constraints = new GridBagConstraints();
