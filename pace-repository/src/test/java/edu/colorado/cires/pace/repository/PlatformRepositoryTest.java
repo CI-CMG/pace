@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.List;
 import java.util.function.Function;
 
 class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
@@ -15,6 +18,13 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
   @Override
   protected Function<Platform, String> uniqueFieldGetter() {
     return Platform::getName;
+  }
+
+  @Override
+  protected SearchParameters<Platform> createSearchParameters(List<Platform> objects) {
+    return PlatformSearchParameters.builder()
+        .names(objects.stream().map(Platform::getName).toList())
+        .build();
   }
 
   @Override

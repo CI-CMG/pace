@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.repository.search.FileTypeSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.List;
 import java.util.function.Function;
 
 class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
@@ -15,6 +18,13 @@ class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
   @Override
   protected Function<FileType, String> uniqueFieldGetter() {
     return FileType::getType;
+  }
+
+  @Override
+  protected SearchParameters<FileType> createSearchParameters(List<FileType> objects) {
+    return FileTypeSearchParameters.builder()
+        .types(objects.stream().map(FileType::getType).toList())
+        .build();
   }
 
   @Override

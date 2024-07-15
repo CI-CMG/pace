@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,8 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   protected abstract CRUDRepository<O> createRepository();
   
   protected abstract Function<O, String> uniqueFieldGetter();
+
+  protected abstract SearchParameters<O> createSearchParameters(List<O> objects);
   
   protected Datastore<O> createDatastore() {
     return new Datastore<>() {
@@ -174,6 +177,22 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     );
   }
   
+  @Test
+  void testSearch() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+    O one = repository.create(createNewObject(1));
+    repository.create(createNewObject(2));
+    O three = repository.create(createNewObject(3));
+    repository.create(createNewObject(4));
+
+    SearchParameters<O> searchParameters = createSearchParameters(List.of(one, three));
+    assertEquals(
+        List.of(one, three),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(o -> uniqueFieldGetter().apply(o)))
+            .toList()
+    );
+  }
+
   @Test
   void testUpdate() throws Exception {
     O object = repository.create(createNewObject(1));

@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,13 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
   @Override
   protected Function<Person, String> uniqueFieldGetter() {
     return Person::getName;
+  }
+
+  @Override
+  protected SearchParameters<Person> createSearchParameters(List<Person> objects) {
+    return PersonSearchParameters.builder()
+        .names(objects.stream().map(Person::getName).toList())
+        .build();
   }
 
   @Override

@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.DetectionType;
+import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.List;
 import java.util.function.Function;
 
 class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
@@ -15,6 +18,13 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
   @Override
   protected Function<DetectionType, String> uniqueFieldGetter() {
     return DetectionType::getScienceName;
+  }
+
+  @Override
+  protected SearchParameters<DetectionType> createSearchParameters(List<DetectionType> objects) {
+    return DetectionTypeSearchParameters.builder()
+        .sources(objects.stream().map(DetectionType::getSource).toList())
+        .build();
   }
 
   @Override

@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.repository;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -101,6 +102,11 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing all {} objects", getClassName());
     return datastore.findAll();
+  }
+  
+  public Stream<O> search(SearchParameters<O> searchParameters) throws DatastoreException {
+    return datastore.findAll()
+        .filter(searchParameters::matches);
   }
 
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {

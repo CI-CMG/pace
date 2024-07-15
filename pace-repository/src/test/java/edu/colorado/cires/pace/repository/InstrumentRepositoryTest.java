@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.datastore.Datastore;
+import edu.colorado.cires.pace.repository.search.InstrumentSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +40,13 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   @Override
   protected Function<Instrument, String> uniqueFieldGetter() {
     return Instrument::getName;
+  }
+
+  @Override
+  protected SearchParameters<Instrument> createSearchParameters(List<Instrument> objects) {
+    return InstrumentSearchParameters.builder()
+        .names(objects.stream().map(Instrument::getName).toList())
+        .build();
   }
 
   @Override

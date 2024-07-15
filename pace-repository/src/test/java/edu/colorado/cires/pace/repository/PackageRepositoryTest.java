@@ -33,6 +33,8 @@ import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,6 +56,15 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   @Override
   protected Function<Package, String> uniqueFieldGetter() {
     return Package::getPackageId;
+  }
+
+  @Override
+  protected SearchParameters<Package> createSearchParameters(List<Package> objects) {
+    return PackageSearchParameters.builder()
+        .packageIds(objects.stream()
+            .map(Package::getPackageId)
+            .toList())
+        .build();
   }
 
   @Override

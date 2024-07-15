@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.repository.search.SeaSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.List;
 import java.util.function.Function;
 
 class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
@@ -15,6 +18,13 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
   @Override
   protected Function<Sea, String> uniqueFieldGetter() {
     return Sea::getName;
+  }
+
+  @Override
+  protected SearchParameters<Sea> createSearchParameters(List<Sea> objects) {
+    return SeaSearchParameters.builder()
+        .names(objects.stream().map(Sea::getName).toList())
+        .build();
   }
 
   @Override
