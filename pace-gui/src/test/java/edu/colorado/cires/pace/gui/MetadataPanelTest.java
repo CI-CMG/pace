@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -115,7 +117,13 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
   }
   
   private DialogFixture getDialog(String dialogName) {
-    return window.dialog(dialogName);
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    return window.dialog(dialogName)
+        .requireSize(new Dimension(
+            (int) (screenSize.width * 0.5),
+            (int) (screenSize.height * 0.4)
+        ))
+        .requireModal();
   }
   
   private JTableFixture getTable(JPanelFixture panelFixture, String name) {

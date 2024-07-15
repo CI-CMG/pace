@@ -7,7 +7,9 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -76,8 +78,12 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
 
   private void createFormDialog(O object) {
     JDialog dialog = new JDialog();
+    Dimension size = getFormSize();
+    dialog.setSize(size);
+    dialog.setPreferredSize(size);
     dialog.setName("formDialog");
     dialog.setModal(true);
+    dialog.setLocationRelativeTo(this);
 
     FormPanel<O> formPanel = new FormPanel<>(formSupplier.apply(object), repository, (s) -> {
       while (tableModel.getRowCount() > 0) {
@@ -90,5 +96,12 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
     dialog.add(formPanel);
     dialog.pack();
     dialog.setVisible(true);
+  }
+  
+  private Dimension getFormSize() {
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    int width = (int) (screenSize.width * 0.5);
+    int height = (int) (screenSize.height * 0.4);
+    return new Dimension(width, height);
   }
 }
