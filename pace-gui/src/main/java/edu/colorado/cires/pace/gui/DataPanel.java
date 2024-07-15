@@ -110,10 +110,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     JButton button = new JButton("Clear");
     
     button.addActionListener(e -> {
-      textField.setForeground(Color.gray);
-      textField.setText(String.format(
-          "Search by %s", getHumanReadableUniqueFieldName()
-      ));
+      textField.setText("");
       loadData();
     });
     
