@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.cli.command;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.translator.ProjectTranslator;
 import edu.colorado.cires.pace.data.translator.Translator;
@@ -121,7 +121,7 @@ public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T ex
     clearOut();
     execute(getCommandPrefix(), "translate", "-tf", "csv", "-tn", translatorName, file.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals("Translation failed", exception.message());
     ArrayList<?> detail = (ArrayList<?>) exception.detail();
     assertEquals(100, detail.size());
@@ -174,7 +174,7 @@ public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T ex
     clearOut();
     execute(getCommandPrefix(), "translate", "-tf", "excel", "-tn", translatorName, file.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals("Translation failed", exception.message());
     ArrayList<?> detail = (ArrayList<?>) exception.detail();
     assertEquals(100, detail.size());
@@ -200,7 +200,7 @@ public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T ex
     clearOut();
     execute(getCommandPrefix(), "translate", "-tf", "csv", "-tn", translatorName, file.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
         "Translator with name = %s not found", translatorName
@@ -220,7 +220,7 @@ public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T ex
     clearOut();
     execute(getCommandPrefix(), "translate", "-tf", "csv", "-tn", translatorName, file.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
         "Translator with name = %s is not applicable to %s objects", translatorName, getClazz().getSimpleName()

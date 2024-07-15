@@ -59,11 +59,18 @@ public class ApplicationTabs extends JTabbedPane {
         translatorRepository
     );
   }
+  
+  private final ObjectMapper objectMapper;
+  private final ApplicationPropertyResolver propertyResolver;
 
   public ApplicationTabs(ObjectMapper objectMapper, ApplicationPropertyResolver propertyResolver) throws IOException {
-
+    this.objectMapper = objectMapper;
+    this.propertyResolver = propertyResolver;
+  }
+  
+  public void init() throws IOException {
     DataPanelFactory dataPanelFactory = createDataPanelFactory(objectMapper, propertyResolver);
-    
+
     setName("applicationTabs");
     setTabPlacement(JTabbedPane.LEFT);
     add("Packages", dataPanelFactory.createPackagesPanel());

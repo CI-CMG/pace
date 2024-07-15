@@ -20,16 +20,12 @@ public class InstrumentFileTypePanel extends JPanel {
   private final Map<String, FileType> fileTypeOptions = new HashMap<>(0);
   private final DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
   private final JComboBox<String> comboBox = new JComboBox<>(comboBoxModel);
-
-  public InstrumentFileTypePanel(FileType initialFileType, FileTypeRepository fileTypeRepository, Consumer<InstrumentFileTypePanel> fileTypePanelConsumer) throws DatastoreException {
-    fileTypeOptions.putAll(fileTypeRepository.findAll().collect(
-        Collectors.toMap(
-            FileType::getType,
-            (ft) -> ft
-        )
-    ));
-    
-    comboBoxModel.addAll(fileTypeOptions.keySet());
+  private final FileTypeRepository fileTypeRepository;
+  private final FileType initialFileType;
+  
+  public InstrumentFileTypePanel(FileType initialFileType, FileTypeRepository fileTypeRepository, Consumer<InstrumentFileTypePanel> fileTypePanelConsumer) {
+    this.initialFileType = initialFileType;
+    this.fileTypeRepository = fileTypeRepository;
     
     setLayout(new GridBagLayout());
     
@@ -40,6 +36,20 @@ public class InstrumentFileTypePanel extends JPanel {
     removeButton.addActionListener((e) -> fileTypePanelConsumer.accept(this));
     
     initializeFields(initialFileType);
+  }
+  
+  public void init() throws DatastoreException {
+    fileTypeOptions.putAll(fileTypeRepository.findAll().collect(
+        Collectors.toMap(
+            FileType::getType,
+            (ft) -> ft
+        )
+    ));
+    comboBoxModel.removeAllElements();
+    comboBoxModel.addAll(fileTypeOptions.keySet());
+    if (initialFileType != null) {
+      comboBox.setSelectedItem(initialFileType.getType());
+    }
   }
   
   private void initializeFields(FileType initialFileType) {

@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -65,8 +66,14 @@ public class TranslatorForm extends Form<Translator> {
       
     }
   };
+  
+  private final Translator initialTranslator;
 
   public TranslatorForm(Translator initialTranslator) {
+    this.initialTranslator = initialTranslator;
+  }
+  
+  public void init() {
     setLayout(new GridBagLayout());
 
     add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
@@ -76,7 +83,7 @@ public class TranslatorForm extends Form<Translator> {
     JButton addFieldsButton = new JButton("Import Spreadsheet Headers");
     addFieldsButton.addActionListener(e -> importSpreadsheetHeaders());
     add(addFieldsButton, configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 0; }));
-    
+
     uuidField.setEnabled(false);
     initializeFields(initialTranslator);
   }
@@ -119,7 +126,7 @@ public class TranslatorForm extends Form<Translator> {
   }
   
   private String[] readCSVHeaders(File file) {
-    try (InputStream inputStream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(inputStream)) {
+    try (InputStream inputStream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
       CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
           .setSkipHeaderRecord(false)
           .build();

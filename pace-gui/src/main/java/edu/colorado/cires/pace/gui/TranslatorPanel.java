@@ -79,6 +79,7 @@ public class TranslatorPanel extends DataPanel<Translator> {
       s.forEach(o -> tableModel.addRow(objectConversion.apply(o)));
       dialog.dispose();
     }, object != null);
+    formPanel.init();
 
     dialog.add(formPanel);
     dialog.pack();

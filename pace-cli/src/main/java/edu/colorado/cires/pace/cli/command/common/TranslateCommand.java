@@ -9,7 +9,7 @@ import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
-import edu.colorado.cires.pace.translator.ObjectWithRowException;
+import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.translator.SpreadsheetConverter;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.TranslatorValidationException;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +77,8 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
 
   private List<O> translateCSV(T translator, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
-    try (InputStream inputStream = new FileInputStream(inputFile); Reader reader = new InputStreamReader(inputStream)) {
-      Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
+    try (InputStream inputStream = new FileInputStream(inputFile); Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+      Stream<ObjectWithRowError<O>> translated = SpreadsheetConverter.execute(
           () -> {
             try {
               return CSVReader.read(reader);
@@ -96,7 +97,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   private List<O> translateExcel(T translator, File inputFile)
       throws IOException, NotFoundException, DatastoreException, TranslatorValidationException {
     try (InputStream inputStream = new FileInputStream(inputFile)) {
-      Stream<ObjectWithRowException<O>> translated = SpreadsheetConverter.execute(
+      Stream<ObjectWithRowError<O>> translated = SpreadsheetConverter.execute(
           () -> {
             try {
               return ExcelReader.read(inputStream, 0);
@@ -112,10 +113,10 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
     }
   }
   
-  private List<O> postProcessTranslation(Stream<ObjectWithRowException<O>> translated) throws TranslationException {
-    List<ObjectWithRowException<O>> results = translated.toList();
+  private List<O> postProcessTranslation(Stream<ObjectWithRowError<O>> translated) throws TranslationException {
+    List<ObjectWithRowError<O>> results = translated.toList();
     TranslationException exception = (TranslationException) results.stream()
-        .map(ObjectWithRowException::throwable)
+        .map(ObjectWithRowError::throwable)
         .filter(Objects::nonNull)
         .reduce(new TranslationException("Translation failed"), (rte1, rte2) -> {
           for (Throwable throwable : rte2.getSuppressed()) {
@@ -129,7 +130,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
     }
     
     return results.stream()
-        .map(ObjectWithRowException::object)
+        .map(ObjectWithRowError::object)
         .toList();
   }
   

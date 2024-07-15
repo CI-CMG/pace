@@ -36,7 +36,7 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
     
     System.out.println(
         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-          new CLIException(
+          new CLIError(
               reportedException.getMessage(), errorDetail
           )
     ));
@@ -56,13 +56,13 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
       
       return exceptions.entrySet().stream()
           .map(entry ->
-              new TranslateRowException(
+              new TranslateRowError(
                   entry.getKey(),
                   entry.getValue().stream()
                       .map(fe -> new RowViolation(fe.getColumn(), fe.getProperty(), fe.getMessage()))
                       .toList()
               )
-          ).sorted(Comparator.comparing(TranslateRowException::row)).toList();
+          ).sorted(Comparator.comparing(TranslateRowError::row)).toList();
     } else if (e instanceof PackagingException) {
       return String.format(
           "Failed to read file or directory: %s", e.getCause().getMessage()
@@ -80,9 +80,9 @@ public class ExecutionErrorHandler implements IExecutionExceptionHandler {
   
   private record Violation(String field, String message) {}
   
-  public record TranslateRowException(int row, List<RowViolation> violations) {}
+  public record TranslateRowError(int row, List<RowViolation> violations) {}
   
-  public record CLIException(String message, Object detail) {}
+  public record CLIError(String message, Object detail) {}
   
   private Set<Violation> toViolations(Set<ConstraintViolation<?>> violations) {
     return violations.stream()

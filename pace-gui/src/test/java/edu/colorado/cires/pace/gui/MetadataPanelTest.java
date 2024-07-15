@@ -65,7 +65,11 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     objectMapper.writeValue(metadataDirectory.resolve(getJsonFileName()).toFile(), Collections.emptyList());
 
     Robot robot = BasicRobot.robotWithCurrentAwtHierarchy();
-    Application application = GuiActionRunner.execute(Application::new);
+    Application application = GuiActionRunner.execute(() -> {
+      Application app = new Application();
+      app.createGUI();
+      return app;
+    });
     window = new FrameFixture(robot, application)
         .requireTitle("PACE")
         .requireSize(UIUtils.getPercentageOfWindowDimension(0.75, 0.65));

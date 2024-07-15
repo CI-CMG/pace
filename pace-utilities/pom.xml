@@ -50,6 +50,15 @@
         </includes>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <excludeFilterFile>${project.parent.basedir}/spotbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

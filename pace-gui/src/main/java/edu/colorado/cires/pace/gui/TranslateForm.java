@@ -13,7 +13,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
-import edu.colorado.cires.pace.translator.ObjectWithRowException;
+import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -21,11 +21,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -45,24 +48,37 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator> extends JPanel {
   
-  private final DefaultComboBoxModel<String> translatorComboBoxModel;
+  private final DefaultComboBoxModel<String> translatorComboBoxModel = new DefaultComboBoxModel<>();
   private final JTextField selectedFileField = new JTextField();
   private final JCheckBox updateCheckBox = new JCheckBox();
   
   private final TranslatorRepository translatorRepository;
   private final Converter<T, O> converter;
+  
+  private final Class<T> translatorClazz;
+  private final CRUDRepository<O> repository;
+  private final Class<O> clazz;
+  private final Runnable successAction;
 
   public TranslateForm(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz, TranslatorRepository translatorRepository,
-      Converter<T, O> converter, Class<T> translatorClazz) throws DatastoreException {
-    this.translatorComboBoxModel = new DefaultComboBoxModel<>(translatorRepository.findAll()
-        .filter(t -> translatorClazz.isAssignableFrom(t.getClass()))
-        .map(Translator::getName)
-        .toArray(String[]::new));
+      Converter<T, O> converter, Class<T> translatorClazz) {
     this.translatorRepository = translatorRepository;
     this.converter = converter;
+    this.translatorClazz = translatorClazz;
+    this.repository = repository;
+    this.clazz = clazz;
+    this.successAction = successAction;
+  }
+  
+  public void init() throws DatastoreException {
+    this.translatorComboBoxModel.removeAllElements();
+    this.translatorComboBoxModel.addAll(translatorRepository.findAll()
+        .filter(t -> translatorClazz.isAssignableFrom(t.getClass()))
+        .map(Translator::getName)
+        .toList());
 
     setLayout(new GridBagLayout());
-    
+
     add(createFormPanel(), configureLayout((c) -> { c.gridx = c.gridy = 0; c.anchor = GridBagConstraints.NORTH; c.weightx = 1; }));
     add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weighty = 1; }));
     add(createControlPanel(successAction, repository, clazz), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
@@ -134,24 +150,24 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
       return;
     }
 
-    Function<ObjectWithRowException<O>, ObjectWithRowException<O>> saveAction = (o) -> {
+    Function<ObjectWithRowError<O>, ObjectWithRowError<O>> saveAction = (o) -> {
       O object = o.object();
       try {
         if (updateCheckBox.isSelected()) {
-          return new ObjectWithRowException<>(
+          return new ObjectWithRowError<>(
               repository.update(object.getUuid(), object),
               o.row(),
               null
           );
         } else {
-          return new ObjectWithRowException<>(
+          return new ObjectWithRowError<>(
               repository.create(object),
               o.row(),
               null
           );
         }
       } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException e) {
-        return new ObjectWithRowException<>(
+        return new ObjectWithRowError<>(
             object,
             o.row(),
             e
@@ -169,73 +185,77 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
       return;
     }
 
-    try {
-      List<ObjectWithRowException<O>> exceptions = switch (translationType) {
-        case excel -> {
-          try (InputStream inputStream = new FileInputStream(selectedFile)) {
-            yield postProcessStream(
-                ExcelReader.read(inputStream, 0)
-                    .map(mapWithRowNumber -> {
-                      try {
-                        O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), new RuntimeException());
-                        return new ObjectWithRowException<>(object, mapWithRowNumber.row(), null);
-                      } catch (TranslationException e) {
-                        return new ObjectWithRowException<>(null, mapWithRowNumber.row(), e);
-                      }
-                    }),
-                saveAction,
-                successAction
-            );
-          }
+    List<ObjectWithRowError<O>> exceptions = switch (translationType) {
+      case excel -> {
+        try (InputStream inputStream = new FileInputStream(selectedFile)) {
+          yield postProcessStream(
+              ExcelReader.read(inputStream, 0)
+                  .map(mapWithRowNumber -> {
+                    try {
+                      O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), new RuntimeException());
+                      return new ObjectWithRowError<>(object, mapWithRowNumber.row(), null);
+                    } catch (TranslationException e) {
+                      return new ObjectWithRowError<>(null, mapWithRowNumber.row(), e);
+                    }
+                  }),
+              saveAction,
+              successAction
+          );
+        } catch (IOException e) {
+          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          yield Collections.emptyList();
         }
-        case csv -> {
-          try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream)) {
-            yield postProcessStream(
-                CSVReader.read(reader)
-                    .map(mapWithRowNumber -> {
-                      try {
-                        RuntimeException runtimeException = new RuntimeException();
-                        O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), runtimeException);
-                        if (runtimeException.getSuppressed().length == 0) {
-                          return new ObjectWithRowException<>(object, mapWithRowNumber.row(), null);
-                        }
-                        return new ObjectWithRowException<>(object, mapWithRowNumber.row(), runtimeException);
-                      } catch (TranslationException e) {
-                        return new ObjectWithRowException<>(null, mapWithRowNumber.row(), e);
-                      }
-                    }),
-                saveAction,
-                successAction
-            );
-          }
-        }
-      };
-      
-      if (!exceptions.isEmpty()) {
-        JDialog errorDialog = new JDialog();
-        errorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        errorDialog.setLocationRelativeTo(this);
-        errorDialog.add(new ErrorSpreadsheetPanel<>(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName())));
-        errorDialog.pack();
-        errorDialog.setVisible(true);
       }
-    } catch (Exception ex) {
-      JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      case csv -> {
+        try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+          yield postProcessStream(
+              CSVReader.read(reader)
+                  .map(mapWithRowNumber -> {
+                    try {
+                      RuntimeException runtimeException = new RuntimeException();
+                      O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), runtimeException);
+                      if (runtimeException.getSuppressed().length == 0) {
+                        return new ObjectWithRowError<>(object, mapWithRowNumber.row(), null);
+                      }
+                      return new ObjectWithRowError<>(object, mapWithRowNumber.row(), runtimeException);
+                    } catch (TranslationException e) {
+                      return new ObjectWithRowError<>(null, mapWithRowNumber.row(), e);
+                    }
+                  }),
+              saveAction,
+              successAction
+          );
+        } catch (IOException e) {
+          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          yield Collections.emptyList();
+        }
+      }
+    };
+
+    if (!exceptions.isEmpty()) {
+      JDialog errorDialog = new JDialog();
+      errorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+      errorDialog.setLocationRelativeTo(this);
+      ErrorSpreadsheetPanel<O> errorSpreadsheetPanel = new ErrorSpreadsheetPanel<>(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName()));
+      errorSpreadsheetPanel.init();
+      errorDialog.add(errorSpreadsheetPanel);
+      errorDialog.pack();
+      errorDialog.setVisible(true);
     }
 
   }
   
-  private List<ObjectWithRowException<O>> postProcessStream(Stream<ObjectWithRowException<O>> stream, Function<ObjectWithRowException<O>, ObjectWithRowException<O>> saveAction, Runnable successAction) {
-    List<ObjectWithRowException<O>> exceptions = new ArrayList<>(0);
+  private List<ObjectWithRowError<O>> postProcessStream(Stream<ObjectWithRowError<O>> stream, Function<ObjectWithRowError<O>, ObjectWithRowError<O>> saveAction, Runnable successAction) {
+    List<ObjectWithRowError<O>> exceptions = new ArrayList<>(0);
     stream.peek(o -> {
       Throwable exception = o.throwable();
       if (exception != null) {
         if (exception.getSuppressed().length == 0) {
-          exceptions.add(new ObjectWithRowException<>(o.object(), o.row(), exception));
+          exceptions.add(new ObjectWithRowError<>(o.object(), o.row(), exception));
         } else {
           exceptions.addAll(
               Arrays.stream(exception.getSuppressed())
-                  .map(throwable -> new ObjectWithRowException<>(o.object(), o.row(), throwable))
+                  .map(throwable -> new ObjectWithRowError<>(o.object(), o.row(), throwable))
                   .toList()
           );
         }

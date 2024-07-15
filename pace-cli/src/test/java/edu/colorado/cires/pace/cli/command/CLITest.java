@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.base.PaceCLI;
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler;
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,8 +47,8 @@ public abstract class CLITest {
     commandOut.reset();
   }
   
-  protected CLIException getCLIException() throws JsonProcessingException {
-    return objectMapper.readValue(getCommandOutput(), CLIException.class);
+  protected CLIError getCLIException() throws JsonProcessingException {
+    return objectMapper.readValue(getCommandOutput(), CLIError.class);
   }
 
   protected String getCommandOutput() {

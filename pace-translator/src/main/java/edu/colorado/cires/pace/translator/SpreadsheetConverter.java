@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class SpreadsheetConverter {
   
-  public static <T extends Translator, O extends ObjectWithUniqueField> Stream<ObjectWithRowException<O>> execute(Supplier<Stream<MapWithRowNumber>> reader, T translator, Converter<T, O> converter) {
+  public static <T extends Translator, O extends ObjectWithUniqueField> Stream<ObjectWithRowError<O>> execute(Supplier<Stream<MapWithRowNumber>> reader, T translator, Converter<T, O> converter) {
     RuntimeException runtimeException = new RuntimeException("Translation failed");
 
     return reader.get()
@@ -20,12 +20,12 @@ public class SpreadsheetConverter {
               for (Throwable throwable : rte.getSuppressed()) {
                 runtimeException.addSuppressed(throwable);
               }
-              return new ObjectWithRowException<>(object, mapWithRowNumber.row(), rte);
+              return new ObjectWithRowError<>(object, mapWithRowNumber.row(), rte);
             }
-            return new ObjectWithRowException<>(object, mapWithRowNumber.row(), null);
+            return new ObjectWithRowError<>(object, mapWithRowNumber.row(), null);
           } catch (TranslationException e) {
             runtimeException.addSuppressed(e);
-            return new ObjectWithRowException<>(null, mapWithRowNumber.row(), e);
+            return new ObjectWithRowError<>(null, mapWithRowNumber.row(), e);
           }
         });
   }

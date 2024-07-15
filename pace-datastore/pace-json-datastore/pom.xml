@@ -60,6 +60,22 @@
     </dependency>
   </dependencies>
   
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <excludeFilterFile>${project.parent.basedir}/../spotbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
   <profiles>
     <profile>
       <id>coverage</id>
@@ -87,10 +103,6 @@
                 </rule>
               </rules>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
           </plugin>
         </plugins>
       </build>

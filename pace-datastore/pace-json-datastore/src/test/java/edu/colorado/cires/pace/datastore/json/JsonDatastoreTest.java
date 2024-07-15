@@ -36,7 +36,6 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   @BeforeEach
   void beforeEach() throws IOException {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
-    Files.createDirectories(TEST_PATH);
     datastore = createDatastore(TEST_PATH, OBJECT_MAPPER);
   }
   
@@ -53,7 +52,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   @Test
   void testSave() throws IOException, DatastoreException {
     O object = createNewObject(0);
-
+    Files.createDirectories(TEST_PATH);
     O result = datastore.save(object);
     assertObjectsEqual(object, result);
     assertSavedObjectEqualsObject(object, result);
@@ -79,12 +78,13 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   }
   
   @Test
-  void testSaveFailed() {
+  void testSaveFailed() throws DatastoreException {
     O object = createNewObject(0);
-    
+    object = datastore.save(object);
     FileUtils.deleteQuietly(TEST_PATH.toFile());
-    
-    Exception exception = assertThrows(DatastoreException.class, () -> datastore.save(object));
+
+    O finalObject = object;
+    Exception exception = assertThrows(DatastoreException.class, () -> datastore.save(finalObject));
     assertTrue(exception.getMessage().endsWith(String.format(
         "%s save failed", object.getUuid()
     )));

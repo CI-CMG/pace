@@ -27,6 +27,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   protected final CRUDRepository<O> repository;
   protected final Function<O, Object[]> objectConversion;
   protected final String[] headers;
+  private final String name;
   
   protected MouseAdapter getTableMouseAdapter() {
     return new MouseAdapter() {};
@@ -38,16 +39,18 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
       String[] headers,
       Function<O, Object[]> objectConversion
   ) {
-    setName(name);
+    this.name = name;
     this.headers = headers;
     this.objectConversion = objectConversion;
     this.repository = repository;
     this.tableModel = createTableModel(headers);
-
+  }
+  
+  public void init() {
+    setName(name);
     setLayout(new BorderLayout());
-    
+
     add(createContentPanel());
-    
     loadData();
   }
   

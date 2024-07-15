@@ -69,33 +69,43 @@ public class DataPanelFactory {
   }
 
   public DataPanel<Project> createProjectsPanel() {
-    return new ProjectsPanel(projectRepository, translatorRepository);
+    ProjectsPanel panel = new ProjectsPanel(projectRepository, translatorRepository);
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Platform> createPlatformPanel() {
-    return new PlatformsPanel(
+    PlatformsPanel panel = new PlatformsPanel(
         platformRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
   
   public DataPanel<FileType> createFileTypesPanel() {
-    return new FileTypesPanel(
+    FileTypesPanel panel = new FileTypesPanel(
         fileTypeRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Person> createPeoplePanel() {
-    return new PeoplePanel(personRepository, translatorRepository);
+    PeoplePanel panel = new PeoplePanel(personRepository, translatorRepository);
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Organization> createOrganizationsPanel() {
-    return new OrganizationsPanel(
+    OrganizationsPanel panel = new OrganizationsPanel(
         organizationRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Package> createPackagesPanel() throws IOException {
-    return new PackagesPanel(
+    PackagesPanel panel = new PackagesPanel(
         new PackageRepository(new PackageJsonDatastore(propertyResolver.getDataDir(), objectMapper)),
         new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
         (p) -> new Object[] { 
@@ -131,44 +141,60 @@ public class DataPanelFactory {
         return List.of("UUID", "Object");
       }
     };
+    panel.init();
+    return panel;
   }
 
   public DataPanel<Translator> createTranslatorsPanel() {
-    return new TranslatorPanel(
+    TranslatorPanel panel = new TranslatorPanel(
         translatorRepository,
         new String[] { "UUID", "Name", "Object" },
         (t) -> new Object[] { t.getUuid(), t.getName(), t },
         (o) -> (Translator) o[2],
-        TranslatorForm::new
+        (t) -> {
+          TranslatorForm form = new TranslatorForm(t);
+          form.init();
+          return form;
+        }
     ) {
       @Override
       protected List<String> getHiddenColumns() {
         return List.of("UUID", "Object");
       }
     };
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Instrument> createInstrumentsPanel() {
-    return new InstrumentsPanel(
+    InstrumentsPanel panel = new InstrumentsPanel(
         instrumentRepository, fileTypeRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
   
   public DataPanel<Sensor> createSensorsPanel() {
-    return new SensorsPanel(
+    SensorsPanel panel = new SensorsPanel(
         sensorRepository, translatorRepository
-    );
+    ); 
+    panel.init();
+    return panel; 
   }
 
   public DataPanel<Sea> createSeaAreasPanel() {
-    return new SeaAreasPanel(
+    SeaAreasPanel panel = new SeaAreasPanel(
         seaRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
 
   public DataPanel<DetectionType> createDetectionTypesPanel() {
-    return new DetectionTypesPanel(
+    DetectionTypesPanel panel = new DetectionTypesPanel(
         detectionTypeRepository, translatorRepository
     );
+    panel.init();
+    return panel;
   }
 }

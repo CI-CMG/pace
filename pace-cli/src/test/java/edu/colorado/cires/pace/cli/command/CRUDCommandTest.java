@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -55,7 +55,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     writeObject(createObject("test"));
     
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
         "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(created)
@@ -65,9 +65,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   @Test
   void testCreateUUIDDefined() throws IOException {
     T object = createObject("test", true);
+    execute(getCommandPrefix(), "list"); // initialize datastore
+    clearOut();
     writeObject(object);
     
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
         "uuid for new %s must not be defined", getClazz().getSimpleName()
@@ -77,9 +79,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   @Test
   void testCreateValidationException() throws IOException {
     T object = createObject("");
+    execute(getCommandPrefix(), "list"); // initialize datastore
+    clearOut();
     writeObject(object);
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals(String.format(
         "%s validation failed", getClazz().getSimpleName()
     ), exception.message());
@@ -188,11 +192,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
         "get-by-%s", getUniqueFieldCommandSuffix()
     ), getUniqueField(object));
     
-    CLIException cliException = getCLIException();
-    assertNull(cliException.detail());
+    CLIError cliError = getCLIException();
+    assertNull(cliError.detail());
     assertEquals(String.format(
         "%s with %s = %s not found", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(object)
-    ), cliException.message());
+    ), cliError.message());
   }
 
   protected String getUniqueFieldCommandSuffix() {
@@ -217,7 +221,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     execute(getCommandPrefix(), "get-by-uuid", uuid.toString());
     
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
         "%s with uuid = %s not found", getClazz().getSimpleName(), uuid
@@ -253,11 +257,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     execute(getCommandPrefix(), "update", file.toString());
     
-    CLIException cliException = getCLIException();
-    assertNull(cliException.detail());
+    CLIError cliError = getCLIException();
+    assertNull(cliError.detail());
     assertEquals(String.format(
         "%s uuid must be defined", getClazz().getSimpleName()
-    ), cliException.message());
+    ), cliError.message());
   }
 
   @Test
@@ -272,11 +276,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
 
     execute(getCommandPrefix(), "update", file.toString());
 
-    CLIException cliException = getCLIException();
-    assertNull(cliException.detail());
+    CLIError cliError = getCLIException();
+    assertNull(cliError.detail());
     assertEquals(String.format(
         "%s with uuid = %s not found", getClazz().getSimpleName(), object.getUuid().toString()
-    ), cliException.message());
+    ), cliError.message());
   }
   
   @Test
@@ -297,11 +301,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     execute(getCommandPrefix(), "update", file.toString());
     
-    CLIException cliException = getCLIException();
-    assertNull(cliException.detail());
+    CLIError cliError = getCLIException();
+    assertNull(cliError.detail());
     assertEquals(String.format(
         "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(object1)
-    ), cliException.message());
+    ), cliError.message());
   }
   
   @Test
@@ -337,11 +341,11 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     
     execute(getCommandPrefix(), "delete", uuid.toString());
     
-    CLIException cliException = getCLIException();
-    assertNull(cliException.detail());
+    CLIError cliError = getCLIException();
+    assertNull(cliError.detail());
     assertEquals(String.format(
         "%s with uuid = %s not found", getClazz().getSimpleName(), uuid 
-    ), cliException.message());
+    ), cliError.message());
   }
   
   public T writeObject(T object) throws IOException {

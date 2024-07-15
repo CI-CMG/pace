@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.CLITest;
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
@@ -164,7 +164,7 @@ class MigrateCommandTest extends CLITest {
 
     execute("migrate", sourceData.toString(), localData.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals("Migration failed", exception.message());
     ArrayList<String> violations = (ArrayList<String>) exception.detail();
     assertEquals(40, violations.size());

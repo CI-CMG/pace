@@ -83,6 +83,21 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.2.5</version>
         </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.8.3.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

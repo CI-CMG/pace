@@ -16,8 +16,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 final class FileUtils {
 
   public static void copyFile(Path source, Path target) throws IOException {
-    if (!Files.exists(target.getParent())) {
-      Files.createDirectories(target.getParent());
+    Path parentPath = target.getParent();
+    
+    if (parentPath != null && !Files.exists(parentPath)) {
+      Files.createDirectories(parentPath);
     }
 
     Files.copy(source, target);
@@ -30,8 +32,8 @@ final class FileUtils {
     }
 
     fileWriter.append(String.format(
-        "%s  %s\n", manifestParentDirectory.relativize(path), checksum
-    ));
+        "%s  %s", manifestParentDirectory.relativize(path), checksum
+    )).append("\n");
   }
   
   public static void mkdir(Path path) throws IOException {

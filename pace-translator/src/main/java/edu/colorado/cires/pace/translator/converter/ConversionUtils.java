@@ -80,6 +80,10 @@ final class ConversionUtils {
     
     String zoneValue = stringFromProperty(timeZone);
     String inputValue = stringFromProperty(date);
+    
+    if (zoneValue == null) {
+      return null;
+    }
 
     DateTimeFormatter dateTimeFormatter;
     
@@ -103,10 +107,11 @@ final class ConversionUtils {
       return null;
     }
     
+    if (inputValue == null) {
+      return null;
+    }
     try {
       return LocalDate.parse(inputValue, dateTimeFormatter);
-    } catch (NullPointerException e) {
-      return null;
     } catch (Throwable e) {
       runtimeException.addSuppressed(new FieldException(
           dateTranslator.getDate(), "Invalid date format", date.column(), row 

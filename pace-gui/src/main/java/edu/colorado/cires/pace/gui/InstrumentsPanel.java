@@ -28,7 +28,11 @@ public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTransl
             .collect(Collectors.joining(", ")), i},
         Instrument.class,
         (o) -> (Instrument) o[3],
-        (i) -> new InstrumentForm(i, fileTypeRepository),
+        (i) -> {
+          InstrumentForm form = new InstrumentForm(i, fileTypeRepository);
+          form.init();
+          return form;
+        },
         translatorRepository,
         new InstrumentConverter(fileTypeRepository),
         InstrumentTranslator.class

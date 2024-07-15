@@ -29,22 +29,27 @@ public class InstrumentForm extends Form<Instrument> {
   private final JPanel fileTypesPanel = new JPanel(new GridBagLayout());
   private final FileTypeRepository fileTypeRepository;
   private final JPanel fluff = new JPanel();
+  
+  private final Instrument initialInstrument;
 
   public InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
+    this.initialInstrument = initialInstrument;
+    this.fileTypeRepository = fileTypeRepository;
+  }
+  
+  public void init() {
     setName("instrumentForm");
     uuidField.setName("uuid");
     nameField.setName("name");
     fileTypesPanel.setName("fileTypeListingsPanel");
-    
-    this.fileTypeRepository = fileTypeRepository;
-    
+
     setLayout(new GridBagLayout());
-    
+
     add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
-    
+
     JPanel controlPanel = new JPanel(new GridBagLayout());
     controlPanel.setName("controlPanel");
     controlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
@@ -53,11 +58,11 @@ public class InstrumentForm extends Form<Instrument> {
     controlPanel.add(addFileTypeButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
     add(controlPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     add(new JScrollPane(fileTypesPanel), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH; }));
-    
+
     uuidField.setEnabled(false);
-    
+
     addFileTypeButton.addActionListener((e) -> addFileType(null));
-    
+
     initializeFields(initialInstrument);
   }
   
@@ -71,6 +76,7 @@ public class InstrumentForm extends Form<Instrument> {
             repaint();
           }
       );
+      instrumentFileTypePanel.init();
       if (initialFileType != null) {
         instrumentFileTypePanel.setName(initialFileType.getType());
       }

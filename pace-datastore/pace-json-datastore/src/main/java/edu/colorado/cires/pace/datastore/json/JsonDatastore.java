@@ -29,6 +29,8 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   private final Function<O, String> uniqueFieldGetter;
   private final Map<String, O> objectsMap = new HashMap<>(0);
   private final TypeReference<List<O>> typeReference;
+  
+  private boolean initialized = false;
 
   protected JsonDatastore(Path storagePath, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
       TypeReference<List<O>> typeReference) throws IOException {
@@ -38,21 +40,26 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
     this.clazz = clazz;
     this.uniqueFieldGetter = uniqueFieldGetter;
     this.typeReference = typeReference;
-    init();
   }
   
   private void init() throws IOException {
     if (!storageFile.toFile().exists()) {
       LOGGER.debug("Creating {}", storageFile);
-      Files.createDirectories(storageFile.getParent());
+      Path parentPath = storageFile.getParent();
+      if (parentPath != null && !parentPath.toFile().exists()) {
+        Files.createDirectories(parentPath);
+      }
       objectMapper.writeValue(storageFile.toFile(), Collections.emptyList());
     }
-    
+
     readStorageFile();
+    
+    initialized = true;
   }
 
   @Override
   public O save(O object) throws DatastoreException {
+    lazyInitialize();
     String uniqueField = uniqueFieldGetter.apply(object);
     
     List<O> existingObjects = objectsMap.values().stream()
@@ -77,6 +84,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
 
   @Override
   public void delete(O object) throws DatastoreException {
+    lazyInitialize();
     String uniqueField = uniqueFieldGetter.apply(object);
     try {
       objectsMap.remove(uniqueField);
@@ -90,21 +98,24 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   }
 
   @Override
-  public Optional<O> findByUUID(UUID uuid) {
+  public Optional<O> findByUUID(UUID uuid) throws DatastoreException {
+    lazyInitialize();
     return objectsMap.values().stream()
         .filter(o -> o.getUuid().equals(uuid))
         .findFirst();
   }
 
   @Override
-  public Optional<O> findByUniqueField(String uniqueField) {
+  public Optional<O> findByUniqueField(String uniqueField) throws DatastoreException {
+    lazyInitialize();
     return Optional.ofNullable(
         objectsMap.get(uniqueField)
     );
   }
 
   @Override
-  public Stream<O> findAll() {
+  public Stream<O> findAll() throws DatastoreException {
+    lazyInitialize();
     return objectsMap.values().stream();
   }
 
@@ -132,5 +143,15 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
 
   public Function<O, String> getUniqueFieldGetter() {
     return uniqueFieldGetter;
+  }
+  
+  private void lazyInitialize() throws DatastoreException {
+    if (!initialized) {
+      try {
+        init();
+      } catch (IOException e) {
+        throw new DatastoreException("Datastore initialization failed", e);
+      }
+    }
   }
 }

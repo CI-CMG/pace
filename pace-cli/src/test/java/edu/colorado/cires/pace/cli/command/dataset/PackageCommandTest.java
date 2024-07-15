@@ -11,7 +11,7 @@ import edu.colorado.cires.pace.cli.command.organization.OrganizationCommandTest;
 import edu.colorado.cires.pace.cli.command.person.PersonCommandTest;
 import edu.colorado.cires.pace.cli.command.platform.PlatformCommandTest;
 import edu.colorado.cires.pace.cli.command.project.ProjectCommandTest;
-import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIException;
+import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.LocationDetail;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
@@ -389,7 +389,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     clearOut();
     execute("package", "process", testPath.resolve("test.json").toFile().toString(), outputDirectory.toString());
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals(String.format(
         "Failed to read file or directory: %s", p.getSourcePath().toAbsolutePath()
     ), exception.detail());
@@ -401,9 +401,11 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   @Test
   void testCreateValidationException() throws IOException {
     P object = createObject("");
+    execute(getCommandPrefix(), "list"); // initialize datastore
+    clearOut();
     writeObject(object);
 
-    CLIException exception = getCLIException();
+    CLIError exception = getCLIException();
     assertEquals(String.format(
         "%s validation failed", getClazz().getSimpleName()
     ), exception.message());

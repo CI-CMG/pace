@@ -6,7 +6,6 @@ import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.HeadlessException;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -18,15 +17,14 @@ public class Application extends JFrame {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
-  public Application() throws HeadlessException {
-    createGUI();
+  public Application() {
   }
 
   public static void main(String[] args) {
-    new Application();
+    new Application().createGUI();
   }
   
-  private void createGUI() {
+  protected void createGUI() {
     FlatIntelliJLaf.setup();
 
     ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
@@ -48,6 +46,7 @@ public class Application extends JFrame {
       Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
       
       ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper, propertyResolver);
+      applicationTabs.init();
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       setContentPane(applicationTabs);
       setTitle("PACE");

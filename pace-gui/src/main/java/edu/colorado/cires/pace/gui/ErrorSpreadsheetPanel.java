@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
-import edu.colorado.cires.pace.translator.ObjectWithRowException;
+import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,15 +45,22 @@ import org.dhatim.fastexcel.reader.Row;
 public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPanel {
   
   private final boolean autoResizeColumns;
+  private final File file;
+  private final List<ObjectWithRowError<O>> exceptions;
 
-  public ErrorSpreadsheetPanel(File file, List<ObjectWithRowException<O>> exceptions, boolean autoResizeColumns) {
+  public ErrorSpreadsheetPanel(File file, List<ObjectWithRowError<O>> exceptions, boolean autoResizeColumns) {
+    this.file = file;
+    this.exceptions = exceptions;
     this.autoResizeColumns = autoResizeColumns;
+  }
+  
+  public void init() {
     TableData tableData = readSpreadsheet(file, exceptions);
     setLayout(new BorderLayout());
     add(new JScrollPane(createTable(tableData, exceptions)), BorderLayout.CENTER);
   }
   
-  private JTable createTable(TableData tableData, List<ObjectWithRowException<O>> exceptions) {
+  private JTable createTable(TableData tableData, List<ObjectWithRowError<O>> exceptions) {
     DefaultTableModel tableModel = new TableModel(
         tableData.data().stream()
             .map(List::toArray)
@@ -102,7 +110,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
                 } else {
                   return false;
                 }
-              }).map(ObjectWithRowException::throwable).map(java.lang.Throwable::getMessage)
+              }).map(ObjectWithRowError::throwable).map(java.lang.Throwable::getMessage)
               .collect(Collectors.toSet());
 
           if (!messages.isEmpty()) {
@@ -115,7 +123,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
     return table;
   }
   
-  private TableData readSpreadsheet(File file, List<ObjectWithRowException<O>> exceptions) {
+  private TableData readSpreadsheet(File file, List<ObjectWithRowError<O>> exceptions) {
     TranslationType fileType = file.getName().endsWith("csv") ? TranslationType.csv : TranslationType.excel;
     
     return switch (fileType) {
@@ -157,7 +165,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
             .setHeader()
             .build();
         
-        try (InputStream inputStream = new FileInputStream(file); Reader reader = new InputStreamReader(inputStream) ) {
+        try (InputStream inputStream = new FileInputStream(file); Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8) ) {
           CSVParser parser = format.parse(reader);
           
           List<String> headers = new ArrayList<>(parser.getHeaderNames());
@@ -166,8 +174,8 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
               .map(record -> {
                 List<Object> values  = new ArrayList<>(record.toList());
                 Throwable t = exceptions.stream()
-                    .filter(oObjectWithRowException -> record.getRecordNumber() == oObjectWithRowException.row() - 1)
-                    .findFirst().map(ObjectWithRowException::throwable).orElse(null);
+                    .filter(oObjectWithRowError -> record.getRecordNumber() == oObjectWithRowError.row() - 1)
+                    .findFirst().map(ObjectWithRowError::throwable).orElse(null);
                 if (t == null) {
                   values.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
                 } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {

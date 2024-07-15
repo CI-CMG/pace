@@ -56,7 +56,8 @@ public final class ApplicationPropertyResolver {
       return;
     }
     
-    if (!propertiesFile.getParent().toFile().exists()) {
+    Path parentPath = propertiesFile.getParent();
+    if (parentPath != null && !parentPath.toFile().exists()) {
       FileUtils.createParentDirectories(propertiesFile.toFile());
     }
 
