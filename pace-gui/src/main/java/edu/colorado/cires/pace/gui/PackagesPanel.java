@@ -13,6 +13,8 @@ import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -88,6 +90,18 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     });
     
     return panel;
+  }
+
+  @Override
+  protected SearchParameters<Package> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return PackageSearchParameters.builder()
+        .packageIds(uniqueFieldSearchTerms)
+        .build();
+  }
+
+  @Override
+  protected String getHumanReadableUniqueFieldName() {
+    return "package id";
   }
 
   private void packageSelectedRows() {

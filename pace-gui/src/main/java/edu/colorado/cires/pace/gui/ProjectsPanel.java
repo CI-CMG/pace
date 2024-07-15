@@ -4,7 +4,10 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.ProjectTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.ProjectSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.ProjectConverter;
+import java.util.List;
 import java.util.UUID;
 
 public class ProjectsPanel extends MetadataPanel<Project, ProjectTranslator> {
@@ -26,5 +29,12 @@ public class ProjectsPanel extends MetadataPanel<Project, ProjectTranslator> {
         new ProjectConverter(),
         ProjectTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<Project> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return ProjectSearchParameters.builder()
+        .names(uniqueFieldSearchTerms)
+        .build();
   }
 }

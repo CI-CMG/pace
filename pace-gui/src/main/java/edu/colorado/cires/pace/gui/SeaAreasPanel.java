@@ -4,7 +4,10 @@ import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.translator.SeaTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.SeaSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.SeaConverter;
+import java.util.List;
 import java.util.UUID;
 
 public class SeaAreasPanel extends MetadataPanel<Sea, SeaTranslator> {
@@ -25,5 +28,12 @@ public class SeaAreasPanel extends MetadataPanel<Sea, SeaTranslator> {
         new SeaConverter(),
         SeaTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<Sea> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return SeaSearchParameters.builder()
+        .names(uniqueFieldSearchTerms)
+        .build();
   }
 }

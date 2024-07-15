@@ -4,7 +4,10 @@ import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.FileTypeSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
+import java.util.List;
 import java.util.UUID;
 
 public class FileTypesPanel extends MetadataPanel<FileType, FileTypeTranslator> {
@@ -26,5 +29,12 @@ public class FileTypesPanel extends MetadataPanel<FileType, FileTypeTranslator> 
         new FileTypeConverter(),
         FileTypeTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<FileType> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return FileTypeSearchParameters.builder()
+        .types(uniqueFieldSearchTerms)
+        .build();
   }
 }

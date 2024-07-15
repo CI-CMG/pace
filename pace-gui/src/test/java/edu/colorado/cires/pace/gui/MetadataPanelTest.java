@@ -28,6 +28,7 @@ import org.assertj.swing.fixture.JTabbedPaneFixture;
 import org.assertj.swing.fixture.JTableCellFixture;
 import org.assertj.swing.fixture.JTableFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
+import org.assertj.swing.fixture.JToolBarFixture;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,7 +92,7 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
         .requireVisible();
   }
   
-  protected JTextComponentFixture getTextFixture(JPanelFixture panelFixture, String name) {
+  protected JTextComponentFixture getTextFixture(AbstractContainerFixture<?, ?, ?> panelFixture, String name) {
     return panelFixture.textBox(name)
         .requireVisible();
   }
@@ -239,6 +240,29 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     buttonFixture.click();
     dialogFixture.requireNotVisible();
   }
+
+  private void searchObjects(JPanelFixture panelFixture, String uniqueField) {
+    JToolBarFixture toolBarFixture = panelFixture.toolBar()
+        .requireVisible();
+    
+    getTextFixture(toolBarFixture, "searchField")
+        .requireEnabled()
+        .enterText(uniqueField)
+        .requireText(uniqueField);
+    
+    getButton(toolBarFixture, "Search")
+        .requireEnabled()
+        .click();
+  }
+
+  private void clearSearchParameters(JPanelFixture panelFixture) {
+    JToolBarFixture toolBarFixture = panelFixture.toolBar()
+        .requireVisible();
+    
+    getButton(toolBarFixture, "Clear")
+        .requireEnabled()
+        .click();
+  }
   
   @Test
   void testCRUD() throws IOException {
@@ -250,6 +274,11 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     O object1 = createAndSaveObject(metadataPanelFixture, "A", false);
     requireTableContents(tableFixture, Collections.singletonList(object1));
     O object2 = createAndSaveObject(metadataPanelFixture, "B", false);
+    requireTableContents(tableFixture, List.of(object1, object2));
+    
+    searchObjects(metadataPanelFixture, getUniqueField(object1));
+    requireTableContents(tableFixture, Collections.singletonList(object1));
+    clearSearchParameters(metadataPanelFixture);
     requireTableContents(tableFixture, List.of(object1, object2));
     
     createAndSaveObject(metadataPanelFixture, "A", true);

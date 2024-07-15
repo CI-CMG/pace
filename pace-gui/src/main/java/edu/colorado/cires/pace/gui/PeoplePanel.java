@@ -4,7 +4,10 @@ import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.translator.PersonTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.PersonConverter;
+import java.util.List;
 import java.util.UUID;
 
 public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
@@ -39,5 +42,12 @@ public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
         new PersonConverter(),
         PersonTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<Person> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return PersonSearchParameters.builder()
+        .names(uniqueFieldSearchTerms)
+        .build();
   }
 }

@@ -6,6 +6,8 @@ import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.InstrumentSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,13 @@ public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTransl
         new InstrumentConverter(fileTypeRepository),
         InstrumentTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<Instrument> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return InstrumentSearchParameters.builder()
+        .names(uniqueFieldSearchTerms)
+        .build();
   }
 
   @Override

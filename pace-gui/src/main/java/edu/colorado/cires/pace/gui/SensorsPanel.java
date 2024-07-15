@@ -4,6 +4,8 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import edu.colorado.cires.pace.repository.search.SensorSearchParameters;
 import edu.colorado.cires.pace.translator.converter.SensorConverter;
 import java.util.List;
 
@@ -22,6 +24,13 @@ public class SensorsPanel extends MetadataPanel<Sensor, SensorTranslator> {
         new SensorConverter(),
         SensorTranslator.class
     );
+  }
+
+  @Override
+  protected SearchParameters<Sensor> getSearchParameters(List<String> uniqueFieldSearchTerms) {
+    return SensorSearchParameters.builder()
+        .names(uniqueFieldSearchTerms)
+        .build();
   }
 
   @Override
