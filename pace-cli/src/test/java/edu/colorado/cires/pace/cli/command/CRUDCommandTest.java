@@ -30,6 +30,10 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   protected abstract String getUniqueField(T object);
   protected abstract T updateObject(T original, String uniqueField);
   
+  protected String getSearchParameterArgumentName() {
+    return "--names";
+  }
+  
   public T createObject(String uniqueField) {
     return createObject(uniqueField, false);
   }
@@ -104,8 +108,8 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     T object1 = createObject("test-1");
     T object2 = createObject("test-2");
     
-    writeObject(object1);
-    writeObject(object2);
+    object1 = writeObject(object1);
+    object2 = writeObject(object2);
 
     clearOut();
     
@@ -123,10 +127,34 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     for (int i = 0; i < results.size(); i++) {
       T actual = results.get(i);
       T expected = i == 0 ? object1 : object2;
-      assertObjectsEqual(expected, actual, false);
+      assertObjectsEqual(expected, actual, true);
     }
   }
-  
+
+  @Test
+  void testSearch() throws IOException {
+    T object1 = createObject("test-1");
+    T object2 = createObject("test-2");
+
+    object1 = writeObject(object1);
+    writeObject(object2);
+
+    clearOut();
+
+    execute(getCommandPrefix(), "list", getSearchParameterArgumentName(), getUniqueField(object1));
+
+    String output = getCommandOutput();
+
+    List<T> results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
+    assertEquals(1, results.size());
+
+    assertObjectsEqual(object1, results.get(0), true);
+  }
+
   @Test
   void testFindAllNoResults() throws JsonProcessingException {
     execute(getCommandPrefix(), "list");

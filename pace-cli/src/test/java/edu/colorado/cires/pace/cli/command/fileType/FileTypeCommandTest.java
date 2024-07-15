@@ -12,6 +12,11 @@ import java.util.UUID;
 public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileTypeTranslator> {
 
   @Override
+  protected String getSearchParameterArgumentName() {
+    return "--types";
+  }
+
+  @Override
   public FileType createObject(String uniqueField, boolean withUUID) {
     return FileType.builder()
         .uuid(withUUID ? UUID.randomUUID() : null)

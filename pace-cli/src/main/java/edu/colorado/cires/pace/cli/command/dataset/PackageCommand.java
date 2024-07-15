@@ -27,6 +27,8 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackagingException;
+import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -102,10 +104,20 @@ public class PackageCommand {
   
   @Command(name = "list", description = "List packages", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Package> {
+    
+    @Option(names = { "-pids", "--package-ids" }, split = ",", description = "Filter results based on package ids")
+    private List<String> packageIds = new ArrayList<>(0);
 
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Package> getSearchParameters() {
+      return PackageSearchParameters.builder()
+          .packageIds(packageIds)
+          .build();
     }
   }
   

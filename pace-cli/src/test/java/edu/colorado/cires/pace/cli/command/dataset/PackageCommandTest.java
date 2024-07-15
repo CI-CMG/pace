@@ -44,7 +44,12 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected abstract void addLocationDetailTypeSpecificFields(List<String> basePackageFields);
   protected abstract L createLocationDetailTranslator();
   protected abstract T createPackageTranslator(PackageTranslator packageTranslator);
-  
+
+  @Override
+  protected String getSearchParameterArgumentName() {
+    return "--package-ids";
+  }
+
   protected <O extends ObjectWithUniqueField> O saveObject(O object, String commandPrefix) throws IOException {
     String fileName = String.format("test-%s.json", UUID.randomUUID());
     File file = testPath.resolve(fileName).toFile();

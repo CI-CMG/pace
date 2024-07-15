@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
+import edu.colorado.cires.pace.repository.search.FileTypeSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.Translate;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeCommand.Update;
 import edu.colorado.cires.pace.data.object.FileType;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class FileTypeCommand {
   @Command(name = "list", description = "List file types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<FileType> {
 
+    @Option(names = { "--types", "-t" }, split = ",", description = "Filter results based on types")
+    private List<String> types = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<FileType> getSearchParameters() {
+      return FileTypeSearchParameters.builder()
+          .types(types)
+          .build();
     }
   }
   

@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.PersonTranslator;
+import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PersonConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.person.PersonCommand.Translate;
 import edu.colorado.cires.pace.cli.command.person.PersonCommand.Update;
 import edu.colorado.cires.pace.data.object.Person;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class PersonCommand {
   @Command(name = "list", description = "List people", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Person> {
 
+    @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
+    private List<String> names = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Person> getSearchParameters() {
+      return PersonSearchParameters.builder()
+          .names(names)
+          .build();
     }
   }
   

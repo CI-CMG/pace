@@ -15,6 +15,9 @@ public abstract class ObjectWithNameSearchParameters<O extends ObjectWithName> i
 
   @Override
   public boolean matches(O object) {
+    if (names.isEmpty()) {
+      return true;
+    }
     String name = object.getName().toLowerCase(Locale.ROOT);
     return names.stream()
         .anyMatch(n -> name.contains(n.toLowerCase(Locale.ROOT)));

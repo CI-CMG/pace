@@ -17,6 +17,9 @@ public class PackageSearchParameters implements SearchParameters<Package> {
 
   @Override
   public boolean matches(Package object) {
+    if (packageIds.isEmpty()) {
+      return true;
+    }
     String packageId = object.getPackageId().toLowerCase(Locale.ROOT);
     return packageIds.stream()
         .anyMatch(pid -> packageId.contains(

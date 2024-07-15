@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.PlatformTranslator;
+import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PlatformConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.platform.PlatformCommand.Translate;
 import edu.colorado.cires.pace.cli.command.platform.PlatformCommand.Update;
 import edu.colorado.cires.pace.data.object.Platform;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class PlatformCommand {
   @Command(name = "list", description = "List platforms", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Platform> {
 
+    @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
+    private List<String> names = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<Platform> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Platform> getSearchParameters() {
+      return PlatformSearchParameters.builder()
+          .names(names)
+          .build();
     }
   }
   

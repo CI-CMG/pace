@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
+import edu.colorado.cires.pace.repository.search.OrganizationSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.OrganizationConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.Tran
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.Update;
 import edu.colorado.cires.pace.data.object.Organization;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class OrganizationCommand {
   @Command(name = "list", description = "List organizations", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Organization> {
 
+    @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
+    private List<String> names = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<Organization> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Organization> getSearchParameters() {
+      return OrganizationSearchParameters.builder()
+          .names(names)
+          .build();
     }
   }
   

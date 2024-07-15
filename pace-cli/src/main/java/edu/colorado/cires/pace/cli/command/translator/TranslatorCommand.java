@@ -16,11 +16,15 @@ import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByNam
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Update;
 import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import edu.colorado.cires.pace.repository.search.TranslatorSearchParameters;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "translator", description = "Manage translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class, subcommands = {
@@ -65,10 +69,20 @@ public class TranslatorCommand {
   
   @Command(name = "list", description = "List translators", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Translator> {
+    
+    @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
+    private List<String> names = new ArrayList<>(0);
 
     @Override
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Translator> getSearchParameters() {
+      return TranslatorSearchParameters.builder()
+          .names(names)
+          .build();
     }
   }
   

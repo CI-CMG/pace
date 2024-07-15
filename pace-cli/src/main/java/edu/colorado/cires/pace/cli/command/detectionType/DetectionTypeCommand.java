@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
+import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.DetectionTypeConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.Tr
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeCommand.Update;
 import edu.colorado.cires.pace.data.object.DetectionType;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class DetectionTypeCommand {
   @Command(name = "list", description = "List detection types", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<DetectionType> {
 
+    @Option(names = { "--sources", "-s" }, split = ",", description = "Filter results based on sources")
+    private List<String> sources = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<DetectionType> getSearchParameters() {
+      return DetectionTypeSearchParameters.builder()
+          .sources(sources)
+          .build();
     }
   }
   

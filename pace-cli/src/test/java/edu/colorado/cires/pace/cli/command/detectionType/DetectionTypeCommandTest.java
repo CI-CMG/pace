@@ -12,6 +12,11 @@ import java.util.UUID;
 class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, DetectionTypeTranslator> {
 
   @Override
+  protected String getSearchParameterArgumentName() {
+    return "--sources";
+  }
+
+  @Override
   public DetectionType createObject(String uniqueField, boolean withUUID) {
     return DetectionType.builder()
         .uuid(withUUID ? UUID.randomUUID() : null)

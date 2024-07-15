@@ -9,6 +9,8 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.ShipTranslator;
+import edu.colorado.cires.pace.repository.search.SearchParameters;
+import edu.colorado.cires.pace.repository.search.ShipSearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.ShipConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -23,6 +25,7 @@ import edu.colorado.cires.pace.cli.command.ship.ShipCommand.Translate;
 import edu.colorado.cires.pace.cli.command.ship.ShipCommand.Update;
 import edu.colorado.cires.pace.data.object.Ship;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -75,9 +78,19 @@ public class ShipCommand {
   @Command(name = "list", description = "List ships", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
   static class FindAll extends FindAllCommand<Ship> {
 
+    @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
+    private List<String> names = new ArrayList<>(0);
+
     @Override
     protected RepositoryFactory<Ship> getRepositoryFactory() {
       return repositoryFactory;
+    }
+
+    @Override
+    protected SearchParameters<Ship> getSearchParameters() {
+      return ShipSearchParameters.builder()
+          .names(names)
+          .build();
     }
   }
   

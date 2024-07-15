@@ -17,6 +17,9 @@ public class DetectionTypeSearchParameters implements SearchParameters<Detection
 
   @Override
   public boolean matches(DetectionType object) {
+    if (sources.isEmpty()) {
+      return true;
+    }
     String source = object.getSource().toLowerCase(Locale.ROOT);
     return sources.stream()
         .anyMatch(s -> source.contains(s.toLowerCase(Locale.ROOT)));

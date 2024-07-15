@@ -17,6 +17,9 @@ public class FileTypeSearchParameters implements SearchParameters<FileType> {
 
   @Override
   public boolean matches(FileType object) {
+    if (types.isEmpty()) {
+      return true;
+    }
     String type = object.getType().toLowerCase(Locale.ROOT);
     return types.stream()
         .anyMatch(t -> type.contains(t.toLowerCase(Locale.ROOT)));
