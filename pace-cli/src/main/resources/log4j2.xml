@@ -9,13 +9,13 @@
     </File>
   </Appenders>
   <Loggers>
-    <Root level="warn" additivity="false">
+    <AsyncRoot level="warn" additivity="false">
       <AppenderRef ref="ConsoleAppender"/>
       <AppenderRef ref="FileAppender"/>
-    </Root>
-    <Logger name="edu.colorado.cires.pace" level="info" additivity="false">
+    </AsyncRoot>
+    <AsyncLogger name="edu.colorado.cires.pace" level="info" additivity="false">
       <AppenderRef ref="ConsoleAppender"/>
       <AppenderRef ref="FileAppender"/>
-    </Logger>
+    </AsyncLogger>
   </Loggers>
 </Configuration>
