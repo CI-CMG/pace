@@ -250,10 +250,10 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     JToolBarFixture toolBarFixture = panelFixture.toolBar()
         .requireVisible();
     
-    getTextFixture(toolBarFixture, "searchField")
-        .requireEnabled()
-        .enterText(uniqueField)
-        .requireText(uniqueField);
+    JTextComponentFixture textField = getTextFixture(toolBarFixture, "searchField")
+        .requireEnabled();
+    textField.target().setText(uniqueField);
+    textField.requireText(uniqueField);
     
     getButton(toolBarFixture, "Search")
         .requireEnabled()
