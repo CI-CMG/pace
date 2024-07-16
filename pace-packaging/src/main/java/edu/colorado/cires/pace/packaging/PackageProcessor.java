@@ -10,21 +10,18 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.builder.api.AppenderComponentBuilder;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
-import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
-import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.WriterAppender;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 public class PackageProcessor {
   
@@ -61,34 +58,18 @@ public class PackageProcessor {
 
     for (Package aPackage : packages) {
       Path packageOutputDir = getPackageOutputDir(aPackage);
-      
-      Configurator.reconfigure();
 
-      ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-      builder.setStatusLevel(Level.INFO);
-      builder.setConfigurationName(aPackage.getPackageId());
+      WriterAppender writerAppender = WriterAppender.newBuilder()
+          .setName(aPackage.getPackageId())
+          .setLayout(PatternLayout.createDefaultLayout())
+          .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
+          .build();
 
-      AppenderComponentBuilder appenderComponentBuilder = builder.newAppender("PackageOut", "FILE")
-          .addAttribute("fileName", outputDir.resolve(aPackage.getPackageId()).resolve("process.log"))
-          .addAttribute("append", "true");
-
-      appenderComponentBuilder.add(builder.newLayout("PatternLayout")
-          .addAttribute("pattern", "%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"));
-
-      RootLoggerComponentBuilder rootLoggerComponentBuilder = builder.newRootLogger(Level.INFO);
-      rootLoggerComponentBuilder.add(builder.newAppenderRef("PackageOut"));
-
-      builder.add(appenderComponentBuilder);
-      builder.add(rootLoggerComponentBuilder);
-      
-      Configurator.reconfigure(builder.build());
-
-      Logger logger = LogManager.getLogger(aPackage.getPackageId());
-
+      Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
+      logger.addAppender(writerAppender);
       processPackage(aPackage, packageOutputDir, logger);
+      logger.removeAppender(writerAppender);
     }
-
-    Configurator.reconfigure();
   }
   
   private void initializeProgressIndicators() {

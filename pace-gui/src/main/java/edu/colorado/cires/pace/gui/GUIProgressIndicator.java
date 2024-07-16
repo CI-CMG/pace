@@ -20,6 +20,7 @@ public class GUIProgressIndicator extends ProgressIndicator {
     if (percentComplete == Integer.MAX_VALUE) {
       progressBar.setIndeterminate(true);
     } else {
+      progressBar.setIndeterminate(false);
       progressBar.getModel().setValue(percentComplete);
     }
   }
