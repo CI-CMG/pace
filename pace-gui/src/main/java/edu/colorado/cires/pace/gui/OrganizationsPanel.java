@@ -45,4 +45,14 @@ public class OrganizationsPanel extends MetadataPanel<Organization, Organization
         .names(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(Organization object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Organization";
+  }
 }

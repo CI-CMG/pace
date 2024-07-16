@@ -80,6 +80,9 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
     Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     dialog.setSize(size);
     dialog.setPreferredSize(size);
+    dialog.setTitle(object == null ? String.format("New %s", getHumanReadableObjectName()) : String.format(
+        "%s - %s", getHumanReadableObjectName(), getUniqueField(object)
+    ) );
     dialog.setName("formDialog");
     dialog.setModal(true);
     dialog.setLocationRelativeTo(this);
@@ -97,5 +100,9 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
     dialog.pack();
     dialog.setVisible(true);
   }
-  
+
+  protected abstract String getUniqueField(O object);
+
+  protected abstract String getHumanReadableObjectName();
+
 }

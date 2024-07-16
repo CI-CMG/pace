@@ -37,4 +37,14 @@ public class SensorsPanel extends MetadataPanel<Sensor, SensorTranslator> {
   protected List<String> getHiddenColumns() {
     return List.of("UUID", "Object");
   }
+
+  @Override
+  protected String getUniqueField(Sensor object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Sensor";
+  }
 }

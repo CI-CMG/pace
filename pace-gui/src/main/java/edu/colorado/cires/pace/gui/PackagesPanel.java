@@ -17,6 +17,7 @@ import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
@@ -150,6 +151,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     });
     
     JDialog chooseDestinationDialog = new JDialog();
+    Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
+    chooseDestinationDialog.setSize(size);
+    chooseDestinationDialog.setPreferredSize(size);
     chooseDestinationDialog.setTitle("Choose Destination");
     chooseDestinationDialog.setModal(true);
     chooseDestinationDialog.setLocationRelativeTo(this);

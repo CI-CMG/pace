@@ -5,6 +5,7 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.repository.search.TranslatorSearchParameters;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -81,6 +82,14 @@ public class TranslatorPanel extends DataPanel<Translator> {
     }, object != null);
     formPanel.init();
 
+    dialog.setTitle(object == null ? "New Translator" : String.format(
+        "Translator - %s", object.getName()
+    ));
+    Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
+    dialog.setSize(size);
+    dialog.setPreferredSize(size);
+    dialog.setModal(true);
+    dialog.setLocationRelativeTo(this);
     dialog.add(formPanel);
     dialog.pack();
     dialog.setVisible(true);

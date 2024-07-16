@@ -17,6 +17,7 @@ import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.utilities.TranslationType;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
@@ -238,6 +239,10 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
       errorDialog.setLocationRelativeTo(this);
       ErrorSpreadsheetPanel<O> errorSpreadsheetPanel = new ErrorSpreadsheetPanel<>(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName()));
       errorSpreadsheetPanel.init();
+      Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
+      errorDialog.setSize(size);
+      errorDialog.setPreferredSize(size);
+      errorDialog.setTitle("Spreadsheet Errors");
       errorDialog.add(errorSpreadsheetPanel);
       errorDialog.pack();
       errorDialog.setVisible(true);

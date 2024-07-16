@@ -37,4 +37,14 @@ public class ProjectsPanel extends MetadataPanel<Project, ProjectTranslator> {
         .names(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(Project object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Project";
+  }
 }

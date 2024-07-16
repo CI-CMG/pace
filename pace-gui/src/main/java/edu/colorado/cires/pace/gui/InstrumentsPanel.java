@@ -50,4 +50,14 @@ public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTransl
   protected List<String> getHiddenColumns() {
     return List.of("UUID", "Object");
   }
+
+  @Override
+  protected String getUniqueField(Instrument object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Instrument";
+  }
 }

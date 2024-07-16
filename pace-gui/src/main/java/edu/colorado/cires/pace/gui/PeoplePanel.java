@@ -50,4 +50,14 @@ public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
         .names(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(Person object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Person";
+  }
 }

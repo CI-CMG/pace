@@ -37,4 +37,14 @@ public class FileTypesPanel extends MetadataPanel<FileType, FileTypeTranslator> 
         .types(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(FileType object) {
+    return object.getType();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "File Type";
+  }
 }

@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
+import java.awt.Dimension;
 import java.util.function.Function;
 import javax.swing.JDialog;
 
@@ -29,7 +30,13 @@ public abstract class TranslatePanel<O extends ObjectWithUniqueField, T extends 
   protected void createTranslateForm()
       throws DatastoreException {
     JDialog dialog = new JDialog();
-    dialog.add(new TranslateForm<>(this::loadData, repository, clazz, translatorRepository, converter, translatorClazz));
+    TranslateForm<O, T> translateForm = new TranslateForm<>(this::loadData, repository, clazz, translatorRepository, converter, translatorClazz);
+    translateForm.init();
+    dialog.add(translateForm);
+    dialog.setTitle("Translate");
+    Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
+    dialog.setSize(size);
+    dialog.setPreferredSize(size);
     dialog.setLocationRelativeTo(this);
     dialog.pack();
     dialog.setVisible(true);

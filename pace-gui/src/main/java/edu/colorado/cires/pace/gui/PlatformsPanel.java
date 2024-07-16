@@ -36,4 +36,14 @@ public class PlatformsPanel extends MetadataPanel<Platform, PlatformTranslator> 
         .names(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(Platform object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Platform";
+  }
 }

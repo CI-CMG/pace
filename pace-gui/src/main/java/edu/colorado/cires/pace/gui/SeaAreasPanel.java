@@ -36,4 +36,14 @@ public class SeaAreasPanel extends MetadataPanel<Sea, SeaTranslator> {
         .names(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(Sea object) {
+    return object.getName();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Sea Area";
+  }
 }

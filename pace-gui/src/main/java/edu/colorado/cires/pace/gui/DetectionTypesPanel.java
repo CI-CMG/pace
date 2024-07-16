@@ -41,4 +41,14 @@ public class DetectionTypesPanel extends MetadataPanel<DetectionType, DetectionT
         .sources(uniqueFieldSearchTerms)
         .build();
   }
+
+  @Override
+  protected String getUniqueField(DetectionType object) {
+    return object.getSource();
+  }
+
+  @Override
+  protected String getHumanReadableObjectName() {
+    return "Detection Type";
+  }
 }
