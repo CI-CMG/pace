@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_ERR">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+    </Console>
+  </Appenders>
+  <Loggers>
+    <AsyncRoot level="warn" additivity="false">
+      <AppenderRef ref="ConsoleAppender"/>
+    </AsyncRoot>
+    <AsyncLogger name="edu.colorado.cires.pace" level="debug" additivity="false">
+      <AppenderRef ref="ConsoleAppender"/>
+    </AsyncLogger>
+  </Loggers>
+</Configuration>
