@@ -64,6 +64,7 @@ public class PackageProcessor {
           .setLayout(PatternLayout.createDefaultLayout())
           .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
           .build();
+      writerAppender.start();
 
       Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
       logger.addAppender(writerAppender);
