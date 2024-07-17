@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -122,9 +121,7 @@ class MigrateCommandTest extends CLITest {
         (instrument, record) -> {
           assertEquals(instrument.getName(), record.get(0));
           assertEquals(
-              instrument.getFileTypes().stream()
-                  .map(FileType::getType)
-                  .collect(Collectors.joining(",")), 
+              String.join(",", instrument.getFileTypes()), 
               record.get(1)
           );
         }
@@ -251,9 +248,7 @@ class MigrateCommandTest extends CLITest {
         (instrument, record) -> {
           assertEquals(instrument.getName(), record.get(0));
           assertEquals(
-              instrument.getFileTypes().stream()
-                  .map(FileType::getType)
-                  .collect(Collectors.joining(",")),
+              String.join(",", instrument.getFileTypes()),
               record.get(1)
           );
         }

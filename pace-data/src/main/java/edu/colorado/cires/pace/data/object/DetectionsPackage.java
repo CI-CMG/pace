@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.data.object;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,10 +12,10 @@ import lombok.extern.jackson.Jacksonized;
 @SuperBuilder(toBuilder = true)
 @Jacksonized
 public class DetectionsPackage extends Package implements DataQuality, SoftwareDescription, AnalysisDescription {
-  @NotNull @Valid
-  private final DetectionType soundSource;
+  @NotBlank
+  private final String soundSource;
   
-  private final Person qualityAnalyst;
+  private final String qualityAnalyst;
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;

@@ -16,7 +16,6 @@ import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.UpdateCommand;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
-import edu.colorado.cires.pace.cli.command.fileType.FileTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Create;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Delete;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.FindAll;
@@ -203,9 +202,7 @@ public class InstrumentCommand {
 
     @Override
     protected Converter<InstrumentTranslator, Instrument> getConverter() throws IOException {
-      return new InstrumentConverter(
-          FileTypeRepositoryFactory.createJsonRepository(workDir, objectMapper)
-      );
+      return new InstrumentConverter();
     }
 
     @Override

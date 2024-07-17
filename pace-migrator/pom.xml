@@ -20,11 +20,6 @@
   <dependencies>
     <dependency>
       <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-data</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.ci-cmg</groupId>
       <artifactId>pace-repository</artifactId>
       <version>${project.version}</version>
     </dependency>

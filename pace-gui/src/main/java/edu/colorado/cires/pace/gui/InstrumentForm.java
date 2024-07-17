@@ -66,8 +66,14 @@ public class InstrumentForm extends Form<Instrument> {
     initializeFields(initialInstrument);
   }
   
-  private void addFileType(FileType initialFileType) {
+  private void addFileType(String initialFileTypeName) {
     try {
+      FileType initialFileType;
+      if (initialFileTypeName == null) {
+        initialFileType = null;
+      } else {
+        initialFileType = fileTypeRepository.getByUniqueField(initialFileTypeName);
+      }
       fileTypesPanel.remove(fluff);
       InstrumentFileTypePanel instrumentFileTypePanel = new InstrumentFileTypePanel(
           initialFileType, fileTypeRepository, (p) -> {
@@ -83,7 +89,7 @@ public class InstrumentForm extends Form<Instrument> {
       fileTypesPanel.add(instrumentFileTypePanel, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; }));
       fileTypesPanel.add(fluff, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; c.weighty = 1; }));
       revalidate();
-    } catch (DatastoreException e) {
+    } catch (DatastoreException | NotFoundException e) {
       throw new RuntimeException(e);
     }
   }
@@ -109,6 +115,7 @@ public class InstrumentForm extends Form<Instrument> {
             .filter(c -> c instanceof InstrumentFileTypePanel)
             .map(c -> (InstrumentFileTypePanel) c)
             .map(InstrumentFileTypePanel::toFileType)
+            .map(FileType::getType)
             .filter(Objects::nonNull)
             .toList())
         .build();

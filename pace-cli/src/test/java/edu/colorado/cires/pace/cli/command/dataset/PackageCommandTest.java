@@ -6,19 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
-import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommandTest;
-import edu.colorado.cires.pace.cli.command.organization.OrganizationCommandTest;
-import edu.colorado.cires.pace.cli.command.person.PersonCommandTest;
-import edu.colorado.cires.pace.cli.command.platform.PlatformCommandTest;
-import edu.colorado.cires.pace.cli.command.project.ProjectCommandTest;
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
-import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.LocationDetail;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
@@ -161,7 +152,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
 
   @Override
   protected String[] objectToRow(P object) {
-    Dataset dataset = (Dataset) object;
     List<String> fields = new ArrayList<>(List.of(
         object.getUuid() == null ? "" : object.getUuid().toString(),
         "UTC",
@@ -172,37 +162,29 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         object.getCalibrationDocumentsPath().toString(),
         object.getNavigationPath().toString(),
         object.getSourcePath().toString(),
-        dataset.getSiteOrCruiseName(),
-        dataset.getDeploymentId(),
-        dataset.getDatasetPackager().getName(),
-        dataset.getProjects().stream()
-            .map(Project::getName)
-            .collect(Collectors.joining(";")),
-        dataset.getPublicReleaseDate().toString(),
-        dataset.getScientists().stream()
-            .map(Person::getName)
-            .collect(Collectors.joining(";")),
-        dataset.getSponsors().stream()
-            .map(Organization::getName)
-            .collect(Collectors.joining(";")),
-        dataset.getFunders().stream()
-            .map(Organization::getName)
-            .collect(Collectors.joining(";")),
-        dataset.getPlatform().getName(),
-        dataset.getInstrument().getName(),
-        dataset.getStartTime().toString(),
-        dataset.getEndTime().toString(),
-        dataset.getPreDeploymentCalibrationDate().toString(),
-        dataset.getPostDeploymentCalibrationDate().toString(),
-        dataset.getCalibrationDescription(),
-        dataset.getDeploymentTitle(),
-        dataset.getDeploymentPurpose(),
-        dataset.getDeploymentDescription(),
-        dataset.getAlternateSiteName(),
-        dataset.getAlternateDeploymentName()
+        object.getSiteOrCruiseName(),
+        object.getDeploymentId(),
+        object.getDatasetPackager(),
+        String.join(";", object.getProjects()),
+        object.getPublicReleaseDate().toString(),
+        String.join(";", object.getScientists()),
+        String.join(";", object.getSponsors()),
+        String.join(";", object.getFunders()),
+        object.getPlatform(),
+        object.getInstrument(),
+        object.getStartTime().toString(),
+        object.getEndTime().toString(),
+        object.getPreDeploymentCalibrationDate().toString(),
+        object.getPostDeploymentCalibrationDate().toString(),
+        object.getCalibrationDescription(),
+        object.getDeploymentTitle(),
+        object.getDeploymentPurpose(),
+        object.getDeploymentDescription(),
+        object.getAlternateSiteName(),
+        object.getAlternateDeploymentName()
     ));
     addPackageTypeSpecificFields(fields, object);
-    addLocationDetailTypeSpecificFields(fields, ((Dataset) object).getLocationDetail());
+    addLocationDetailTypeSpecificFields(fields, object.getLocationDetail());
     return fields.toArray(String[]::new);
   }
 
@@ -249,62 +231,56 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     assertEquals(expected.getNavigationPath(), actual.getNavigationPath());
     assertEquals(expected.getSourcePath(), actual.getSourcePath());
     assertEquals(expected.getPackageId(), actual.getPackageId());
-    
-    Dataset expectedDataset = (Dataset) expected;
-    Dataset actualDataset = (Dataset) actual;
-    assertEquals(expectedDataset.getSiteOrCruiseName(), actualDataset.getSiteOrCruiseName());
-    assertEquals(expectedDataset.getDeploymentId(), actualDataset.getDeploymentId());
-    PersonCommandTest.assertPeopleEqual(expectedDataset.getDatasetPackager(), actualDataset.getDatasetPackager(), true);
 
-    for (int i = 0; i < expectedDataset.getProjects().size(); i++) {
-      ProjectCommandTest.assertProjectsEqual(
-          expectedDataset.getProjects().get(i),
-          actualDataset.getProjects().get(i),
-          true
+    assertEquals(expected.getSiteOrCruiseName(), actual.getSiteOrCruiseName());
+    assertEquals(expected.getDeploymentId(), actual.getDeploymentId());
+    assertEquals(expected.getDatasetPackager(), actual.getDatasetPackager());
+
+    for (int i = 0; i < expected.getProjects().size(); i++) {
+      assertEquals(
+          expected.getProjects().get(i),
+          actual.getProjects().get(i)
       );
     }
     
-    assertEquals(expectedDataset.getPublicReleaseDate(), actualDataset.getPublicReleaseDate());
+    assertEquals(expected.getPublicReleaseDate(), actual.getPublicReleaseDate());
 
-    for (int i = 0; i < expectedDataset.getScientists().size(); i++) {
-      PersonCommandTest.assertPeopleEqual(
-          expectedDataset.getScientists().get(i),
-          actualDataset.getScientists().get(i),
-          true
+    for (int i = 0; i < expected.getScientists().size(); i++) {
+      assertEquals(
+          expected.getScientists().get(i),
+          actual.getScientists().get(i)
       );
     }
 
-    for (int i = 0; i < expectedDataset.getSponsors().size(); i++) {
-      OrganizationCommandTest.assertOrganizationsEqual(
-          expectedDataset.getSponsors().get(i),
-          actualDataset.getSponsors().get(i),
-          true
+    for (int i = 0; i < expected.getSponsors().size(); i++) {
+      assertEquals(
+          expected.getSponsors().get(i),
+          actual.getSponsors().get(i)
       );
     }
 
-    for (int i = 0; i < expectedDataset.getFunders().size(); i++) {
-      OrganizationCommandTest.assertOrganizationsEqual(
-          expectedDataset.getFunders().get(i),
-          actualDataset.getFunders().get(i),
-          true
+    for (int i = 0; i < expected.getFunders().size(); i++) {
+      assertEquals(
+          expected.getFunders().get(i),
+          actual.getFunders().get(i)
       );
     }
 
-    PlatformCommandTest.assertPlatformsEqual(expectedDataset.getPlatform(), actualDataset.getPlatform(), true);
-    InstrumentCommandTest.assertInstrumentsEqual(expectedDataset.getInstrument(), actualDataset.getInstrument(), true);
+    assertEquals(expected.getPlatform(), actual.getPlatform());
+    assertEquals(expected.getInstrument(), actual.getInstrument());
     
-    assertEquals(expectedDataset.getStartTime(), actualDataset.getStartTime());
-    assertEquals(expectedDataset.getEndTime(), actualDataset.getEndTime());
-    assertEquals(expectedDataset.getPreDeploymentCalibrationDate(), actualDataset.getPreDeploymentCalibrationDate());
-    assertEquals(expectedDataset.getPostDeploymentCalibrationDate(), actualDataset.getPostDeploymentCalibrationDate());
-    assertEquals(expectedDataset.getCalibrationDescription(), actualDataset.getCalibrationDescription());
-    assertEquals(expectedDataset.getDeploymentTitle(), actualDataset.getDeploymentTitle());
-    assertEquals(expectedDataset.getDeploymentPurpose(), actualDataset.getDeploymentPurpose());
-    assertEquals(expectedDataset.getDeploymentDescription(), actualDataset.getDeploymentDescription());
-    assertEquals(expectedDataset.getAlternateSiteName(), actualDataset.getAlternateSiteName());
-    assertEquals(expectedDataset.getAlternateDeploymentName(), actualDataset.getAlternateDeploymentName());
+    assertEquals(expected.getStartTime(), actual.getStartTime());
+    assertEquals(expected.getEndTime(), actual.getEndTime());
+    assertEquals(expected.getPreDeploymentCalibrationDate(), actual.getPreDeploymentCalibrationDate());
+    assertEquals(expected.getPostDeploymentCalibrationDate(), actual.getPostDeploymentCalibrationDate());
+    assertEquals(expected.getCalibrationDescription(), actual.getCalibrationDescription());
+    assertEquals(expected.getDeploymentTitle(), actual.getDeploymentTitle());
+    assertEquals(expected.getDeploymentPurpose(), actual.getDeploymentPurpose());
+    assertEquals(expected.getDeploymentDescription(), actual.getDeploymentDescription());
+    assertEquals(expected.getAlternateSiteName(), actual.getAlternateSiteName());
+    assertEquals(expected.getAlternateDeploymentName(), actual.getAlternateDeploymentName());
    
-    assertLocationDetailsEquals(expectedDataset.getLocationDetail(), actualDataset.getLocationDetail());
+    assertLocationDetailsEquals(expected.getLocationDetail(), actual.getLocationDetail());
     assertTypeSpecificPackagesEqual(expected, actual);
   }
 

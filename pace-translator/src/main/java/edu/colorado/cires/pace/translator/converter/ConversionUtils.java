@@ -1,13 +1,9 @@
 package edu.colorado.cires.pace.translator.converter;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.TimeTranslator;
-import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.nio.file.Path;
@@ -19,10 +15,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -226,6 +220,10 @@ final class ConversionUtils {
     );
   }
   
+  public static List<String> stringListFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+    return Arrays.stream(stringFromMap(properties, propertyName).split(";")).toList();
+  }
+  
   public static String stringFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
     return stringFromProperty(
         propertyFromMap(properties, propertyName)
@@ -237,44 +235,7 @@ final class ConversionUtils {
         .map(string -> StringUtils.isBlank(string) ? null : string.trim())
         .orElse(null);
   }
-  
-  private static <O extends ObjectWithUniqueField> O objectFromUniqueField(String uniqueFieldPropertyName, String uniqueFieldValue, CRUDRepository<O> repository, int row, int column, RuntimeException runtimeException) {
-    try {
-      return repository.getByUniqueField(uniqueFieldValue);
-    } catch (DatastoreException | NotFoundException e) {
-      runtimeException.addSuppressed(new FieldException(
-          uniqueFieldPropertyName, e.getMessage(), column, row
-      ));
-      return null;
-    }
-  }
-  
-  public static <O extends ObjectWithUniqueField> O objectFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, CRUDRepository<O> repository, int row, RuntimeException runtimeException) {
-    ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, propertyName);
-    String property = stringFromProperty(valueWithColumnNumber);
-    
-    if (property == null) {
-      return null;
-    }
-    
-    return objectFromUniqueField(propertyName, property, repository, row, valueWithColumnNumber.column(), runtimeException);
-  }
-  
-  public static <O extends ObjectWithUniqueField> List<O> delimitedObjectsFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException, CRUDRepository<O> repository) {
-    ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, propertyName);
-    
-    String delimitedValues = stringFromProperty(valueWithColumnNumber);
-    
-    if (delimitedValues == null) {
-      return Collections.emptyList();
-    }
-    
-    return Arrays.stream(delimitedValues.split(";"))
-        .map(string -> objectFromUniqueField(propertyName, string.trim(), repository, row, valueWithColumnNumber.column(), runtimeException))
-        .filter(Objects::nonNull)
-        .toList();
-  }
-  
+
   public static Double latitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
     
     String latitudeString = stringFromMap(properties, propertyName);

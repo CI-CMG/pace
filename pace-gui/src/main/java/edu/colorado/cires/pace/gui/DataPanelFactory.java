@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
@@ -110,11 +109,11 @@ public class DataPanelFactory {
         new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
         (p) -> new Object[] { 
             p.getUuid(),
-            ((Dataset) p).getSiteOrCruiseName(),
-            ((Dataset) p).getDeploymentId(),
-            String.join(", ", ((Dataset) p).getProjects().stream().map(Project::getName).toArray(String[]::new)),
+            p.getSiteOrCruiseName(),
+            p.getDeploymentId(),
+            String.join(", ", p.getProjects().toArray(String[]::new)),
             DatasetType.fromPackage(p).getName(),
-            LocationType.fromLocationDetail(((Dataset) p).getLocationDetail()).getName(),
+            LocationType.fromLocationDetail(p.getLocationDetail()).getName(),
             false,
             p
         },
@@ -122,15 +121,6 @@ public class DataPanelFactory {
         objectMapper,
         translatorRepository,
         new PackageConverter(
-            personRepository,
-            projectRepository,
-            organizationRepository,
-            platformRepository,
-            instrumentRepository,
-            seaRepository,
-            shipRepository,
-            detectionTypeRepository,
-            sensorRepository
         ),
         personRepository,
         organizationRepository,

@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface DataQuality {
   
-  Person getQualityAnalyst();
+  String getQualityAnalyst();
   String getQualityAnalysisObjectives();
   String getQualityAnalysisMethod();
   String getQualityAssessmentDescription();

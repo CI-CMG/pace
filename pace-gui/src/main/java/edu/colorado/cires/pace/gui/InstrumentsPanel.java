@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
@@ -10,7 +9,6 @@ import edu.colorado.cires.pace.repository.search.InstrumentSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTranslator> {
 
@@ -23,9 +21,7 @@ public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTransl
         "instrumentsPanel",
         repository,
         new String[]{"UUID", "Name", "File Types", "Object"},
-        (i) -> new Object[]{i.getUuid(), i.getName(), i.getFileTypes().stream()
-            .map(FileType::getType)
-            .collect(Collectors.joining(", ")), i},
+        (i) -> new Object[]{i.getUuid(), i.getName(), String.join(", ", i.getFileTypes()), i},
         Instrument.class,
         (o) -> (Instrument) o[3],
         (i) -> {
@@ -34,7 +30,7 @@ public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTransl
           return form;
         },
         translatorRepository,
-        new InstrumentConverter(fileTypeRepository),
+        new InstrumentConverter(),
         InstrumentTranslator.class
     );
   }

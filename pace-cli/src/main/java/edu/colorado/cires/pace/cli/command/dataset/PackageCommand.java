@@ -34,15 +34,9 @@ import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Translate;
-import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.person.PersonRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
 import edu.colorado.cires.pace.cli.util.CLIProgressIndicator;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.ProgressIndicator;
@@ -228,17 +222,7 @@ public class PackageCommand {
 
     @Override
     protected Converter<PackageTranslator, Package> getConverter() throws IOException {
-      return new PackageConverter(
-          PersonRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          PlatformRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          InstrumentRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          SeaRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          ShipRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          DetectionTypeRepositoryFactory.createJsonRepository(workDir, objectMapper),
-          SensorRepositoryFactory.createRepository(workDir, objectMapper)
-      );
+      return new PackageConverter();
     }
 
     @Override

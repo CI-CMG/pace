@@ -21,29 +21,29 @@ public abstract class Dataset extends ObjectWithUniqueField implements TimeRange
   private final String siteOrCruiseName;
   @NotBlank
   private final String deploymentId;
-  @NotNull @Valid
-  private final Person datasetPackager;
+  @NotBlank
+  private final String datasetPackager;
   @NotNull @NotEmpty
-  private final List<@Valid Project> projects;
+  private final List<@NotBlank String> projects;
   @NotNull
   private final LocalDate publicReleaseDate;
   @NotNull @Valid
   private final LocationDetail locationDetail;
   @NotNull @NotEmpty
-  private final List<@Valid Person> scientists;
+  private final List<@NotBlank String> scientists;
   @NotNull @NotEmpty
-  private final List<@Valid Organization> sponsors;
+  private final List<@NotBlank String> sponsors;
   @NotNull @NotEmpty
-  private final List<@Valid Organization> funders;
+  private final List<@NotBlank String> funders;
   private final String deploymentTitle;
   private final String deploymentPurpose;
   private final String deploymentDescription;
   private final String alternateSiteName;
   private final String alternateDeploymentName;
-  @NotNull @Valid
-  private final Platform platform;
-  @NotNull @Valid
-  private final Instrument instrument;
+  @NotBlank
+  private final String platform;
+  @NotBlank
+  private final String instrument;
   @NotNull
   private final LocalDateTime startTime;
   @NotNull
@@ -88,10 +88,9 @@ public abstract class Dataset extends ObjectWithUniqueField implements TimeRange
   public String getPackageId() {
     String packageId = null;
 
-    List<Project> projects = getProjects() == null ? Collections.emptyList() : getProjects();
+    List<String> projects = getProjects() == null ? Collections.emptyList() : getProjects();
     if (!projects.isEmpty()) {
-      Project project = projects.get(0);
-      packageId = project.getName();
+      packageId = projects.get(0);
     }
 
     String siteCruiseName = getSiteOrCruiseName();

@@ -28,9 +28,7 @@ class TestResolvePackageId {
         AudioPackage.builder()
             .siteOrCruiseName(siteOrCruiseName)
             .deploymentId(deploymentId)
-            .projects(Collections.singletonList(Project.builder()
-                    .name(projectName)
-                .build()))
+            .projects(Collections.singletonList(projectName))
     ) {};
     
     assertEquals(expectedValue, dataset.getPackageId());

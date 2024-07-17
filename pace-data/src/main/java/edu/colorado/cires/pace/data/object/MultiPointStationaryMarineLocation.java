@@ -13,7 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class MultiPointStationaryMarineLocation implements MarineLocation {
   
-  private final Sea seaArea;
+  private final String seaArea;
   @NotNull @NotEmpty
   private final List<@Valid MarineInstrumentLocation> locations;
   

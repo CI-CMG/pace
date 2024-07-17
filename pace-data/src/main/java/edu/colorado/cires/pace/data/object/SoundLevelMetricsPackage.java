@@ -14,7 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 public class SoundLevelMetricsPackage extends Package implements AnalysisDescription, DataQuality, SoftwareDescription, AudioTimeRange {
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
-  private final Person qualityAnalyst;
+  private final String qualityAnalyst;
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;

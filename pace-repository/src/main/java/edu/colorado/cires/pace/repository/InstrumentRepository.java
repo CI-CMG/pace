@@ -35,11 +35,11 @@ public class InstrumentRepository extends CRUDRepository<Instrument> {
   }
 
   private void checkFileTypes(Instrument instrument) throws DatastoreException, BadArgumentException {
-    for (FileType fileType : instrument.getFileTypes()) {
-      fileTypeDatastore.findByUUID(fileType.getUuid())
+    for (String fileType : instrument.getFileTypes()) {
+      fileTypeDatastore.findByUniqueField(fileType)
           .orElseThrow(
               () -> new BadArgumentException(String.format(
-                  "File type does not exist: %s", fileType.getType()
+                  "File type does not exist: %s", fileType
               ))
           );
     }

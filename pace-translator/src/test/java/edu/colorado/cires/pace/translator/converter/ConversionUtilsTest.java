@@ -1,28 +1,18 @@
 package edu.colorado.cires.pace.translator.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.NotFoundException;
-import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -966,86 +956,6 @@ class ConversionUtilsTest {
     );
 
     assertNull(result);
-  }
-
-  @Test
-  void objectFromMap() throws NotFoundException, DatastoreException {
-    Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
-    map.put("test-property", new ValueWithColumnNumber(Optional.of("ship-1"), 1));
-
-    ShipRepository repository = mock(ShipRepository.class);
-    try {
-      when(repository.getByUniqueField("ship-1")).thenReturn(Ship.builder()
-              .name("ship-1")
-          .build());
-    } catch (DatastoreException | NotFoundException e) {
-      throw new RuntimeException(e);
-    }
-
-    Ship ship = ConversionUtils.objectFromMap(
-        map, "test-property", repository, 1, new RuntimeException()
-    );
-    assertNotNull(ship);
-    assertEquals("ship-1", ship.getName());
-    
-    when(repository.getByUniqueField("ship-1")).thenThrow(
-        new NotFoundException("ship-1 not found")
-    );
-
-    RuntimeException runtimeException = new RuntimeException();
-    ship = ConversionUtils.objectFromMap(
-        map, "test-property", repository, 1, runtimeException
-    );
-    assertNull(ship);
-    assertEquals(1, runtimeException.getSuppressed().length);
-    Throwable throwable = runtimeException.getSuppressed()[0];
-    assertInstanceOf(FieldException.class, throwable);
-    FieldException fieldException = (FieldException) throwable;
-    assertEquals("ship-1 not found", fieldException.getMessage());
-
-    ship = ConversionUtils.objectFromMap(
-        map, "test-other-property", repository, 1, runtimeException
-    );
-    assertNull(ship);
-  }
-
-  @Test
-  void delimitedObjectsFromMap() throws NotFoundException, DatastoreException {
-    Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
-    map.put("test-property", new ValueWithColumnNumber(Optional.of("ship-1;ship-2"), 1));
-
-    ShipRepository repository = mock(ShipRepository.class);
-    when(repository.getByUniqueField("ship-1")).thenReturn(Ship.builder()
-        .name("ship-1")
-        .build());
-
-    when(repository.getByUniqueField("ship-2")).thenReturn(Ship.builder()
-        .name("ship-2")
-        .build());
-
-    List<Ship> ships = ConversionUtils.delimitedObjectsFromMap(
-        map, "test-property", 1, new RuntimeException(), repository
-    );
-    assertEquals(2, ships.size());
-    assertEquals(Set.of("ship-1", "ship-2"), ships.stream().map(Ship::getName).collect(Collectors.toSet()));
-
-    when(repository.getByUniqueField("ship-2")).thenThrow(
-        new NotFoundException("ship-2 not found")
-    );
-
-    RuntimeException runtimeException = new RuntimeException();
-    ships = ConversionUtils.delimitedObjectsFromMap(
-        map, "test-property", 1, runtimeException, repository
-    );
-    assertEquals(1, ships.size());
-    assertEquals(1, runtimeException.getSuppressed().length);
-    Throwable throwable = runtimeException.getSuppressed()[0];
-    assertInstanceOf(FieldException.class, throwable);
-    FieldException fieldException = (FieldException) throwable;
-    assertEquals("ship-2 not found", fieldException.getMessage());
-    
-    ships = ConversionUtils.delimitedObjectsFromMap(map, "test-other-property", 1, new RuntimeException(), repository);
-    assertEquals(0, ships.size());
   }
   
   @ParameterizedTest

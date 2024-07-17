@@ -39,7 +39,7 @@ public class InstrumentSQLiteDatastore extends SQLiteDatastore<Instrument> {
                     } catch (DatastoreException e) {
                       throw new RuntimeException(e);
                     }
-                  })
+                  }).map(FileType::getType)
                   .toList())
           .build());
     }

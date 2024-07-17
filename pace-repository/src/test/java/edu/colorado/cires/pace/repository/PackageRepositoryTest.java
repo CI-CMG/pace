@@ -7,27 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.DutyCycle;
-import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Gain;
-import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
-import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.data.object.Position;
-import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
-import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
@@ -69,54 +58,42 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     if (object instanceof AudioPackage) {
       return ((AudioPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof CPODPackage) {
       return ((CPODPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof DetectionsPackage) {
       return ((DetectionsPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundClipsPackage) {
       return ((SoundClipsPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundLevelMetricsPackage) {
       return ((SoundLevelMetricsPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundPropagationModelsPackage) {
       return ((SoundPropagationModelsPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
-          .projects(Collections.singletonList(Project.builder()
-                  .name(uniqueField)
-              .build()))
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
@@ -273,61 +250,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("packager-name")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
@@ -342,11 +276,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
-        .qualityAnalyst(Person.builder()
-            .name("quality-analyst")
-            .position("quality-analyzer")
-            .organization("quality-analysis-organization")
-            .build())
+        .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
         .qualityAssessmentDescription("quality-assessment-description")
@@ -371,39 +301,10 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            AudioSensor.builder()
-                .preampId("preampId")
-                .hydrophoneId("hydrophoneId")
-                .description("audio-sensor-description")
-                .position(Position.builder()
-                    .x(1f)
-                    .y(2f)
-                    .z(3f)
-                    .build())
-                .name("audio-sensor-1")
-                .build(),
-            DepthSensor.builder()
-                .name("depth-sensor")
-                .description("depth-sensor-description")
-                .position(Position.builder()
-                    .x(10f)
-                    .y(20f)
-                    .z(30f)
-                    .build())
-                .build()
+            "audio-sensor", "depth-sensor"
         )).channels(List.of(
             Channel.builder()
-                .sensor(AudioSensor.builder()
-                    .preampId("preampId")
-                    .hydrophoneId("hydrophoneId")
-                    .description("audio-sensor-description")
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .name("audio-sensor-2")
-                    .build())
+                .sensor("audio-sensor")
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(
@@ -429,9 +330,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 ))
                 .build()
         )).locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)
@@ -464,61 +363,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("packager-name")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
@@ -530,9 +386,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)
@@ -566,61 +420,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("packager-name")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
@@ -631,11 +442,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
-        .qualityAnalyst(Person.builder()
-            .name("quality-analyst")
-            .position("quality-analyzer")
-            .organization("quality-analysis-organization")
-            .build())
+        .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
         .qualityAssessmentDescription("quality-assessment-description")
@@ -657,9 +464,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .endTime(LocalDateTime.now().minusMinutes(10))
                 .build()
         )).locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)
@@ -691,61 +496,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("dataset-packager")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
@@ -757,9 +519,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)
@@ -780,9 +540,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     return DetectionsPackage.builder()
         .minFrequency(1f)
         .maxFrequency(2f)
-        .soundSource(DetectionType.builder()
-            .source("sound-source")
-            .build())
+        .soundSource("sound-source")
         .sourcePath(Paths.get("source-path"))
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
@@ -796,61 +554,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("dataset-packager")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
@@ -861,11 +576,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
-        .qualityAnalyst(Person.builder()
-            .name("quality-analyst")
-            .position("quality-analyzer")
-            .organization("quality-analysis-organization")
-            .build())
+        .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
         .qualityAssessmentDescription("quality-assessment-description")
@@ -887,9 +598,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .endTime(LocalDateTime.now().minusMinutes(10))
                 .build()
         )).locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)
@@ -921,61 +630,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
-        .datasetPackager(Person.builder()
-            .name("packager-name")
-            .position("packer-position")
-            .organization("packer-organization")
-            .build())
+        .datasetPackager("dataset-packager")
         .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-1")
-                .build()
+            "project-name-1", "project-name-2"
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
-            Person.builder()
-                .name("scientist-1")
-                .position("scientist-1-position")
-                .organization("scientist-1-organization")
-                .build(),
-            Person.builder()
-                .name("scientist-2")
-                .position("scientist-2-position")
-                .organization("scientist-2-organization")
-                .build()
+            "scientist-1", "scientist-2"
         )).sponsors(List.of(
-            Organization.builder()
-                .name("organization-1")
-                .build(),
-            Organization.builder()
-                .name("organization-2")
-                .build()
+            "organization-1", "organization-2"
         )).funders(List.of(
-            Organization.builder()
-                .name("organization-3")
-                .build(),
-            Organization.builder()
-                .name("organization-4")
-                .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .fileTypes(List.of(
-                FileType.builder()
-                    .type("file-type-1")
-                    .comment("comment-1")
-                    .build(),
-                FileType.builder()
-                    .type("file-type-2")
-                    .comment("comment-2")
-                    .build()
-            ))
-            .build())
+            "organization-3", "organization-4"
+        )).platform("platform")
+        .instrument("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
@@ -990,11 +656,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
         .alternateDeploymentName("alternate-deployment-name")
-        .qualityAnalyst(Person.builder()
-            .name("quality-analyst")
-            .position("quality-analyzer")
-            .organization("quality-analysis-organization")
-            .build())
+        .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
         .qualityAssessmentDescription("quality-assessment-description")
@@ -1019,39 +681,10 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            AudioSensor.builder()
-                .preampId("preampId")
-                .hydrophoneId("hydrophoneId")
-                .description("audio-sensor-description")
-                .position(Position.builder()
-                    .x(1f)
-                    .y(2f)
-                    .z(3f)
-                    .build())
-                .name("audio-sensor-1")
-                .build(),
-            DepthSensor.builder()
-                .name("depth-sensor")
-                .description("depth-sensor-description")
-                .position(Position.builder()
-                    .x(10f)
-                    .y(20f)
-                    .z(30f)
-                    .build())
-                .build()
+            "audio-sensor", "depth-sensor"
         )).channels(List.of(
             Channel.builder()
-                .sensor(AudioSensor.builder()
-                    .preampId("preampId")
-                    .hydrophoneId("hydrophoneId")
-                    .description("audio-sensor-description")
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .name("audio-sensor-2")
-                    .build())
+                .sensor("audio-sensor")
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(
@@ -1077,9 +710,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 ))
                 .build()
         )).locationDetail(StationaryMarineLocation.builder()
-            .seaArea(Sea.builder()
-                .name("sea-area")
-                .build())
+            .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
                 .instrumentDepth(-10f)
                 .seaFloorDepth(-100f)

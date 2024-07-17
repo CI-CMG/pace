@@ -1,8 +1,6 @@
 package edu.colorado.cires.pace.data.object;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -12,9 +10,9 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class MobileMarineLocation implements MarineLocation {
   
-  private final Sea seaArea;
-  @NotNull @Valid
-  private final Ship vessel;
+  private final String seaArea;
+  @NotBlank
+  private final String vessel;
   @NotBlank
   private final String locationDerivationDescription;
   

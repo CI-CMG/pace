@@ -11,10 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.fixture.JButtonFixture;
@@ -127,7 +125,7 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
           .requireNoSelection()
           .requireVisible()
           .requireEnabled()
-          .selectItem(object.getFileTypes().get(i).getType());
+          .selectItem(object.getFileTypes().get(i));
     }
   }
 
@@ -135,7 +133,7 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   protected Instrument createObject(String uniqueField) {
     return Instrument.builder()
         .name(uniqueField)
-        .fileTypes(fileTypes)
+        .fileTypes(fileTypes.stream().map(FileType::getType).toList())
         .build();
   }
 
@@ -143,9 +141,7 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   protected String[] objectToRow(Instrument object) {
     return new String[] {
         object.getName(),
-        object.getFileTypes().stream()
-            .map(FileType::getType)
-            .collect(Collectors.joining(", "))
+        String.join(", ", object.getFileTypes())
     };
   }
 
@@ -153,9 +149,7 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   protected String[] objectToSpreadsheetRow(Instrument object) {
     return new String[] {
       object.getName(),
-      object.getFileTypes().stream()
-          .map(FileType::getType)
-          .collect(Collectors.joining(";"))
+        String.join(";", object.getFileTypes())
     };
   }
 
@@ -166,13 +160,13 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
     JPanelFixture fileTypeListingsPanel = getPanel(formFixture, "fileTypeListingsPanel");
     object.getFileTypes().forEach(
         fileType -> {
-          JPanelFixture fileTypeListingPanel = getPanel(fileTypeListingsPanel, fileType.getType());
+          JPanelFixture fileTypeListingPanel = getPanel(fileTypeListingsPanel, fileType);
           getButton(fileTypeListingPanel, "Remove").requireEnabled();
           
           fileTypeListingPanel.comboBox()
               .requireEnabled()
               .requireVisible()
-              .requireSelection(fileType.getType());
+              .requireSelection(fileType);
         }
     );
   }
@@ -184,7 +178,7 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
     );
     return original.toBuilder()
         .name(uniqueField)
-        .fileTypes(newFileTypes)
+        .fileTypes(newFileTypes.stream().map(FileType::getType).toList())
         .build();
   }
 
@@ -203,22 +197,14 @@ class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
     
     assertEquals(expected.getName(), actual.getName());
     
-    List<FileType> expectedFileTypes = expected.getFileTypes().stream()
-        .sorted(Comparator.comparing(FileType::getType))
+    List<String> expectedFileTypes = expected.getFileTypes().stream()
+        .sorted()
         .toList();
-    List<FileType> actualFileTypes = actual.getFileTypes().stream()
-        .sorted(Comparator.comparing(FileType::getType))
+    List<String> actualFileTypes = actual.getFileTypes().stream()
+        .sorted()
         .toList();
     
-    assertEquals(expectedFileTypes.size(), actualFileTypes.size());
-
-    for (int i = 0; i < expectedFileTypes.size(); i++) {
-      FileTypesPanelTest.assertFileTypesEquals(
-          expectedFileTypes.get(i),
-          actualFileTypes.get(i),
-          true
-      );
-    }
+    assertEquals(expectedFileTypes, actualFileTypes);
   }
 
   @Override

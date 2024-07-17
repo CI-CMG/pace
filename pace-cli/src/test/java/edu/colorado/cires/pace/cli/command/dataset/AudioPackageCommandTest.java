@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.colorado.cires.pace.cli.command.person.PersonCommandTest;
-import edu.colorado.cires.pace.cli.command.sea.SeaCommandTest;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
@@ -42,7 +40,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 
 class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPackageTranslator, StationaryMarineLocationTranslator> {
@@ -97,7 +94,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
             saveObject(FileType.builder()
                 .type("fileType 1")
                 .comment("comment")
-                .build(), "file-type")
+                .build(), "file-type").getType()
         ))
         .build(), "instrument");
     
@@ -192,10 +189,8 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       object.getDeploymentTime().toString(),
       object.getRecoveryTime().toString(),
       object.getComments(),
-      object.getSensors().stream()
-          .map(Sensor::getName)
-          .collect(Collectors.joining(";")),
-      object.getQualityAnalyst().getName(), 
+        String.join(";", object.getSensors()),
+      object.getQualityAnalyst(), 
       object.getQualityAnalysisObjectives(),
       object.getQualityAnalysisMethod(),
       object.getQualityAssessmentDescription(),
@@ -205,7 +200,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       qualityEntry.getMaxFrequency().toString(),
       qualityEntry.getQualityLevel().getName(),
       qualityEntry.getComments(),
-      channel.getSensor().getName(),
+      channel.getSensor(),
       channel.getStartTime().toString(),
       channel.getEndTime().toString(),
       sampleRate.getStartTime().toString(),
@@ -353,7 +348,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
     MarineInstrumentLocation deploymentLocation = stationaryMarineLocation.getDeploymentLocation();
     MarineInstrumentLocation recoveryLocation = stationaryMarineLocation.getRecoveryLocation();
     fields.addAll(List.of(
-        stationaryMarineLocation.getSeaArea().getName(),
+        stationaryMarineLocation.getSeaArea(),
         deploymentLocation.getLatitude().toString(),
         deploymentLocation.getLongitude().toString(),
         deploymentLocation.getSeaFloorDepth().toString(),
@@ -387,10 +382,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
           actual.getQualityEntries().get(i)
       );
     }
-    PersonCommandTest.assertPeopleEqual(
+    assertEquals(
         expected.getQualityAnalyst(),
-        actual.getQualityAnalyst(),
-        true
+        actual.getQualityAnalyst()
     );
     assertEquals(expected.getQualityAnalysisObjectives(), actual.getQualityAnalysisObjectives());
     assertEquals(expected.getQualityAnalysisMethod(), actual.getQualityAnalysisMethod());
@@ -478,7 +472,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
     StationaryMarineLocation expectedLocation = (StationaryMarineLocation) expected;
     StationaryMarineLocation actualLocation = (StationaryMarineLocation) actual;
 
-    SeaCommandTest.assertSeasEqual(expectedLocation.getSeaArea(), actualLocation.getSeaArea(), true);
+    assertEquals(expectedLocation.getSeaArea(), actualLocation.getSeaArea());
     assertMarineLocationsEqual(expectedLocation.getDeploymentLocation(), actualLocation.getDeploymentLocation());
     assertMarineLocationsEqual(expectedLocation.getRecoveryLocation(), actualLocation.getRecoveryLocation());
   }
@@ -496,14 +490,14 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .sourcePath(testPath.resolve("sourcePath").toAbsolutePath())
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId(uniqueField)
-        .datasetPackager(datasetPackager)
-        .projects(List.of(project))
+        .datasetPackager(datasetPackager.getName())
+        .projects(List.of(project.getName()))
         .publicReleaseDate(LocalDate.of(2020, 1,1))
-        .scientists(List.of(scientist))
-        .sponsors(List.of(sponsor))
-        .funders(List.of(funder))
-        .platform(platform)
-        .instrument(instrument)
+        .scientists(List.of(scientist.getName()))
+        .sponsors(List.of(sponsor.getName()))
+        .funders(List.of(funder.getName()))
+        .platform(platform.getName())
+        .instrument(instrument.getName())
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2019, 12, 31, 12, 0, 1))
         .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
@@ -518,7 +512,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .deploymentPurpose("deploymentPurpose")
         .alternateSiteName("alternateSiteName")
         .alternateDeploymentName("alternateDeploymentName")
-        .qualityAnalyst(qualityAnalyst)
+        .qualityAnalyst(qualityAnalyst.getName())
         .qualityAnalysisObjectives("qualityAnalysisObjectives")
         .qualityAnalysisMethod("qualityAnalysisMethod")
         .qualityAssessmentDescription("qualityAssessmentDescription")
@@ -533,11 +527,11 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .deploymentTime(LocalDateTime.of(2019, 12, 31, 12, 1, 1))
         .recoveryTime(LocalDateTime.of(2019, 12, 31, 22, 59, 1))
         .comments("deployment comments")
-        .sensors(List.of(sensor1))
+        .sensors(List.of(sensor1.getName()))
         .channels(List.of(Channel.builder()
                 .startTime(LocalDateTime.of(2019, 12, 31, 12, 5, 1))
                 .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
-                .sensor(sensor2)
+                .sensor(sensor2.getName())
                 .sampleRates(List.of(SampleRate.builder()
                         .startTime(LocalDateTime.of(2019, 12, 31, 13, 15, 1))
                         .endTime(LocalDateTime.of(2019, 12, 31, 14, 0, 1))
@@ -557,7 +551,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
                     .build()))
             .build()))
         .locationDetail(StationaryMarineLocation.builder()
-            .seaArea(seaArea)
+            .seaArea(seaArea.getName())
             .recoveryLocation(MarineInstrumentLocation.builder()
                 .seaFloorDepth(1f)
                 .instrumentDepth(2f)

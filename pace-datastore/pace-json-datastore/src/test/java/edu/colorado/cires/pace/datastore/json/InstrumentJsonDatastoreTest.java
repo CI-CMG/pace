@@ -8,7 +8,6 @@ import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ class InstrumentJsonDatastoreTest extends JsonDatastoreTest<Instrument> {
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())
         .fileTypes(List.of(
-            fileType1, fileType2
+            fileType1.getType(), fileType2.getType()
         )).build();
   }
 
@@ -60,20 +59,14 @@ class InstrumentJsonDatastoreTest extends JsonDatastoreTest<Instrument> {
     assertEquals(expected.getUuid(), actual.getUuid());
     assertEquals(expected.getName(), actual.getName());
     
-    List<FileType> expectedFileTypes = expected.getFileTypes().stream()
-        .sorted(Comparator.comparing(FileType::getUuid))
+    List<String> expectedFileTypes = expected.getFileTypes().stream()
+        .sorted()
         .toList();
     
-    List<FileType> actualFileTypes = actual.getFileTypes().stream()
-        .sorted(Comparator.comparing(FileType::getUuid))
+    List<String> actualFileTypes = actual.getFileTypes().stream()
+        .sorted()
         .toList();
     
-    assertEquals(expectedFileTypes.size(), actualFileTypes.size());
-    
-    for (int i = 0; i < expectedFileTypes.size(); i++) {
-      assertEquals(expectedFileTypes.get(i).getUuid(), actualFileTypes.get(i).getUuid());
-      assertEquals(expectedFileTypes.get(i).getType(), actualFileTypes.get(i).getType());
-      assertEquals(expectedFileTypes.get(i).getComment(), actualFileTypes.get(i).getComment());
-    }
+    assertEquals(expectedFileTypes, actualFileTypes);
   }
 }

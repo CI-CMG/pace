@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -27,7 +26,7 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
     return Instrument.builder()
         .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
-        .fileTypes(fileTypes)
+        .fileTypes(fileTypes.stream().map(FileType::getType).toList())
         .build();
   }
   
@@ -84,10 +83,9 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
   public static void assertInstrumentsEqual(Instrument expected, Instrument actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     for (int i = 0; i < expected.getFileTypes().size(); i++) {
-      FileTypeCommandTest.assertFileTypesEqual(
+      assertEquals(
           expected.getFileTypes().get(i),
-          actual.getFileTypes().get(i),
-          true
+          actual.getFileTypes().get(i)
       );
     }
     if (checkUUID) {
@@ -133,9 +131,7 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
     return new String[] {
         object.getUuid() == null ? "" : object.getUuid().toString(),
         object.getName(),
-        object.getFileTypes().stream()
-            .map(FileType::getType)
-            .collect(Collectors.joining(";"))
+        String.join(";", object.getFileTypes())
     };
   }
 }

@@ -24,11 +24,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.ci-cmg</groupId>
-      <artifactId>pace-repository</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.16.0</version>

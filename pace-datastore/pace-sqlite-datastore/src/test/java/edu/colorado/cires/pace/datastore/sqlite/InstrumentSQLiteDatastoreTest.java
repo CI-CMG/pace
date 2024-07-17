@@ -15,6 +15,7 @@ import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class InstrumentSQLiteDatastoreTest extends SQLiteDatastoreTest<Instrument> {
@@ -64,10 +65,7 @@ class InstrumentSQLiteDatastoreTest extends SQLiteDatastoreTest<Instrument> {
     assertNotNull(object.getName());
     
     assertNotNull(object.getFileTypes());
-    object.getFileTypes().forEach((ft) -> {
-      assertNotNull(ft.getUuid());
-      assertNotNull(ft.getType());
-    });
+    object.getFileTypes().forEach(Assertions::assertNotNull);
   }
   
   @Test

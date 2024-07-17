@@ -21,7 +21,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   private static final Datastore<FileType> fileTypeRepository = mock(Datastore.class);
   static {
     try {
-      when(fileTypeRepository.findByUUID(any())).thenReturn(Optional.of(FileType.builder()
+      when(fileTypeRepository.findByUniqueField(any())).thenReturn(Optional.of(FileType.builder()
               .uuid(UUID.randomUUID())
               .type(UUID.randomUUID().toString())
               .comment("comment")
@@ -60,7 +60,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
     return Instrument.builder()
         .name(String.format("name-%s", suffix))
         .fileTypes(List.of(
-            fileType1, fileType2
+            fileType1.getType(), fileType2.getType()
         )).build();
   }
 
@@ -85,12 +85,15 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   @Test
   void testFileTypeDoesNotExist() throws Exception {
     Instrument instrument = createNewObject(1);
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(0).getUuid())).thenReturn(Optional.empty());
-    when(fileTypeRepository.findByUUID(instrument.getFileTypes().get(1).getUuid())).thenReturn(Optional.of(instrument.getFileTypes().get(1)));
+    when(fileTypeRepository.findByUniqueField(instrument.getFileTypes().get(0))).thenReturn(Optional.empty());
+    when(fileTypeRepository.findByUniqueField(instrument.getFileTypes().get(1))).thenReturn(Optional.of(FileType.builder()
+            .type(instrument.getFileTypes().get(1))
+            .comment("comment")
+        .build()));
     
     Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(instrument));
     assertEquals(String.format(
-        "File type does not exist: %s", instrument.getFileTypes().get(0).getType()
+        "File type does not exist: %s", instrument.getFileTypes().get(0)
     ), exception.getMessage());
   }
 }

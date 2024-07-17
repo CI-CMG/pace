@@ -1,17 +1,16 @@
 package edu.colorado.cires.pace.translator.converter;
 
-import static edu.colorado.cires.pace.translator.converter.ConversionUtils.delimitedObjectsFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.floatFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.integerFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.latitudeFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.localDateFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.localDateTimeFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.longitudeFromMap;
-import static edu.colorado.cires.pace.translator.converter.ConversionUtils.objectFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.propertyFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromProperty;
+import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringListFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
 
 import edu.colorado.cires.pace.data.object.AudioPackage;
@@ -52,75 +51,38 @@ import edu.colorado.cires.pace.data.translator.SoundLevelMetricsPackageTranslato
 import edu.colorado.cires.pace.data.translator.SoundPropagationModelsPackageTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
-import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.InstrumentRepository;
-import edu.colorado.cires.pace.repository.OrganizationRepository;
-import edu.colorado.cires.pace.repository.PersonRepository;
-import edu.colorado.cires.pace.repository.PlatformRepository;
-import edu.colorado.cires.pace.repository.ProjectRepository;
-import edu.colorado.cires.pace.repository.SeaRepository;
-import edu.colorado.cires.pace.repository.SensorRepository;
-import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class PackageConverter extends Converter<PackageTranslator, Package> {
-  
-  private final PersonRepository personRepository;
-  private final ProjectRepository projectRepository;
-  private final OrganizationRepository organizationRepository;
-  private final PlatformRepository platformRepository;
-  private final InstrumentRepository instrumentRepository;
-  private final SeaRepository seaRepository;
-  private final ShipRepository shipRepository;
-  private final DetectionTypeRepository detectionTypeRepository;
-  private final SensorRepository sensorRepository;
-
-  public PackageConverter(PersonRepository personRepository, ProjectRepository projectRepository,
-      OrganizationRepository organizationRepository, PlatformRepository platformRepository, InstrumentRepository instrumentRepository,
-      SeaRepository seaRepository, ShipRepository shipRepository, DetectionTypeRepository detectionTypeRepository, SensorRepository sensorRepository) {
-    this.personRepository = personRepository;
-    this.projectRepository = projectRepository;
-    this.organizationRepository = organizationRepository;
-    this.platformRepository = platformRepository;
-    this.instrumentRepository = instrumentRepository;
-    this.seaRepository = seaRepository;
-    this.shipRepository = shipRepository;
-    this.detectionTypeRepository = detectionTypeRepository;
-    this.sensorRepository = sensorRepository;
-  }
 
   @Override
   public Package convert(PackageTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     if (translator instanceof AudioPackageTranslator audioPackageTranslator) {
       return audioPackageFromMap(
-          audioPackageTranslator, properties, row, runtimeException, personRepository, projectRepository, organizationRepository,
-          platformRepository, instrumentRepository, seaRepository, shipRepository, sensorRepository
+          audioPackageTranslator, properties, row, runtimeException
       );
     } else if (translator instanceof CPODPackageTranslator cpodPackageTranslator) {
       return cpodPackageFromMap(
-          cpodPackageTranslator, properties, row, runtimeException, personRepository, projectRepository, organizationRepository,
-          platformRepository, instrumentRepository, seaRepository, shipRepository, sensorRepository
+          cpodPackageTranslator, properties, row, runtimeException
       );
     } else if (translator instanceof DetectionsPackageTranslator detectionsPackageTranslator) {
-      return detectionsPackageFromMap(detectionsPackageTranslator, properties, row, runtimeException, personRepository, projectRepository,
-          organizationRepository, platformRepository, instrumentRepository, seaRepository, shipRepository, detectionTypeRepository);
+      return detectionsPackageFromMap(detectionsPackageTranslator, properties, row, runtimeException
+      );
     } else if (translator instanceof SoundClipsPackageTranslator soundClipsPackageTranslator) {
-      return soundClipsPackageFromMap(soundClipsPackageTranslator, properties, row, runtimeException, personRepository, projectRepository,
-          organizationRepository, platformRepository, instrumentRepository, seaRepository, shipRepository);
+      return soundClipsPackageFromMap(soundClipsPackageTranslator, properties, row, runtimeException
+      );
     } else if (translator instanceof SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator) {
-      return soundLevelMetricsPackageFromMap(soundLevelMetricsPackageTranslator, properties, row, runtimeException, personRepository, projectRepository,
-          organizationRepository, platformRepository, instrumentRepository, seaRepository, shipRepository);
+      return soundLevelMetricsPackageFromMap(soundLevelMetricsPackageTranslator, properties, row, runtimeException
+      );
     } else if (translator instanceof SoundPropagationModelsPackageTranslator soundPropagationModelsPackageTranslator) {
-      return soundPropagationModelsPackageFromMap(soundPropagationModelsPackageTranslator, properties, row, runtimeException, personRepository, projectRepository,
-          organizationRepository, platformRepository, instrumentRepository, seaRepository, shipRepository);
+      return soundPropagationModelsPackageFromMap(soundPropagationModelsPackageTranslator, properties, row, runtimeException
+      );
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", translator.getClass().getSimpleName()
@@ -129,8 +91,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
   }
 
   private static CPODPackage cpodPackageFromMap(CPODPackageTranslator cpodPackageTranslator, Map<String, ValueWithColumnNumber> properties, int row,
-      RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository,
-      PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository, ShipRepository shipRepository, SensorRepository sensorRepository)
+      RuntimeException runtimeException)
       throws TranslationException {
     QualityControlDetailTranslator qualityControlDetailTranslator = cpodPackageTranslator.getQualityControlDetailTranslator();
     return CPODPackage.builder()
@@ -144,14 +105,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, cpodPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, cpodPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, cpodPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, cpodPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, cpodPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, cpodPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, cpodPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, cpodPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, cpodPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, cpodPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, cpodPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, cpodPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, cpodPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, cpodPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, cpodPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, cpodPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, cpodPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, cpodPackageTranslator.getInstrument()))
         .instrumentId(stringFromMap(properties, cpodPackageTranslator.getInstrumentId()))
         .startTime(localDateTimeFromMap(properties, cpodPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, cpodPackageTranslator.getEndTime(), row, runtimeException))
@@ -166,7 +127,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, cpodPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, cpodPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, cpodPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(objectFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst(), personRepository, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
         .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
         .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
         .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
@@ -174,13 +135,13 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentTime(localDateTimeFromMap(properties, cpodPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, cpodPackageTranslator.getRecoveryTime(), row, runtimeException))
         .comments(stringFromMap(properties, cpodPackageTranslator.getComments()))
-        .sensors(delimitedObjectsFromMap(properties, cpodPackageTranslator.getSensors(), row, runtimeException, sensorRepository))
-        .channels(channelsFromMap(cpodPackageTranslator.getChannelTranslators(), properties, row, runtimeException, sensorRepository))
-        .locationDetail(locationDetailFromMap(cpodPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository))
+        .sensors(stringListFromMap(properties, cpodPackageTranslator.getSensors()))
+        .channels(channelsFromMap(cpodPackageTranslator.getChannelTranslators(), properties, row, runtimeException))
+        .locationDetail(locationDetailFromMap(cpodPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
         .build();
   }
 
-  private static AudioPackage audioPackageFromMap(AudioPackageTranslator audioPackageTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository, PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository, ShipRepository shipRepository, SensorRepository sensorRepository)
+  private static AudioPackage audioPackageFromMap(AudioPackageTranslator audioPackageTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     QualityControlDetailTranslator qualityControlDetailTranslator = audioPackageTranslator.getQualityControlDetailTranslator();
     
@@ -195,14 +156,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, audioPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, audioPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, audioPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, audioPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, audioPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, audioPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, audioPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, audioPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, audioPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, audioPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, audioPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, audioPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, audioPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, audioPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, audioPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, audioPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, audioPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, audioPackageTranslator.getInstrument()))
         .instrumentId(stringFromMap(properties, audioPackageTranslator.getInstrumentId()))
         .startTime(localDateTimeFromMap(properties, audioPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, audioPackageTranslator.getEndTime(), row, runtimeException))
@@ -217,7 +178,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, audioPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, audioPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, audioPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(objectFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst(), personRepository, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
         .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
         .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
         .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
@@ -225,17 +186,16 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentTime(localDateTimeFromMap(properties, audioPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, audioPackageTranslator.getRecoveryTime(), row, runtimeException))
         .comments(stringFromMap(properties, audioPackageTranslator.getComments()))
-        .sensors(delimitedObjectsFromMap(properties, audioPackageTranslator.getSensors(), row, runtimeException, sensorRepository))
-        .channels(channelsFromMap(audioPackageTranslator.getChannelTranslators(), properties, row, runtimeException, sensorRepository))
+        .sensors(stringListFromMap(properties, audioPackageTranslator.getSensors()))
+        .channels(channelsFromMap(audioPackageTranslator.getChannelTranslators(), properties, row, runtimeException))
         .locationDetail(locationDetailFromMap(
-            audioPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository
+            audioPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException
         ))
         .build();
   }
 
   private static DetectionsPackage detectionsPackageFromMap(DetectionsPackageTranslator detectionsPackageTranslator, Map<String, ValueWithColumnNumber> properties,
-      int row, RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository,
-      PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository, ShipRepository shipRepository, DetectionTypeRepository detectionTypeRepository)
+      int row, RuntimeException runtimeException)
       throws TranslationException {
     QualityControlDetailTranslator qualityControlDetailTranslator = detectionsPackageTranslator.getQualityControlDetailTranslator();
     return DetectionsPackage.builder()
@@ -249,14 +209,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, detectionsPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, detectionsPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, detectionsPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, detectionsPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, detectionsPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, detectionsPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, detectionsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, detectionsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, detectionsPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, detectionsPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, detectionsPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, detectionsPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, detectionsPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, detectionsPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, detectionsPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, detectionsPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, detectionsPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, detectionsPackageTranslator.getInstrument()))
         .startTime(localDateTimeFromMap(properties, detectionsPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, detectionsPackageTranslator.getEndTime(), row, runtimeException))
         .preDeploymentCalibrationDate(localDateFromMap(properties, detectionsPackageTranslator.getPreDeploymentCalibrationDate(), row, runtimeException))
@@ -267,7 +227,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, detectionsPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, detectionsPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, detectionsPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(objectFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst(), personRepository, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
         .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
         .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
         .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
@@ -282,37 +242,21 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sampleRate(floatFromMap(properties, detectionsPackageTranslator.getSampleRate(), row, runtimeException))
         .minFrequency(floatFromMap(properties, detectionsPackageTranslator.getMinFrequency(), row, runtimeException))
         .maxFrequency(floatFromMap(properties, detectionsPackageTranslator.getMaxFrequency(), row, runtimeException))
-        .locationDetail(locationDetailFromMap(detectionsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository))
-        .soundSource(objectFromMap(properties, detectionsPackageTranslator.getSoundSource(), detectionTypeRepository, row, runtimeException))
+        .locationDetail(locationDetailFromMap(detectionsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
+        .soundSource(stringFromMap(properties, detectionsPackageTranslator.getSoundSource()))
         .build();
   }
 
-  private static LocationDetail locationDetailFromMap(LocationDetailTranslator locationDetailTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, CRUDRepository<?>... repositories)
+  private static LocationDetail locationDetailFromMap(LocationDetailTranslator locationDetailTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     if (locationDetailTranslator instanceof StationaryTerrestrialLocationTranslator stationaryTerrestrialLocationTranslator) {
       return stationaryTerrestrialLocationFromMap(stationaryTerrestrialLocationTranslator, properties, row, runtimeException);
     } else if (locationDetailTranslator instanceof MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator) {
-      SeaRepository seaRepository = (SeaRepository) Arrays.stream(repositories)
-          .filter(r -> r instanceof SeaRepository)
-          .findFirst()
-          .orElseThrow(() -> new IllegalStateException("Sea repository not provided at runtime"));
-      return multiPointStationaryMarineLocationFromMap(multipointStationaryMarineLocationTranslator, properties, row, runtimeException, seaRepository);
+      return multiPointStationaryMarineLocationFromMap(multipointStationaryMarineLocationTranslator, properties, row, runtimeException);
     } else if (locationDetailTranslator instanceof MobileMarineLocationTranslator mobileMarineLocationTranslator) {
-      SeaRepository seaRepository = (SeaRepository) Arrays.stream(repositories)
-          .filter(r -> r instanceof SeaRepository)
-          .findFirst()
-          .orElseThrow(() -> new IllegalStateException("Sea repository not provided at runtime"));
-      ShipRepository shipRepository = (ShipRepository) Arrays.stream(repositories)
-          .filter(r -> r instanceof ShipRepository)
-          .findFirst()
-          .orElseThrow(() -> new IllegalStateException("Ship repository not provided at runtime"));
-      return mobileMarineLocationFromMap(mobileMarineLocationTranslator, properties, row, runtimeException, shipRepository, seaRepository);
+      return mobileMarineLocationFromMap(mobileMarineLocationTranslator, properties);
     } else if (locationDetailTranslator instanceof StationaryMarineLocationTranslator stationaryMarineLocationTranslator) {
-      SeaRepository seaRepository = (SeaRepository) Arrays.stream(repositories)
-          .filter(r -> r instanceof SeaRepository)
-          .findFirst()
-          .orElseThrow(() -> new IllegalStateException("Sea repository not provided at runtime"));
-      return stationaryMarineLocationFromMap(stationaryMarineLocationTranslator, properties, row, runtimeException, seaRepository);
+      return stationaryMarineLocationFromMap(stationaryMarineLocationTranslator, properties, row, runtimeException);
     } else {
       throw new TranslationException(String.format(
           "Translation not supported for %s", locationDetailTranslator.getClass().getSimpleName()
@@ -338,34 +282,32 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .build();
   }
 
-  private static MultiPointStationaryMarineLocation multiPointStationaryMarineLocationFromMap(MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, SeaRepository seaRepository) {
+  private static MultiPointStationaryMarineLocation multiPointStationaryMarineLocationFromMap(MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return MultiPointStationaryMarineLocation.builder()
-        .seaArea(objectFromMap(properties, multipointStationaryMarineLocationTranslator.getSeaArea(), seaRepository, row, runtimeException))
+        .seaArea(stringFromMap(properties, multipointStationaryMarineLocationTranslator.getSeaArea()))
         .locations(multipointStationaryMarineLocationTranslator.getLocationTranslators().stream()
             .map(marineInstrumentLocationTranslator -> marineInstrumentLocationFromMap(marineInstrumentLocationTranslator, properties, row, runtimeException))
             .toList())
         .build();
   }
 
-  private static MobileMarineLocation mobileMarineLocationFromMap(MobileMarineLocationTranslator mobileMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, ShipRepository shipRepository, SeaRepository seaRepository) {
+  private static MobileMarineLocation mobileMarineLocationFromMap(MobileMarineLocationTranslator mobileMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties) {
     return MobileMarineLocation.builder()
         .locationDerivationDescription(stringFromMap(properties, mobileMarineLocationTranslator.getLocationDerivationDescription()))
-        .vessel(objectFromMap(properties, mobileMarineLocationTranslator.getVessel(), shipRepository, row, runtimeException))
-        .seaArea(objectFromMap(properties, mobileMarineLocationTranslator.getSeaArea(), seaRepository, row, runtimeException))
+        .vessel(stringFromMap(properties, mobileMarineLocationTranslator.getVessel()))
+        .seaArea(stringFromMap(properties, mobileMarineLocationTranslator.getSeaArea()))
         .build();
   }
 
-  private static StationaryMarineLocation stationaryMarineLocationFromMap(StationaryMarineLocationTranslator stationaryMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, SeaRepository seaRepository) {
+  private static StationaryMarineLocation stationaryMarineLocationFromMap(StationaryMarineLocationTranslator stationaryMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return StationaryMarineLocation.builder()
         .deploymentLocation(marineInstrumentLocationFromMap(stationaryMarineLocationTranslator.getDeploymentLocationTranslator(), properties, row, runtimeException))
         .recoveryLocation(marineInstrumentLocationFromMap(stationaryMarineLocationTranslator.getRecoveryLocationTranslator(), properties, row, runtimeException))
-        .seaArea(objectFromMap(properties, stationaryMarineLocationTranslator.getSeaArea(), seaRepository, row, runtimeException))
+        .seaArea(stringFromMap(properties, stationaryMarineLocationTranslator.getSeaArea()))
         .build();
   }
 
-  private static SoundClipsPackage soundClipsPackageFromMap(SoundClipsPackageTranslator soundClipsPackageTranslator, Map<String, ValueWithColumnNumber> properties,
-      int row, RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository,
-      PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository, ShipRepository shipRepository)
+  private static SoundClipsPackage soundClipsPackageFromMap(SoundClipsPackageTranslator soundClipsPackageTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     return SoundClipsPackage.builder()
         .uuid(uuidFromMap(properties, soundClipsPackageTranslator.getPackageUUID(), row, runtimeException))
@@ -379,14 +321,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, soundClipsPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, soundClipsPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, soundClipsPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, soundClipsPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, soundClipsPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, soundClipsPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, soundClipsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, soundClipsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, soundClipsPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, soundClipsPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, soundClipsPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, soundClipsPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, soundClipsPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, soundClipsPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, soundClipsPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, soundClipsPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, soundClipsPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, soundClipsPackageTranslator.getInstrument()))
         .startTime(localDateTimeFromMap(properties, soundClipsPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, soundClipsPackageTranslator.getEndTime(), row, runtimeException))
         .preDeploymentCalibrationDate(localDateFromMap(properties, soundClipsPackageTranslator.getPreDeploymentCalibrationDate(), row, runtimeException))
@@ -402,13 +344,12 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .softwareProtocolCitation(stringFromMap(properties, soundClipsPackageTranslator.getSoftwareProtocolCitation()))
         .softwareDescription(stringFromMap(properties, soundClipsPackageTranslator.getSoftwareDescription()))
         .softwareProcessingDescription(stringFromMap(properties, soundClipsPackageTranslator.getSoftwareProcessingDescription()))
-        .locationDetail(locationDetailFromMap(soundClipsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository))
+        .locationDetail(locationDetailFromMap(soundClipsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
         .build();
   }
 
   private static SoundLevelMetricsPackage soundLevelMetricsPackageFromMap(SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator, Map<String, ValueWithColumnNumber> properties,
-      int row, RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository,
-      PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository, ShipRepository shipRepository) throws TranslationException {
+      int row, RuntimeException runtimeException) throws TranslationException {
     QualityControlDetailTranslator qualityControlDetailTranslator = soundLevelMetricsPackageTranslator.getQualityControlDetailTranslator();
     return SoundLevelMetricsPackage.builder()
         .uuid(uuidFromMap(properties, soundLevelMetricsPackageTranslator.getPackageUUID(), row, runtimeException))
@@ -421,14 +362,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, soundLevelMetricsPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, soundLevelMetricsPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, soundLevelMetricsPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, soundLevelMetricsPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, soundLevelMetricsPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, soundLevelMetricsPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, soundLevelMetricsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, soundLevelMetricsPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, soundLevelMetricsPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, soundLevelMetricsPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, soundLevelMetricsPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, soundLevelMetricsPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, soundLevelMetricsPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, soundLevelMetricsPackageTranslator.getInstrument()))
         .startTime(localDateTimeFromMap(properties, soundLevelMetricsPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, soundLevelMetricsPackageTranslator.getEndTime(), row, runtimeException))
         .preDeploymentCalibrationDate(localDateFromMap(properties, soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate(), row, runtimeException))
@@ -441,7 +382,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .alternateDeploymentName(stringFromMap(properties, soundLevelMetricsPackageTranslator.getAlternateDeploymentName()))
         .audioStartTime(localDateTimeFromMap(properties, soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator(), row, runtimeException))
         .audioEndTime(localDateTimeFromMap(properties, soundLevelMetricsPackageTranslator.getAudioEndTimeTranslator(), row, runtimeException))
-        .qualityAnalyst(objectFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst(), personRepository, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
         .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
         .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
         .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
@@ -456,14 +397,12 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .softwareProtocolCitation(stringFromMap(properties, soundLevelMetricsPackageTranslator.getSoftwareProtocolCitation()))
         .softwareDescription(stringFromMap(properties, soundLevelMetricsPackageTranslator.getSoftwareDescription()))
         .softwareProcessingDescription(stringFromMap(properties, soundLevelMetricsPackageTranslator.getSoftwareProcessingDescription()))
-        .locationDetail(locationDetailFromMap(soundLevelMetricsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository))
+        .locationDetail(locationDetailFromMap(soundLevelMetricsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
         .build();
   }
 
   private static SoundPropagationModelsPackage soundPropagationModelsPackageFromMap(SoundPropagationModelsPackageTranslator soundPropagationModelsPackageTranslator,
-      Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, PersonRepository personRepository, ProjectRepository projectRepository,
-      OrganizationRepository organizationRepository, PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SeaRepository seaRepository,
-      ShipRepository shipRepository) throws TranslationException {
+      Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) throws TranslationException {
     return SoundPropagationModelsPackage.builder()
         .uuid(uuidFromMap(properties, soundPropagationModelsPackageTranslator.getPackageUUID(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, soundPropagationModelsPackageTranslator.getTemperaturePath(), row, runtimeException))
@@ -475,14 +414,14 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .sourcePath(pathFromMap(properties, soundPropagationModelsPackageTranslator.getSourcePath(), row, runtimeException))
         .siteOrCruiseName(stringFromMap(properties, soundPropagationModelsPackageTranslator.getSiteOrCruiseName()))
         .deploymentId(stringFromMap(properties, soundPropagationModelsPackageTranslator.getDeploymentId()))
-        .datasetPackager(objectFromMap(properties, soundPropagationModelsPackageTranslator.getDatasetPackager(), personRepository, row, runtimeException))
-        .projects(delimitedObjectsFromMap(properties, soundPropagationModelsPackageTranslator.getProjects(), row, runtimeException, projectRepository))
+        .datasetPackager(stringFromMap(properties, soundPropagationModelsPackageTranslator.getDatasetPackager()))
+        .projects(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, soundPropagationModelsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
-        .scientists(delimitedObjectsFromMap(properties, soundPropagationModelsPackageTranslator.getScientists(), row, runtimeException, personRepository))
-        .sponsors(delimitedObjectsFromMap(properties, soundPropagationModelsPackageTranslator.getSponsors(), row, runtimeException, organizationRepository))
-        .funders(delimitedObjectsFromMap(properties, soundPropagationModelsPackageTranslator.getFunders(), row, runtimeException, organizationRepository))
-        .platform(objectFromMap(properties, soundPropagationModelsPackageTranslator.getPlatform(), platformRepository, row, runtimeException))
-        .instrument(objectFromMap(properties, soundPropagationModelsPackageTranslator.getInstrument(), instrumentRepository, row, runtimeException))
+        .scientists(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getScientists()))
+        .sponsors(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getSponsors()))
+        .funders(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getFunders()))
+        .platform(stringFromMap(properties, soundPropagationModelsPackageTranslator.getPlatform()))
+        .instrument(stringFromMap(properties, soundPropagationModelsPackageTranslator.getInstrument()))
         .startTime(localDateTimeFromMap(properties, soundPropagationModelsPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, soundPropagationModelsPackageTranslator.getEndTime(), row, runtimeException))
         .modeledFrequency(floatFromMap(properties, soundPropagationModelsPackageTranslator.getModeledFrequency(), row, runtimeException))
@@ -501,7 +440,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, soundPropagationModelsPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, soundPropagationModelsPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, soundPropagationModelsPackageTranslator.getAlternateDeploymentName()))
-        .locationDetail(locationDetailFromMap(soundPropagationModelsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException, seaRepository, shipRepository))
+        .locationDetail(locationDetailFromMap(soundPropagationModelsPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
         .build();
   }
 
@@ -540,10 +479,10 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .toList();
   }
 
-  private static Channel channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, SensorRepository sensorRepository)
+  private static Channel channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     return Channel.builder()
-        .sensor(objectFromMap(properties, channelTranslator.getSensor(), sensorRepository, row, runtimeException))
+        .sensor(stringFromMap(properties, channelTranslator.getSensor()))
         .startTime(localDateTimeFromMap(properties, channelTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, channelTranslator.getEndTime(), row, runtimeException))
         .sampleRates(sampleRatesFromMap(channelTranslator.getSampleRates(), properties, row, runtimeException))
@@ -596,11 +535,11 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .toList();
   }
 
-  private static List<Channel> channelsFromMap(List<ChannelTranslator> channelTranslators, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException, SensorRepository sensorRepository) {
+  private static List<Channel> channelsFromMap(List<ChannelTranslator> channelTranslators, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return channelTranslators.stream()
         .map(channelTranslator -> {
           try {
-            return channelFromMap(channelTranslator, properties, row, runtimeException, sensorRepository);
+            return channelFromMap(channelTranslator, properties, row, runtimeException);
           } catch (TranslationException e) {
             runtimeException.addSuppressed(e);
             return null;
