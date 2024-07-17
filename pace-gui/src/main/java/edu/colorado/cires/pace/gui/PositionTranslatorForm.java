@@ -16,6 +16,9 @@ public class PositionTranslatorForm extends JPanel {
   private final JComboBox<String> zField = new JComboBox<>();
 
   public PositionTranslatorForm(PositionTranslator initialTranslator, String[] headerOptions) {
+    xField.setName("x");
+    yField.setName("y");
+    zField.setName("z");
     addFields();
     initializeFields(initialTranslator, headerOptions);
   }

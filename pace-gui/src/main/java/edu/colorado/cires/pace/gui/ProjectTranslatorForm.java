@@ -22,6 +22,9 @@ public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator>
 
   public ProjectTranslatorForm(ProjectTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("projectTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

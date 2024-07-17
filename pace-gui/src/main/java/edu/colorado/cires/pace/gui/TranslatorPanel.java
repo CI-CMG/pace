@@ -72,6 +72,7 @@ public class TranslatorPanel extends DataPanel<Translator> {
 
   private void createFormDialog(Translator object) {
     JDialog dialog = new JDialog();
+    dialog.setName("translatorDialog");
 
     FormPanel<Translator> formPanel = new FormPanel<>(formSupplier.apply(object), repository, (s) -> {
       while (tableModel.getRowCount() > 0) {

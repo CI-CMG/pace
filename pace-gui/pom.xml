@@ -77,6 +77,18 @@
       <version>5.10.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.10.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel</artifactId>
+      <version>0.17.0</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

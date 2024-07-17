@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.Position;
+import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JTabbedPaneFixture;
 
 class DepthSensorPanelTest extends SensorsPanelTest<DepthSensor> {
 
@@ -82,5 +84,62 @@ class DepthSensorPanelTest extends SensorsPanelTest<DepthSensor> {
     assertEquals(expectedPosition.getX(), actualPosition.getX());
     assertEquals(expectedPosition.getY(), actualPosition.getY());
     assertEquals(expectedPosition.getZ(), actualPosition.getZ());
+  }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Name", "Description", "Position (X)", "Position (Y)", "Position (Z)"
+    };
+  }
+
+  @Override
+  protected String[] objectToSpreadsheetRow(DepthSensor object) {
+    return new String[] {
+        object.getName(),
+        object.getDescription(),
+        object.getPosition().getX().toString(),
+        object.getPosition().getY().toString(),
+        object.getPosition().getZ().toString()
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Sensor", 11);
+
+    JPanelFixture formFixture = panelFixture.panel(new GenericTypeMatcher<>(SensorTranslatorForm.class) {
+      @Override
+      protected boolean isMatching(SensorTranslatorForm sensorTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(formFixture, "sensorType", "Depth", 3);
+
+    JTabbedPaneFixture tabbedPaneFixture = formFixture.tabbedPane().requireVisible();
+    tabbedPaneFixture.selectTab("2. Sensor Info");
+
+    panelFixture.panel(new GenericTypeMatcher<>(DepthSensorTranslatorForm.class) {
+      @Override
+      protected boolean isMatching(DepthSensorTranslatorForm depthSensorTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(formFixture, "uuid", "UUID", 6);
+    selectComboBoxOption(formFixture, "name", "Name", 6);
+    selectComboBoxOption(formFixture, "description", "Description", 6);
+
+    JPanelFixture positionFixture = panelFixture.panel(new GenericTypeMatcher<>(PositionTranslatorForm.class) {
+      @Override
+      protected boolean isMatching(PositionTranslatorForm positionTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(positionFixture, "x", "Position (X)", 6);
+    selectComboBoxOption(positionFixture, "y", "Position (Y)", 6);
+    selectComboBoxOption(positionFixture, "z", "Position (Z)", 6);
   }
 }

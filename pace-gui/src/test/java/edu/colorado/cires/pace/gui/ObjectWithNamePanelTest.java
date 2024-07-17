@@ -9,6 +9,24 @@ import org.assertj.swing.fixture.JPanelFixture;
 abstract class ObjectWithNamePanelTest<O extends ObjectWithName> extends MetadataPanelTest<O> {
 
   @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] { "UUID", "Name" };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", getTranslatorTypeName(), 11);
+    
+    JPanelFixture formFixture = getPanel(panelFixture, getTranslatorPanelName());
+    selectComboBoxOption(formFixture, "uuid", "UUID", 2);
+    selectComboBoxOption(formFixture, "name", "Name", 2);
+  }
+
+  protected abstract String getTranslatorPanelName();
+
+  protected abstract String getTranslatorTypeName();
+
+  @Override
   protected void fillOutForm(JPanelFixture formFixture, O object) {
     enterFieldText(formFixture, "name", object.getName());
   }

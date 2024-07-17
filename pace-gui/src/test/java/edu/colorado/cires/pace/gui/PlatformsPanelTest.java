@@ -49,4 +49,14 @@ class PlatformsPanelTest extends ObjectWithNamePanelTest<Platform> {
   protected Class<Platform> getObjectClass() {
     return Platform.class;
   }
+
+  @Override
+  protected String getTranslatorPanelName() {
+    return "platformTranslatorForm";
+  }
+
+  @Override
+  protected String getTranslatorTypeName() {
+    return "Platform";
+  }
 }

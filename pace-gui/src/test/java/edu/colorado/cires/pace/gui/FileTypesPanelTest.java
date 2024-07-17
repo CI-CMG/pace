@@ -101,4 +101,21 @@ class FileTypesPanelTest extends MetadataPanelTest<FileType> {
   protected Class<FileType> getObjectClass() {
     return FileType.class;
   }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Type", "Comment"
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "File Type", 11);
+    
+    JPanelFixture formFixture = getPanel(panelFixture, "fileTypeTranslatorForm");
+    selectComboBoxOption(formFixture, "uuid", "UUID", 3);
+    selectComboBoxOption(formFixture, "type", "Type", 3);
+    selectComboBoxOption(formFixture, "comment", "Comment", 3);
+  }
 }

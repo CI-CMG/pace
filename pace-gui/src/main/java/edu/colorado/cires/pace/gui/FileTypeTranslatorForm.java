@@ -23,6 +23,10 @@ public class FileTypeTranslatorForm extends BaseTranslatorForm<FileTypeTranslato
 
   public FileTypeTranslatorForm(FileTypeTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("fileTypeTranslatorForm");
+    uuidField.setName("uuid");
+    typeField.setName("type");
+    commentField.setName("comment");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

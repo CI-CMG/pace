@@ -22,6 +22,9 @@ public class PlatformTranslatorForm extends BaseTranslatorForm<PlatformTranslato
   
   public PlatformTranslatorForm(PlatformTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("platformTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

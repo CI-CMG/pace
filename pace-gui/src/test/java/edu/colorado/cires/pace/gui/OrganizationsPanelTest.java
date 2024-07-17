@@ -123,4 +123,27 @@ class OrganizationsPanelTest extends MetadataPanelTest<Organization> {
   protected Class<Organization> getObjectClass() {
     return Organization.class;
   }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Organization", 11);
+    
+    JPanelFixture formFixture = getPanel(panelFixture, "organizationTranslatorForm");
+    selectComboBoxOption(formFixture, "uuid", "UUID", 9);
+    selectComboBoxOption(formFixture, "name", "Name", 9);
+    selectComboBoxOption(formFixture, "street", "Street", 9);
+    selectComboBoxOption(formFixture, "city", "City", 9);
+    selectComboBoxOption(formFixture, "state", "State", 9);
+    selectComboBoxOption(formFixture, "zip", "Zip", 9);
+    selectComboBoxOption(formFixture, "country", "Country", 9);
+    selectComboBoxOption(formFixture, "phone", "Phone", 9);
+    selectComboBoxOption(formFixture, "email", "Email", 9);
+  }
 }

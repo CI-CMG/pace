@@ -63,6 +63,9 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
   public SensorTranslatorForm(SensorTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    descriptionField.setName("description");
     headerOptions = initialTranslator == null ? headerOptions : getInitialHeaderOptions(initialTranslator);
     setHeaderOptions(headerOptions);
     this.initialTranslator = initialTranslator;
@@ -151,7 +154,8 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     JComboBox<String> comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
         "Audio", "Depth", "Other"
     }));
-    comboBox.setSelectedItem("Depth");
+    comboBox.setName("sensorType");
+    comboBox.setSelectedItem(null);
     
     comboBox.addItemListener(e -> updateSensorTypeSpecificPanel(panel, e, headerOptions));
     

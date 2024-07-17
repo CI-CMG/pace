@@ -72,6 +72,7 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
   }
   
   public void init() throws DatastoreException {
+    setName("translateForm");
     this.translatorComboBoxModel.removeAllElements();
     this.translatorComboBoxModel.addAll(translatorRepository.findAll()
         .filter(t -> translatorClazz.isAssignableFrom(t.getClass()))
@@ -87,6 +88,7 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
 
   private JPanel createFormPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
+    panel.setName("translateFormPanel");
     panel.add(new JLabel("Translator"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     JComboBox<String> translatorComboBox = new JComboBox<>(translatorComboBoxModel);
     translatorComboBox.setSelectedItem(null);

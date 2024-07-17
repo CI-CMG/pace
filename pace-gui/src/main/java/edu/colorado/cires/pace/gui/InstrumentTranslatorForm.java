@@ -23,6 +23,10 @@ public class InstrumentTranslatorForm extends BaseTranslatorForm<InstrumentTrans
 
   public InstrumentTranslatorForm(InstrumentTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("instrumentTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    fileTypesField.setName("fileTypes");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

@@ -96,4 +96,33 @@ class DetectionTypesPanelTest extends MetadataPanelTest<DetectionType> {
   protected Class<DetectionType> getObjectClass() {
     return DetectionType.class;
   }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Source", "Science Name"
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Detection Type", 11);
+
+    JPanelFixture typeSpecificForm = getPanel(panelFixture, "detectionTypeTranslatorForm");
+    typeSpecificForm.comboBox("uuid")
+        .requireVisible()
+        .requireEnabled()
+        .requireItemCount(3)
+        .selectItem("UUID");
+    typeSpecificForm.comboBox("source")
+        .requireVisible()
+        .requireEnabled()
+        .requireItemCount(3)
+        .selectItem("Source");
+    typeSpecificForm.comboBox("scienceName")
+        .requireVisible()
+        .requireEnabled()
+        .requireItemCount(3)
+        .selectItem("Science Name");
+  }
 }

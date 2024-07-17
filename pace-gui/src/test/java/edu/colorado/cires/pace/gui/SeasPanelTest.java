@@ -49,4 +49,14 @@ class SeasPanelTest extends ObjectWithNamePanelTest<Sea> {
   protected Class<Sea> getObjectClass() {
     return Sea.class;
   }
+
+  @Override
+  protected String getTranslatorPanelName() {
+    return "seaTranslatorForm";
+  }
+
+  @Override
+  protected String getTranslatorTypeName() {
+    return "Sea Area";
+  }
 }

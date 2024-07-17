@@ -14,10 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<AudioSensorTranslator> {
   
   private final JComboBox<String> hydrophoneIdField = new JComboBox<>();
-  private final JComboBox<String> preampId = new JComboBox<>();
+  private final JComboBox<String> preampIdField = new JComboBox<>();
 
   public AudioSensorTranslatorForm(AudioSensorTranslator initialTranslator, String[] headerOptions) {
     super(initialTranslator, headerOptions);
+    hydrophoneIdField.setName("hydrophoneId");
+    preampIdField.setName("preampId");
     addFields();
     initializeFields(initialTranslator, headerOptions);
   }
@@ -28,7 +30,7 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
     add(new JLabel("Hydrophone ID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(hydrophoneIdField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     add(new JLabel("Preamp ID"), configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    add(preampId, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
+    add(preampIdField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
   }
 
   @Override
@@ -37,14 +39,14 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
     
     if (initialTranslator != null) {
       hydrophoneIdField.setSelectedItem(initialTranslator.getHydrophoneId());
-      preampId.setSelectedItem(initialTranslator.getPreampId());
+      preampIdField.setSelectedItem(initialTranslator.getPreampId());
     }
   }
 
   @Override
   protected void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(hydrophoneIdField, headerOptions);
-    updateComboBoxModel(preampId, headerOptions);
+    updateComboBoxModel(preampIdField, headerOptions);
   }
 
   @Override
@@ -60,7 +62,7 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
         .description((String) descriptionField.getSelectedItem())
         .positionTranslator(positionTranslatorForm.toTranslator())
         .hydrophoneId((String) hydrophoneIdField.getSelectedItem())
-        .preampId((String) preampId.getSelectedItem())
+        .preampId((String) preampIdField.getSelectedItem())
         .build();
   }
 }

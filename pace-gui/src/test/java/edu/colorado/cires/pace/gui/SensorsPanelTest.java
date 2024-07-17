@@ -6,6 +6,8 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import java.util.List;
 
 abstract class SensorsPanelTest<S extends Sensor> extends MetadataPanelTest<S> {
+  
+  
 
   @Override
   protected Class<S> getObjectClass() {

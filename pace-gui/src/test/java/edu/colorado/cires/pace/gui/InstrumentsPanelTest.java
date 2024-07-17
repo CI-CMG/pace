@@ -22,7 +22,7 @@ import org.assertj.swing.fixture.JPanelFixture;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-public class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
+class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   
   private final File fileTypesJsonFile = testPath.resolve("test-metadata")
       .resolve("file-types.json")
@@ -150,6 +150,16 @@ public class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   }
 
   @Override
+  protected String[] objectToSpreadsheetRow(Instrument object) {
+    return new String[] {
+      object.getName(),
+      object.getFileTypes().stream()
+          .map(FileType::getType)
+          .collect(Collectors.joining(";"))
+    };
+  }
+
+  @Override
   protected void requireFormContents(JPanelFixture formFixture, Instrument object) {
     requireFieldText(formFixture, "name", object.getName());
 
@@ -224,5 +234,22 @@ public class InstrumentsPanelTest extends MetadataPanelTest<Instrument> {
   @Override
   protected Class<Instrument> getObjectClass() {
     return Instrument.class;
+  }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Name", "File Types"
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Instrument", 11);
+    
+    JPanelFixture formFixture = getPanel(panelFixture, "instrumentTranslatorForm");
+    selectComboBoxOption(formFixture, "uuid", "UUID", 3);
+    selectComboBoxOption(formFixture, "name", "Name", 3);
+    selectComboBoxOption(formFixture, "fileTypes", "File Types", 3);
   }
 }

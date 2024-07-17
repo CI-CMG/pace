@@ -49,4 +49,14 @@ class ProjectPanelTest extends ObjectWithNamePanelTest<Project> {
   protected Class<Project> getObjectClass() {
     return Project.class;
   }
+
+  @Override
+  protected String getTranslatorPanelName() {
+    return "projectTranslatorForm";
+  }
+
+  @Override
+  protected String getTranslatorTypeName() {
+    return "Project";
+  }
 }

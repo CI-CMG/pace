@@ -35,6 +35,16 @@ public class OrganizationTranslatorForm  extends BaseTranslatorForm<Organization
 
   @Override
   protected void addUniqueFields() {
+    setName("organizationTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    streetField.setName("street");
+    cityField.setName("city");
+    stateField.setName("state");
+    zipField.setName("zip");
+    countryField.setName("country");
+    emailField.setName("email");
+    phoneField.setName("phone");
     setLayout(new BorderLayout());
 
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);

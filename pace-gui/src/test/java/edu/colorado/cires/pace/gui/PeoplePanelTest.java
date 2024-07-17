@@ -146,5 +146,31 @@ class PeoplePanelTest extends MetadataPanelTest<Person> {
     return Person.class;
   }
 
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+        "UUID", "Name", "Organization", "Position", "Street", "City", 
+        "State", "Zip", "Country", "Email", "Phone", "Orcid"
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Person", 11);
+    JPanelFixture formFixture = getPanel(panelFixture, "personTranslatorForm");
+    selectComboBoxOption(formFixture, "uuid", "UUID", 12);
+    selectComboBoxOption(formFixture, "name", "Name", 12);
+    selectComboBoxOption(formFixture, "position", "Position", 12);
+    selectComboBoxOption(formFixture, "organization", "Organization", 12);
+    selectComboBoxOption(formFixture, "street", "Street", 12);
+    selectComboBoxOption(formFixture, "city", "City", 12);
+    selectComboBoxOption(formFixture, "state", "State", 12);
+    selectComboBoxOption(formFixture, "zip", "Zip", 12);
+    selectComboBoxOption(formFixture, "country", "Country", 12);
+    selectComboBoxOption(formFixture, "email", "Email", 12);
+    selectComboBoxOption(formFixture, "phone", "Phone", 12);
+    selectComboBoxOption(formFixture, "orcid", "Orcid", 12);
+  }
+
 
 }

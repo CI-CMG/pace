@@ -29,6 +29,10 @@ public class DetectionTypeTranslatorForm extends BaseTranslatorForm<DetectionTyp
 
   @Override
   protected void addUniqueFields() {
+    setName("detectionTypeTranslatorForm");
+    uuidField.setName("uuid");
+    sourceField.setName("source");
+    scienceNameField.setName("scienceName");
     setLayout(new BorderLayout());
 
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);

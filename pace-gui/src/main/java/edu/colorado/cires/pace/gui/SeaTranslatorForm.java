@@ -22,6 +22,9 @@ public class SeaTranslatorForm extends BaseTranslatorForm<SeaTranslator> {
 
   public SeaTranslatorForm(SeaTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("seaTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

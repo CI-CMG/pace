@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.Position;
+import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JTabbedPaneFixture;
 
 class AudioSensorPanelTest extends SensorsPanelTest<AudioSensor> {
 
@@ -89,5 +91,68 @@ class AudioSensorPanelTest extends SensorsPanelTest<AudioSensor> {
     assertEquals(expectedPosition.getX(), actualPosition.getX());
     assertEquals(expectedPosition.getY(), actualPosition.getY());
     assertEquals(expectedPosition.getZ(), actualPosition.getZ());
+  }
+
+  @Override
+  protected String[] getSpreadsheetHeaders() {
+    return new String[] {
+      "UUID", "Name", "Description", "Position (X)", "Position (Y)", "Position (Z)", "Hydrophone ID", "Preamp ID"  
+    };
+  }
+
+  @Override
+  protected String[] objectToSpreadsheetRow(AudioSensor object) {
+    return new String[] {
+        object.getName(),
+        object.getDescription(),
+        object.getPosition().getX().toString(),
+        object.getPosition().getY().toString(),
+        object.getPosition().getZ().toString(),
+        object.getHydrophoneId(),
+        object.getPreampId()
+    };
+  }
+
+  @Override
+  protected void fillOutTranslatorForm(JPanelFixture panelFixture) {
+    selectComboBoxOption(panelFixture, "translatorType", "Sensor", 11);
+
+    JPanelFixture formFixture = panelFixture.panel(new GenericTypeMatcher<>(SensorTranslatorForm.class) {
+      @Override
+      protected boolean isMatching(SensorTranslatorForm sensorTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(formFixture, "sensorType", "Audio", 3);
+
+    JTabbedPaneFixture tabbedPaneFixture = formFixture.tabbedPane().requireVisible();
+    tabbedPaneFixture.selectTab("2. Sensor Info");
+
+    JPanelFixture typeSpecificFormFixture = panelFixture.panel(new GenericTypeMatcher<>(AudioSensorTranslatorForm.class) {
+
+      @Override
+      protected boolean isMatching(AudioSensorTranslatorForm audioSensorTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(formFixture, "uuid", "UUID", 8);
+    selectComboBoxOption(formFixture, "name", "Name", 8);
+    selectComboBoxOption(formFixture, "description", "Description", 8);
+
+    JPanelFixture positionFixture = panelFixture.panel(new GenericTypeMatcher<>(PositionTranslatorForm.class) {
+      @Override
+      protected boolean isMatching(PositionTranslatorForm positionTranslatorForm) {
+        return true;
+      }
+    }).requireVisible();
+
+    selectComboBoxOption(positionFixture, "x", "Position (X)", 8);
+    selectComboBoxOption(positionFixture, "y", "Position (Y)", 8);
+    selectComboBoxOption(positionFixture, "z", "Position (Z)", 8);
+
+    selectComboBoxOption(typeSpecificFormFixture, "hydrophoneId", "Hydrophone ID", 8);
+    selectComboBoxOption(typeSpecificFormFixture, "preampId", "Preamp ID", 8);
   }
 }

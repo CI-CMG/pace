@@ -70,6 +70,9 @@ public class TranslatorForm extends Form<Translator> {
   private final Translator initialTranslator;
 
   public TranslatorForm(Translator initialTranslator) {
+    setName("translatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
     this.initialTranslator = initialTranslator;
   }
   
@@ -202,6 +205,7 @@ public class TranslatorForm extends Form<Translator> {
             "Sensor"
         }
     ));
+    translatorTypeComboBox.setName("translatorType");
     translatorTypeComboBox.setSelectedItem(null);
     translatorTypeComboBox.addItemListener(e -> {
       String choice = (String) e.getItem();

@@ -33,6 +33,19 @@ public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
 
   public PersonTranslatorForm(PersonTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
+    setName("personTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
+    positionField.setName("position");
+    organizationField.setName("organization");
+    streetField.setName("street");
+    cityField.setName("city");
+    stateField.setName("state");
+    zipField.setName("zip");
+    countryField.setName("country");
+    emailField.setName("email");
+    phoneField.setName("phone");
+    orcidField.setName("orcid");
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
   }

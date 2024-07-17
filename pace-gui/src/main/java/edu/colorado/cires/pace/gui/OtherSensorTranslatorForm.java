@@ -18,6 +18,8 @@ public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
 
   public OtherSensorTranslatorForm(OtherSensorTranslator initialTranslator, String[] headerOptions) {
     super(initialTranslator, headerOptions);
+    sensorTypeField.setName("sensorType");
+    propertiesField.setName("properties");
     addFields();
     initializeFields(initialTranslator, headerOptions);
   }
