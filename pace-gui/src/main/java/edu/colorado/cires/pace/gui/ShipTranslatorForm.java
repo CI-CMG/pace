@@ -28,6 +28,9 @@ public class ShipTranslatorForm extends BaseTranslatorForm<ShipTranslator> {
 
   @Override
   protected void addUniqueFields() {
+    setName("shipTranslatorForm");
+    uuidField.setName("uuid");
+    nameField.setName("name");
     setLayout(new BorderLayout());
 
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);

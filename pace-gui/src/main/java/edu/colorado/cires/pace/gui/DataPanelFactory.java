@@ -11,6 +11,7 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.datastore.json.PackageJsonDatastore;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
@@ -183,6 +184,14 @@ public class DataPanelFactory {
   public DataPanel<DetectionType> createDetectionTypesPanel() {
     DetectionTypesPanel panel = new DetectionTypesPanel(
         detectionTypeRepository, translatorRepository
+    );
+    panel.init();
+    return panel;
+  }
+  
+  public DataPanel<Ship> createShipsPanel() {
+    ShipsPanel panel = new ShipsPanel(
+        shipRepository, translatorRepository
     );
     panel.init();
     return panel;
