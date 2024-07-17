@@ -3,18 +3,17 @@ package edu.colorado.cires.pace.data.object;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.UUID;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @Jacksonized
-public class Instrument implements ObjectWithName {
+public class Instrument extends ObjectWithName {
   
-  private final UUID uuid;
-  private final String name;
   @NotEmpty
   private final List<@Valid FileType> fileTypes;
 

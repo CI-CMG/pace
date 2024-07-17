@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.repository.search.SeaSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
 
   @Override
   protected CRUDRepository<Sea> createRepository() {
     return new SeaRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Sea, String> uniqueFieldGetter() {
-    return Sea::getName;
   }
 
   @Override

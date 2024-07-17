@@ -1,16 +1,13 @@
 package edu.colorado.cires.pace.data.translator;
 
-import java.util.UUID;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
-public class PackageTranslator implements Translator {
-  
-  private final UUID uuid;
-  private final String name;
-  
+public class PackageTranslator extends Translator {
   private final String packageUUID;
   private final String temperaturePath;
   private final String biologicalPath;

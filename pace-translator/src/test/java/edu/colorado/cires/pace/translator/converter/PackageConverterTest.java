@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.CPODPackage;
@@ -35,6 +34,7 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.translator.AudioPackageTranslator;

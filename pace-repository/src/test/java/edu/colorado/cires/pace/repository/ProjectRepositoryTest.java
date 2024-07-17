@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.repository.search.ProjectSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class ProjectRepositoryTest extends CrudRepositoryTest<Project> {
 
   @Override
   protected CRUDRepository<Project> createRepository() {
     return new ProjectRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Project, String> uniqueFieldGetter() {
-    return Project::getName;
   }
 
   @Override

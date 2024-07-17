@@ -4,7 +4,6 @@ import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.repository.search.TranslatorSearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 abstract class TranslatorRepositoryTest extends CrudRepositoryTest<Translator> {
 
@@ -22,8 +21,4 @@ abstract class TranslatorRepositoryTest extends CrudRepositoryTest<Translator> {
     return new TranslatorRepository(createDatastore());
   }
 
-  @Override
-  protected Function<Translator, String> uniqueFieldGetter() {
-    return Translator::getName;
-  }
 }

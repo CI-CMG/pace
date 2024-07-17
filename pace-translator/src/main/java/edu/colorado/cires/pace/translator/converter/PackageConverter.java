@@ -14,7 +14,6 @@ import static edu.colorado.cires.pace.translator.converter.ConversionUtils.strin
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromProperty;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
 
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Channel;
@@ -31,6 +30,7 @@ import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.translator.AudioPackageTranslator;

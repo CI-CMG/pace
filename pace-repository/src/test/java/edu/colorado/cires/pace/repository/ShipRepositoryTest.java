@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.repository.search.ShipSearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class ShipRepositoryTest extends CrudRepositoryTest<Ship> {
 
   @Override
   protected CRUDRepository<Ship> createRepository() {
     return new ShipRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Ship, String> uniqueFieldGetter() {
-    return Ship::getName;
   }
 
   @Override

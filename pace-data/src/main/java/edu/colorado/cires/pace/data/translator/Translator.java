@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.data.translator;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.colorado.cires.pace.data.object.ObjectWithName;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
 @JsonSubTypes({
@@ -25,6 +28,9 @@ import edu.colorado.cires.pace.data.object.ObjectWithName;
     @JsonSubTypes.Type(value = ProjectTranslator.class, name = "project"),
     @JsonSubTypes.Type(value = SeaTranslator.class, name = "sea"),
 })
-public interface Translator extends ObjectWithName {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
+public abstract class Translator extends ObjectWithName {
 
 }

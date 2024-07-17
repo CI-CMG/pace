@@ -2,10 +2,7 @@ package edu.colorado.cires.pace.data.object;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -27,70 +24,29 @@ class TestResolvePackageId {
       ",,,"
   })
   void testResolvePackageId(String siteOrCruiseName, String deploymentId, String projectName, String expectedValue) {
-    PackageInfo packageInfo = new PackageInfo() {
-      @Override
-      public String getSiteOrCruiseName() {
-        return siteOrCruiseName;
-      }
-
-      @Override
-      public String getDeploymentId() {
-        return deploymentId;
-      }
-
-      @Override
-      public Person getDatasetPackager() {
-        return null;
-      }
-
-      @Override
-      public List<@Valid Project> getProjects() {
-        return List.of(Project.builder()
-                .name(projectName)
-            .build());
-      }
-
-      @Override
-      public LocalDate getPublicReleaseDate() {
-        return null;
-      }
-    };
+    Dataset dataset = new Dataset(
+        AudioPackage.builder()
+            .siteOrCruiseName(siteOrCruiseName)
+            .deploymentId(deploymentId)
+            .projects(Collections.singletonList(Project.builder()
+                    .name(projectName)
+                .build()))
+    ) {};
     
-    assertEquals(expectedValue, packageInfo.getPackageId());
+    assertEquals(expectedValue, dataset.getPackageId());
   }
 
   @Test
   void testResolvePackageIdEmptyProjects() {
-    PackageInfo packageInfo = new PackageInfo() {
-      @Override
-      public String getSiteOrCruiseName() {
-        return "socName";
-      }
-
-      @Override
-      public String getDeploymentId() {
-        return "dId";
-      }
-
-      @Override
-      public Person getDatasetPackager() {
-        return null;
-      }
-
-      @Override
-      public List<@Valid Project> getProjects() {
-        return Collections.emptyList();
-      }
-
-      @Override
-      public LocalDate getPublicReleaseDate() {
-        return null;
-      }
-    };
+    Dataset dataset = new Dataset(
+        AudioPackage.builder()
+            .siteOrCruiseName("socName")
+            .deploymentId("dId")
+    ) {};
 
     assertEquals(String.format(
-        "%s_%s", packageInfo.getSiteOrCruiseName(), packageInfo.getDeploymentId()
-    ), packageInfo.getPackageId());
+        "%s_%s", dataset.getSiteOrCruiseName(), dataset.getDeploymentId()
+    ), dataset.getPackageId());
   }
 
 }

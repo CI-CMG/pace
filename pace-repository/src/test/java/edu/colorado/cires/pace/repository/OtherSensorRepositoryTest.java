@@ -3,46 +3,30 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class OtherSensorRepositoryTest extends SensorRepositoryTest {
   
-  static class TestSensor implements Sensor {
-
-    @Override
-    public String getName() {
-      return "name";
-    }
-
-    @Override
-    public Position getPosition() {
-      return Position.builder()
-          .x(1f)
-          .y(1f)
-          .z(1f)
-          .build();
-    }
-
-    @Override
-    public String getDescription() {
-      return "description";
-    }
-
-    @Override
-    public UUID getUuid() {
-      return null;
-    }
-  } 
+  private static final Sensor sensor = new Sensor(
+      DepthSensor.builder()
+          .name("name")
+          .position(Position.builder()
+              .x(1f)
+              .y(1f)
+              .z(1f)
+              .build())
+          .description("description")
+  ) {};
   
   @Test
   void testUnsupported() {
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(new TestSensor()));
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(sensor));
     assertEquals(String.format(
-        "Unsupported sensor type: %s", TestSensor.class.getSimpleName()
+        "Unsupported sensor type: %s", sensor.getClass().getSimpleName()
     ), exception.getMessage());
   }
 
@@ -73,7 +57,7 @@ class OtherSensorRepositoryTest extends SensorRepositoryTest {
   protected void assertObjectsEqual(Sensor expected, Sensor actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
     assertEquals(expected.getPosition(), actual.getPosition());
-    assertEquals(expected.getDescription(), expected.getDescription());
+    assertEquals(expected.getDescription(), actual.getDescription());
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());
     }

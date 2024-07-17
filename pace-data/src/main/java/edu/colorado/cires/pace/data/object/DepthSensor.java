@@ -1,18 +1,13 @@
 package edu.colorado.cires.pace.data.object;
 
-import java.util.UUID;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @Jacksonized
-public class DepthSensor implements Sensor {
-  
-  private final UUID uuid;
-  private final String name;
-  private final Position position;
-  private final String description;
-  
+public class DepthSensor extends Sensor {
 }

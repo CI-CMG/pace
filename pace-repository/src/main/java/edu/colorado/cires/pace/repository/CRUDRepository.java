@@ -45,7 +45,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
           "uuid for new %s must not be defined", getClassName()
       ));
     }
-    String uniqueField = datastore.getUniqueFieldGetter().apply(object);
+    String uniqueField = object.getUniqueField();
     if (datastore.findByUniqueField(uniqueField).isPresent()) {
       LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), uniqueField);
       throw new ConflictException(String.format(
@@ -125,8 +125,8 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       ));
     }
     O existingObject = getByUUID(uuid);
-    String newUniqueField = datastore.getUniqueFieldGetter().apply(object);
-    String existingUniqueField = datastore.getUniqueFieldGetter().apply(existingObject);
+    String newUniqueField = object.getUniqueField();
+    String existingUniqueField = existingObject.getUniqueField();
     if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
       LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), newUniqueField);
       throw new ConflictException(String.format(

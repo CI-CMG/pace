@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.packaging;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -11,10 +12,9 @@ import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import edu.colorado.cires.pace.data.object.AudioDataset;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.CPodDataset;
+import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.Dataset;
@@ -204,7 +204,7 @@ class PackagerProcessorTest {
     checkTargetPaths(packingJob.getOtherPath(), baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packingJob.getTemperaturePath(), baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
-        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? "acoustic_files" : "data_files"
+        (packingJob instanceof AudioPackage || packingJob instanceof CPODPackage) ? "acoustic_files" : "data_files"
     ));
     
     String actualMetadata = FileUtils.readFileToString(baseExpectedOutputPath.resolve(String.format(
@@ -224,8 +224,16 @@ class PackagerProcessorTest {
     String actualProjects = FileUtils.readFileToString(baseExpectedOutputPath.resolve("projects.json").toFile(), StandardCharsets.UTF_8);
     assertEquals(expectedProjects, actualProjects);
     
-    Dataset dataset = objectMapper.readValue(actualMetadata, Dataset.class);
-    assertInstanceOf(AudioDataset.class, dataset);
+    Package dataset = objectMapper.readValue(actualMetadata, Package.class);
+    assertInstanceOf(AudioPackage.class, dataset);
+    assertNull(dataset.getUuid());
+    assertNull(dataset.getTemperaturePath());
+    assertNull(dataset.getBiologicalPath());
+    assertNull(dataset.getOtherPath());
+    assertNull(dataset.getDocumentsPath());
+    assertNull(dataset.getCalibrationDocumentsPath());
+    assertNull(dataset.getNavigationPath());
+    assertNull(dataset.getSourcePath());
   }
 
   private Package createPackingJob(

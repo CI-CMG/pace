@@ -1,19 +1,23 @@
 package edu.colorado.cires.pace.data.object;
 
 import jakarta.validation.constraints.NotBlank;
-import java.util.UUID;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @Jacksonized
-public class FileType implements ObjectWithUniqueField {
+public class FileType extends ObjectWithUniqueField {
 
-  final UUID uuid;
   @NotBlank
   final String type;
   final String comment;
-  
+
+  @Override
+  public String getUniqueField() {
+    return type;
+  }
 }

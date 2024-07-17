@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.repository.search.FileTypeSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class FileTypeRepositoryTest extends CrudRepositoryTest<FileType> {
 
   @Override
   protected CRUDRepository<FileType> createRepository() {
     return new FileTypeRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<FileType, String> uniqueFieldGetter() {
-    return FileType::getType;
   }
 
   @Override

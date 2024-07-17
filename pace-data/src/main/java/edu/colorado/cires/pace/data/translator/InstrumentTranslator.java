@@ -1,20 +1,16 @@
 package edu.colorado.cires.pace.data.translator;
 
-import java.util.UUID;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @Jacksonized
-public class InstrumentTranslator implements Translator {
-  
-  private final UUID uuid;
-  private final String name;
-  
+public class InstrumentTranslator extends Translator {
   private final String instrumentUUID;
   private final String instrumentName;
   private final String fileTypes;
-
 }

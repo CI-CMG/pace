@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class DetectionTypeSQLiteDatastore extends SQLiteDatastore<DetectionType> {
 
   public DetectionTypeSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "DETECTION_TYPES", DetectionType::getSource, DetectionType.class);
+    super(sqliteFile, "DETECTION_TYPES", DetectionType.class);
   }
 
   @Override

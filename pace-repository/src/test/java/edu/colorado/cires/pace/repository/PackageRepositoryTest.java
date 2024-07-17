@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.CPODPackage;
@@ -31,19 +30,17 @@ import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class PackageRepositoryTest extends CrudRepositoryTest<Package> {
@@ -51,11 +48,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   @Override
   protected CRUDRepository<Package> createRepository() {
     return new PackageRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Package, String> uniqueFieldGetter() {
-    return Package::getPackageId;
   }
 
   @Override
@@ -184,13 +176,13 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     Package object = createCPODDataset(1);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
-    assertEquals(uniqueFieldGetter().apply(object), uniqueFieldGetter().apply(created));
+    assertEquals(object.getPackageId(), created.getPackageId());
     assertObjectsEqual(object, created, false);
 
     Package saved = map.get(created.getUuid());
     assertNotNull(saved);
     assertEquals(created.getUuid(), saved.getUuid());
-    assertEquals(uniqueFieldGetter().apply(created), uniqueFieldGetter().apply(saved));
+    assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
 
@@ -199,13 +191,13 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     Package object = createDetectionsDataset(1);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
-    assertEquals(uniqueFieldGetter().apply(object), uniqueFieldGetter().apply(created));
+    assertEquals(object.getPackageId(), created.getPackageId());
     assertObjectsEqual(object, created, false);
 
     Package saved = map.get(created.getUuid());
     assertNotNull(saved);
     assertEquals(created.getUuid(), saved.getUuid());
-    assertEquals(uniqueFieldGetter().apply(created), uniqueFieldGetter().apply(saved));
+    assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
   
@@ -214,13 +206,13 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     Package object = createSoundClipsDataset(1);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
-    assertEquals(uniqueFieldGetter().apply(object), uniqueFieldGetter().apply(created));
+    assertEquals(object.getPackageId(), created.getPackageId());
     assertObjectsEqual(object, created, false);
 
     Package saved = map.get(created.getUuid());
     assertNotNull(saved);
     assertEquals(created.getUuid(), saved.getUuid());
-    assertEquals(uniqueFieldGetter().apply(created), uniqueFieldGetter().apply(saved));
+    assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
   
@@ -229,13 +221,13 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     Package object = createSoundLevelMetricsDataset(1);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
-    assertEquals(uniqueFieldGetter().apply(object), uniqueFieldGetter().apply(created));
+    assertEquals(object.getPackageId(), created.getPackageId());
     assertObjectsEqual(object, created, false);
 
     Package saved = map.get(created.getUuid());
     assertNotNull(saved);
     assertEquals(created.getUuid(), saved.getUuid());
-    assertEquals(uniqueFieldGetter().apply(created), uniqueFieldGetter().apply(saved));
+    assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
 
@@ -244,71 +236,25 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     Package object = createSoundPropagationModelsDataset(1);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
-    assertEquals(uniqueFieldGetter().apply(object), uniqueFieldGetter().apply(created));
+    assertEquals(object.getPackageId(), created.getPackageId());
     assertObjectsEqual(object, created, false);
 
     Package saved = map.get(created.getUuid());
     assertNotNull(saved);
     assertEquals(created.getUuid(), saved.getUuid());
-    assertEquals(uniqueFieldGetter().apply(created), uniqueFieldGetter().apply(saved));
+    assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
   
   @Test
   void testCreateUnsupportedDataset() {
-    class TestPackage implements Package {
-
-      @Override
-      public UUID getUuid() {
-        return null;
-      }
-
-      @Override
-      public Path getTemperaturePath() {
-        return null;
-      }
-
-      @Override
-      public Path getBiologicalPath() {
-        return null;
-      }
-
-      @Override
-      public Path getOtherPath() {
-        return null;
-      }
-
-      @Override
-      public Path getDocumentsPath() {
-        return null;
-      }
-
-      @Override
-      public Path getCalibrationDocumentsPath() {
-        return null;
-      }
-
-      @Override
-      public Path getNavigationPath() {
-        return null;
-      }
-
-      @Override
-      public Path getSourcePath() {
-        return Paths.get("test-package");
-      }
-
-      @Override
-      public String getPackageId() {
-        return "";
-      }
-    }
-    
-    Package packingJob = new TestPackage();
+    Package packingJob = new Package(
+        ((SoundPropagationModelsPackage) createSoundPropagationModelsDataset(1)).toBuilder()
+    ) {};
     
     Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(packingJob));
     assertEquals(String.format(
-        "Unsupported package type: %s", TestPackage.class.getSimpleName()
+        "Unsupported package type: %s", packingJob.getClass().getSimpleName()
     ), exception.getMessage());
   }
 

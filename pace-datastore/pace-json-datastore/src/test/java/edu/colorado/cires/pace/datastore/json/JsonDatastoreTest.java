@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.ObjectWithUUID;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
@@ -148,9 +147,9 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     object2 = datastore.save(object2);
     
     List<O> results = datastore.findAll()
-        .sorted((Comparator.comparing(ObjectWithUUID::getUuid)))
+        .sorted((Comparator.comparing(ObjectWithUniqueField::getUuid)))
         .toList();
-    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUUID::getUuid))
+    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUniqueField::getUuid))
         .toList();
     
     assertEquals(expected.size(), results.size());

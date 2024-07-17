@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.packaging;
 
-import edu.colorado.cires.pace.data.object.AudioDataset;
-import edu.colorado.cires.pace.data.object.CPodDataset;
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Package;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -81,7 +81,7 @@ class PackageInstructionFactory {
     logger.info("Scanning source files from {}", packingJob.getSourcePath());
     Stream<PackageInstruction> sourceFiles = processPath(
         packingJob::getSourcePath, 
-        (packingJob instanceof AudioDataset || packingJob instanceof CPodDataset) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files"),
+        (packingJob instanceof AudioPackage || packingJob instanceof CPODPackage) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files"),
         logger
     );
     

@@ -14,7 +14,6 @@ import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
@@ -35,11 +34,6 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
   @Override
   protected CRUDRepository<Instrument> createRepository() {
     return new InstrumentRepository(createDatastore(), fileTypeRepository);
-  }
-
-  @Override
-  protected Function<Instrument, String> uniqueFieldGetter() {
-    return Instrument::getName;
   }
 
   @Override

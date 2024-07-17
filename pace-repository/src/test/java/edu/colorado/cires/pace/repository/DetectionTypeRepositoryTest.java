@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
 
   @Override
   protected CRUDRepository<DetectionType> createRepository() {
     return new DetectionTypeRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<DetectionType, String> uniqueFieldGetter() {
-    return DetectionType::getScienceName;
   }
 
   @Override

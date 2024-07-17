@@ -9,7 +9,6 @@ import edu.colorado.cires.pace.repository.search.OrganizationSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
@@ -17,11 +16,6 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
   @Override
   protected CRUDRepository<Organization> createRepository() {
     return new OrganizationRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Organization, String> uniqueFieldGetter() {
-    return Organization::getName;
   }
 
   @Override

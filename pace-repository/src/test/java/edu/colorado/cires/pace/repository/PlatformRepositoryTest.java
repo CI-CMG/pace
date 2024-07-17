@@ -6,18 +6,12 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
-import java.util.function.Function;
 
 class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
 
   @Override
   protected CRUDRepository<Platform> createRepository() {
     return new PlatformRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Platform, String> uniqueFieldGetter() {
-    return Platform::getName;
   }
 
   @Override

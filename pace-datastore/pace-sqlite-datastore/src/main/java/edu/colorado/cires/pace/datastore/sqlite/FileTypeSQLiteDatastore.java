@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class FileTypeSQLiteDatastore extends SQLiteDatastore<FileType> {
 
   public FileTypeSQLiteDatastore(Path sqliteFile) {
-    super(sqliteFile, "FILE_TYPES", FileType::getType, FileType.class);
+    super(sqliteFile, "FILE_TYPES", FileType.class);
   }
 
   @Override

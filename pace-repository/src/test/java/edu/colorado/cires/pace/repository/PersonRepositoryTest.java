@@ -9,7 +9,6 @@ import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class PersonRepositoryTest extends CrudRepositoryTest<Person> {
@@ -17,11 +16,6 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
   @Override
   protected CRUDRepository<Person> createRepository() {
     return new PersonRepository(createDatastore());
-  }
-
-  @Override
-  protected Function<Person, String> uniqueFieldGetter() {
-    return Person::getName;
   }
 
   @Override
