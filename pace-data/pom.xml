@@ -49,9 +49,12 @@
       <artifactId>expressly</artifactId>
       <version>5.0.0</version>
     </dependency>
-
-
-
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>2.2.22</version>
+    </dependency>
+    
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -77,6 +80,54 @@
         <artifactId>spotbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${project.parent.basedir}/spotbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.victools</groupId>
+        <artifactId>jsonschema-maven-plugin</artifactId>
+        <version>4.35.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaVersion>DRAFT_2020_12</schemaVersion>
+          <classNames>
+            <className>edu.colorado.cires.pace.data.object.DetectionType</className>
+            <className>edu.colorado.cires.pace.data.object.FileType</className>
+            <className>edu.colorado.cires.pace.data.object.Instrument</className>
+            <className>edu.colorado.cires.pace.data.object.Organization</className>
+            <className>edu.colorado.cires.pace.data.object.Package</className>
+            <className>edu.colorado.cires.pace.data.object.Person</className>
+            <className>edu.colorado.cires.pace.data.object.Platform</className>
+            <className>edu.colorado.cires.pace.data.object.Project</className>
+            <className>edu.colorado.cires.pace.data.object.Sea</className>
+            <className>edu.colorado.cires.pace.data.object.Sensor</className>
+            <className>edu.colorado.cires.pace.data.object.Ship</className>
+            <className>edu.colorado.cires.pace.data.translator.Translator</className>
+          </classNames>
+          <schemaFilePath>target/schema</schemaFilePath>
+          <options>
+            <preset>PLAIN_JSON</preset>
+          </options>
+          <modules>
+            <module>
+              <name>JakartaValidation</name>
+            </module>
+            <module>
+              <name>Jackson</name>
+              <options>
+                <option>FLATTENED_ENUMS_FROM_JSONVALUE</option>
+              </options>
+            </module>
+            <module>
+              <name>Swagger2</name>
+            </module>
+          </modules>
         </configuration>
       </plugin>
     </plugins>

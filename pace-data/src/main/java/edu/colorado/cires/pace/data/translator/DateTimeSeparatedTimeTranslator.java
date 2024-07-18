@@ -1,16 +1,16 @@
 package edu.colorado.cires.pace.data.translator;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true)
+@Builder(toBuilder = true)
 @Jacksonized
-public class DateTimeSeparatedTimeTranslator extends DateTranslator {
+public class DateTimeSeparatedTimeTranslator implements TimeTranslator {
   
+  private final String date;
   private final String time;
+  private final String timeZone;
 
 }
