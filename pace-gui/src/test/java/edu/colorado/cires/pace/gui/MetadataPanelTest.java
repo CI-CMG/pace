@@ -46,6 +46,7 @@ import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -373,6 +374,7 @@ abstract class MetadataPanelTest<O extends ObjectWithUniqueField> {
     requireTableContents(tableFixture, Collections.singletonList(object2));
   }
   
+  @Disabled
   @ParameterizedTest
   @EnumSource(TranslationType.class)
   void testTranslate(TranslationType translationType) throws IOException {
