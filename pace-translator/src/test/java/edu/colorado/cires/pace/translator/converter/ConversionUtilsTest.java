@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.translator.TimeTranslator;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.nio.file.Path;
@@ -847,7 +848,17 @@ class ConversionUtilsTest {
     map.put("test-other-property", new ValueWithColumnNumber(Optional.of("12:00:00"), 2));
 
     runtimeException = new RuntimeException();
-    result = ConversionUtils.localDateTimeFromMap(map, () -> "test-zone-property", 2, runtimeException);
+    result = ConversionUtils.localDateTimeFromMap(map, new TimeTranslator() {
+      @Override
+      public String getTime() {
+        return "test-property";
+      }
+
+      @Override
+      public String getTimeZone() {
+        return "test-zone-property";
+      }
+    }, 2, runtimeException);
     assertNull(result);
     assertEquals(0, runtimeException.getSuppressed().length);
     

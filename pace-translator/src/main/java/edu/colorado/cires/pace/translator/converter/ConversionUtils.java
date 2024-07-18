@@ -188,9 +188,14 @@ final class ConversionUtils {
   private static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, DateTimeSeparatedTimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
     String zoneId = stringFromMap(properties, timeTranslator.getTimeZone());
     
+    DateTranslator dateTranslator = DateTranslator.builder()
+        .date(timeTranslator.getDate())
+        .timeZone(timeTranslator.getTimeZone())
+        .build();
+    
     LocalDate date = parseLocalDate(
         properties,
-        timeTranslator,
+        dateTranslator,
         row,
         runtimeException
     );
