@@ -44,7 +44,7 @@ import picocli.CommandLine.Parameters;
 })
 public class SensorCommand {
   
-  private static final RepositoryFactory<Sensor> repositoryFactory = SensorRepositoryFactory::createRepository;
+  private static final RepositoryFactory<Sensor> repositoryFactory = SensorRepositoryFactory::createJsonRepository;
   private static final Class<Sensor> clazz = Sensor.class;
   private static final TypeReference<List<Sensor>> typeReference = new TypeReference<>() {};
   
@@ -71,7 +71,7 @@ public class SensorCommand {
 
     @Override
     protected RepositoryFactory<Sensor> getRepositoryFactory() {
-      return SensorRepositoryFactory::createRepository;
+      return SensorRepositoryFactory::createJsonRepository;
     }
   }
   

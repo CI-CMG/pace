@@ -3,19 +3,23 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.OrganizationSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
+class OrganizationRepositoryTest extends PackageDependencyRepositoryTest<Organization> {
 
   @Override
   protected CRUDRepository<Organization> createRepository() {
-    return new OrganizationRepository(createDatastore());
+    return new OrganizationRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -23,6 +27,16 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
     return OrganizationSearchParameters.builder()
         .names(objects.stream().map(Organization::getName).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Organization> getObjectClass() {
+    return Organization.class;
   }
 
   @Override
@@ -72,7 +86,7 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
   @Test
   void testCreateUUIDNotNull() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Organization object = createNewObject(1);
-    object = repository.setUUID(object, UUID.randomUUID());
+    object = (Organization) object.setUuid(UUID.randomUUID());
 
     Organization created = repository.create(object);
     assertEquals(object.getUuid(), created.getUuid());
@@ -119,5 +133,35 @@ class OrganizationRepositoryTest extends CrudRepositoryTest<Organization> {
     assertEquals(String.format(
         "%s with uuid = %s already exists", repository.getClassName(), one.getUuid()
     ), exception.getMessage());
+  }
+
+  @Override
+  protected boolean objectInDependentObject(Organization updated, UUID dependentObjectUUID) {
+    String name = updated.getName();
+    Package p = packages.get(dependentObjectUUID);
+    return p.getSponsors().contains(name) || p.getFunders().contains(name);
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(Organization object) {
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .sponsors(Collections.singletonList(object.getName()))
+        .funders(Collections.singletonList(object.getName()))
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .sponsors(Collections.singletonList("unrelated-sponsor"))
+        .funders(Collections.singletonList("unrelated-funder"))
+        .build();
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
   }
 }

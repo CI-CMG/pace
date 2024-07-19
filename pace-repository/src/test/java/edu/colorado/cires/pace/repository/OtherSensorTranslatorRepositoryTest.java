@@ -9,6 +9,11 @@ import edu.colorado.cires.pace.data.translator.Translator;
 public class OtherSensorTranslatorRepositoryTest extends TranslatorRepositoryTest {
 
   @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
   protected Translator createNewObject(int suffix) {
     return OtherSensorTranslator.builder()
         .name(String.format("name-%s", suffix))

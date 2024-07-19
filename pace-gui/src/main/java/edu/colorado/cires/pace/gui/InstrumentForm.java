@@ -130,7 +130,7 @@ public class InstrumentForm extends Form<Instrument> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Instrument> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Instrument> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

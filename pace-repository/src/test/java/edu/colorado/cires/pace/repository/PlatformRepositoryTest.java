@@ -2,16 +2,20 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
+import java.util.UUID;
 
-class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
+class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {
 
   @Override
   protected CRUDRepository<Platform> createRepository() {
-    return new PlatformRepository(createDatastore());
+    return new PlatformRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -19,6 +23,16 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
     return PlatformSearchParameters.builder()
         .names(objects.stream().map(Platform::getName).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Platform> getObjectClass() {
+    return Platform.class;
   }
 
   @Override
@@ -42,5 +56,31 @@ class PlatformRepositoryTest extends CrudRepositoryTest<Platform> {
       assertEquals(expected.getUuid(), actual.getUuid());
     }
     assertEquals(expected.getName(), actual.getName());
+  }
+
+  @Override
+  protected boolean objectInDependentObject(Platform updated, UUID dependentObjectUUID) {
+    return packages.get(dependentObjectUUID).getPlatform().equals(updated.getName());
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(Platform object) {
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .platform(object.getName())
+        .build();
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .platform("unrelated-platform")
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
   }
 }

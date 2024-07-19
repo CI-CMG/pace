@@ -232,7 +232,7 @@ public class SensorForm extends Form<Sensor> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Sensor> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Sensor> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
 import jakarta.validation.constraints.NotBlank;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -16,4 +17,8 @@ public class Person extends Contact {
   final String position;
   final String orcid;
 
+  @Override
+  public ObjectWithUniqueField setUuid(UUID uuid) {
+    return toBuilder().uuid(uuid).build();
+  }
 }

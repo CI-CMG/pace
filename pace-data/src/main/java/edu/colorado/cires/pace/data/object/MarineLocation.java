@@ -5,5 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public interface MarineLocation extends LocationDetail {
   @NotBlank
   String getSeaArea();
+  
+  MarineLocation setSeaArea(String seaArea);
 
 }

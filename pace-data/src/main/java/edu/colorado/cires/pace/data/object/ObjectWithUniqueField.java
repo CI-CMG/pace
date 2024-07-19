@@ -13,5 +13,7 @@ public abstract class ObjectWithUniqueField {
   
   @JsonIgnore
   public abstract String getUniqueField();
+  
+  public abstract ObjectWithUniqueField setUuid(UUID uuid);
 
 }

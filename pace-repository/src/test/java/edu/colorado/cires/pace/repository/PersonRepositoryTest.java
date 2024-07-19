@@ -1,21 +1,29 @@
 package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.DataQuality;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class PersonRepositoryTest extends CrudRepositoryTest<Person> {
+class PersonRepositoryTest extends PackageDependencyRepositoryTest<Person> {
 
   @Override
   protected CRUDRepository<Person> createRepository() {
-    return new PersonRepository(createDatastore());
+    return new PersonRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -23,6 +31,16 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
     return PersonSearchParameters.builder()
         .names(objects.stream().map(Person::getName).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Person> getObjectClass() {
+    return Person.class;
   }
 
   @Override
@@ -81,7 +99,7 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
   @Test
   void testCreateUUIDNotNull() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Person object = createNewObject(1);
-    object = repository.setUUID(object, UUID.randomUUID());
+    object = (Person) object.setUuid(UUID.randomUUID());
 
     Person created = repository.create(object);
     assertEquals(object.getUuid(), created.getUuid());
@@ -128,5 +146,62 @@ class PersonRepositoryTest extends CrudRepositoryTest<Person> {
     assertEquals(String.format(
         "%s with uuid = %s already exists", repository.getClassName(), one.getUuid()
     ), exception.getMessage());
+  }
+
+  @Override
+  protected boolean objectInDependentObject(Person updated, UUID dependentObjectUUID) {
+    Package p = packages.get(dependentObjectUUID);
+    
+    String name = updated.getName();
+    
+    if (p instanceof DataQuality) {
+      return p.getDatasetPackager().equals(name) &&
+          p.getScientists().contains(name) &&
+          ((DataQuality) p).getQualityAnalyst().equals(name);
+    } else {
+      return p.getDatasetPackager().equals(name) &&
+          p.getScientists().contains(name);
+    }
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(Person object) {
+    String name = object.getName();
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .datasetPackager(name)
+        .scientists(Collections.singletonList(name))
+        .qualityAnalyst(name)
+        .build();
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .datasetPackager("unrelated-person")
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+  
+  @Test
+  void testUpdateNoPackageQualityControl() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+    Person object = repository.create(createNewObject(1));
+    Package dependentObject = ((SoundPropagationModelsPackage) PackageRepositoryTest.createSoundPropagationModelsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .scientists(Collections.singletonList(object.getName()))
+        .datasetPackager(object.getName())
+        .build();
+    packages.put(dependentObject.getUuid(), dependentObject);
+
+    String newUniqueField = "new-value";
+    Person toUpdate = copyWithUpdatedUniqueField(object, newUniqueField);
+    Person updated = repository.update(object.getUuid(), toUpdate);
+    assertNotEquals(object.getUniqueField(), updated.getUniqueField());
+    assertTrue(objectInDependentObject(updated, dependentObject.getUuid()));
   }
 }

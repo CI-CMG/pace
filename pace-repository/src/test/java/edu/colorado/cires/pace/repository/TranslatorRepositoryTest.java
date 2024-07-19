@@ -21,4 +21,13 @@ abstract class TranslatorRepositoryTest extends CrudRepositoryTest<Translator> {
     return new TranslatorRepository(createDatastore());
   }
 
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Translator> getObjectClass() {
+    return Translator.class;
+  }
 }

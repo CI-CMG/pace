@@ -13,7 +13,6 @@ import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.translator.Translator;
-import edu.colorado.cires.pace.datastore.json.PackageJsonDatastore;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.InstrumentRepository;
@@ -29,14 +28,11 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.DatasetType;
 import edu.colorado.cires.pace.translator.LocationType;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
-import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
-import java.io.IOException;
 import java.util.List;
 
 public class DataPanelFactory {
 
-  private final ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   
   private final ProjectRepository projectRepository;
@@ -50,11 +46,12 @@ public class DataPanelFactory {
   private final ShipRepository shipRepository;
   private final FileTypeRepository fileTypeRepository;
   private final TranslatorRepository translatorRepository;
+  private final PackageRepository packageRepository;
 
   DataPanelFactory(ProjectRepository projectRepository, PersonRepository personRepository, OrganizationRepository organizationRepository,
       PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SensorRepository sensorRepository,
       DetectionTypeRepository detectionTypeRepository, SeaRepository seaRepository, ShipRepository shipRepository,
-      FileTypeRepository fileTypeRepository, TranslatorRepository translatorRepository) {
+      FileTypeRepository fileTypeRepository, TranslatorRepository translatorRepository, PackageRepository packageRepository) {
     this.projectRepository = projectRepository;
     this.personRepository = personRepository;
     this.organizationRepository = organizationRepository;
@@ -66,6 +63,7 @@ public class DataPanelFactory {
     this.shipRepository = shipRepository;
     this.fileTypeRepository = fileTypeRepository;
     this.translatorRepository = translatorRepository;
+    this.packageRepository = packageRepository;
   }
 
   public DataPanel<Project> createProjectsPanel() {
@@ -104,9 +102,9 @@ public class DataPanelFactory {
     return panel;
   }
   
-  public DataPanel<Package> createPackagesPanel() throws IOException {
+  public DataPanel<Package> createPackagesPanel() {
     PackagesPanel panel = new PackagesPanel(
-        new PackageRepository(new PackageJsonDatastore(propertyResolver.getDataDir(), objectMapper)),
+        packageRepository,
         new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
         (p) -> new Object[] { 
             p.getUuid(),

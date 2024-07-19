@@ -6,37 +6,108 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.AudioDataPackage;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.CPODPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.DataQualityEntry;
+import edu.colorado.cires.pace.data.object.DepthSensor;
+import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.Gain;
+import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.MarineLocation;
+import edu.colorado.cires.pace.data.object.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
+import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PackageRepositoryTest extends CrudRepositoryTest<Package> {
+  
+  protected final Map<UUID, DetectionType> detectionTypes = new HashMap<>(0);
+  protected final Map<UUID, Instrument> instruments = new HashMap<>(0);
+  protected final Map<UUID, Organization> organizations = new HashMap<>(0);
+  protected final Map<UUID, Person> people = new HashMap<>(0);
+  protected final Map<UUID, Platform> platforms = new HashMap<>(0);
+  protected final Map<UUID, Project> projects = new HashMap<>(0);
+  protected final Map<UUID, Sea> seas = new HashMap<>(0);
+  protected final Map<UUID, Sensor> sensors = new HashMap<>(0);
+  protected final Map<UUID, Ship> ships = new HashMap<>(0);
+
+  @BeforeEach
+  void setUp() {
+    detectionTypes.clear();
+    instruments.clear();
+    organizations.clear();
+    people.clear();
+    platforms.clear();
+    projects.clear();
+    seas.clear();
+    sensors.clear();
+    ships.clear();
+  }
+
+  @AfterEach
+  void tearDown() {
+    detectionTypes.clear();
+    instruments.clear();
+    organizations.clear();
+    people.clear();
+    platforms.clear();
+    projects.clear();
+    seas.clear();
+    sensors.clear();
+    ships.clear();
+  }
 
   @Override
   protected CRUDRepository<Package> createRepository() {
-    return new PackageRepository(createDatastore());
+    return new PackageRepository(
+        createDatastore(),
+        createDatastore(detectionTypes, DetectionType.class, "source"),
+        createDatastore(instruments, Instrument.class, "name"),
+        createDatastore(organizations, Organization.class, "name"),
+        createDatastore(people, Person.class, "name"),
+        createDatastore(platforms, Platform.class, "name"),
+        createDatastore(projects, Project.class, "name"),
+        createDatastore(seas, Sea.class, "name"),
+        createDatastore(sensors, Sensor.class, "name"),
+        createDatastore(ships, Ship.class, "name")
+    );
   }
 
   @Override
@@ -49,12 +120,32 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   }
 
   @Override
+  protected String getUniqueFieldName() {
+    return "packageId";
+  }
+
+  @Override
+  protected Class<Package> getObjectClass() {
+    return Package.class;
+  }
+
+  @Override
   protected Package createNewObject(int suffix) {
-    return createPackingJob(suffix);
+    AudioDataPackage audioDataPackage = createAudioPackingJob(suffix);
+    saveAudioDataDependencies(audioDataPackage);
+    return audioDataPackage;
   }
 
   @Override
   protected Package copyWithUpdatedUniqueField(Package object, String uniqueField) {
+    insertObjectIntoMap(
+        projects,
+        Project.builder()
+            .uuid(UUID.randomUUID())
+            .name(uniqueField)
+            .build()
+    );
+    
     if (object instanceof AudioPackage) {
       return ((AudioPackage) object).toBuilder()
           .siteOrCruiseName(uniqueField)
@@ -147,7 +238,31 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
       throw new RuntimeException(e);
     }
   }
-  
+
+  @Test
+  void testCreateConstrainViolation() {
+    Package object = createNewObject(1);
+    object = copyWithUpdatedUniqueField(object, "");
+
+    Package finalObject = object;
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> repository.create(finalObject));
+    assertEquals(String.format(
+        "%s validation failed", repository.getClassName()
+    ), exception.getMessage());
+
+    Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+    assertEquals(3, constraintViolations.size());
+    List<ConstraintViolation<?>> constraintViolation = constraintViolations.stream()
+        .sorted((Comparator.comparing(o -> o.getPropertyPath().toString())))
+        .toList();
+    assertEquals("deploymentId", constraintViolation.get(0).getPropertyPath().toString());
+    assertEquals("must not be blank", constraintViolation.get(0).getMessage());
+    assertEquals("projects[0].<list element>", constraintViolation.get(1).getPropertyPath().toString());
+    assertEquals("must not be blank", constraintViolation.get(1).getMessage());
+    assertEquals("siteOrCruiseName", constraintViolation.get(2).getPropertyPath().toString());
+    assertEquals("must not be blank", constraintViolation.get(2).getMessage());
+  }
+
   @Test
   void testCreateCPODDataset() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Package object = createCPODDataset(1);
@@ -162,10 +277,158 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
+  
+  private void saveBaseDatasetDependencies(Package p) {
+    insertObjectIntoMap(
+        instruments,
+        Instrument.builder()
+            .uuid(UUID.randomUUID())
+            .name(p.getInstrument())
+            .fileTypes(Collections.singletonList("test"))
+            .build()
+    );
+
+    insertObjectsIntoMap(
+        projects,
+        (List<Project>) p.getProjects().stream()
+            .map(name -> Project.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+
+    insertObjectsIntoMap(
+        organizations,
+        (List<Organization>) p.getSponsors().stream()
+            .map(name -> Organization.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+
+    insertObjectsIntoMap(
+        organizations,
+        (List<Organization>) p.getFunders().stream()
+            .map(name -> Organization.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+
+    if (p.getLocationDetail() instanceof MarineLocation marineLocation) {
+      insertObjectIntoMap(
+          seas,
+          Sea.builder()
+              .uuid(UUID.randomUUID())
+              .name(marineLocation.getSeaArea())
+              .build()
+      );
+    }
+
+    insertObjectsIntoMap(
+        people,
+        (List<Person>) p.getScientists().stream()
+            .map(name -> Person.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+
+    insertObjectIntoMap(
+        people,
+        Person.builder()
+            .uuid(UUID.randomUUID())
+            .name(p.getDatasetPackager())
+            .build()
+    );
+
+    insertObjectIntoMap(
+        platforms,
+        Platform.builder()
+            .uuid(UUID.randomUUID())
+            .name(p.getPlatform())
+            .build()
+    );
+  }
+
+  private void saveAudioDataDependencies(AudioDataPackage audioDataPackage) {
+    saveBaseDatasetDependencies(audioDataPackage);
+    insertObjectsIntoMap(
+        sensors,
+        (List<Sensor>) audioDataPackage.getSensors().stream()
+            .map(name -> DepthSensor.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+    
+    insertObjectsIntoMap(
+        sensors,
+        (List<Sensor>) audioDataPackage.getChannels().stream()
+            .map(Channel::getSensor)
+            .map(name -> DepthSensor.builder()
+                .uuid(UUID.randomUUID())
+                .name(name)
+                .build())
+            .toList()
+    );
+    
+    insertObjectIntoMap(
+        people,
+        Person.builder()
+            .uuid(UUID.randomUUID())
+            .name(audioDataPackage.getQualityAnalyst())
+            .build()
+    );
+  }
+
+  private <T extends ObjectWithUniqueField> void insertObjectsIntoMap(Map<UUID, T> map, List<T> objects) {
+    objects.forEach(
+        object -> insertObjectIntoMap(map, object)
+    );
+  }
+
+  private <T extends ObjectWithUniqueField> void insertObjectIntoMap(Map<UUID, T> map, T object) {
+    map.put(object.getUuid(), object);
+  }
+
+  private void saveDetectionsDependencies(DetectionsPackage p) {
+    saveBaseDatasetDependencies(p);
+
+    insertObjectIntoMap(
+        people,
+        Person.builder()
+            .uuid(UUID.randomUUID())
+            .name(p.getQualityAnalyst())
+            .build()
+    );
+    
+    insertObjectIntoMap(
+        detectionTypes,
+        DetectionType.builder()
+            .uuid(UUID.randomUUID())
+            .source(p.getSoundSource())
+            .build()
+    );
+    
+    insertObjectIntoMap(
+        ships,
+        Ship.builder()
+            .uuid(UUID.randomUUID())
+            .name(((MobileMarineLocation) p.getLocationDetail()).getVessel())
+            .build()
+    );
+  }
 
   @Test
   void testCreateDetectionsPackage() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Package object = createDetectionsDataset(1);
+    saveDetectionsDependencies((DetectionsPackage) object);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
     assertEquals(object.getPackageId(), created.getPackageId());
@@ -177,10 +440,25 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
-  
+
+  @Test
+  void testCreateDetectionsPackageSoundSourceNotFound() {
+    Package object = createDetectionsDataset(1);
+    saveDetectionsDependencies((DetectionsPackage) object);
+    detectionTypes.clear();
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> repository.create(object));
+    assertEquals("Package validation failed", exception.getMessage());
+    Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+    assertEquals(1, constraintViolations.size());
+    ConstraintViolation<?> constraintViolation = constraintViolations.iterator().next();
+    assertEquals("soundSource", constraintViolation.getPropertyPath().toString());
+    assertEquals("DetectionType with source = sound-source does not exist", constraintViolation.getMessage());
+  }
+
   @Test
   void testCreateSoundClipsPackage() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Package object = createSoundClipsDataset(1);
+    saveBaseDatasetDependencies(object);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
     assertEquals(object.getPackageId(), created.getPackageId());
@@ -196,6 +474,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   @Test
   void testCreateSoundLevelMetricsDataset() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Package object = createSoundLevelMetricsDataset(1);
+    saveSoundLevelMetricsDependencies((SoundLevelMetricsPackage) object);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
     assertEquals(object.getPackageId(), created.getPackageId());
@@ -206,11 +485,23 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     assertEquals(created.getUuid(), saved.getUuid());
     assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
+  }
+
+  private void saveSoundLevelMetricsDependencies(SoundLevelMetricsPackage p) {
+    saveBaseDatasetDependencies(p);
+    insertObjectIntoMap(
+        people,
+        Person.builder()
+            .uuid(UUID.randomUUID())
+            .name(p.getQualityAnalyst())
+            .build()
+    );
   }
 
   @Test
   void testCreateSoundPropagationModelsDataset() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     Package object = createSoundPropagationModelsDataset(1);
+    saveBaseDatasetDependencies(object);
     Package created = repository.create(object);
     assertNotNull(created.getUuid());
     assertEquals(object.getPackageId(), created.getPackageId());
@@ -222,20 +513,8 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     assertEquals(created.getPackageId(), saved.getPackageId());
     assertObjectsEqual(created, saved, true);
   }
-  
-  @Test
-  void testCreateUnsupportedDataset() {
-    Package packingJob = new Package(
-        ((SoundPropagationModelsPackage) createSoundPropagationModelsDataset(1)).toBuilder()
-    ) {};
-    
-    Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(packingJob));
-    assertEquals(String.format(
-        "Unsupported package type: %s", packingJob.getClass().getSimpleName()
-    ), exception.getMessage());
-  }
 
-  private Package createPackingJob(int suffix) {
+  public static AudioDataPackage createAudioPackingJob(int suffix) {
     return AudioPackage.builder()
         .sourcePath(Paths.get("source-path"))
         .temperaturePath(Paths.get("temperature-path"))
@@ -347,7 +626,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .build();
   }
 
-  private Package createSoundPropagationModelsDataset(int suffix) {
+  public static Package createSoundPropagationModelsDataset(int suffix) {
     return SoundPropagationModelsPackage.builder()
         .modeledFrequency(1f)
         .sourcePath(Paths.get("source-path"))
@@ -403,7 +682,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .build();
   }
 
-  private Package createSoundLevelMetricsDataset(int suffix) {
+  public static Package createSoundLevelMetricsDataset(int suffix) {
     return SoundLevelMetricsPackage.builder()
         .minFrequency(1f)
         .maxFrequency(2f)
@@ -463,20 +742,11 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .startTime(LocalDateTime.now().minusMinutes(20))
                 .endTime(LocalDateTime.now().minusMinutes(10))
                 .build()
-        )).locationDetail(StationaryMarineLocation.builder()
-            .seaArea("sea-area")
-            .deploymentLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-10f)
-                .seaFloorDepth(-100f)
-                .longitude(10d)
-                .latitude(10d)
-                .build())
-            .recoveryLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-20f)
-                .seaFloorDepth(-110f)
-                .longitude(15d)
-                .latitude(15d)
-                .build())
+        )).locationDetail(StationaryTerrestrialLocation.builder()
+            .latitude(1d)
+            .longitude(2d)
+            .instrumentElevation(4f)
+            .surfaceElevation(3f)
             .build())
         .build();
   }
@@ -536,7 +806,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .build();
   }
   
-  private Package createDetectionsDataset(int suffix) {
+  public static Package createDetectionsDataset(int suffix) {
     return DetectionsPackage.builder()
         .minFrequency(1f)
         .maxFrequency(2f)
@@ -597,26 +867,16 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .startTime(LocalDateTime.now().minusMinutes(20))
                 .endTime(LocalDateTime.now().minusMinutes(10))
                 .build()
-        )).locationDetail(StationaryMarineLocation.builder()
+        )).locationDetail(MobileMarineLocation.builder()
             .seaArea("sea-area")
-            .deploymentLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-10f)
-                .seaFloorDepth(-100f)
-                .longitude(10d)
-                .latitude(10d)
-                .build())
-            .recoveryLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-20f)
-                .seaFloorDepth(-110f)
-                .longitude(15d)
-                .latitude(15d)
-                .build())
+            .vessel("vessel")
+            .locationDerivationDescription("location description")
             .build())
         .build();
   }
   
   private Package createCPODDataset(int suffix) {
-    return CPODPackage.builder()
+    CPODPackage cpodPackage = CPODPackage.builder()
         .sourcePath(Paths.get("source-path"))
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
@@ -725,5 +985,8 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .build())
             .build())
         .build();
+    
+    saveAudioDataDependencies(cpodPackage);
+    return cpodPackage;
   }
 }

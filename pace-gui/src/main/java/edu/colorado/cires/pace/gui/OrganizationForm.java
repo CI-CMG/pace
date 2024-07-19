@@ -115,7 +115,7 @@ public class OrganizationForm extends Form<Organization> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Organization> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Organization> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

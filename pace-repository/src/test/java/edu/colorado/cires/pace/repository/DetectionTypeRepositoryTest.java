@@ -2,16 +2,20 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.DetectionType;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
+import java.util.UUID;
 
-class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
+class DetectionTypeRepositoryTest extends PackageDependencyRepositoryTest<DetectionType> {
 
   @Override
   protected CRUDRepository<DetectionType> createRepository() {
-    return new DetectionTypeRepository(createDatastore());
+    return new DetectionTypeRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -19,6 +23,16 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
     return DetectionTypeSearchParameters.builder()
         .sources(objects.stream().map(DetectionType::getSource).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "source";
+  }
+
+  @Override
+  protected Class<DetectionType> getObjectClass() {
+    return DetectionType.class;
   }
 
   @Override
@@ -31,10 +45,8 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
 
   @Override
   protected DetectionType copyWithUpdatedUniqueField(DetectionType object, String uniqueField) {
-    return DetectionType.builder()
-        .uuid(object.getUuid())
-        .source(object.getSource())
-        .scienceName(uniqueField)
+    return object.toBuilder()
+        .source(uniqueField)
         .build();
   }
 
@@ -45,5 +57,35 @@ class DetectionTypeRepositoryTest extends CrudRepositoryTest<DetectionType> {
     }
     assertEquals(expected.getScienceName(), actual.getScienceName());
     assertEquals(expected.getScienceName(), actual.getScienceName());
+  }
+
+  @Override
+  protected boolean objectInDependentObject(DetectionType updated, UUID dependentObjectUUID) {
+    Package p = packages.get(dependentObjectUUID);
+    if (p instanceof DetectionsPackage detectionsPackage) {
+      return detectionsPackage.getSoundSource().equals(updated.getSource());
+    }
+    return false;
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(DetectionType object) {
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .soundSource(object.getSource())
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .build();
+
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
   }
 }

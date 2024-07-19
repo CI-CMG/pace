@@ -80,7 +80,7 @@ public class DetectionTypeForm extends Form<DetectionType> {
   }
 
   @Override
-  protected void delete(CRUDRepository<DetectionType> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<DetectionType> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
     repository.delete(UUID.fromString(uuidText));
   }

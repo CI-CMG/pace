@@ -2,16 +2,23 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.LocationDetail;
+import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.repository.search.SeaSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.List;
+import java.util.UUID;
 
-class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
+class SeaRepositoryTest extends PackageDependencyRepositoryTest<Sea> {
 
   @Override
   protected CRUDRepository<Sea> createRepository() {
-    return new SeaRepository(createDatastore());
+    return new SeaRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -19,6 +26,16 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
     return SeaSearchParameters.builder()
         .names(objects.stream().map(Sea::getName).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Sea> getObjectClass() {
+    return Sea.class;
   }
 
   @Override
@@ -42,5 +59,51 @@ class SeaRepositoryTest extends CrudRepositoryTest<Sea> {
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());
     }
+  }
+
+  @Override
+  protected boolean objectInDependentObject(Sea updated, UUID dependentObjectUUID) {
+    Package p = packages.get(dependentObjectUUID);
+    LocationDetail locationDetail = p.getLocationDetail();
+    if (locationDetail instanceof StationaryMarineLocation stationaryMarineLocation) {
+      return stationaryMarineLocation.getSeaArea().equals(updated.getName());
+    }
+    
+    return false;
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(Sea object) {
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .locationDetail(StationaryMarineLocation.builder()
+            .seaArea(object.getName())
+            .deploymentLocation(MarineInstrumentLocation.builder()
+                .latitude(1d)
+                .longitude(2d)
+                .seaFloorDepth(4f)
+                .instrumentDepth(8f)
+                .build())
+            .recoveryLocation(MarineInstrumentLocation.builder()
+                .latitude(1d)
+                .longitude(2d)
+                .seaFloorDepth(4f)
+                .instrumentDepth(8f)
+                .build())
+            .build())
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((SoundLevelMetricsPackage) PackageRepositoryTest.createSoundLevelMetricsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
   }
 }

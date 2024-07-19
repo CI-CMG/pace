@@ -62,7 +62,7 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
         updatedObjectsConsumer.accept(
             repository.findAll()
         );
-      } catch (NotFoundException | DatastoreException | ConstraintViolationException ex ) {
+      } catch (NotFoundException | DatastoreException | ConstraintViolationException | BadArgumentException ex ) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }
     });

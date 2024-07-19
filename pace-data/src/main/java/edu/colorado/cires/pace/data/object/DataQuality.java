@@ -9,5 +9,7 @@ public interface DataQuality {
   String getQualityAnalysisMethod();
   String getQualityAssessmentDescription();
   List<DataQualityEntry> getQualityEntries();
+  
+  DataQuality setQualityAnalyst(String qualityAnalyst);
 
 }

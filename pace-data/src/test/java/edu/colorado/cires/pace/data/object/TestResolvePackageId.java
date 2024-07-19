@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.data.object;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -29,7 +30,12 @@ class TestResolvePackageId {
             .siteOrCruiseName(siteOrCruiseName)
             .deploymentId(deploymentId)
             .projects(Collections.singletonList(projectName))
-    ) {};
+    ) {
+      @Override
+      public ObjectWithUniqueField setUuid(UUID uuid) {
+        return null;
+      }
+    };
     
     assertEquals(expectedValue, dataset.getPackageId());
   }
@@ -40,7 +46,12 @@ class TestResolvePackageId {
         AudioPackage.builder()
             .siteOrCruiseName("socName")
             .deploymentId("dId")
-    ) {};
+    ) {
+      @Override
+      public ObjectWithUniqueField setUuid(UUID uuid) {
+        return null;
+      }
+    };
 
     assertEquals(String.format(
         "%s_%s", dataset.getSiteOrCruiseName(), dataset.getDeploymentId()

@@ -70,7 +70,7 @@ public class PlatformForm extends Form<Platform> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Platform> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Platform> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

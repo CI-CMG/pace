@@ -1,34 +1,12 @@
 package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.OtherSensor;
 import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
-import org.junit.jupiter.api.Test;
 
 class OtherSensorRepositoryTest extends SensorRepositoryTest {
-  
-  private static final Sensor sensor = new Sensor(
-      DepthSensor.builder()
-          .name("name")
-          .position(Position.builder()
-              .x(1f)
-              .y(1f)
-              .z(1f)
-              .build())
-          .description("description")
-  ) {};
-  
-  @Test
-  void testUnsupported() {
-    Exception exception = assertThrows(IllegalArgumentException.class, () -> repository.create(sensor));
-    assertEquals(String.format(
-        "Unsupported sensor type: %s", sensor.getClass().getSimpleName()
-    ), exception.getMessage());
-  }
 
   @Override
   protected Sensor createNewObject(int suffix) {

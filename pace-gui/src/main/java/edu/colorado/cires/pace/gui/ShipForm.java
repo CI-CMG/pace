@@ -70,7 +70,7 @@ public class ShipForm extends Form<Ship> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Ship> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Ship> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

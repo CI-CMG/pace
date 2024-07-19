@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.cli.command.migrate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.common.VersionProvider;
+import edu.colorado.cires.pace.cli.command.dataset.PackageRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.fileType.FileTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
@@ -11,12 +12,15 @@ import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
+import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.migrator.MigrationException;
 import edu.colorado.cires.pace.migrator.MigrationRepositoryPair;
 import edu.colorado.cires.pace.migrator.Migrator;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -38,8 +42,10 @@ public class MigrateCommand implements Runnable {
     RuntimeException runtimeException = new RuntimeException();
 
     try {
+      Datastore<Package> packageDatastore = PackageRepositoryFactory.createJsonDatastore(datastoreDirectory, objectMapper); 
+      
       Migrator.migrate(new MigrationRepositoryPair<>(
-          DetectionTypeRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
+          DetectionTypeRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), packageDatastore),
           DetectionTypeRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
           ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
@@ -47,31 +53,34 @@ public class MigrateCommand implements Runnable {
           FileTypeRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          InstrumentRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), datastoreDirectory, objectMapper),
+          InstrumentRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), datastoreDirectory, objectMapper, packageDatastore),
           InstrumentRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          OrganizationRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
+          OrganizationRepositoryFactory.createSQLiteRepository(
+              localDataFile.toPath(),
+              packageDatastore
+          ),
           OrganizationRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          PersonRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
+          PersonRepositoryFactory.createSQLiteRepository(localDataFile.toPath(), packageDatastore),
           PersonRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          PlatformRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
+          PlatformRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), packageDatastore),
           PlatformRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          ProjectRepositoryFactory.createSQLiteRepository(localDataFile.toPath()),
+          ProjectRepositoryFactory.createSQLiteRepository(localDataFile.toPath(), packageDatastore),
           ProjectRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          SeaRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
+          SeaRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), packageDatastore),
           SeaRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
       Migrator.migrate(new MigrationRepositoryPair<>(
-          ShipRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath()),
+          ShipRepositoryFactory.createSQLiteRepository(sourceDataFile.toPath(), packageDatastore),
           ShipRepositoryFactory.createJsonRepository(datastoreDirectory, objectMapper)
       ), runtimeException);
 
@@ -82,7 +91,7 @@ public class MigrateCommand implements Runnable {
         }
         throw migrationException;
       }
-    } catch (Exception e) {
+    } catch (MigrationException | IOException e) {
       throw new RuntimeException(e);
     }
   }

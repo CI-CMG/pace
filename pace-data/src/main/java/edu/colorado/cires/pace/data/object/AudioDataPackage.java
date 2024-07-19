@@ -30,4 +30,7 @@ public abstract class AudioDataPackage extends Package implements DataQuality {
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
   private final List<DataQualityEntry> qualityEntries;
+  
+  public abstract AudioDataPackage updateChannels(List<Channel> channels);
+  public abstract AudioDataPackage updateSensors(List<String> sensors);
 }

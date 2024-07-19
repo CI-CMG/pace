@@ -76,7 +76,7 @@ public class FileTypeForm extends Form<FileType> {
   }
 
   @Override
-  protected void delete(CRUDRepository<FileType> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<FileType> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
 
     repository.delete(UUID.fromString(uuidText));

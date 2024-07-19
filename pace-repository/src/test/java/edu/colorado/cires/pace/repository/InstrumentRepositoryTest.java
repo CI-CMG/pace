@@ -6,21 +6,29 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.colorado.cires.pace.data.object.AudioPackage;
+import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.repository.search.InstrumentSearchParameters;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
+class InstrumentRepositoryTest extends PackageDependencyRepositoryTest<Instrument> {
   
   private static final Datastore<FileType> fileTypeRepository = mock(Datastore.class);
+  
   static {
     try {
+      when(fileTypeRepository.getClassName()).thenReturn(FileType.class.getSimpleName());
+      when(fileTypeRepository.getUniqueFieldName()).thenReturn("type");
       when(fileTypeRepository.findByUniqueField(any())).thenReturn(Optional.of(FileType.builder()
               .uuid(UUID.randomUUID())
               .type(UUID.randomUUID().toString())
@@ -33,7 +41,7 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
 
   @Override
   protected CRUDRepository<Instrument> createRepository() {
-    return new InstrumentRepository(createDatastore(), fileTypeRepository);
+    return new InstrumentRepository(createDatastore(), fileTypeRepository, createDatastore(packages, Package.class, "packageId"));
   }
 
   @Override
@@ -41,6 +49,16 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
     return InstrumentSearchParameters.builder()
         .names(objects.stream().map(Instrument::getName).toList())
         .build();
+  }
+
+  @Override
+  protected String getUniqueFieldName() {
+    return "name";
+  }
+
+  @Override
+  protected Class<Instrument> getObjectClass() {
+    return Instrument.class;
   }
 
   @Override
@@ -91,9 +109,38 @@ class InstrumentRepositoryTest extends CrudRepositoryTest<Instrument> {
             .comment("comment")
         .build()));
     
-    Exception exception = assertThrows(BadArgumentException.class, () -> repository.create(instrument));
-    assertEquals(String.format(
-        "File type does not exist: %s", instrument.getFileTypes().get(0)
-    ), exception.getMessage());
+    ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> repository.create(instrument));
+    assertEquals("Instrument validation failed", exception.getMessage());
+    
+    assertEquals(1, exception.getConstraintViolations().size());
+    ConstraintViolation<?> constraintViolation = exception.getConstraintViolations().iterator().next();
+    assertEquals("FileType with type = file-type-1-1 does not exist", constraintViolation.getMessage());
+    assertEquals("fileTypes[0]", constraintViolation.getPropertyPath().toString());
+  }
+
+  @Override
+  protected boolean objectInDependentObject(Instrument updated, UUID dependentObjectUUID) {
+    return packages.get(dependentObjectUUID).getInstrument().equals(updated.getName());
+  }
+
+  @Override
+  protected Package createAndSaveDependentObject(Instrument object) {
+    Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .instrument(object.getName())
+        .build();
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
+  }
+
+  @Override
+  protected Package createAndSaveIndependentDependentObject() {
+    Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
+        .uuid(UUID.randomUUID())
+        .instrument("unrelated-instrument")
+        .build();
+    
+    packages.put(p.getUuid(), p);
+    return packages.get(p.getUuid());
   }
 }

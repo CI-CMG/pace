@@ -254,7 +254,7 @@ public class TranslatorForm extends Form<Translator> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Translator> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Translator> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     Translator translator = baseTranslatorForm.toTranslator(uuidField, nameField);
     repository.delete(translator.getUuid());
   }

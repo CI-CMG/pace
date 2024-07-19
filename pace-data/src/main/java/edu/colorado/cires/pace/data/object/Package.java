@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,5 +44,14 @@ public abstract class Package extends Dataset {
   private final Path navigationPath;
   @JsonView(Package.class) @NotNull
   private final Path sourcePath;
+
+  public abstract Package setLocationDetail(LocationDetail locationDetail);
+  public abstract Package setProjects(List<String> projects);
+  public abstract Package setPlatform(String platform);
+  public abstract Package setScientists(List<String> scientists);
+  public abstract Package setDatasetPackager(String datasetPackager);
+  public abstract Package setSponsors(List<String> sponsors);
+  public abstract Package setFunders(List<String> funders);
+  public abstract Package setInstrument(String instrument);
 
 }

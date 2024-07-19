@@ -134,7 +134,7 @@ public class PersonForm extends Form<Person> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Person> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Person> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     repository.delete(initialPerson.getUuid());
   }
 }

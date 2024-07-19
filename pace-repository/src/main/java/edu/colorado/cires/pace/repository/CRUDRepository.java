@@ -34,8 +34,6 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     this.writableUUID = writableUUID;
   }
-
-  protected abstract O setUUID(O object, UUID uuid) throws BadArgumentException;
   
   public O create(O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     validate(object);
@@ -53,7 +51,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       ));
     }
     
-    if (object.getUuid() != null && writableUUID) {
+    if (object.getUuid() != null) {
       if (datastore.findByUUID(object.getUuid()).isPresent()) {
         LOGGER.error("{} with uuid {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
@@ -65,7 +63,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     if (!writableUUID || object.getUuid() == null) {
       UUID uuid = UUID.randomUUID();
       LOGGER.debug("Generated new {} with uuid = {}", datastore.getClassName(), uuid);
-      object = setUUID(object, uuid);
+      object = (O) object.setUuid(uuid);
     }
 
     object = datastore.save(object);
@@ -86,7 +84,8 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     return object;
   }
   
-  public O getByUUID(UUID uuid) throws DatastoreException, NotFoundException {
+  public O getByUUID(UUID uuid) throws DatastoreException, NotFoundException, BadArgumentException {
+    checkUUIDNotNull(uuid);
     O object = datastore.findByUUID(uuid).orElseThrow(
         () -> {
           LOGGER.error("{} with uuid = {} not found", getClassName(), uuid);
@@ -112,18 +111,8 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     validate(object);
     UUID objectUUID = object.getUuid();
-    if (objectUUID == null) {
-      LOGGER.error("{} uuid must be defined", getClassName());
-      throw new BadArgumentException(String.format(
-          "%s uuid must be defined", getClassName()
-      ));
-    }
-    if (!objectUUID.equals(uuid) && !writableUUID) {
-      LOGGER.error("{} uuid does not match argument uuid", getClassName());
-      throw new BadArgumentException(String.format(
-          "%s uuid does not match argument uuid", getClassName()
-      ));
-    }
+    checkUUIDNotNull(objectUUID);
+    checkUUIDsEqual(objectUUID, uuid);
     O existingObject = getByUUID(uuid);
     String newUniqueField = object.getUniqueField();
     String existingUniqueField = existingObject.getUniqueField();
@@ -134,7 +123,7 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       ));
     }
 
-    if (!object.getUuid().equals(uuid) && writableUUID) {
+    if (!object.getUuid().equals(uuid)) {
       if (datastore.findByUUID(object.getUuid()).isPresent()) {
         LOGGER.error("{} with uuid = {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
@@ -152,16 +141,23 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
     );
     
     if (writableUUID && (!uuid.equals(objectUUID))) {
-      if (datastore.findByUUID(existingObject.getUuid()).isPresent()) {
-        LOGGER.debug("{} with outdated uuid = {} will be removed", getClassName(), existingObject.getUuid());
-        datastore.delete(existingObject);
-      }
+      LOGGER.debug("{} with outdated uuid = {} will be removed", getClassName(), existingObject.getUuid());
+      datastore.delete(existingObject);
     }
     
     return object;
   }
-  
-  public void delete(UUID uuid) throws DatastoreException, NotFoundException {
+
+  protected void checkUUIDsEqual(UUID objectUUID, UUID uuid) throws BadArgumentException {
+    if (!objectUUID.equals(uuid) && !writableUUID) {
+      LOGGER.error("{} uuid does not match argument uuid", getClassName());
+      throw new BadArgumentException(String.format(
+          "%s uuid does not match argument uuid", getClassName()
+      ));
+    }
+  }
+
+  public void delete(UUID uuid) throws DatastoreException, NotFoundException, BadArgumentException {
     datastore.delete(
         getByUUID(uuid)
     );
@@ -183,6 +179,15 @@ public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
       throw new ConstraintViolationException(String.format(
           "%s validation failed", datastore.getClassName() 
       ), violations);
+    }
+  }
+  
+  protected void checkUUIDNotNull(UUID objectUUID) throws BadArgumentException {
+    if (objectUUID == null) {
+      LOGGER.error("{} uuid must be defined", getClassName());
+      throw new BadArgumentException(String.format(
+          "%s uuid must be defined", getClassName()
+      ));
     }
   }
 }

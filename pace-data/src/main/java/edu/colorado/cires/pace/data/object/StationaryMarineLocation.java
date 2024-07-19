@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @Jacksonized
 public class StationaryMarineLocation implements MarineLocation {
   
@@ -16,5 +16,11 @@ public class StationaryMarineLocation implements MarineLocation {
   private final MarineInstrumentLocation deploymentLocation;
   @NotNull @Valid
   private final MarineInstrumentLocation recoveryLocation;
-  
+
+  @Override
+  public MarineLocation setSeaArea(String seaArea) {
+    return toBuilder()
+        .seaArea(seaArea)
+        .build();
+  }
 }

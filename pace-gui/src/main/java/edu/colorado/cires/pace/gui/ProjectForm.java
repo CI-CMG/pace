@@ -72,7 +72,7 @@ public class ProjectForm extends Form<Project> {
   }
 
   @Override
-  protected void delete(CRUDRepository<Project> repository) throws NotFoundException, DatastoreException {
+  protected void delete(CRUDRepository<Project> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     String uuidText = uuidField.getText();
     
     repository.delete(UUID.fromString(uuidText));
