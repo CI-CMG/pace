@@ -16,4 +16,9 @@ public class Organization extends Contact {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public Organization setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

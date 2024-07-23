@@ -19,4 +19,9 @@ public class ShipTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public ShipTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

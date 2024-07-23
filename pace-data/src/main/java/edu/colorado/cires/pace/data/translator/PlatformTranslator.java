@@ -19,4 +19,9 @@ public class PlatformTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public PlatformTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

@@ -26,4 +26,9 @@ public class OrganizationTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public OrganizationTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

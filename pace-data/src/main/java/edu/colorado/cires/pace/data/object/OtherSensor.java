@@ -21,4 +21,9 @@ public class OtherSensor extends Sensor {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public OtherSensor setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

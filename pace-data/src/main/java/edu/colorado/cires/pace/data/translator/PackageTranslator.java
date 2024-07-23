@@ -44,4 +44,9 @@ public class PackageTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public PackageTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

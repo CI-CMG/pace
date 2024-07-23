@@ -21,4 +21,9 @@ public class AudioSensor extends Sensor {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public AudioSensor setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

@@ -19,4 +19,9 @@ public class SensorTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public SensorTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

@@ -26,4 +26,9 @@ public class FileType extends ObjectWithUniqueField {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public FileType setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

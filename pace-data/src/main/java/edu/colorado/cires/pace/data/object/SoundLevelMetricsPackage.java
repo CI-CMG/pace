@@ -80,4 +80,9 @@ public class SoundLevelMetricsPackage extends Package implements AnalysisDescrip
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public SoundLevelMetricsPackage setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

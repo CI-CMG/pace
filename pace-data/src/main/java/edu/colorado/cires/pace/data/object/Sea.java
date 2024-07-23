@@ -16,4 +16,9 @@ public class Sea extends ObjectWithName {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public Sea setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

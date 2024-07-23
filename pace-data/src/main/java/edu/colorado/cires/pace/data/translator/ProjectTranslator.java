@@ -16,7 +16,12 @@ public class ProjectTranslator extends Translator {
   private final String projectName;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public ProjectTranslator setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
+  }
+
+  @Override
+  public ObjectWithUniqueField setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
   }
 }

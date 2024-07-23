@@ -20,4 +20,9 @@ public class InstrumentTranslator extends Translator {
   public InstrumentTranslator setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public InstrumentTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

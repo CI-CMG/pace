@@ -69,4 +69,9 @@ public class SoundPropagationModelsPackage extends Package implements SoftwareDe
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public SoundPropagationModelsPackage setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

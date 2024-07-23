@@ -23,4 +23,9 @@ public class Instrument extends ObjectWithName {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public Instrument setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

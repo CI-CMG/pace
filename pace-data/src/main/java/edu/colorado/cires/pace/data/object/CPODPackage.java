@@ -72,4 +72,9 @@ public class CPODPackage extends AudioDataPackage {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public CPODPackage setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

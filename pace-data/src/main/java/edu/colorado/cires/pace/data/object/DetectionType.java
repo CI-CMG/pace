@@ -25,4 +25,9 @@ public class DetectionType extends ObjectWithUniqueField {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public DetectionType setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

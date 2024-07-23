@@ -20,4 +20,9 @@ public class FileTypeTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public FileTypeTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

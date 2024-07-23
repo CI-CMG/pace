@@ -35,6 +35,11 @@ class TestResolvePackageId {
       public ObjectWithUniqueField setUuid(UUID uuid) {
         return null;
       }
+
+      @Override
+      public ObjectWithUniqueField setVisible(boolean visible) {
+        return null;
+      }
     };
     
     assertEquals(expectedValue, dataset.getPackageId());
@@ -49,6 +54,11 @@ class TestResolvePackageId {
     ) {
       @Override
       public ObjectWithUniqueField setUuid(UUID uuid) {
+        return null;
+      }
+
+      @Override
+      public ObjectWithUniqueField setVisible(boolean visible) {
         return null;
       }
     };

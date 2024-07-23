@@ -21,4 +21,9 @@ public class Person extends Contact {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public Person setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

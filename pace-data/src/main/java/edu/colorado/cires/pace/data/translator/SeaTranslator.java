@@ -19,4 +19,9 @@ public class SeaTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public SeaTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

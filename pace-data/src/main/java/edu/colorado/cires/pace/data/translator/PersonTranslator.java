@@ -29,4 +29,9 @@ public class PersonTranslator extends Translator {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public PersonTranslator setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }

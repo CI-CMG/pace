@@ -16,4 +16,9 @@ public class Ship extends ObjectWithName {
   public ObjectWithUniqueField setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
+
+  @Override
+  public Ship setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 }
