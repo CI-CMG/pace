@@ -9,9 +9,6 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Sea;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
-import edu.colorado.cires.pace.repository.search.SeaSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import java.util.List;
 import java.util.UUID;
 
 class SeaRepositoryTest extends PackageDependencyRepositoryTest<Sea> {
@@ -19,13 +16,6 @@ class SeaRepositoryTest extends PackageDependencyRepositoryTest<Sea> {
   @Override
   protected CRUDRepository<Sea> createRepository() {
     return new SeaRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Sea> createSearchParameters(List<Sea> objects) {
-    return SeaSearchParameters.builder()
-        .names(objects.stream().map(Sea::getName).toList())
-        .build();
   }
 
   @Override

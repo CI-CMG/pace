@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class ShipTranslatorForm extends BaseTranslatorForm<ShipTranslator> {
   
@@ -63,10 +61,10 @@ public class ShipTranslatorForm extends BaseTranslatorForm<ShipTranslator> {
   }
 
   @Override
-  protected ShipTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected ShipTranslator toTranslator(UUID uuid, String name) {
     return ShipTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .shipUUID((String) this.uuidField.getSelectedItem())
         .shipName((String) this.nameField.getSelectedItem())
         .build();

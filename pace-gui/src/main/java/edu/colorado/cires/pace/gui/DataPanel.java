@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
   
@@ -98,10 +100,13 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
         }
       }
     });
+    JCheckBox checkBox = new JCheckBox("Visible", true);
     toolBar.add(textField);
-    toolBar.add(createSearchButton(textField));
+    toolBar.add(checkBox);
     toolBar.addSeparator();
-    toolBar.add(createClearButton(textField));
+    toolBar.add(createSearchButton(textField, checkBox));
+    toolBar.addSeparator();
+    toolBar.add(createClearButton(textField, checkBox));
     return toolBar;
   }
 
@@ -109,31 +114,50 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     return repository.getUniqueFieldName();
   }
 
-  private JButton createClearButton(JTextField textField) {
+  private JButton createClearButton(JTextField textField, JCheckBox checkBox) {
     JButton button = new JButton("Clear");
     
     button.addActionListener(e -> {
       textField.setText("");
+      checkBox.setSelected(true);
       loadData();
     });
     
     return button;
   }
   
-  private JButton createSearchButton(JTextField textField) {
+  private JButton createSearchButton(JTextField textField, JCheckBox checkBox) {
     JButton button = new JButton("Search");
     
-    button.addActionListener(e -> searchData(
-        getSearchParameters(
-            Collections.singletonList(textField.getText())
-        )
-    ));
+    button.addActionListener(e -> {
+      String searchText = textField.getText();
+      List<String> searchTextTerms;
+      if (StringUtils.isBlank(searchText) || searchText.equals(String.format(
+          "Search by %s", getHumanReadableUniqueFieldName()
+      ))) {
+        searchTextTerms = Collections.emptyList();
+      } else {
+        searchTextTerms = Collections.singletonList(searchText);
+      }
+      searchData(
+          getSearchParameters(
+              searchTextTerms,
+              Collections.singletonList(checkBox.isSelected())
+          )
+      );
+    });
     
     return button;
   }
   
   protected abstract JPanel createControlPanel();
-  protected abstract SearchParameters<O> getSearchParameters(List<String> uniqueFieldSearchTerms);
+  
+  private SearchParameters<O> getSearchParameters(List<String> uniqueFieldSearchTerms, List<Boolean> visibilityStateSearchTerms) {
+    return SearchParameters.<O>builder()
+        .uniqueFields(uniqueFieldSearchTerms)
+        .visibilityStates(visibilityStateSearchTerms)
+        .build();
+  }
   
   protected void loadData() {
     cleanUpTable();
@@ -166,7 +190,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   }
   
   protected List<String> getHiddenColumns() {
-    return Collections.singletonList("UUID");
+    return List.of("UUID", "Visible");
   }
   
   protected JTable createTable() {

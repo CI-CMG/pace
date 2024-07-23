@@ -14,38 +14,36 @@ import edu.colorado.cires.pace.data.translator.SeaTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import edu.colorado.cires.pace.data.translator.ShipTranslator;
 import edu.colorado.cires.pace.data.translator.Translator;
-import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.ConflictException;
-import edu.colorado.cires.pace.repository.NotFoundException;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.csv.CSVFormat;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 
-public class TranslatorForm extends Form<Translator> {
-
-  private final JTextField uuidField = new JTextField();
-  private final JTextField nameField = new JTextField();
-  
+public class TranslatorForm extends ObjectWithNameForm<Translator> {
   private String[] headerOptions = new String[] {};
   
-  private BaseTranslatorForm<? extends Translator> baseTranslatorForm = new BaseTranslatorForm<>(new String[] {}) {
+  private JPanel contentPanel;
+  
+  private BaseTranslatorForm<? extends Translator> baseTranslatorForm;
+  
+  private static Translator initialTranslator;
+  
+  private static final BaseTranslatorForm<? extends Translator> DEFAULT_BASE_TRANSLATOR_FORM = new BaseTranslatorForm<>(new String[] {}) {
     @Override
     protected void addUniqueFields() {
 
@@ -57,7 +55,7 @@ public class TranslatorForm extends Form<Translator> {
     }
 
     @Override
-    protected Translator toTranslator(JTextField uuidField, JTextField nameField) {
+    protected Translator toTranslator(UUID uuid, String name) {
       return null;
     }
 
@@ -66,29 +64,14 @@ public class TranslatorForm extends Form<Translator> {
       
     }
   };
-  
-  private final Translator initialTranslator;
 
-  public TranslatorForm(Translator initialTranslator) {
-    setName("translatorForm");
-    uuidField.setName("uuid");
-    nameField.setName("name");
-    this.initialTranslator = initialTranslator;
+  private TranslatorForm(Translator initialTranslator) {
+    super(initialTranslator, false);
   }
   
-  public void init() {
-    setLayout(new GridBagLayout());
-
-    add(new JLabel("UUID"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
-    JButton addFieldsButton = new JButton("Import Spreadsheet Headers");
-    addFieldsButton.addActionListener(e -> importSpreadsheetHeaders());
-    add(addFieldsButton, configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 0; }));
-
-    uuidField.setEnabled(false);
-    initializeFields(initialTranslator);
+  public static TranslatorForm create(Translator translator) {
+    initialTranslator = translator;
+    return new TranslatorForm(translator);
   }
   
   private void importSpreadsheetHeaders() {
@@ -144,47 +127,58 @@ public class TranslatorForm extends Form<Translator> {
   }
 
   @Override
-  protected void initializeFields(Translator object) {
-    if (object != null) {
-      uuidField.setText(object.getUuid().toString());
-      nameField.setText(object.getName());
-      
-      if (object instanceof PackageTranslator packageTranslator) {
-        baseTranslatorForm = new PackageTranslatorForm(packageTranslator, headerOptions);
-      } else if (object instanceof PersonTranslator personTranslator) {
-        baseTranslatorForm = new PersonTranslatorForm(personTranslator, headerOptions);
-      } else if (object instanceof OrganizationTranslator organizationTranslator) {
-        baseTranslatorForm = new OrganizationTranslatorForm(organizationTranslator, headerOptions);
-      } else if (object instanceof ShipTranslator shipTranslator) {
-        baseTranslatorForm = new ShipTranslatorForm(shipTranslator, headerOptions);
-      } else if (object instanceof DetectionTypeTranslator detectionTypeTranslator) {
-        baseTranslatorForm = new DetectionTypeTranslatorForm(detectionTypeTranslator, headerOptions);
-      } else if (object instanceof FileTypeTranslator fileTypeTranslator) {
-        baseTranslatorForm = new FileTypeTranslatorForm(fileTypeTranslator, headerOptions);
-      } else if (object instanceof InstrumentTranslator instrumentTranslator) {
-        baseTranslatorForm = new InstrumentTranslatorForm(instrumentTranslator, headerOptions);
-      } else if (object instanceof PlatformTranslator platformTranslator) {
-        baseTranslatorForm = new PlatformTranslatorForm(platformTranslator, headerOptions);
-      } else if (object instanceof ProjectTranslator projectTranslator) {
-        baseTranslatorForm = new ProjectTranslatorForm(projectTranslator, headerOptions);
-      } else if (object instanceof SeaTranslator seaTranslator) {
-        baseTranslatorForm = new SeaTranslatorForm(seaTranslator, headerOptions);
-      } else if (object instanceof SensorTranslator sensorTranslator) {
-        baseTranslatorForm = new SensorTranslatorForm(sensorTranslator, headerOptions);
-      }
-      add(baseTranslatorForm, configureLayout((c) -> {
-        c.gridx = 0; c.gridy = 5; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
-      }));
-    } else {
-      add(baseTranslatorForm, configureLayout((c) -> {
+  protected Translator objectFromFormFields(UUID uuid, String uniqueField, boolean visible) {
+    return (Translator) baseTranslatorForm.toTranslator(uuid, uniqueField).setVisible(visible);
+  }
+
+  @Override
+  protected void addAdditionalFields(JPanel contentPanel, CRUDRepository<?>... dependencyRepositories) {
+    baseTranslatorForm = DEFAULT_BASE_TRANSLATOR_FORM;
+    this.contentPanel = contentPanel;
+    if (initialTranslator == null) {
+      contentPanel.add(baseTranslatorForm, configureLayout((c) -> {
         c.gridx = 0; c.gridy = 7; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
       }));
 
       JComboBox<String> translatorTypeComboBox = getTranslatorTypeComboBox();
 
-      add(new JLabel("Translator Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
-      add(translatorTypeComboBox, configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
+      contentPanel.add(new JLabel("Translator Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
+      contentPanel.add(translatorTypeComboBox, configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     }
+    
+    JButton addFieldsButton = new JButton("Import Spreadsheet Headers");
+    addFieldsButton.addActionListener(e -> importSpreadsheetHeaders());
+    contentPanel.add(addFieldsButton, configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 0; }));
+  }
+
+  @Override
+  protected void initializeAdditionalFields(Translator object, CRUDRepository<?>... dependencyRepositories) {
+    if (object instanceof PackageTranslator packageTranslator) {
+      baseTranslatorForm = new PackageTranslatorForm(packageTranslator, headerOptions);
+    } else if (object instanceof PersonTranslator personTranslator) {
+      baseTranslatorForm = new PersonTranslatorForm(personTranslator, headerOptions);
+    } else if (object instanceof OrganizationTranslator organizationTranslator) {
+      baseTranslatorForm = new OrganizationTranslatorForm(organizationTranslator, headerOptions);
+    } else if (object instanceof ShipTranslator shipTranslator) {
+      baseTranslatorForm = new ShipTranslatorForm(shipTranslator, headerOptions);
+    } else if (object instanceof DetectionTypeTranslator detectionTypeTranslator) {
+      baseTranslatorForm = new DetectionTypeTranslatorForm(detectionTypeTranslator, headerOptions);
+    } else if (object instanceof FileTypeTranslator fileTypeTranslator) {
+      baseTranslatorForm = new FileTypeTranslatorForm(fileTypeTranslator, headerOptions);
+    } else if (object instanceof InstrumentTranslator instrumentTranslator) {
+      baseTranslatorForm = new InstrumentTranslatorForm(instrumentTranslator, headerOptions);
+    } else if (object instanceof PlatformTranslator platformTranslator) {
+      baseTranslatorForm = new PlatformTranslatorForm(platformTranslator, headerOptions);
+    } else if (object instanceof ProjectTranslator projectTranslator) {
+      baseTranslatorForm = new ProjectTranslatorForm(projectTranslator, headerOptions);
+    } else if (object instanceof SeaTranslator seaTranslator) {
+      baseTranslatorForm = new SeaTranslatorForm(seaTranslator, headerOptions);
+    } else if (object instanceof SensorTranslator sensorTranslator) {
+      baseTranslatorForm = new SensorTranslatorForm(sensorTranslator, headerOptions);
+    }
+    contentPanel.add(baseTranslatorForm, configureLayout((c) -> {
+      c.gridx = 0; c.gridy = 5; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
+    }));
 
     revalidate();
   }
@@ -229,33 +223,15 @@ public class TranslatorForm extends Form<Translator> {
       };
 
       if (newTranslatorForm != null) {
-        remove(baseTranslatorForm);
+        contentPanel.remove(baseTranslatorForm);
         revalidate();
         baseTranslatorForm = newTranslatorForm;
-        add(baseTranslatorForm, configureLayout((c) -> {
+        contentPanel.add(baseTranslatorForm, configureLayout((c) -> {
           c.gridx = 0; c.gridy = 7; c.weightx = 1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
         }));
         revalidate();
       }
     });
     return translatorTypeComboBox;
-  }
-
-  @Override
-  protected void save(CRUDRepository<Translator> repository) throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
-    Translator translator = baseTranslatorForm.toTranslator(uuidField, nameField);
-    boolean isUpdate = translator.getUuid() != null;
-    
-    if (isUpdate) {
-      repository.update(translator.getUuid(), translator);
-    } else {
-      repository.create(translator);
-    }
-  }
-
-  @Override
-  protected void delete(CRUDRepository<Translator> repository) throws NotFoundException, DatastoreException, BadArgumentException {
-    Translator translator = baseTranslatorForm.toTranslator(uuidField, nameField);
-    repository.delete(translator.getUuid());
   }
 }

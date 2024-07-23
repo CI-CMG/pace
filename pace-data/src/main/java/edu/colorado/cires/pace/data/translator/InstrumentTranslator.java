@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.data.translator;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

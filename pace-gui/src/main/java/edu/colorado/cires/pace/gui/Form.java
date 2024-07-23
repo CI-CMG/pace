@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public abstract class Form<O extends ObjectWithUniqueField> extends JPanel {
   
-  protected abstract void initializeFields(O object);
+  protected abstract void initializeFields(O object, CRUDRepository<?>... dependencyRepositories);
   
   protected abstract void save(CRUDRepository<O> repository) throws BadArgumentException, ConflictException, NotFoundException, DatastoreException;
   

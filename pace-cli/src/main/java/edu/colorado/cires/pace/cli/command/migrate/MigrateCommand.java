@@ -36,7 +36,7 @@ public class MigrateCommand implements Runnable {
 
   @Override
   public void run() {
-    Path datastoreDirectory = new ApplicationPropertyResolver().getDataDir();
+    Path datastoreDirectory = ApplicationPropertyResolver.getDataDir();
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
     
     RuntimeException runtimeException = new RuntimeException();

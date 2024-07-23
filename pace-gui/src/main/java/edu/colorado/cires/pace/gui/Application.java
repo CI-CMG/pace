@@ -27,7 +27,6 @@ public class Application extends JFrame {
   protected void createGUI() {
     FlatIntelliJLaf.setup();
 
-    ApplicationPropertyResolver propertyResolver = new ApplicationPropertyResolver();
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
 
     java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
@@ -35,8 +34,8 @@ public class Application extends JFrame {
       Object key = keys.nextElement();
       Object value = UIManager.get(key);
       if (value instanceof javax.swing.plaf.FontUIResource) {
-        String font = propertyResolver.getPropertyValue("pace.gui.font", (s) -> s);
-        Integer fontSize = propertyResolver.getPropertyValue("pace.gui.font-size", Integer::parseInt);
+        String font = ApplicationPropertyResolver.getPropertyValue("pace.gui.font", (s) -> s);
+        Integer fontSize = ApplicationPropertyResolver.getPropertyValue("pace.gui.font-size", Integer::parseInt);
 
         UIManager.put(key, new FontUIResource(font, Font.PLAIN, fontSize == null ? 12 : fontSize));
       }
@@ -45,7 +44,7 @@ public class Application extends JFrame {
     try {
       Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
       
-      ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper, propertyResolver);
+      ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper);
       applicationTabs.init();
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       setContentPane(applicationTabs);

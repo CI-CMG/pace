@@ -8,10 +8,7 @@ import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.search.OrganizationSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -20,13 +17,6 @@ class OrganizationRepositoryTest extends PackageDependencyRepositoryTest<Organiz
   @Override
   protected CRUDRepository<Organization> createRepository() {
     return new OrganizationRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Organization> createSearchParameters(List<Organization> objects) {
-    return OrganizationSearchParameters.builder()
-        .names(objects.stream().map(Organization::getName).toList())
-        .build();
   }
 
   @Override

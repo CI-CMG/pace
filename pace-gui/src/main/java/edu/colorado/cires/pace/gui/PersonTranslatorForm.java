@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
   
@@ -123,10 +121,10 @@ public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
   }
 
   @Override
-  protected PersonTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected PersonTranslator toTranslator(UUID uuid, String name) {
     return PersonTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .personUUID((String) this.uuidField.getSelectedItem())
         .personName((String) this.nameField.getSelectedItem())
         .organization((String) organizationField.getSelectedItem())

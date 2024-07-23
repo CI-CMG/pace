@@ -30,8 +30,6 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
   protected CRUDRepository<O> repository;
 
   protected abstract CRUDRepository<O> createRepository();
-
-  protected abstract SearchParameters<O> createSearchParameters(List<O> objects);
   
   protected abstract String getUniqueFieldName();
   
@@ -83,6 +81,13 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
         return clazz.getSimpleName();
       }
     };
+  }
+
+  private SearchParameters<O> createSearchParameters(List<O> objects, List<Boolean> visibilityStates) {
+    return SearchParameters.<O>builder()
+        .uniqueFields(objects.stream().map(ObjectWithUniqueField::getUniqueField).toList())
+        .visibilityStates(visibilityStates)
+        .build();
   }
   
   @BeforeEach
@@ -206,9 +211,56 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O three = repository.create(createNewObject(3));
     repository.create(createNewObject(4));
 
-    SearchParameters<O> searchParameters = createSearchParameters(List.of(one, three));
+    SearchParameters<O> searchParameters = createSearchParameters(List.of(one, three), List.of(true));
     assertEquals(
         List.of(one, three),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .toList()
+    );
+  }
+
+  @Test
+  void testSearchVisibility() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+    O one = repository.create((O) createNewObject(1).setVisible(false));
+    O two = repository.create(createNewObject(2));
+    O three = repository.create((O) createNewObject(3).setVisible(false));
+    O four = repository.create(createNewObject(4));
+
+    SearchParameters<O> searchParameters = createSearchParameters(List.of(one, three), List.of(true));
+    assertEquals(
+        Collections.emptyList(),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .toList()
+    );
+
+    searchParameters = createSearchParameters(List.of(one, three), List.of(false));
+    assertEquals(
+        List.of(one, three),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .toList()
+    );
+    
+    searchParameters = createSearchParameters(List.of(two, four), List.of(true));
+    assertEquals(
+        List.of(two, four),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .toList()
+    );
+    searchParameters = createSearchParameters(List.of(two), List.of(true));
+    assertEquals(
+        List.of(two),
+        repository.search(searchParameters)
+            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .toList()
+    );
+    
+    searchParameters = createSearchParameters(List.of(one, four), List.of());
+    assertEquals(
+        List.of(one, four),
         repository.search(searchParameters)
             .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
             .toList()
@@ -222,7 +274,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     O three = repository.create(createNewObject(3));
     O four = repository.create(createNewObject(4));
 
-    SearchParameters<O> searchParameters = createSearchParameters(Collections.emptyList());
+    SearchParameters<O> searchParameters = createSearchParameters(Collections.emptyList(), List.of(true));
     assertEquals(
         List.of(one, two, three, four),
         repository.search(searchParameters)

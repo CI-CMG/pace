@@ -16,8 +16,6 @@ import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByNam
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Update;
 import edu.colorado.cires.pace.data.translator.Translator;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import edu.colorado.cires.pace.repository.search.TranslatorSearchParameters;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +71,30 @@ public class TranslatorCommand {
     @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
     private List<String> names = new ArrayList<>(0);
 
+    @Option(names = {"--show-hidden"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showHidden;
+
+    @Option(names = {"--show-visible"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showVisible;
+
     @Override
     protected RepositoryFactory<Translator> getRepositoryFactory() {
       return repositoryFactory;
     }
 
     @Override
-    protected SearchParameters<Translator> getSearchParameters() {
-      return TranslatorSearchParameters.builder()
-          .names(names)
-          .build();
+    protected List<String> getUniqueFields() {
+      return names;
+    }
+
+    @Override
+    protected Boolean getShowHidden() {
+      return showHidden;
+    }
+
+    @Override
+    protected Boolean getShowVisible() {
+      return showVisible;
     }
   }
   

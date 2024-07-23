@@ -12,8 +12,6 @@ import edu.colorado.cires.pace.data.object.FileType;
 import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
-import edu.colorado.cires.pace.repository.search.InstrumentSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
@@ -42,13 +40,6 @@ class InstrumentRepositoryTest extends PackageDependencyRepositoryTest<Instrumen
   @Override
   protected CRUDRepository<Instrument> createRepository() {
     return new InstrumentRepository(createDatastore(), fileTypeRepository, createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Instrument> createSearchParameters(List<Instrument> objects) {
-    return InstrumentSearchParameters.builder()
-        .names(objects.stream().map(Instrument::getName).toList())
-        .build();
   }
 
   @Override

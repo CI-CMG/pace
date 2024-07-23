@@ -12,10 +12,7 @@ import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -24,13 +21,6 @@ class PersonRepositoryTest extends PackageDependencyRepositoryTest<Person> {
   @Override
   protected CRUDRepository<Person> createRepository() {
     return new PersonRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Person> createSearchParameters(List<Person> objects) {
-    return PersonSearchParameters.builder()
-        .names(objects.stream().map(Person::getName).toList())
-        .build();
   }
 
   @Override

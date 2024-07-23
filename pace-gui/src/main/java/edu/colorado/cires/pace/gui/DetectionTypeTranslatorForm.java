@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class DetectionTypeTranslatorForm extends BaseTranslatorForm<DetectionTypeTranslator> {
   
@@ -69,10 +67,10 @@ public class DetectionTypeTranslatorForm extends BaseTranslatorForm<DetectionTyp
   }
 
   @Override
-  protected DetectionTypeTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected DetectionTypeTranslator toTranslator(UUID uuid, String name) {
     return DetectionTypeTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .detectionTypeUUID((String) this.uuidField.getSelectedItem())
         .source((String) sourceField.getSelectedItem())
         .scienceName((String) scienceNameField.getSelectedItem())

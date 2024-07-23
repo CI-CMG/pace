@@ -16,14 +16,13 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
 
 public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   
@@ -38,7 +37,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   
   private JComboBox<String> sensorTypeComboBox;
   
-  private SensorTypeSpecificTranslatorForm<?> sensorTypeSpecificTranslatorForm = new SensorTypeSpecificTranslatorForm<>(null, new String[0]) {
+  private SensorTypeSpecificTranslatorForm<?> sensorTypeSpecificTranslatorForm = new SensorTypeSpecificTranslatorForm<>() {
     @Override
     protected void addFields() {
 
@@ -55,7 +54,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     }
 
     @Override
-    protected SensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField,
+    protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
         JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
       return null;
     }
@@ -83,7 +82,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     } else if (initialTranslator instanceof OtherSensorTranslator otherSensorTranslator) {
       return new OtherSensorTranslatorForm(otherSensorTranslator, headerOptions);
     } else {
-      return new SensorTypeSpecificTranslatorForm<>(null, new String[0]) {
+      return new SensorTypeSpecificTranslatorForm<>() {
         @Override
         protected void addFields() {
 
@@ -100,7 +99,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
         }
 
         @Override
-        protected SensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField,
+        protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
             JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
           return null;
         }
@@ -172,7 +171,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
       case "Audio" -> new AudioSensorTranslatorForm(null, headerOptions);
       case "Other" -> new OtherSensorTranslatorForm(null, headerOptions);
       case "Depth" -> new DepthSensorTranslatorForm(null, headerOptions);
-      default -> new SensorTypeSpecificTranslatorForm<>(null, new String[0]) {
+      default -> new SensorTypeSpecificTranslatorForm<>() {
         @Override
         protected void addFields() {
 
@@ -189,7 +188,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
         }
 
         @Override
-        protected SensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField,
+        protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
             JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
           return null;
         }
@@ -240,9 +239,9 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   }
 
   @Override
-  protected SensorTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected SensorTranslator toTranslator(UUID uuid, String name) {
     return sensorTypeSpecificTranslatorForm.toTranslator(
-        uuidField, nameField, this.uuidField, this.nameField, descriptionField, positionTranslatorForm
+        uuid, name, this.uuidField, this.nameField, descriptionField, positionTranslatorForm
     );
   }
 

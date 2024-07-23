@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator> {
   
@@ -63,10 +61,10 @@ public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator>
   }
 
   @Override
-  protected ProjectTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected ProjectTranslator toTranslator(UUID uuid, String name) {
     return ProjectTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .projectUUID((String) this.uuidField.getSelectedItem())
         .projectName((String) this.nameField.getSelectedItem())
         .build();

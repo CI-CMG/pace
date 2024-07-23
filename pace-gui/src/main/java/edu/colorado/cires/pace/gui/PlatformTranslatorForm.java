@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class PlatformTranslatorForm extends BaseTranslatorForm<PlatformTranslator> {
   
@@ -62,10 +60,10 @@ public class PlatformTranslatorForm extends BaseTranslatorForm<PlatformTranslato
   }
 
   @Override
-  protected PlatformTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected PlatformTranslator toTranslator(UUID uuid, String name) {
     return PlatformTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .platformUUID((String) this.uuidField.getSelectedItem())
         .platformName((String) this.nameField.getSelectedItem())
         .build();

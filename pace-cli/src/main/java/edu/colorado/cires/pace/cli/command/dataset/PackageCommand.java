@@ -27,8 +27,6 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackagingException;
-import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -102,16 +100,30 @@ public class PackageCommand {
     @Option(names = { "-pids", "--package-ids" }, split = ",", description = "Filter results based on package ids")
     private List<String> packageIds = new ArrayList<>(0);
 
+    @Option(names = {"--show-hidden"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showHidden;
+
+    @Option(names = {"--show-visible"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showVisible;
+
     @Override
     protected RepositoryFactory<Package> getRepositoryFactory() {
       return repositoryFactory;
     }
 
     @Override
-    protected SearchParameters<Package> getSearchParameters() {
-      return PackageSearchParameters.builder()
-          .packageIds(packageIds)
-          .build();
+    protected List<String> getUniqueFields() {
+      return packageIds;
+    }
+
+    @Override
+    protected Boolean getShowHidden() {
+      return showHidden;
+    }
+
+    @Override
+    protected Boolean getShowVisible() {
+      return showVisible;
     }
   }
   
@@ -248,7 +260,7 @@ public class PackageCommand {
     @Override
     public void run() {
       try {
-        Path workDir = new ApplicationPropertyResolver().getDataDir();
+        Path workDir = ApplicationPropertyResolver.getDataDir();
         ObjectMapper objectMapper = createObjectMapper();
         
         List<Person> people = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();

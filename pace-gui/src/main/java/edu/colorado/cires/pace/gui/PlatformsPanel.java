@@ -4,10 +4,7 @@ import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.translator.PlatformTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
-import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.PlatformConverter;
-import java.util.List;
 import java.util.UUID;
 
 public class PlatformsPanel extends MetadataPanel<Platform, PlatformTranslator> {
@@ -16,25 +13,19 @@ public class PlatformsPanel extends MetadataPanel<Platform, PlatformTranslator> 
     super(
         "platformsPanel",
         repository,
-        new String[]{"UUID", "Name"},
-        (platform) -> new Object[]{platform.getUuid(), platform.getName()},
+        new String[]{"UUID", "Name", "Visible"},
+        (platform) -> new Object[]{platform.getUuid(), platform.getName(), platform.isVisible()},
         Platform.class,
         (o) -> Platform.builder()
             .uuid((UUID) o[0])
             .name((String) o[1])
+            .visible((Boolean) o[2])
             .build(),
         PlatformForm::new,
         translatorRepository,
         new PlatformConverter(),
         PlatformTranslator.class
     );
-  }
-
-  @Override
-  protected SearchParameters<Platform> getSearchParameters(List<String> uniqueFieldSearchTerms) {
-    return PlatformSearchParameters.builder()
-        .names(uniqueFieldSearchTerms)
-        .build();
   }
 
   @Override

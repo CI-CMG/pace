@@ -6,10 +6,7 @@ import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import edu.colorado.cires.pace.repository.search.SensorSearchParameters;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sensor> {
@@ -22,13 +19,6 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
   @Override
   protected Class<Sensor> getObjectClass() {
     return Sensor.class;
-  }
-
-  @Override
-  protected SearchParameters<Sensor> createSearchParameters(List<Sensor> objects) {
-    return SensorSearchParameters.builder()
-        .names(objects.stream().map(Sensor::getName).toList())
-        .build();
   }
 
   @Override

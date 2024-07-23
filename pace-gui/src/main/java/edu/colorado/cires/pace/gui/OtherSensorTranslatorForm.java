@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<OtherSensorTranslator> {
   
@@ -17,7 +15,7 @@ public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   private final JComboBox<String> propertiesField = new JComboBox<>();
 
   public OtherSensorTranslatorForm(OtherSensorTranslator initialTranslator, String[] headerOptions) {
-    super(initialTranslator, headerOptions);
+    super();
     sensorTypeField.setName("sensorType");
     propertiesField.setName("properties");
     addFields();
@@ -50,12 +48,11 @@ public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected OtherSensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
+  protected OtherSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
       PositionTranslatorForm positionTranslatorForm) {
-    String uuidText = translatorUUIDField.getText();
     return OtherSensorTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidText) ? null : UUID.fromString(uuidText))
-        .name(translatorNameField.getText())
+        .uuid(translatorUUID)
+        .name(translatorName)
         .sensorUUID((String) uuidField.getSelectedItem())
         .sensorName((String) nameField.getSelectedItem())
         .description((String) descriptionField.getSelectedItem())

@@ -2,8 +2,6 @@ package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.translator.Translator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import edu.colorado.cires.pace.repository.search.TranslatorSearchParameters;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -61,13 +59,6 @@ public class TranslatorPanel extends DataPanel<Translator> {
     createButton.addActionListener((e) -> createFormDialog(null));
 
     return panel;
-  }
-
-  @Override
-  protected SearchParameters<Translator> getSearchParameters(List<String> uniqueFieldSearchTerms) {
-    return TranslatorSearchParameters.builder()
-        .names(uniqueFieldSearchTerms)
-        .build();
   }
 
   private void createFormDialog(Translator object) {

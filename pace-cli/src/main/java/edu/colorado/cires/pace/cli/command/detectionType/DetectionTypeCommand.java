@@ -9,8 +9,6 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
-import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.DetectionTypeConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -81,16 +79,30 @@ public class DetectionTypeCommand {
     @Option(names = { "--sources", "-s" }, split = ",", description = "Filter results based on sources")
     private List<String> sources = new ArrayList<>(0);
 
+    @Option(names = {"--show-hidden"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showHidden;
+
+    @Option(names = {"--show-visible"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showVisible;
+
     @Override
     protected RepositoryFactory<DetectionType> getRepositoryFactory() {
       return repositoryFactory;
     }
 
     @Override
-    protected SearchParameters<DetectionType> getSearchParameters() {
-      return DetectionTypeSearchParameters.builder()
-          .sources(sources)
-          .build();
+    protected List<String> getUniqueFields() {
+      return sources;
+    }
+
+    @Override
+    protected Boolean getShowHidden() {
+      return showHidden;
+    }
+
+    @Override
+    protected Boolean getShowVisible() {
+      return showVisible;
     }
   }
   

@@ -37,8 +37,6 @@ import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.repository.search.PackageSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -108,15 +106,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         createDatastore(sensors, Sensor.class, "name"),
         createDatastore(ships, Ship.class, "name")
     );
-  }
-
-  @Override
-  protected SearchParameters<Package> createSearchParameters(List<Package> objects) {
-    return PackageSearchParameters.builder()
-        .packageIds(objects.stream()
-            .map(Package::getPackageId)
-            .toList())
-        .build();
   }
 
   @Override

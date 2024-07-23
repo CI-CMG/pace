@@ -38,7 +38,7 @@ public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extend
   protected abstract Supplier<File> getInputSupplier();
   
   protected final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
-  protected final Path workDir = new ApplicationPropertyResolver().getDataDir();
+  protected final Path workDir = ApplicationPropertyResolver.getDataDir();
   
   protected abstract Converter<T, O> getConverter() throws IOException;
   

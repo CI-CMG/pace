@@ -4,14 +4,38 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class FindAllCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
   
-  protected abstract SearchParameters<O> getSearchParameters();
+  protected abstract List<String> getUniqueFields();
+  protected abstract Boolean getShowHidden();
+  protected abstract Boolean getShowVisible();
+  
+  private List<Boolean> getVisibilityStates() {
+    List<Boolean> visibilityStates = new ArrayList<>(0);
+    
+    if (!getShowHidden() && !getShowVisible()) {
+      visibilityStates.add(true); 
+    } else {
+      if (getShowHidden()) {
+        visibilityStates.add(false);
+      }
+      if (getShowVisible()) {
+        visibilityStates.add(true);
+      }
+    }
+    
+    return visibilityStates;
+  }
 
   @Override
   protected Object runCommand() throws IOException, DatastoreException {
-    return createRepository().search(getSearchParameters())
+    return createRepository().search(SearchParameters.<O>builder()
+            .uniqueFields(getUniqueFields())
+            .visibilityStates(getVisibilityStates())
+            .build())
         .toList();
   }
 

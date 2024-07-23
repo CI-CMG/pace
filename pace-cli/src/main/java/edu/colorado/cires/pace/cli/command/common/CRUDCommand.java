@@ -26,7 +26,7 @@ abstract class CRUDCommand<O extends ObjectWithUniqueField> implements Runnable 
       throws Exception;
 
   private Path getDatastoreDirectory() {
-    return new ApplicationPropertyResolver().getDataDir();
+    return ApplicationPropertyResolver.getDataDir();
   }
   
   private String writeObject(Object object) throws JsonProcessingException {

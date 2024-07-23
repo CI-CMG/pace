@@ -4,10 +4,7 @@ import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.translator.PersonTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
-import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.PersonConverter;
-import java.util.List;
 import java.util.UUID;
 
 public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
@@ -18,10 +15,10 @@ public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
         "peoplePanel",
         repository,
         new String[]{"UUID", "Name", "Organization", "Position", "Street", "City", "State", "Zip", "Country", "Email",
-            "Phone", "Orcid"},
+            "Phone", "Orcid", "Visible"},
         (person) -> new Object[]{person.getUuid(), person.getName(), person.getOrganization(), person.getPosition(),
             person.getStreet(), person.getCity(), person.getState(), person.getZip(), person.getCountry(), person.getEmail(),
-            person.getPhone(), person.getOrcid()},
+            person.getPhone(), person.getOrcid(), person.isVisible()},
         Person.class,
         (objects) -> Person.builder()
             .uuid((UUID) objects[0])
@@ -36,19 +33,13 @@ public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
             .email((String) objects[9])
             .phone((String) objects[10])
             .orcid((String) objects[11])
+            .visible((Boolean) objects[12])
             .build(),
         PersonForm::new,
         translatorRepository,
         new PersonConverter(),
         PersonTranslator.class
     );
-  }
-
-  @Override
-  protected SearchParameters<Person> getSearchParameters(List<String> uniqueFieldSearchTerms) {
-    return PersonSearchParameters.builder()
-        .names(uniqueFieldSearchTerms)
-        .build();
   }
 
   @Override

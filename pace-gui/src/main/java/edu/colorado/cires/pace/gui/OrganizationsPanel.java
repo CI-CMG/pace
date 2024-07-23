@@ -4,10 +4,7 @@ import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
-import edu.colorado.cires.pace.repository.search.OrganizationSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.OrganizationConverter;
-import java.util.List;
 import java.util.UUID;
 
 public class OrganizationsPanel extends MetadataPanel<Organization, OrganizationTranslator> {
@@ -17,9 +14,10 @@ public class OrganizationsPanel extends MetadataPanel<Organization, Organization
     super(
         "organizationsPanel",
         repository,
-        new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone"},
-        (person) -> new Object[]{person.getUuid(), person.getName(), person.getStreet(), person.getCity(),
-            person.getState(), person.getZip(), person.getCountry(), person.getEmail(), person.getPhone()},
+        new String[]{"UUID", "Name", "Street", "City", "State", "Zip", "Country", "Email", "Phone", "Visible"},
+        (organization) -> new Object[]{organization.getUuid(), organization.getName(), organization.getStreet(), organization.getCity(),
+            organization.getState(), organization.getZip(), organization.getCountry(), organization.getEmail(), organization.getPhone(), 
+            organization.isVisible()},
         Organization.class,
         (objects) -> Organization.builder()
             .uuid((UUID) objects[0])
@@ -31,19 +29,13 @@ public class OrganizationsPanel extends MetadataPanel<Organization, Organization
             .country((String) objects[6])
             .email((String) objects[7])
             .phone((String) objects[8])
+            .visible((Boolean) objects[9])
             .build(),
         OrganizationForm::new,
         translatorRepository,
         new OrganizationConverter(),
         OrganizationTranslator.class
     );
-  }
-
-  @Override
-  protected SearchParameters<Organization> getSearchParameters(List<String> uniqueFieldSearchTerms) {
-    return OrganizationSearchParameters.builder()
-        .names(uniqueFieldSearchTerms)
-        .build();
   }
 
   @Override

@@ -3,13 +3,11 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
 import java.util.UUID;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class DepthSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<DepthSensorTranslator> {
 
   public DepthSensorTranslatorForm(DepthSensorTranslator initialTranslator, String[] headerOptions) {
-    super(initialTranslator, headerOptions);
+    super();
     addFields();
     initializeFields(initialTranslator, headerOptions);
   }
@@ -30,12 +28,11 @@ public class DepthSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected DepthSensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
+  protected DepthSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
       PositionTranslatorForm positionTranslatorForm) {
-    String uuidText = translatorUUIDField.getText();
     return DepthSensorTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidText) ? null : UUID.fromString(uuidText))
-        .name(translatorNameField.getText())
+        .uuid(translatorUUID)
+        .name(translatorName)
         .sensorUUID((String) uuidField.getSelectedItem())
         .sensorName((String) nameField.getSelectedItem())
         .description((String) descriptionField.getSelectedItem())

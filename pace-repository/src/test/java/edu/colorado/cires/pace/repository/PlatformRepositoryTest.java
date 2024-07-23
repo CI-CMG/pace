@@ -6,9 +6,6 @@ import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.repository.search.PlatformSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import java.util.List;
 import java.util.UUID;
 
 class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {
@@ -16,13 +13,6 @@ class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {
   @Override
   protected CRUDRepository<Platform> createRepository() {
     return new PlatformRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Platform> createSearchParameters(List<Platform> objects) {
-    return PlatformSearchParameters.builder()
-        .names(objects.stream().map(Platform::getName).toList())
-        .build();
   }
 
   @Override

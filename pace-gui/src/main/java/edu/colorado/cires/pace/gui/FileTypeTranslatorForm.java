@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class FileTypeTranslatorForm extends BaseTranslatorForm<FileTypeTranslator> {
   
@@ -68,10 +66,10 @@ public class FileTypeTranslatorForm extends BaseTranslatorForm<FileTypeTranslato
   }
 
   @Override
-  protected FileTypeTranslator toTranslator(JTextField uuidField, JTextField nameField) {
+  protected FileTypeTranslator toTranslator(UUID uuid, String name) {
     return FileTypeTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidField.getText()) ? null : UUID.fromString(uuidField.getText()))
-        .name(nameField.getText())
+        .uuid(uuid)
+        .name(name)
         .fileTypeUUID((String) this.uuidField.getSelectedItem())
         .type((String) typeField.getSelectedItem())
         .comment((String) commentField.getSelectedItem())

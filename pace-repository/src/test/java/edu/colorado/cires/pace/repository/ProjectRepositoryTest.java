@@ -6,10 +6,7 @@ import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.repository.search.ProjectSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 class ProjectRepositoryTest extends PackageDependencyRepositoryTest<Project> {
@@ -17,13 +14,6 @@ class ProjectRepositoryTest extends PackageDependencyRepositoryTest<Project> {
   @Override
   protected CRUDRepository<Project> createRepository() {
     return new ProjectRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Project> createSearchParameters(List<Project> objects) {
-    return ProjectSearchParameters.builder()
-        .names(objects.stream().map(Project::getName).toList())
-        .build();
   }
 
   @Override

@@ -9,8 +9,6 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
-import edu.colorado.cires.pace.repository.search.FileTypeSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -81,16 +79,30 @@ public class FileTypeCommand {
     @Option(names = { "--types", "-t" }, split = ",", description = "Filter results based on types")
     private List<String> types = new ArrayList<>(0);
 
+    @Option(names = {"--show-hidden"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showHidden;
+
+    @Option(names = {"--show-visible"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showVisible;
+
     @Override
     protected RepositoryFactory<FileType> getRepositoryFactory() {
       return repositoryFactory;
     }
 
     @Override
-    protected SearchParameters<FileType> getSearchParameters() {
-      return FileTypeSearchParameters.builder()
-          .types(types)
-          .build();
+    protected List<String> getUniqueFields() {
+      return types;
+    }
+
+    @Override
+    protected Boolean getShowHidden() {
+      return showHidden;
+    }
+
+    @Override
+    protected Boolean getShowVisible() {
+      return showVisible;
     }
   }
   

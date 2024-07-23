@@ -6,9 +6,6 @@ import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.DetectionType;
 import edu.colorado.cires.pace.data.object.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.repository.search.DetectionTypeSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import java.util.List;
 import java.util.UUID;
 
 class DetectionTypeRepositoryTest extends PackageDependencyRepositoryTest<DetectionType> {
@@ -16,13 +13,6 @@ class DetectionTypeRepositoryTest extends PackageDependencyRepositoryTest<Detect
   @Override
   protected CRUDRepository<DetectionType> createRepository() {
     return new DetectionTypeRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<DetectionType> createSearchParameters(List<DetectionType> objects) {
-    return DetectionTypeSearchParameters.builder()
-        .sources(objects.stream().map(DetectionType::getSource).toList())
-        .build();
   }
 
   @Override

@@ -105,7 +105,7 @@ public class DataPanelFactory {
   public DataPanel<Package> createPackagesPanel() {
     PackagesPanel panel = new PackagesPanel(
         packageRepository,
-        new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Object" },
+        new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Visible", "Object" },
         (p) -> new Object[] { 
             p.getUuid(),
             p.getSiteOrCruiseName(),
@@ -114,6 +114,7 @@ public class DataPanelFactory {
             DatasetType.fromPackage(p).getName(),
             LocationType.fromLocationDetail(p.getLocationDetail()).getName(),
             false,
+            p.isVisible(),
             p
         },
         Package.class,
@@ -127,7 +128,7 @@ public class DataPanelFactory {
     ) {
       @Override
       protected List<String> getHiddenColumns() {
-        return List.of("UUID", "Object");
+        return List.of("UUID", "Object", "Visible");
       }
     };
     panel.init();
@@ -137,18 +138,14 @@ public class DataPanelFactory {
   public DataPanel<Translator> createTranslatorsPanel() {
     TranslatorPanel panel = new TranslatorPanel(
         translatorRepository,
-        new String[] { "UUID", "Name", "Object" },
-        (t) -> new Object[] { t.getUuid(), t.getName(), t },
+        new String[] { "UUID", "Name", "Object", "Visible" },
+        (t) -> new Object[] { t.getUuid(), t.getName(), t, t.isVisible() },
         (o) -> (Translator) o[2],
-        (t) -> {
-          TranslatorForm form = new TranslatorForm(t);
-          form.init();
-          return form;
-        }
+        TranslatorForm::create
     ) {
       @Override
       protected List<String> getHiddenColumns() {
-        return List.of("UUID", "Object");
+        return List.of("UUID", "Object", "Visible");
       }
     };
     panel.init();

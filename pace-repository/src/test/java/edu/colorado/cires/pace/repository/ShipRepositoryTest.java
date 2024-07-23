@@ -8,9 +8,6 @@ import edu.colorado.cires.pace.data.object.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Ship;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
-import edu.colorado.cires.pace.repository.search.ShipSearchParameters;
-import java.util.List;
 import java.util.UUID;
 
 class ShipRepositoryTest extends PackageDependencyRepositoryTest<Ship> {
@@ -18,13 +15,6 @@ class ShipRepositoryTest extends PackageDependencyRepositoryTest<Ship> {
   @Override
   protected CRUDRepository<Ship> createRepository() {
     return new ShipRepository(createDatastore(), createDatastore(packages, Package.class, "packageId"));
-  }
-
-  @Override
-  protected SearchParameters<Ship> createSearchParameters(List<Ship> objects) {
-    return ShipSearchParameters.builder()
-        .names(objects.stream().map(Ship::getName).toList())
-        .build();
   }
 
   @Override

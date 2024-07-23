@@ -9,8 +9,6 @@ import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
 import edu.colorado.cires.pace.data.translator.PersonTranslator;
-import edu.colorado.cires.pace.repository.search.PersonSearchParameters;
-import edu.colorado.cires.pace.repository.search.SearchParameters;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PersonConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -81,16 +79,31 @@ public class PersonCommand {
     @Option(names = { "--names", "-n" }, split = ",", description = "Filter results based on names")
     private List<String> names = new ArrayList<>(0);
 
+    @Option(names = {"--show-hidden"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showHidden;
+
+    @Option(names = {"--show-visible"}, description = "Filter results based on visibility", defaultValue = "false")
+    private Boolean showVisible;
+
     @Override
     protected RepositoryFactory<Person> getRepositoryFactory() {
       return repositoryFactory;
     }
 
+
     @Override
-    protected SearchParameters<Person> getSearchParameters() {
-      return PersonSearchParameters.builder()
-          .names(names)
-          .build();
+    protected List<String> getUniqueFields() {
+      return names;
+    }
+
+    @Override
+    protected Boolean getShowHidden() {
+      return showHidden;
+    }
+
+    @Override
+    protected Boolean getShowVisible() {
+      return showVisible;
     }
   }
   

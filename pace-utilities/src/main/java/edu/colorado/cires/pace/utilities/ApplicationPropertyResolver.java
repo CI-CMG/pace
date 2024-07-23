@@ -17,40 +17,43 @@ public final class ApplicationPropertyResolver {
 
   private static final Path APPLICATION_BASE_DIR = Paths.get(System.getProperty("user.home")).resolve(".pace");
 
-  public <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
-    Properties properties = new Properties();
+  static {
     try {
       createPropertiesFileAndConfigDir();
-
-      try (InputStream defaultInputStream = getClass().getResourceAsStream("/application.properties");
-          InputStream userPropertiesInputStream = new FileInputStream(getPropertiesFilePath().toFile())) {
+      
+      try (
+          InputStream defaultInputStream = ApplicationPropertyResolver.class.getResourceAsStream("/application.properties");
+          InputStream userPropertiesInputStream = new FileInputStream(getPropertiesFilePath().toFile())
+      ) {
+        Properties properties = System.getProperties();
         properties.load(defaultInputStream);
         properties.load(userPropertiesInputStream);
+        System.setProperties(properties);
       }
     } catch (IOException e) {
-      throw new IllegalStateException(String.format(
-          "Failed to read %s value from application properties", propertyName
-      ), e);
+      throw new RuntimeException(e);
     }
-    
-    String propertyValue = properties.getProperty(propertyName);
-    
+  }
+
+  public static <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
+    String propertyValue = System.getProperty(propertyName);
+
     if (StringUtils.isBlank(propertyValue)) {
       return null;
     }
-    
+
     return transform.apply(propertyValue);
   }
   
-  private Path getConfigDir() {
+  private static Path getConfigDir() {
     return APPLICATION_BASE_DIR.resolve("config");
   }
   
-  private Path getPropertiesFilePath() {
+  private static Path getPropertiesFilePath() {
     return getConfigDir().resolve("application.properties");
   }
   
-  private void createPropertiesFileAndConfigDir() throws IOException {
+  private static void createPropertiesFileAndConfigDir() throws IOException {
     Path propertiesFile = getPropertiesFilePath();
     if (propertiesFile.toFile().exists()) {
       return;
@@ -61,7 +64,7 @@ public final class ApplicationPropertyResolver {
       FileUtils.createParentDirectories(propertiesFile.toFile());
     }
 
-    try (InputStream inputStream = getClass().getResourceAsStream("/application.properties"); OutputStream outputStream = new FileOutputStream(propertiesFile.toFile())) {
+    try (InputStream inputStream = ApplicationPropertyResolver.class.getResourceAsStream("/application.properties"); OutputStream outputStream = new FileOutputStream(propertiesFile.toFile())) {
       if (inputStream == null) {
         throw new FileNotFoundException("application.properties file not found in application resources");
       }
@@ -74,7 +77,7 @@ public final class ApplicationPropertyResolver {
     }
   }
 
-  public Path getDataDir() {
+  public static Path getDataDir() {
     String dirString = getPropertyValue("pace.metadata-directory", (s) -> s);
     if (StringUtils.isBlank(dirString)) {
       return APPLICATION_BASE_DIR.resolve("data").toAbsolutePath();
@@ -83,12 +86,17 @@ public final class ApplicationPropertyResolver {
     return Paths.get(dirString).toAbsolutePath();
   }
 
-  public String getVersion() {
+  public static String getVersion() {
     return getVersion(true);
   }
 
-  public String getVersion(boolean includePatchVersion) {
+  public static String getVersion(boolean includePatchVersion) {
     String fullVersion = getPropertyValue("pace.version", (s) -> s);
+    
+    if (fullVersion == null) {
+      return null;
+    }
+    
     if (includePatchVersion) {
       return fullVersion;
     }

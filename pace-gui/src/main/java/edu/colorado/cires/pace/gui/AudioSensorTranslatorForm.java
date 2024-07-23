@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import org.apache.commons.lang3.StringUtils;
 
 public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<AudioSensorTranslator> {
   
@@ -17,7 +15,7 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   private final JComboBox<String> preampIdField = new JComboBox<>();
 
   public AudioSensorTranslatorForm(AudioSensorTranslator initialTranslator, String[] headerOptions) {
-    super(initialTranslator, headerOptions);
+    super();
     hydrophoneIdField.setName("hydrophoneId");
     preampIdField.setName("preampId");
     addFields();
@@ -50,13 +48,11 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected AudioSensorTranslator toTranslator(JTextField translatorUUIDField, JTextField translatorNameField, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
+  protected AudioSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
       PositionTranslatorForm positionTranslatorForm) {
-    String uuidText = translatorUUIDField.getText();
-    
     return AudioSensorTranslator.builder()
-        .uuid(StringUtils.isBlank(uuidText) ? null : UUID.fromString(uuidText))
-        .name(translatorNameField.getText())
+        .uuid(translatorUUID)
+        .name(translatorName)
         .sensorUUID((String) uuidField.getSelectedItem())
         .sensorName((String) nameField.getSelectedItem())
         .description((String) descriptionField.getSelectedItem())

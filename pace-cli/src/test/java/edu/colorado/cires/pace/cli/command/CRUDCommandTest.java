@@ -136,7 +136,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   }
 
   @Test
-  void testSearch() throws IOException {
+  void testSearchByUniqueField() throws IOException {
     T object1 = createObject("test-1");
     T object2 = createObject("test-2");
 
@@ -150,6 +150,76 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
     String output = getCommandOutput();
 
     List<T> results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
+    assertEquals(1, results.size());
+
+    assertObjectsEqual(object1, results.get(0), true);
+  }
+
+  @Test
+  void testSearchByVisibility() throws IOException {
+    T object1 = createObject("test-1");
+    T object2 = (T) createObject("test-2").setVisible(false);
+
+    object1 = writeObject(object1);
+    object2 = writeObject(object2);
+
+    clearOut();
+
+    execute(getCommandPrefix(), "list", "--show-visible");
+
+    String output = getCommandOutput();
+
+    List<T> results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
+    assertEquals(1, results.size());
+
+    assertObjectsEqual(object1, results.get(0), true);
+
+    clearOut();
+
+    execute(getCommandPrefix(), "list", "--show-hidden");
+
+    output = getCommandOutput();
+
+    results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
+    assertEquals(1, results.size());
+
+    assertObjectsEqual(object2, results.get(0), true);
+
+    clearOut();
+
+    execute(getCommandPrefix(), "list", "--show-hidden", "--show-visible");
+
+    output = getCommandOutput();
+
+    results = objectMapper.readValue(output, getTypeReference());
+    results = results.stream()
+        .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
+            getUniqueField(o2)
+        )).toList();
+    assertEquals(2, results.size());
+
+    assertObjectsEqual(object1, results.get(0), true);
+    assertObjectsEqual(object2, results.get(1), true);
+
+    clearOut();
+
+    execute(getCommandPrefix(), "list", getSearchParameterArgumentName(), getUniqueField(object1), "--show-visible", "--show-hidden");
+
+    output = getCommandOutput();
+
+    results = objectMapper.readValue(output, getTypeReference());
     results = results.stream()
         .sorted((o1, o2) -> getUniqueField(o1).compareToIgnoreCase(
             getUniqueField(o2)

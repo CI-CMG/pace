@@ -36,58 +36,61 @@ import edu.colorado.cires.pace.repository.ShipRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.io.IOException;
+import java.nio.file.Path;
 import javax.swing.JTabbedPane;
 
 public class ApplicationTabs extends JTabbedPane {
 
-  private DataPanelFactory createDataPanelFactory(ObjectMapper objectMapper, ApplicationPropertyResolver propertyResolver) throws IOException {
+  private DataPanelFactory createDataPanelFactory(ObjectMapper objectMapper) throws IOException {
+    Path dataDir = ApplicationPropertyResolver.getDataDir();
+    
     TranslatorRepository translatorRepository = new TranslatorRepository(
-        new TranslatorJsonDatastore(propertyResolver.getDataDir(), objectMapper)
+        new TranslatorJsonDatastore(dataDir, objectMapper)
     );
-    PackageJsonDatastore packageJsonDatastore = new PackageJsonDatastore(propertyResolver.getDataDir(), objectMapper);
-    FileTypeJsonDatastore fileTypeJsonDatastore = new FileTypeJsonDatastore(propertyResolver.getDataDir(), objectMapper);
-    InstrumentJsonDatastore instrumentJsonDatastore = new InstrumentJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    PackageJsonDatastore packageJsonDatastore = new PackageJsonDatastore(dataDir, objectMapper);
+    FileTypeJsonDatastore fileTypeJsonDatastore = new FileTypeJsonDatastore(dataDir, objectMapper);
+    InstrumentJsonDatastore instrumentJsonDatastore = new InstrumentJsonDatastore(dataDir, objectMapper);
     FileTypeRepository fileTypeRepository = new FileTypeRepository(fileTypeJsonDatastore, instrumentJsonDatastore);
 
-    Datastore< Project> projectDatastore = new ProjectJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore< Project> projectDatastore = new ProjectJsonDatastore(dataDir, objectMapper);
     ProjectRepository projectRepository = new ProjectRepository(
         projectDatastore,
         packageJsonDatastore
     );
     
-    Datastore<Person> personDatastore = new PersonJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Person> personDatastore = new PersonJsonDatastore(dataDir, objectMapper);
     PersonRepository personRepository = new PersonRepository(personDatastore, packageJsonDatastore);
-    Datastore<Organization> organizationDatastore = new OrganizationJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Organization> organizationDatastore = new OrganizationJsonDatastore(dataDir, objectMapper);
     OrganizationRepository organizationRepository = new OrganizationRepository(
         organizationDatastore,
         packageJsonDatastore
     );
     
-    Datastore<Platform> platformDatastore = new PlatformJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Platform> platformDatastore = new PlatformJsonDatastore(dataDir, objectMapper);
     PlatformRepository platformRepository = new PlatformRepository(
         platformDatastore,
         packageJsonDatastore
     );
     InstrumentRepository instrumentRepository = new InstrumentRepository(instrumentJsonDatastore, fileTypeJsonDatastore, packageJsonDatastore);
     
-    Datastore<Sensor> sensorDatastore = new SensorJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Sensor> sensorDatastore = new SensorJsonDatastore(dataDir, objectMapper);
     SensorRepository sensorRepository = new SensorRepository(
         sensorDatastore,
         packageJsonDatastore
     );
-    Datastore<DetectionType> detectionTypeDatastore = new DetectionTypeJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<DetectionType> detectionTypeDatastore = new DetectionTypeJsonDatastore(dataDir, objectMapper);
     DetectionTypeRepository detectionTypeRepository = new DetectionTypeRepository(
         detectionTypeDatastore,
         packageJsonDatastore
     );
     
-    Datastore<Sea> seaDatastore = new SeaJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Sea> seaDatastore = new SeaJsonDatastore(dataDir, objectMapper);
     SeaRepository seaRepository = new SeaRepository(
         seaDatastore,
         packageJsonDatastore
     );
     
-    Datastore<Ship> shipDatastore = new ShipJsonDatastore(propertyResolver.getDataDir(), objectMapper);
+    Datastore<Ship> shipDatastore = new ShipJsonDatastore(dataDir, objectMapper);
     ShipRepository shipRepository = new ShipRepository(
         shipDatastore,
         packageJsonDatastore
@@ -122,15 +125,13 @@ public class ApplicationTabs extends JTabbedPane {
   }
   
   private final ObjectMapper objectMapper;
-  private final ApplicationPropertyResolver propertyResolver;
 
-  public ApplicationTabs(ObjectMapper objectMapper, ApplicationPropertyResolver propertyResolver) {
+  public ApplicationTabs(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
-    this.propertyResolver = propertyResolver;
   }
   
   public void init() throws IOException {
-    DataPanelFactory dataPanelFactory = createDataPanelFactory(objectMapper, propertyResolver);
+    DataPanelFactory dataPanelFactory = createDataPanelFactory(objectMapper);
 
     setName("applicationTabs");
     setTabPlacement(JTabbedPane.LEFT);
