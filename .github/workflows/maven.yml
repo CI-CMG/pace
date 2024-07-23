@@ -27,7 +27,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: xvfb-run mvn -B clean package -Pdep-check -Pcoverage
+        run: mvn -B clean package -Pdep-check -Pcoverage
       - id: version
         run: |
           echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
