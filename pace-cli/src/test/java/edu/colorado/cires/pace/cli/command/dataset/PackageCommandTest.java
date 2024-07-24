@@ -27,6 +27,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 abstract class PackageCommandTest<P extends Package, T extends PackageTranslator, L extends LocationDetailTranslator> extends TranslateCommandTest<P, T> {
   
@@ -293,12 +295,24 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     return object.getPackageId();
   }
   
-  @Test
-  void testPackage() throws IOException {
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void testPackage(boolean useSavedObject) throws IOException {
 
     Package p = writeObject(
         createObject("test")
     );
+    clearOut();
+    
+    File packageFile = testPath.resolve("test.json").toFile();
+    
+    if (useSavedObject) {
+      execute("package", "get-by-package-id", p.getUniqueField());
+      p = objectMapper.readValue(getCommandOutput(), Package.class);
+      clearOut();
+      objectMapper.writeValue(packageFile, p);
+    }
+    
     createDirectoryAndWriteFile(p.getTemperaturePath());
     createDirectoryAndWriteFile(p.getBiologicalPath());
     createDirectoryAndWriteFile(p.getOtherPath());
@@ -309,7 +323,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     
     File outputDirectory = testPath.resolve("output").toFile();
     
-    execute("package", "process", testPath.resolve("test.json").toFile().toString(), outputDirectory.toString());
+    execute("package", "process", packageFile.toString(), outputDirectory.toString());
 
     Set<String> expectedPaths = Set.of(
       "target/test-dir/output/project 1_siteOrCruiseName_test/bagit.txt",
@@ -336,6 +350,16 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         .collect(Collectors.toSet());
     
     assertEquals(expectedPaths, actualPaths);
+    
+    clearOut();
+
+    execute(getCommandPrefix(), String.format(
+        "get-by-%s", getUniqueFieldCommandSuffix()
+    ), p.getUniqueField());
+
+    String output = getCommandOutput();
+    P object = objectMapper.readValue(output, getClazz());
+    assertEquals(!useSavedObject, object.isVisible());
   }
   
   private void createDirectoryAndWriteFile(Path path) throws IOException {

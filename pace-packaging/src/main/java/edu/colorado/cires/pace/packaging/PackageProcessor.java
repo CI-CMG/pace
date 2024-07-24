@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Dataset;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
 import edu.colorado.cires.pace.data.object.Person;
@@ -14,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class PackageProcessor {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
   
-  public void process() throws IOException, PackagingException {
+  public List<Package> process() throws IOException, PackagingException {
     FileUtils.mkdir(outputDir);
 
     for (Package aPackage : packages) {
@@ -56,6 +56,8 @@ public class PackageProcessor {
 
     new Thread(this::initializeProgressIndicators).start();
 
+    List<Package> processedPackages = new ArrayList<>(0);
+    
     for (Package aPackage : packages) {
       Path packageOutputDir = getPackageOutputDir(aPackage);
 
@@ -70,7 +72,11 @@ public class PackageProcessor {
       logger.addAppender(writerAppender);
       processPackage(aPackage, packageOutputDir, logger);
       logger.removeAppender(writerAppender);
+      
+      processedPackages.add((Package) aPackage.setVisible(false));
     }
+    
+    return processedPackages;
   }
   
   private void initializeProgressIndicators() {
@@ -99,7 +105,7 @@ public class PackageProcessor {
 
     Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata((Dataset) packingJob, objectMapper, outputDirectory),
+        FileUtils.writeMetadata(packingJob, objectMapper, outputDirectory),
         FileUtils.writeObjectsBlob(people, objectMapper, outputDirectory, "people.json"),
         FileUtils.writeObjectsBlob(organizations, objectMapper, outputDirectory, "organizations.json"),
         FileUtils.writeObjectsBlob(projects, objectMapper, outputDirectory, "projects.json"),
@@ -125,7 +131,7 @@ public class PackageProcessor {
   }
   
   private Path getPackageOutputDir(Package packingJob) throws IOException {
-    return outputDir.resolve(((Dataset) packingJob).getPackageId());
+    return outputDir.resolve(packingJob.getPackageId());
   }
 
 }

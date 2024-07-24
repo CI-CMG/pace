@@ -8,7 +8,10 @@ import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
+import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.ConflictException;
+import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
@@ -23,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import javax.swing.JButton;
@@ -102,7 +106,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       Boolean selected = (Boolean) tableModel.getValueAt(i, 6);
       if (selected) {
-        packages.add((Package) tableModel.getValueAt(i, 7));
+        packages.add((Package) tableModel.getValueAt(i, 8));
       }
     }
     
@@ -171,13 +175,19 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
                 progressIndicator
             );
 
-            packageProcessor.process();
-          } catch (DatastoreException | IOException | PackagingException ex) {
+            List<Package> processedPackages = packageProcessor.process().stream()
+                .filter(p -> Objects.nonNull(p.getUuid()))
+                .toList();
+            for (Package processedPackage : processedPackages) {
+              repository.update(processedPackage.getUuid(), processedPackage);
+            }
+          } catch (DatastoreException | IOException | PackagingException | ConflictException | NotFoundException | BadArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           } finally {
             progressIndicator.indicateStatus(0);
             resetTable();
             packageButton.setEnabled(true);
+            searchData();
           }
 
         }).start();
@@ -201,7 +211,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       return switch (columnIndex) {
         case 0 -> UUID.class;
         case 6 -> Boolean.class;
-        case 7 -> Package.class;
+        case 8 -> Package.class;
         default -> String.class;
       };
     }

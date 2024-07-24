@@ -183,9 +183,10 @@ class PackagerProcessorTest {
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
-    new PackageProcessor(
+    List<Package> packages = new PackageProcessor(
         objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
     ).process();
+    assertTrue(packages.stream().noneMatch(Package::isVisible));
     verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
     
     Path baseExpectedOutputPath = testOutputPath.resolve(packingJob.getPackageId()).resolve("data");

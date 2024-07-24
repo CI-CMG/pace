@@ -27,6 +27,10 @@ import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackagingException;
+import edu.colorado.cires.pace.repository.BadArgumentException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
+import edu.colorado.cires.pace.repository.ConflictException;
+import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -44,6 +48,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 import picocli.CommandLine.Command;
@@ -262,6 +267,8 @@ public class PackageCommand {
       try {
         Path workDir = ApplicationPropertyResolver.getDataDir();
         ObjectMapper objectMapper = createObjectMapper();
+
+        CRUDRepository<Package> packageRepository = PackageRepositoryFactory.createRepository(workDir, objectMapper);
         
         List<Person> people = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
         List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
@@ -272,30 +279,32 @@ public class PackageCommand {
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
             new CLIProgressIndicator()
         };
-        
-        
-        try {
-          List<Package> packages = new ArrayList<>(0);
-          deserializeAndProcess(
-              objectMapper,
-              packageJob,
-              Package.class,
-              typeReference,
-              (deserializedObject) -> {
-                packages.add(deserializedObject);
-                return deserializedObject;
-              }
-          );
-          
-          PackageProcessor packageProcessor = new PackageProcessor(
-              objectMapper, people, organizations, projects, packages, outputPath, progressIndicators
-          );
-          
-          packageProcessor.process();
-        } catch (IOException e) {
-          throw new RuntimeException(e);
+
+
+        List<Package> packages = new ArrayList<>(0);
+        deserializeAndProcess(
+            objectMapper,
+            packageJob,
+            Package.class,
+            typeReference,
+            (deserializedObject) -> {
+              packages.add(deserializedObject);
+              return deserializedObject;
+            }
+        );
+
+        PackageProcessor packageProcessor = new PackageProcessor(
+            objectMapper, people, organizations, projects, packages, outputPath, progressIndicators
+        );
+
+        List<Package> processedPackages = packageProcessor.process().stream()
+            .filter(p -> Objects.nonNull(p.getUuid()))
+            .toList();
+
+        for (Package aPackage : processedPackages) {
+          packageRepository.update(aPackage.getUuid(), aPackage);
         }
-      } catch (PackagingException | DatastoreException | IOException | RuntimeException e) {
+      } catch (PackagingException | DatastoreException | IOException | RuntimeException | ConflictException | NotFoundException | BadArgumentException e) {
         throw new RuntimeException(e);
       }
     }
