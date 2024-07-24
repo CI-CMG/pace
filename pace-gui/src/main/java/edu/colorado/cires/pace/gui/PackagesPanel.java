@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
+import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,11 +26,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -37,14 +43,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import org.apache.commons.lang3.StringUtils;
 
 public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
   private static final JProgressBar progressBar = new JProgressBar();
   private final ObjectMapper objectMapper;
-  private static final JButton packageButton = new JButton("Package");
+  private static final JButton actionButton = new JButton();
   
   private final PersonRepository personRepository;
   private final OrganizationRepository organizationRepository;
@@ -79,10 +87,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     JButton translateButton = new JButton("Translate");
     buttonPanel.add(translateButton, configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
     buttonPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
-    buttonPanel.add(packageButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
+    buttonPanel.add(actionButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
     panel.add(buttonPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    
-    packageButton.addActionListener((e) -> packageSelectedRows());
     
     translateButton.addActionListener((e) -> {
       try {
@@ -112,10 +118,30 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     processPackages(packages);
   }
+
+  private void saveRowVisibility() {
+    for (int i = 0; i < tableModel.getRowCount(); i++) {
+      Boolean selected = (Boolean) tableModel.getValueAt(i, 7);
+      Package p = (Package) tableModel.getValueAt(i, 8);
+      Package packageToUpdate = (Package) p.setVisible(selected);
+
+      if (p.isVisible() != packageToUpdate.isVisible()) {
+        try {
+          repository.update(packageToUpdate.getUuid(), packageToUpdate);
+        } catch (DatastoreException | ConflictException | NotFoundException | BadArgumentException e) {
+          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    }
+    
+    searchData();
+  }
   
   private void resetTable() {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       tableModel.setValueAt(false, i, 6);
+      Package p = (Package) tableModel.getValueAt(i, 8);
+      tableModel.setValueAt(p.isVisible(), i, 7);
     }
   }
   
@@ -159,7 +185,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
-        packageButton.setEnabled(false);
+        actionButton.setEnabled(false);
         
         new Thread(() -> {
           GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
@@ -186,7 +212,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
           } finally {
             progressIndicator.indicateStatus(0);
             resetTable();
-            packageButton.setEnabled(true);
+            actionButton.setEnabled(true);
             searchData();
           }
 
@@ -199,7 +225,92 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     chooseDestinationDialog.pack();
     chooseDestinationDialog.setVisible(true);
   }
+
+  @Override
+  protected JComponent createToolBar() {
+    JToolBar searchToolBar = (JToolBar) super.createToolBar();
+    JToolBar packageToolbar = createPackageToolbar();
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.add(searchToolBar, configureFormLayout(0, 0));
+    panel.add(packageToolbar, configureFormLayout(0, 1));
+    return panel;
+  }
+
+  private JToolBar createPackageToolbar() {
+    JToolBar toolBar = new JToolBar();
+    ButtonGroup group = new ButtonGroup();
+    JCheckBox viewModeButton = createModeToggleCheckbox("View", this::setViewMode);
+    viewModeButton.setSelected(true);
+    setViewMode(true);
+    JCheckBox packageModeButton = createModeToggleCheckbox("Package", this::setPackageMode);
+    setPackageMode(false);
+    JCheckBox editVisibilityModeButton = createModeToggleCheckbox("Edit Visibility", this::setEditVisibilityModel);
+    setEditVisibilityModel(false);
+    group.add(viewModeButton);
+    group.add(packageModeButton);
+    group.add(editVisibilityModeButton);
+    toolBar.add(new JLabel("Mode:\t"));
+    toolBar.add(viewModeButton);
+    toolBar.add(packageModeButton);
+    toolBar.add(editVisibilityModeButton);
+    return toolBar;
+  }
   
+  private void setViewMode(Boolean enabled) {
+    actionButton.setVisible(!enabled);
+    
+    resetTable();
+  }
+  
+  private void setPackageMode(Boolean enabled) {
+    if (enabled) {
+      Arrays.stream(actionButton.getActionListeners()).forEach(
+          actionButton::removeActionListener
+      );
+      
+      actionButton.addActionListener(e -> packageSelectedRows());
+      actionButton.setText("Package");
+      
+      getTableColumnModel().addColumn(
+          getHiddenColumnByHeaderValue("Select for Packaging")
+      );
+    } else {
+      TableColumn tableColumn = getHiddenColumnByHeaderValue("Select for Packaging");
+      if (tableColumn != null) {
+        getTableColumnModel().removeColumn(tableColumn);
+      }
+    }
+    
+    resetTable();
+  }
+  private void setEditVisibilityModel(Boolean enabled) {
+    if (enabled) {
+      Arrays.stream(actionButton.getActionListeners()).forEach(
+          actionButton::removeActionListener
+      );
+      
+      actionButton.addActionListener(e -> saveRowVisibility());
+      actionButton.setText("Submit");
+      
+      getTableColumnModel().addColumn(
+          getHiddenColumnByHeaderValue("Visible")
+      );
+    } else {
+      TableColumn tableColumn = getHiddenColumnByHeaderValue("Visible");
+      if (tableColumn != null) {
+        getTableColumnModel().removeColumn(tableColumn);
+      }
+    }
+    
+    resetTable();
+  }
+  
+  private JCheckBox createModeToggleCheckbox(String text, Consumer<Boolean> itemListener) {
+    JCheckBox checkBox = new JCheckBox(text);
+    checkBox.addItemListener(e -> itemListener.accept(checkBox.isSelected()));
+    return checkBox;
+  }
+
   private static class PackageTableModel extends DefaultTableModel {
 
     public PackageTableModel(Object[][] data, Object[] columnNames) {
@@ -210,7 +321,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     public Class<?> getColumnClass(int columnIndex) {
       return switch (columnIndex) {
         case 0 -> UUID.class;
-        case 6 -> Boolean.class;
+        case 6, 7 -> Boolean.class;
         case 8 -> Package.class;
         default -> String.class;
       };
@@ -218,7 +329,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-      return column == 6;
+      return column == 6 || column == 7;
     }
   }
 }

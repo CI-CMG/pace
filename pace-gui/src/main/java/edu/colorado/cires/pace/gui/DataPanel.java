@@ -10,16 +10,20 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +38,9 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   private JTextField uniqueFieldSearchField;
   private JCheckBox visibilitySearchField;
   
+  private final Map<String, TableColumn> hiddenColumns = new HashMap<>(0);
+  
+  private JTable table;
   
   protected MouseAdapter getTableMouseAdapter() {
     return new MouseAdapter() {};
@@ -56,8 +63,10 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     setName(name);
     setLayout(new BorderLayout());
 
+    this.table = createTable();
+    
     add(createContentPanel());
-    loadData();
+    searchData();
   }
   
   protected DefaultTableModel createTableModel(String[] headers) {
@@ -71,12 +80,12 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(createToolBar(), BorderLayout.NORTH);
-    panel.add(new JScrollPane(createTable()), BorderLayout.CENTER);
+    panel.add(new JScrollPane(table), BorderLayout.CENTER);
     panel.add(createControlPanel(), BorderLayout.SOUTH);
     return panel;
   }
   
-  private JToolBar createToolBar() {
+  protected JComponent createToolBar() {
     JToolBar toolBar = new JToolBar();
     uniqueFieldSearchField = new JTextField();
     uniqueFieldSearchField.setName("searchField");
@@ -198,6 +207,14 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     return List.of("UUID", "Visible");
   }
   
+  protected TableColumn getHiddenColumnByHeaderValue(String headerValue) {
+    return hiddenColumns.get(headerValue);
+  }
+  
+  protected TableColumnModel getTableColumnModel() {
+    return table.getColumnModel();
+  }
+  
   protected JTable createTable() {
     JTable table = new JTable();
     table.setName("dataTable");
@@ -210,11 +227,14 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
 
     TableColumnModel columnModel = table.getColumnModel();
     getHiddenColumns().forEach(
-        c -> columnModel.removeColumn(
-            columnModel.getColumn(
-                columnModel.getColumnIndex(c)
-            )
-        )
+        c -> {
+          TableColumn columnToHide = columnModel.getColumn(
+              columnModel.getColumnIndex(c)
+          );
+          hiddenColumns.put((String) columnToHide.getHeaderValue(), columnToHide);
+          
+          columnModel.removeColumn(columnToHide);
+        }
     );
     
     return table;

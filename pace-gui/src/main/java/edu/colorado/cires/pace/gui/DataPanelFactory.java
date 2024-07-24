@@ -128,7 +128,7 @@ public class DataPanelFactory {
     ) {
       @Override
       protected List<String> getHiddenColumns() {
-        return List.of("UUID", "Object", "Visible");
+        return List.of("UUID", "Object", "Visible", "Select for Packaging");
       }
     };
     panel.init();
