@@ -120,7 +120,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     button.addActionListener(e -> {
       textField.setText("");
       checkBox.setSelected(true);
-      loadData();
+      searchData(searchParametersFromFields(textField, checkBox));
     });
     
     return button;
@@ -129,25 +129,28 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   private JButton createSearchButton(JTextField textField, JCheckBox checkBox) {
     JButton button = new JButton("Search");
     
-    button.addActionListener(e -> {
-      String searchText = textField.getText();
-      List<String> searchTextTerms;
-      if (StringUtils.isBlank(searchText) || searchText.equals(String.format(
-          "Search by %s", getHumanReadableUniqueFieldName()
-      ))) {
-        searchTextTerms = Collections.emptyList();
-      } else {
-        searchTextTerms = Collections.singletonList(searchText);
-      }
-      searchData(
-          getSearchParameters(
-              searchTextTerms,
-              Collections.singletonList(checkBox.isSelected())
-          )
-      );
-    });
+    button.addActionListener(e -> searchData(
+        searchParametersFromFields(textField, checkBox)
+    ));
     
     return button;
+  }
+  
+  private SearchParameters<O> searchParametersFromFields(JTextField textField, JCheckBox checkBox) {
+    String searchText = textField.getText();
+    List<String> searchTextTerms;
+    if (StringUtils.isBlank(searchText) || searchText.equals(String.format(
+        "Search by %s", getHumanReadableUniqueFieldName()
+    ))) {
+      searchTextTerms = Collections.emptyList();
+    } else {
+      searchTextTerms = Collections.singletonList(searchText);
+    }
+    
+    return getSearchParameters(
+        searchTextTerms,
+        Collections.singletonList(checkBox.isSelected())
+    );
   }
   
   protected abstract JPanel createControlPanel();
