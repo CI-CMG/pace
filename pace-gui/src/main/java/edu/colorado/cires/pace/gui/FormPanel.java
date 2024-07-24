@@ -19,12 +19,14 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
   private final Form<O> form;
   private final CRUDRepository<O> repository;
   private final Consumer<Stream<O>> updatedObjectsConsumer;
+  private final Runnable searchAction;
   private final boolean isEdit;
   
-  public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, boolean isEdit) {
+  public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, Runnable searchAction, boolean isEdit) {
     this.form = form;
     this.repository = repository;
     this.updatedObjectsConsumer = updatedObjectsConsumer;
+    this.searchAction = searchAction;
     this.isEdit = isEdit;
   }
   
@@ -51,6 +53,7 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
         updatedObjectsConsumer.accept(
             repository.findAll()
         );
+        searchAction.run();
       } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException | ConstraintViolationException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }
@@ -62,6 +65,7 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
         updatedObjectsConsumer.accept(
             repository.findAll()
         );
+        searchAction.run();
       } catch (NotFoundException | DatastoreException | ConstraintViolationException | BadArgumentException ex ) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       }

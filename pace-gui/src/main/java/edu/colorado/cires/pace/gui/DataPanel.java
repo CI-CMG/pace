@@ -31,6 +31,10 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   protected final String[] headers;
   private final String name;
   
+  private JTextField uniqueFieldSearchField;
+  private JCheckBox visibilitySearchField;
+  
+  
   protected MouseAdapter getTableMouseAdapter() {
     return new MouseAdapter() {};
   }
@@ -74,39 +78,39 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
   
   private JToolBar createToolBar() {
     JToolBar toolBar = new JToolBar();
-    JTextField textField = new JTextField();
-    textField.setName("searchField");
-    textField.setForeground(Color.gray);
-    textField.setText(String.format(
+    uniqueFieldSearchField = new JTextField();
+    uniqueFieldSearchField.setName("searchField");
+    uniqueFieldSearchField.setForeground(Color.gray);
+    uniqueFieldSearchField.setText(String.format(
         "Search by %s", getHumanReadableUniqueFieldName()
     ));
-    textField.addFocusListener(new FocusListener() {
+    uniqueFieldSearchField.addFocusListener(new FocusListener() {
       @Override
       public void focusGained(FocusEvent e) {
-        if (textField.getText().contains(String.format(
+        if (uniqueFieldSearchField.getText().contains(String.format(
             "Search by %s", getHumanReadableUniqueFieldName()
         ))) {
-          textField.setText("");
-          textField.setForeground(Color.black);
+          uniqueFieldSearchField.setText("");
+          uniqueFieldSearchField.setForeground(Color.black);
         }
       }
       @Override
       public void focusLost(FocusEvent e) {
-        if (textField.getText().isEmpty()) {
-          textField.setForeground(Color.gray);
-          textField.setText(String.format(
+        if (uniqueFieldSearchField.getText().isEmpty()) {
+          uniqueFieldSearchField.setForeground(Color.gray);
+          uniqueFieldSearchField.setText(String.format(
               "Search by %s", getHumanReadableUniqueFieldName()
           ));
         }
       }
     });
-    JCheckBox checkBox = new JCheckBox("Visible", true);
-    toolBar.add(textField);
-    toolBar.add(checkBox);
+    visibilitySearchField = new JCheckBox("Visible", true);
+    toolBar.add(uniqueFieldSearchField);
+    toolBar.add(visibilitySearchField);
     toolBar.addSeparator();
-    toolBar.add(createSearchButton(textField, checkBox));
+    toolBar.add(createSearchButton());
     toolBar.addSeparator();
-    toolBar.add(createClearButton(textField, checkBox));
+    toolBar.add(createClearButton());
     return toolBar;
   }
 
@@ -114,30 +118,28 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     return repository.getUniqueFieldName();
   }
 
-  private JButton createClearButton(JTextField textField, JCheckBox checkBox) {
+  private JButton createClearButton() {
     JButton button = new JButton("Clear");
     
     button.addActionListener(e -> {
-      textField.setText("");
-      checkBox.setSelected(true);
-      searchData(searchParametersFromFields(textField, checkBox));
+      uniqueFieldSearchField.setText("");
+      visibilitySearchField.setSelected(true);
+      searchData();
     });
     
     return button;
   }
   
-  private JButton createSearchButton(JTextField textField, JCheckBox checkBox) {
+  private JButton createSearchButton() {
     JButton button = new JButton("Search");
     
-    button.addActionListener(e -> searchData(
-        searchParametersFromFields(textField, checkBox)
-    ));
+    button.addActionListener(e -> searchData());
     
     return button;
   }
   
-  private SearchParameters<O> searchParametersFromFields(JTextField textField, JCheckBox checkBox) {
-    String searchText = textField.getText();
+  private SearchParameters<O> searchParametersFromFields() {
+    String searchText = uniqueFieldSearchField.getText();
     List<String> searchTextTerms;
     if (StringUtils.isBlank(searchText) || searchText.equals(String.format(
         "Search by %s", getHumanReadableUniqueFieldName()
@@ -149,7 +151,7 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     
     return getSearchParameters(
         searchTextTerms,
-        Collections.singletonList(checkBox.isSelected())
+        Collections.singletonList(visibilitySearchField.isSelected())
     );
   }
   
@@ -174,11 +176,11 @@ public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel 
     }
   }
   
-  private void searchData(SearchParameters<O> searchParameters) {
+  protected void searchData() {
     cleanUpTable();
 
     try {
-      repository.search(searchParameters).forEach(
+      repository.search(searchParametersFromFields()).forEach(
           o -> tableModel.addRow(objectConversion.apply(o))
       );
     } catch (DatastoreException e) {
