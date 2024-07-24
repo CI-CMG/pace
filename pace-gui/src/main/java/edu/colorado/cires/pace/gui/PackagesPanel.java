@@ -53,6 +53,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private static final JProgressBar progressBar = new JProgressBar();
   private final ObjectMapper objectMapper;
   private static final JButton actionButton = new JButton();
+  private static final JButton toggleAllButton = new JButton("Toggle All");
   
   private final PersonRepository personRepository;
   private final OrganizationRepository organizationRepository;
@@ -87,7 +88,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     JButton translateButton = new JButton("Translate");
     buttonPanel.add(translateButton, configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
     buttonPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
-    buttonPanel.add(actionButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
+    buttonPanel.add(toggleAllButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
+    buttonPanel.add(actionButton, configureLayout((c) -> { c.gridx = 3; c.gridy = 0; c.weightx = 0; }));
     panel.add(buttonPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     
     translateButton.addActionListener((e) -> {
@@ -117,6 +119,25 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     }
     
     processPackages(packages);
+  }
+
+  private void toggleSelectedPackages() {
+    updateBooleanTableValue(6);
+  }
+
+  private void togglePackageVisibilities() {
+    updateBooleanTableValue(7);
+  }
+  
+  private void updateBooleanTableValue(int columnIndex) {
+    Boolean newValue = null;
+    for (int i = 0; i < tableModel.getRowCount(); i++) {
+      Boolean selected = (Boolean) tableModel.getValueAt(i, columnIndex);
+      if (newValue == null) {
+        newValue = !selected;
+      }
+      tableModel.setValueAt(newValue, i, columnIndex);
+    }
   }
 
   private void saveRowVisibility() {
@@ -186,6 +207,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
         actionButton.setEnabled(false);
+        toggleAllButton.setEnabled(false);
         
         new Thread(() -> {
           GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
@@ -213,6 +235,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
             progressIndicator.indicateStatus(0);
             resetTable();
             actionButton.setEnabled(true);
+            toggleAllButton.setEnabled(true);
             searchData();
           }
 
@@ -249,7 +272,6 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     group.add(viewModeButton);
     group.add(packageModeButton);
     group.add(editVisibilityModeButton);
-    toolBar.add(new JLabel("Mode:\t"));
     toolBar.add(viewModeButton);
     toolBar.add(packageModeButton);
     toolBar.add(editVisibilityModeButton);
@@ -258,6 +280,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
   private void setViewMode(Boolean enabled) {
     actionButton.setVisible(!enabled);
+    toggleAllButton.setVisible(!enabled);
     
     resetTable();
   }
@@ -274,6 +297,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       getTableColumnModel().addColumn(
           getHiddenColumnByHeaderValue("Select for Packaging")
       );
+
+      Arrays.stream(toggleAllButton.getActionListeners()).forEach(
+          toggleAllButton::removeActionListener
+      );
+      
+      toggleAllButton.addActionListener(e -> toggleSelectedPackages());
     } else {
       TableColumn tableColumn = getHiddenColumnByHeaderValue("Select for Packaging");
       if (tableColumn != null) {
@@ -283,6 +312,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     resetTable();
   }
+
   private void setEditVisibilityModel(Boolean enabled) {
     if (enabled) {
       Arrays.stream(actionButton.getActionListeners()).forEach(
@@ -295,6 +325,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       getTableColumnModel().addColumn(
           getHiddenColumnByHeaderValue("Visible")
       );
+
+      Arrays.stream(toggleAllButton.getActionListeners()).forEach(
+          toggleAllButton::removeActionListener
+      );
+      
+      toggleAllButton.addActionListener(e -> togglePackageVisibilities());
     } else {
       TableColumn tableColumn = getHiddenColumnByHeaderValue("Visible");
       if (tableColumn != null) {
@@ -304,7 +340,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     resetTable();
   }
-  
+
   private JCheckBox createModeToggleCheckbox(String text, Consumer<Boolean> itemListener) {
     JCheckBox checkBox = new JCheckBox(text);
     checkBox.addItemListener(e -> itemListener.accept(checkBox.isSelected()));
