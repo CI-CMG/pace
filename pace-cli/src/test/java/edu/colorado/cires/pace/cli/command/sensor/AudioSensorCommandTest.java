@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import java.util.UUID;
 
 class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorTranslator> {
@@ -51,11 +50,6 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
         .sensorUUID("UUID")
         .sensorName("sensorName")
         .description("description")
-        .positionTranslator(PositionTranslator.builder()
-            .x("position (X)")
-            .y("position (Y)")
-            .z("position (Z)")
-            .build())
         .hydrophoneId("hydrophoneId")
         .preampId("preampId")
         .build();

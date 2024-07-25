@@ -20,7 +20,6 @@ public class OtherSensorTranslator extends SensorTranslator {
         .name(sensorTranslator.getName())
         .sensorUUID(sensorTranslator.getSensorUUID())
         .sensorName(sensorTranslator.getSensorName())
-        .description(sensorTranslator.getDescription())
-        .positionTranslator(sensorTranslator.getPositionTranslator());
+        .description(sensorTranslator.getDescription());
   }
 }

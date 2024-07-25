@@ -48,15 +48,13 @@ public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected AudioSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
-      PositionTranslatorForm positionTranslatorForm) {
+  protected AudioSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField) {
     return AudioSensorTranslator.builder()
         .uuid(translatorUUID)
         .name(translatorName)
         .sensorUUID((String) uuidField.getSelectedItem())
         .sensorName((String) nameField.getSelectedItem())
         .description((String) descriptionField.getSelectedItem())
-        .positionTranslator(positionTranslatorForm.toTranslator())
         .hydrophoneId((String) hydrophoneIdField.getSelectedItem())
         .preampId((String) preampIdField.getSelectedItem())
         .build();

@@ -13,7 +13,6 @@ public class SensorTranslator extends Translator {
   private String sensorUUID;
   private String sensorName;
   private String description;
-  private PositionTranslator positionTranslator;
 
   @Override
   public ObjectWithUniqueField setUuid(UUID uuid) {

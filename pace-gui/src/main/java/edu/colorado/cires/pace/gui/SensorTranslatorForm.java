@@ -1,13 +1,11 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
-import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
 import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
 import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -29,8 +27,6 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
   private final JComboBox<String> descriptionField = new JComboBox<>();
-  
-  private final PositionTranslatorForm positionTranslatorForm;
   
   private final SensorTranslator initialTranslator;
   private JPanel formPanel;
@@ -55,7 +51,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
     @Override
     protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
-        JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
+        JComboBox<String> nameField, JComboBox<String> descriptionField) {
       return null;
     }
   };
@@ -68,7 +64,6 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     headerOptions = initialTranslator == null ? headerOptions : getInitialHeaderOptions(initialTranslator);
     setHeaderOptions(headerOptions);
     this.initialTranslator = initialTranslator;
-    this.positionTranslatorForm = new PositionTranslatorForm(initialTranslator == null ? null : initialTranslator.getPositionTranslator(), headerOptions);
     this.sensorTypeSpecificTranslatorForm = getSensorTypeSpecificTranslatorForm(initialTranslator, headerOptions);
     addUniqueFields();
     initializeUniqueFields(initialTranslator);
@@ -100,7 +95,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
         @Override
         protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
-            JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
+            JComboBox<String> nameField, JComboBox<String> descriptionField) {
           return null;
         }
       };
@@ -119,10 +114,6 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     formPanel.add(nameField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     formPanel.add(new JLabel("Description"), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     formPanel.add(descriptionField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
-    positionTranslatorForm.setBorder(createEtchedBorder("Position"));
-    formPanel.add(positionTranslatorForm, configureLayout(c -> { 
-      c.gridx = 0; c.gridy = 6; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
     formPanel.add(sensorTypeSpecificTranslatorForm, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 7; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -189,7 +180,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
         @Override
         protected SensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField,
-            JComboBox<String> nameField, JComboBox<String> descriptionField, PositionTranslatorForm positionTranslatorForm) {
+            JComboBox<String> nameField, JComboBox<String> descriptionField) {
           return null;
         }
       };
@@ -209,13 +200,6 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
         initialTranslator.getSensorName(),
         initialTranslator.getDescription()
     ));
-
-    PositionTranslator positionTranslator = initialTranslator.getPositionTranslator();
-    if (positionTranslator != null) {
-      options.add(positionTranslator.getX());
-      options.add(positionTranslator.getY());
-      options.add(positionTranslator.getZ());
-    }
 
     if (initialTranslator instanceof AudioSensorTranslator audioSensorTranslator) {
       options.add(audioSensorTranslator.getHydrophoneId());
@@ -241,7 +225,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   @Override
   protected SensorTranslator toTranslator(UUID uuid, String name) {
     return sensorTypeSpecificTranslatorForm.toTranslator(
-        uuid, name, this.uuidField, this.nameField, descriptionField, positionTranslatorForm
+        uuid, name, this.uuidField, this.nameField, descriptionField
     );
   }
 
@@ -250,9 +234,6 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     updateComboBoxModel(uuidField, options);
     updateComboBoxModel(nameField, options);
     updateComboBoxModel(descriptionField, options);
-    if (positionTranslatorForm != null) {
-      positionTranslatorForm.updateHeaderOptions(options);
-    }
     if (sensorTypeSpecificTranslatorForm != null) {
       sensorTypeSpecificTranslatorForm.updateHeaderOptions(options);
     }

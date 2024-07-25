@@ -9,7 +9,6 @@ import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
 import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
 import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
@@ -45,11 +44,6 @@ class SensorConverterTest {
             .sensorUUID("sensor-uuid")
             .sensorName("sensor-name")
             .description("sensor-description")
-            .positionTranslator(PositionTranslator.builder()
-                .x("sensor-x")
-                .y("sensor-y")
-                .z("sensor-z")
-                .build())
             .build(),
         Map.of(
             "sensor-uuid", new ValueWithColumnNumber(Optional.of(uuid.toString()), 1),
@@ -82,11 +76,6 @@ class SensorConverterTest {
             .description("sensor-description")
             .hydrophoneId("sensor-hydrophone-id")
             .preampId("sensor-preamp-id")
-            .positionTranslator(PositionTranslator.builder()
-                .x("sensor-x")
-                .y("sensor-y")
-                .z("sensor-z")
-                .build())
             .build(),
         Map.of(
             "sensor-uuid", new ValueWithColumnNumber(Optional.of(uuid.toString()), 1),
@@ -123,11 +112,6 @@ class SensorConverterTest {
             .description("sensor-description")
             .sensorType("sensor-type")
             .properties("sensor-properties")
-            .positionTranslator(PositionTranslator.builder()
-                .x("sensor-x")
-                .y("sensor-y")
-                .z("sensor-z")
-                .build())
             .build(),
         Map.of(
             "sensor-uuid", new ValueWithColumnNumber(Optional.of(uuid.toString()), 1),

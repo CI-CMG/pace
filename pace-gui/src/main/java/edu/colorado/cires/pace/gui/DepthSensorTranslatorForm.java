@@ -28,15 +28,13 @@ public class DepthSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected DepthSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
-      PositionTranslatorForm positionTranslatorForm) {
+  protected DepthSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField) {
     return DepthSensorTranslator.builder()
         .uuid(translatorUUID)
         .name(translatorName)
         .sensorUUID((String) uuidField.getSelectedItem())
         .sensorName((String) nameField.getSelectedItem())
         .description((String) descriptionField.getSelectedItem())
-        .positionTranslator(positionTranslatorForm.toTranslator())
         .build();
   }
 }

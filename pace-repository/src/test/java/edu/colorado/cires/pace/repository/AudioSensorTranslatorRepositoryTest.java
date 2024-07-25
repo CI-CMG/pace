@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.Translator;
 
 public class AudioSensorTranslatorRepositoryTest extends TranslatorRepositoryTest {
@@ -15,11 +14,6 @@ public class AudioSensorTranslatorRepositoryTest extends TranslatorRepositoryTes
         .sensorUUID(String.format("uuid-%s", suffix))
         .sensorName(String.format("name-%s", suffix))
         .description(String.format("description-%s", suffix))
-        .positionTranslator(PositionTranslator.builder()
-            .x(String.format("x-%s", suffix))
-            .y(String.format("y-%s", suffix))
-            .z(String.format("z-%s", suffix))
-            .build())
         .preampId(String.format("preamp-id-%s", suffix))
         .hydrophoneId(String.format("hydrophone-id-%s", suffix))
         .build();
@@ -46,11 +40,5 @@ public class AudioSensorTranslatorRepositoryTest extends TranslatorRepositoryTes
     assertEquals(expectedSensorTranslator.getDescription(), actualSensorTranslator.getDescription());
     assertEquals(expectedSensorTranslator.getHydrophoneId(), actualSensorTranslator.getHydrophoneId());
     assertEquals(expectedSensorTranslator.getPreampId(), actualSensorTranslator.getPreampId());
-    
-    PositionTranslator expectedPositionTranslator = expectedSensorTranslator.getPositionTranslator();
-    PositionTranslator actualPositionTranslator = actualSensorTranslator.getPositionTranslator();
-    assertEquals(expectedPositionTranslator.getX(), actualPositionTranslator.getX());
-    assertEquals(expectedPositionTranslator.getY(), actualPositionTranslator.getY());
-    assertEquals(expectedPositionTranslator.getZ(), actualPositionTranslator.getZ());
   }
 }
