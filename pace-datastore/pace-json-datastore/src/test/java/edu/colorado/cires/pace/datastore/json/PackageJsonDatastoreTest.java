@@ -11,6 +11,8 @@ import edu.colorado.cires.pace.data.object.DutyCycle;
 import edu.colorado.cires.pace.data.object.Gain;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
@@ -122,10 +124,32 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            "audio-sensor", "depth-sensor"
+            PackageSensor.builder()
+                .name("audio-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(),
+            PackageSensor.builder()
+                .name("depth-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build()
         )).channels(List.of(
             Channel.builder()
-                .sensor("audio-sensor")
+                .sensor(PackageSensor.builder()
+                    .name("audio-sensor")
+                    .position(Position.builder()
+                        .x(1f)
+                        .y(2f)
+                        .z(3f)
+                        .build())
+                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(

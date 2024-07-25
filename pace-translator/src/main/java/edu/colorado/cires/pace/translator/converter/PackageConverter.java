@@ -25,6 +25,8 @@ import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
 import edu.colorado.cires.pace.data.object.SoundClipsPackage;
@@ -43,7 +45,9 @@ import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
 import edu.colorado.cires.pace.data.translator.MarineInstrumentLocationTranslator;
 import edu.colorado.cires.pace.data.translator.MobileMarineLocationTranslator;
 import edu.colorado.cires.pace.data.translator.MultipointStationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import edu.colorado.cires.pace.data.translator.SoundClipsPackageTranslator;
@@ -135,9 +139,31 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentTime(localDateTimeFromMap(properties, cpodPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, cpodPackageTranslator.getRecoveryTime(), row, runtimeException))
         .comments(stringFromMap(properties, cpodPackageTranslator.getComments()))
-        .sensors(stringListFromMap(properties, cpodPackageTranslator.getSensors()))
+        .sensors(packageSensorsFromMap(properties, cpodPackageTranslator.getSensors(), row, runtimeException))
         .channels(channelsFromMap(cpodPackageTranslator.getChannelTranslators(), properties, row, runtimeException))
         .locationDetail(locationDetailFromMap(cpodPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException))
+        .build();
+  }
+
+  private static List<PackageSensor> packageSensorsFromMap(Map<String, ValueWithColumnNumber> properties, List<PackageSensorTranslator> sensors,
+      int row, RuntimeException runtimeException) {
+    return sensors.stream()
+        .map(translator -> packageSensorFromMap(properties, translator, row, runtimeException))
+        .toList();
+  }
+  
+  private static PackageSensor packageSensorFromMap(Map<String, ValueWithColumnNumber> properties, PackageSensorTranslator translator, int row, RuntimeException runtimeException) {
+    return PackageSensor.builder()
+        .name(stringFromMap(properties, translator.getName()))
+        .position(positionFromMap(translator.getPosition(), properties, row, runtimeException))
+        .build();
+  }
+
+  private static Position positionFromMap(PositionTranslator positionTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
+    return Position.builder()
+        .x(floatFromMap(properties, positionTranslator.getX(), row, runtimeException))
+        .y(floatFromMap(properties, positionTranslator.getY(), row, runtimeException))
+        .z(floatFromMap(properties, positionTranslator.getZ(), row, runtimeException))
         .build();
   }
 
@@ -186,7 +212,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentTime(localDateTimeFromMap(properties, audioPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, audioPackageTranslator.getRecoveryTime(), row, runtimeException))
         .comments(stringFromMap(properties, audioPackageTranslator.getComments()))
-        .sensors(stringListFromMap(properties, audioPackageTranslator.getSensors()))
+        .sensors(packageSensorsFromMap(properties, audioPackageTranslator.getSensors(), row, runtimeException))
         .channels(channelsFromMap(audioPackageTranslator.getChannelTranslators(), properties, row, runtimeException))
         .locationDetail(locationDetailFromMap(
             audioPackageTranslator.getLocationDetailTranslator(), properties, row, runtimeException
@@ -482,7 +508,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
   private static Channel channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     return Channel.builder()
-        .sensor(stringFromMap(properties, channelTranslator.getSensor()))
+        .sensor(packageSensorFromMap(properties, channelTranslator.getSensor(), row, runtimeException))
         .startTime(localDateTimeFromMap(properties, channelTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, channelTranslator.getEndTime(), row, runtimeException))
         .sampleRates(sampleRatesFromMap(channelTranslator.getSampleRates(), properties, row, runtimeException))

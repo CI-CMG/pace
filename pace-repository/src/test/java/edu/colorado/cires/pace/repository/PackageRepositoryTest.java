@@ -23,8 +23,10 @@ import edu.colorado.cires.pace.data.object.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
@@ -349,9 +351,9 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     insertObjectsIntoMap(
         sensors,
         (List<Sensor>) audioDataPackage.getSensors().stream()
-            .map(name -> DepthSensor.builder()
+            .map(packageSensor -> DepthSensor.builder()
                 .uuid(UUID.randomUUID())
-                .name(name)
+                .name(packageSensor.getName())
                 .build())
             .toList()
     );
@@ -360,9 +362,9 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         sensors,
         (List<Sensor>) audioDataPackage.getChannels().stream()
             .map(Channel::getSensor)
-            .map(name -> DepthSensor.builder()
+            .map(packageSensor -> DepthSensor.builder()
                 .uuid(UUID.randomUUID())
-                .name(name)
+                .name(packageSensor.getName())
                 .build())
             .toList()
     );
@@ -569,10 +571,32 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            "audio-sensor", "depth-sensor"
+            PackageSensor.builder()
+                .name("audio-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(), 
+            PackageSensor.builder()
+                .name("depth-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build()
         )).channels(List.of(
             Channel.builder()
-                .sensor("audio-sensor")
+                .sensor(PackageSensor.builder()
+                    .name("audio-sensor")
+                    .position(Position.builder()
+                        .x(1f)
+                        .y(2f)
+                        .z(3f)
+                        .build())
+                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(
@@ -930,10 +954,32 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            "audio-sensor", "depth-sensor"
+            PackageSensor.builder()
+                .name("audio-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(),
+            PackageSensor.builder()
+                .name("depth-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build()
         )).channels(List.of(
             Channel.builder()
-                .sensor("audio-sensor")
+                .sensor(PackageSensor.builder()
+                    .name("audio-sensor")
+                    .position(Position.builder()
+                        .x(1f)
+                        .y(2f)
+                        .z(3f)
+                        .build())
+                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(

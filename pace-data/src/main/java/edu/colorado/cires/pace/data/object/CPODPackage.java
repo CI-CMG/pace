@@ -44,7 +44,7 @@ public class CPODPackage extends AudioDataPackage {
   }
 
   @Override
-  public CPODPackage updateSensors(List<String> sensors) {
+  public CPODPackage updateSensors(List<PackageSensor> sensors) {
     return toBuilder().sensors(sensors).build();
   }
 

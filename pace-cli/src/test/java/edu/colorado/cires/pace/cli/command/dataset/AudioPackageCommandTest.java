@@ -15,8 +15,10 @@ import edu.colorado.cires.pace.data.object.Instrument;
 import edu.colorado.cires.pace.data.object.LocationDetail;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.PackageSensor;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
@@ -30,13 +32,16 @@ import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
 import edu.colorado.cires.pace.data.translator.GainTranslator;
 import edu.colorado.cires.pace.data.translator.MarineInstrumentLocationTranslator;
+import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,6 +134,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         "recoveryTime",
         "comments",
         "sensors",
+        "sensors x",
+        "sensors y",
+        "sensors z",
         // data quality
         "qualityAnalyst",
         "qualityAnalysisObjectives",
@@ -143,6 +151,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         "qualityComments 1",
         // channel 1
         "channel sensor 1",
+        "channel sensor 1 x",
+        "channel sensor 1 y",
+        "channel sensor 1 z",
         "channel startTime 1",
         "channel endTime 1",
         // channel 1 sample rate 1
@@ -178,7 +189,10 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       object.getDeploymentTime().toString(),
       object.getRecoveryTime().toString(),
       object.getComments(),
-        String.join(";", object.getSensors()),
+      object.getSensors().get(0).getName(),
+      object.getSensors().get(0).getPosition().getX().toString(),
+      object.getSensors().get(0).getPosition().getY().toString(),
+      object.getSensors().get(0).getPosition().getZ().toString(),
       object.getQualityAnalyst(), 
       object.getQualityAnalysisObjectives(),
       object.getQualityAnalysisMethod(),
@@ -189,7 +203,10 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       qualityEntry.getMaxFrequency().toString(),
       qualityEntry.getQualityLevel().getName(),
       qualityEntry.getComments(),
-      channel.getSensor(),
+      channel.getSensor().getName(),
+        channel.getSensor().getPosition().getX().toString(),
+        channel.getSensor().getPosition().getY().toString(),
+        channel.getSensor().getPosition().getZ().toString(),
       channel.getStartTime().toString(),
       channel.getEndTime().toString(),
       sampleRate.getStartTime().toString(),
@@ -257,7 +274,14 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
             .timeZone("timeZone")
             .build())
         .comments("comments")
-        .sensors("sensors")
+        .sensors(Collections.singletonList(PackageSensorTranslator.builder()
+            .name("sensors")
+            .position(PositionTranslator.builder()
+                .x("sensors x")
+                .y("sensors y")
+                .z("sensors z")
+                .build())
+            .build()))
         .qualityControlDetailTranslator(QualityControlDetailTranslator.builder()
             .qualityAnalyst("qualityAnalyst")
             .qualityAnalysisObjectives("qualityAnalysisObjectives")
@@ -280,7 +304,14 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
             .build())
         .channelTranslators(List.of(
             ChannelTranslator.builder()
-                .sensor("channel sensor 1")
+                .sensor(PackageSensorTranslator.builder()
+                    .name("channel sensor 1")
+                    .position(PositionTranslator.builder()
+                        .x("channel sensor 1 x")
+                        .y("channel sensor 1 y")
+                        .z("channel sensor 1 z")
+                        .build())
+                    .build())
                 .startTime(DefaultTimeTranslator.builder()
                     .timeZone("timeZone")
                     .time("channel startTime 1")
@@ -516,11 +547,25 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .deploymentTime(LocalDateTime.of(2019, 12, 31, 12, 1, 1))
         .recoveryTime(LocalDateTime.of(2019, 12, 31, 22, 59, 1))
         .comments("deployment comments")
-        .sensors(List.of(sensor1.getName()))
+        .sensors(List.of(PackageSensor.builder()
+                .name(sensor1.getName())
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+            .build()))
         .channels(List.of(Channel.builder()
                 .startTime(LocalDateTime.of(2019, 12, 31, 12, 5, 1))
                 .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
-                .sensor(sensor2.getName())
+                .sensor(PackageSensor.builder()
+                    .name(sensor2.getName())
+                    .position(Position.builder()
+                        .x(1f)
+                        .y(2f)
+                        .z(3f)
+                        .build())
+                    .build())
                 .sampleRates(List.of(SampleRate.builder()
                         .startTime(LocalDateTime.of(2019, 12, 31, 13, 15, 1))
                         .endTime(LocalDateTime.of(2019, 12, 31, 14, 0, 1))

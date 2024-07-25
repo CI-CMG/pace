@@ -2,7 +2,6 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
-import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.ChannelTranslator;
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
@@ -13,15 +12,13 @@ import java.awt.GridBagLayout;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ChannelTranslatorForm extends JPanel {
-
-  private final JComboBox<String> sensorField = new JComboBox<>();
+  
   private final TimeTranslatorForm startTimeForm;
   private final TimeTranslatorForm endTimeForm;
+  private final PackageSensorTranslatorForm packageSensorTranslatorForm;
   private final JPanel sampleRateTranslatorsPanel = new JPanel(new GridBagLayout());
   private final JPanel dutyCycleTranslatorsPanel = new JPanel(new GridBagLayout());
   private final JPanel gainTranslatorsPanel = new JPanel(new GridBagLayout());
@@ -39,6 +36,7 @@ public class ChannelTranslatorForm extends JPanel {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
+    this.packageSensorTranslatorForm = new PackageSensorTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getSensor());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -46,14 +44,14 @@ public class ChannelTranslatorForm extends JPanel {
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Sensor"), configureLayout(c -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    add(sensorField, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
     startTimeForm.setBorder(createEtchedBorder("Start Time"));
-    add(startTimeForm, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    add(startTimeForm, configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     endTimeForm.setBorder(createEtchedBorder("End Time"));
-    add(endTimeForm, configureLayout(c -> { c.gridx = 1; c.gridy = 2; c.weightx = 1; }));
+    add(endTimeForm, configureLayout(c -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
+    packageSensorTranslatorForm.setBorder(createEtchedBorder("Sensor"));
+    add(packageSensorTranslatorForm, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 2; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
     JPanel sampleRatesPanel = new JPanel(new GridBagLayout());
     sampleRatesPanel.add(sampleRateTranslatorsPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
@@ -106,10 +104,7 @@ public class ChannelTranslatorForm extends JPanel {
   }
   
   private void initializeFields(String[] headerOptions, ChannelTranslator initialTranslator) {
-    updateComboBoxModel(sensorField, headerOptions);
-    
     if (initialTranslator != null) {
-      sensorField.setSelectedItem(initialTranslator.getSensor());
       initialTranslator.getSampleRates().forEach(
           t -> addSampleRate(headerOptions, t)
       );
@@ -183,7 +178,7 @@ public class ChannelTranslatorForm extends JPanel {
   }
   
   public void updateHeaderOptions(String[] headerOptions) {
-    updateComboBoxModel(sensorField, headerOptions);
+    packageSensorTranslatorForm.updateHeaderOptions(headerOptions);
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
     Arrays.stream(sampleRateTranslatorsPanel.getComponents())
@@ -216,7 +211,7 @@ public class ChannelTranslatorForm extends JPanel {
   
   public ChannelTranslator toTranslator() {
     return ChannelTranslator.builder()
-        .sensor((String) sensorField.getSelectedItem())
+        .sensor(packageSensorTranslatorForm.toTranslator())
         .startTime(startTimeForm.toTranslator())
         .endTime(endTimeForm.toTranslator())
         .sampleRates(Arrays.stream(sampleRateTranslatorsPanel.getComponents())

@@ -13,10 +13,10 @@ public class SensorsPanel extends MetadataPanel<Sensor, SensorTranslator> {
     super(
         "sensorsPanel",
         repository,
-        new String[]{"UUID", "Name", "Position", "Description", "Visible", "Object"},
+        new String[]{"UUID", "Name", "Description", "Visible", "Object"},
         (s) -> new Object[]{s.getUuid(), s.getName(), s.getDescription(), s.isVisible(), s},
         Sensor.class,
-        (o) -> (Sensor) o[5],
+        (o) -> (Sensor) o[4],
         SensorForm::create,
         translatorRepository,
         new SensorConverter(),

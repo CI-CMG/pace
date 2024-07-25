@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.repository;
 import edu.colorado.cires.pace.data.object.AudioDataPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.List;
@@ -16,10 +17,10 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Sensor object) {
     if (dependency instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().contains(object.getName()) ||
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList().contains(object.getName()) ||
           audioDataPackage.getChannels().stream()
               .map(Channel::getSensor)
-              .anyMatch(s -> s.equals(object.getName()));
+              .anyMatch(s -> s.getName().equals(object.getName()));
     }
     
     return false;
@@ -28,10 +29,16 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
   @Override
   protected Package applyObjectToDependentObjects(Sensor original, Sensor updated, Package dependency) {
     AudioDataPackage audioDataPackage = (AudioDataPackage) dependency;
-    List<String> sensors = replaceStringInList(audioDataPackage.getSensors(), original.getName(), updated.getName());
+    List<PackageSensor> sensors = audioDataPackage.getSensors().stream()
+        .map(s -> s.toBuilder()
+            .name(replaceString(s.getName(), original.getName(), updated.getName()))
+            .build())
+        .toList();
     List<Channel> channels = audioDataPackage.getChannels().stream()
         .map(c -> c.toBuilder()
-            .sensor(replaceString(c.getSensor(), original.getName(), updated.getName()))
+            .sensor(c.getSensor().toBuilder()
+                .name(replaceString(c.getSensor().getName(), original.getName(), updated.getName()))
+                .build())
             .build())
         .toList();
 

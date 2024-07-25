@@ -10,7 +10,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class ChannelTranslator {
   
-  private final String sensor;
+  private final PackageSensorTranslator sensor;
   private final TimeTranslator startTime;
   private final TimeTranslator endTime;
   private final List<SampleRateTranslator> sampleRates;

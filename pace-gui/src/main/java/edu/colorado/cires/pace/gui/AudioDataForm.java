@@ -5,9 +5,13 @@ import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.translator.AudioDataPackageTranslator;
+import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.translator.TimeTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,7 +23,9 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
   private final JComboBox<String> frequencyRangeField = new JComboBox<>();
   private final JComboBox<String> gainField = new JComboBox<>();
   private final JComboBox<String> commentsField = new JComboBox<>();
-  private final JComboBox<String> sensorsField = new JComboBox<>();
+  
+  private final JPanel sensorTranslatorsPanel = new JPanel(new GridBagLayout());
+  private final JButton addSensorButton = new JButton("Add Sensor");
   
   private final TimeTranslatorForm deploymentTimeForm;
   private final TimeTranslatorForm recoveryTimeForm;
@@ -64,22 +70,28 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     add(commentsField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Sensors"), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 10; c.weightx = 1;
-    }));
-    add(sensorsField, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
     deploymentTimeForm.setBorder(createEtchedBorder("Deployment Time"));
     add(deploymentTimeForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 12; c.weightx = 1;
+      c.gridx = 0; c.gridy = 10; c.weightx = 1;
     }));
     recoveryTimeForm.setBorder(createEtchedBorder("Recovery Time"));
     add(recoveryTimeForm, configureLayout(c -> {
-      c.gridx = 1; c.gridy = 12; c.weightx = 1;
+      c.gridx = 1; c.gridy = 10; c.weightx = 1;
+    }));
+    
+    JPanel sensorsPanel = new JPanel(new GridBagLayout());
+    sensorsPanel.add(sensorTranslatorsPanel, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    sensorsPanel.add(addSensorButton, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    sensorsPanel.setBorder(createEtchedBorder("Sensors"));
+    add(sensorsPanel, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(new JPanel(), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 13; c.weighty = 1;
+      c.gridx = 0; c.gridy = 12; c.weighty = 1;
     }));
   }
   
@@ -89,7 +101,6 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     updateComboBoxModel(frequencyRangeField, headerOptions);
     updateComboBoxModel(gainField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
-    updateComboBoxModel(sensorsField, headerOptions);
     
     if (initialTranslator != null) {
       instrumentIdField.setSelectedItem(initialTranslator.getInstrumentId());
@@ -97,17 +108,47 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
       frequencyRangeField.setSelectedItem(initialTranslator.getFrequencyRange());
       gainField.setSelectedItem(initialTranslator.getGain());
       commentsField.setSelectedItem(initialTranslator.getComments());
-      sensorsField.setSelectedItem(initialTranslator.getSensors());
+      initialTranslator.getSensors().forEach(
+          t -> addSensor(headerOptions, t)
+      );
     }
   }
-  
+
+  private void addSensor(String[] headerOptions, PackageSensorTranslator translator) {
+    PackageSensorTranslatorForm form = new PackageSensorTranslatorForm(headerOptions, translator, f -> {
+      sensorTranslatorsPanel.remove(f.getParent());
+      revalidate();
+    });
+    
+    CollapsiblePanel<PackageSensorTranslatorForm> collapsiblePanel = new CollapsiblePanel<>(
+        String.format(
+            "Sensor %s", sensorTranslatorsPanel.getComponentCount() + 1
+        ),
+        form
+    );
+    collapsiblePanel.getContentPanel().setVisible(false);
+
+    sensorTranslatorsPanel.add(collapsiblePanel, configureLayout(c -> {
+      c.gridx = 0; c.gridy = sensorTranslatorsPanel.getComponentCount(); c.weightx = 1;
+    }));
+    revalidate();
+  }
+
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(instrumentIdField, headerOptions);
     updateComboBoxModel(hydrophoneSensitivityField, headerOptions);
     updateComboBoxModel(frequencyRangeField, headerOptions);
     updateComboBoxModel(gainField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
-    updateComboBoxModel(sensorsField, headerOptions);
+
+    Arrays.stream(sensorTranslatorsPanel.getComponents())
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (PackageSensorTranslatorForm) p.getContentPanel())
+        .forEach(p -> p.updateHeaderOptions(headerOptions));
+    Arrays.stream(addSensorButton.getActionListeners())
+            .forEach(addSensorButton::removeActionListener);
+    addSensorButton.addActionListener(l -> addSensor(headerOptions, null));
 
     deploymentTimeForm.updateHeaderOptions(headerOptions);
     recoveryTimeForm.updateHeaderOptions(headerOptions);
@@ -133,8 +174,13 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     return (String) commentsField.getSelectedItem();
   }
 
-  public String getSensorsValue() {
-    return (String) sensorsField.getSelectedItem();
+  public List<PackageSensorTranslator> getSensorsValue() {
+    return Arrays.stream(sensorTranslatorsPanel.getComponents())
+        .filter(p -> p instanceof CollapsiblePanel<?>)
+        .map(p -> (CollapsiblePanel<?>) p)
+        .map(p -> (PackageSensorTranslatorForm) p.getContentPanel())
+        .map(PackageSensorTranslatorForm::toTranslator)
+        .toList();
   }
 
   public TimeTranslator getDeploymentTimeTranslator() {

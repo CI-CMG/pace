@@ -22,7 +22,9 @@ import edu.colorado.cires.pace.data.object.Gain;
 import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
 import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
@@ -301,10 +303,32 @@ class PackagerProcessorTest {
         .recoveryTime(LocalDateTime.now().minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
-            "audio-sensor", "depth-sensor"
+            PackageSensor.builder()
+                .name("audio-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(),
+            PackageSensor.builder()
+                .name("depth-sensor")
+                .position(Position.builder()
+                    .x(4f)
+                    .y(5f)
+                    .z(6f)
+                    .build())
+                .build()
         )).channels(List.of(
             Channel.builder()
-                .sensor("audioSensor")
+                .sensor(PackageSensor.builder()
+                    .name("audioSensor")
+                    .position(Position.builder()
+                        .x(7f)
+                        .y(8f)
+                        .z(9f)
+                        .build())
+                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(

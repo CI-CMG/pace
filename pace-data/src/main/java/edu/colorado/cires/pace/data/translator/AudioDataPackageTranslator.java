@@ -22,7 +22,7 @@ public abstract class AudioDataPackageTranslator extends PackageTranslator {
   private final TimeTranslator deploymentTime;
   private final TimeTranslator recoveryTime;
   private final String comments;
-  private final String sensors;
+  private final List<PackageSensorTranslator> sensors;
   @Builder.Default
   private final List<ChannelTranslator> channelTranslators = new ArrayList<>(0);
   

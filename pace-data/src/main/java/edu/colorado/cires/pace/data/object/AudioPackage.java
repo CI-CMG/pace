@@ -59,7 +59,7 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public AudioPackage updateSensors(List<String> sensors) {
+  public AudioPackage updateSensors(List<PackageSensor> sensors) {
     return toBuilder().sensors(sensors).build();
   }
 

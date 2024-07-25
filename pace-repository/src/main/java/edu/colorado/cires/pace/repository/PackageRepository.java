@@ -12,6 +12,7 @@ import edu.colorado.cires.pace.data.object.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
 import edu.colorado.cires.pace.data.object.Project;
@@ -91,10 +92,10 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     if (object instanceof DetectionsPackage detectionsPackage) {
       checkDependency(detectionsPackage.getSoundSource(), detectionTypeDatastore, "soundSource", constraintViolations);
     } else if (object instanceof AudioDataPackage audioDataPackage) {
-      checkDependencies(audioDataPackage.getSensors(), sensorDatastore, "sensors", constraintViolations);
+      checkDependencies(audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList(), sensorDatastore, "sensors", constraintViolations);
       List<Channel> channels = audioDataPackage.getChannels();
       for (int i = 0; i < channels.size(); i++) {
-        checkDependency(channels.get(i).getSensor(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
+        checkDependency(channels.get(i).getSensor().getName(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
       }
     }
     

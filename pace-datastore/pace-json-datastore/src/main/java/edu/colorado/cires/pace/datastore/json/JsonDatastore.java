@@ -8,11 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
   private final Function<O, String> uniqueFieldGetter;
-  private final Map<String, O> objectsMap = new HashMap<>(0);
+  private final ConcurrentHashMap<String, O> objectsMap = new ConcurrentHashMap<>(0);
 
   private boolean initialized = false;
 

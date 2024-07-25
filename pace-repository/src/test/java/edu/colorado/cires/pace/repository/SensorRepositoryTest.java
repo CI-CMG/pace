@@ -4,6 +4,8 @@ import edu.colorado.cires.pace.data.object.AudioDataPackage;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.Channel;
 import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.PackageSensor;
+import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
 import java.util.Collections;
@@ -31,10 +33,19 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
     AudioPackage p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1));
     p = p.toBuilder()
         .uuid(UUID.randomUUID())
-        .sensors(Collections.singletonList(object.getName()))
+        .sensors(Collections.singletonList(PackageSensor.builder()
+                .name(object.getName())
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+            .build()))
         .channels(p.getChannels().stream()
             .map(c -> c.toBuilder()
-                .sensor(object.getName())
+                .sensor(c.getSensor().toBuilder()
+                    .name(object.getName())
+                    .build())
                 .build())
             .toList())
         .build();
@@ -47,9 +58,10 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
     Package p = packages.get(dependentObjectUUID);
     
     if (p instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().contains(updated.getName()) &&
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList().contains(updated.getName()) &&
           audioDataPackage.getChannels().stream()
               .map(Channel::getSensor)
+              .map(PackageSensor::getName)
               .toList().contains(updated.getName());
     }
     

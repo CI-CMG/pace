@@ -17,6 +17,7 @@ import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
 import edu.colorado.cires.pace.data.translator.MarineInstrumentLocationTranslator;
 import edu.colorado.cires.pace.data.translator.MobileMarineLocationTranslator;
 import edu.colorado.cires.pace.data.translator.MultipointStationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
@@ -307,7 +308,12 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(audioDataPackageTranslator.getFrequencyRange());
     headerOptions.add(audioDataPackageTranslator.getGain());
     headerOptions.add(audioDataPackageTranslator.getComments());
-    headerOptions.add(audioDataPackageTranslator.getSensors());
+    for (PackageSensorTranslator sensor : audioDataPackageTranslator.getSensors()) {
+      headerOptions.add(sensor.getName());
+      headerOptions.add(sensor.getPosition().getX());
+      headerOptions.add(sensor.getPosition().getY());
+      headerOptions.add(sensor.getPosition().getZ());
+    }
     addTimeTranslatorFields(audioDataPackageTranslator.getDeploymentTime(), headerOptions);
     addTimeTranslatorFields(audioDataPackageTranslator.getRecoveryTime(), headerOptions);
     addQualityDetailFields(audioDataPackageTranslator.getQualityControlDetailTranslator(), headerOptions);
@@ -317,7 +323,10 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   }
 
   private void addChannelFields(ChannelTranslator channelTranslator, List<String> headerOptions) {
-    headerOptions.add(channelTranslator.getSensor());
+    headerOptions.add(channelTranslator.getSensor().getName());
+    headerOptions.add(channelTranslator.getSensor().getPosition().getX());
+    headerOptions.add(channelTranslator.getSensor().getPosition().getY());
+    headerOptions.add(channelTranslator.getSensor().getPosition().getZ());
     addTimeTranslatorFields(channelTranslator.getStartTime(), headerOptions);
     addTimeTranslatorFields(channelTranslator.getEndTime(), headerOptions);
     channelTranslator.getSampleRates().forEach(

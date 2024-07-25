@@ -9,7 +9,9 @@ import edu.colorado.cires.pace.data.translator.DateTranslator;
 import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
 import edu.colorado.cires.pace.data.translator.GainTranslator;
+import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
 import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
@@ -81,7 +83,14 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
             .time(String.format("recoveryTime-%s", suffix))
             .build())
         .comments(String.format("comments-%s", suffix))
-        .sensors(String.format("sensors-%s", suffix))
+        .sensors(Collections.singletonList(PackageSensorTranslator.builder()
+                .name(String.format("sensors-%s", suffix))
+                .position(PositionTranslator.builder()
+                    .x(String.format("sensors-%s x", suffix))
+                    .y(String.format("sensors-%s y", suffix))
+                    .z(String.format("sensors-%s z", suffix))
+                    .build())
+            .build()))
         .qualityControlDetailTranslator(QualityControlDetailTranslator.builder()
             .qualityAnalyst(String.format("quality-analyst-%s", suffix))
             .qualityAnalysisObjectives(String.format("quality-analysis-objectives-%s", suffix))
@@ -101,7 +110,14 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
                 .build()))
             .build())
         .channelTranslators(Collections.singletonList(ChannelTranslator.builder()
-                .sensor(String.format("channel-sensor-%s", suffix))
+                .sensor(PackageSensorTranslator.builder()
+                .name(String.format("channel-sensor-%s", suffix))
+                .position(PositionTranslator.builder()
+                    .x(String.format("channel-sensor-%s x", suffix))
+                    .y(String.format("channel-sensor-%s y", suffix))
+                    .z(String.format("channel-sensor-%s z", suffix))
+                    .build())
+                .build())
                 .startTime(DefaultTimeTranslator.builder()
                     .time(String.format("channel-start-time-%s", suffix))
                     .build())
@@ -178,8 +194,8 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());
-    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedPackageTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualPackageTranslator.getEndTime()).getTime());
+    assertEquals((expectedPackageTranslator.getStartTime()).getTime(), (actualPackageTranslator.getStartTime()).getTime());
+    assertEquals((expectedPackageTranslator.getEndTime()).getTime(), (actualPackageTranslator.getEndTime()).getTime());
     assertEquals(expectedPackageTranslator.getPreDeploymentCalibrationDate(), actualPackageTranslator.getPreDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getPostDeploymentCalibrationDate(), actualPackageTranslator.getPostDeploymentCalibrationDate());
     assertEquals(expectedPackageTranslator.getCalibrationDescription(), actualPackageTranslator.getCalibrationDescription());
@@ -195,8 +211,8 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
     assertEquals(expectedAudioTranslator.getHydrophoneSensitivity(), actualAudioTranslator.getHydrophoneSensitivity());
     assertEquals(expectedAudioTranslator.getFrequencyRange(), actualAudioTranslator.getFrequencyRange());
     assertEquals(expectedAudioTranslator.getGain(), actualAudioTranslator.getGain());
-    assertEquals(((DefaultTimeTranslator) expectedAudioTranslator.getDeploymentTime()).getTime(), ((DefaultTimeTranslator) actualAudioTranslator.getDeploymentTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedAudioTranslator.getRecoveryTime()).getTime(), ((DefaultTimeTranslator) actualAudioTranslator.getRecoveryTime()).getTime());
+    assertEquals((expectedAudioTranslator.getDeploymentTime()).getTime(), (actualAudioTranslator.getDeploymentTime()).getTime());
+    assertEquals((expectedAudioTranslator.getRecoveryTime()).getTime(), (actualAudioTranslator.getRecoveryTime()).getTime());
     assertEquals(expectedAudioTranslator.getComments(), actualAudioTranslator.getComments());
     assertEquals(expectedAudioTranslator.getSensors(), actualAudioTranslator.getSensors());
 
@@ -209,8 +225,8 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
 
     DataQualityEntryTranslator expectedEntryTranslator = expectedQCTranslator.getQualityEntryTranslators().get(0);
     DataQualityEntryTranslator actualEntryTranslator = actualQCTranslator.getQualityEntryTranslators().get(0);
-    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedEntryTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualEntryTranslator.getEndTime()).getTime());
+    assertEquals((expectedEntryTranslator.getStartTime()).getTime(), (actualEntryTranslator.getStartTime()).getTime());
+    assertEquals((expectedEntryTranslator.getEndTime()).getTime(), (actualEntryTranslator.getEndTime()).getTime());
     assertEquals(expectedEntryTranslator.getMinFrequency(), actualEntryTranslator.getMinFrequency());
     assertEquals(expectedEntryTranslator.getMaxFrequency(), actualEntryTranslator.getMaxFrequency());
     assertEquals(expectedEntryTranslator.getQualityLevel(), actualEntryTranslator.getQualityLevel());
@@ -219,27 +235,27 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
     ChannelTranslator expectedChannelTranslator = expectedAudioTranslator.getChannelTranslators().get(0);
     ChannelTranslator actualChannelTranslator = actualAudioTranslator.getChannelTranslators().get(0);
     assertEquals(expectedChannelTranslator.getSensor(), actualChannelTranslator.getSensor());
-    assertEquals(((DefaultTimeTranslator) expectedChannelTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualChannelTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedChannelTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualChannelTranslator.getEndTime()).getTime());
+    assertEquals((expectedChannelTranslator.getStartTime()).getTime(), (actualChannelTranslator.getStartTime()).getTime());
+    assertEquals((expectedChannelTranslator.getEndTime()).getTime(), (actualChannelTranslator.getEndTime()).getTime());
     
     SampleRateTranslator expectedSampleRateTranslator = expectedChannelTranslator.getSampleRates().get(0);
     SampleRateTranslator actualSampleRateTranslator = actualChannelTranslator.getSampleRates().get(0);
-    assertEquals(((DefaultTimeTranslator) expectedSampleRateTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualSampleRateTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedSampleRateTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualSampleRateTranslator.getEndTime()).getTime());
+    assertEquals((expectedSampleRateTranslator.getStartTime()).getTime(), (actualSampleRateTranslator.getStartTime()).getTime());
+    assertEquals((expectedSampleRateTranslator.getEndTime()).getTime(), (actualSampleRateTranslator.getEndTime()).getTime());
     assertEquals(expectedSampleRateTranslator.getSampleRate(), actualSampleRateTranslator.getSampleRate());
     assertEquals(expectedSampleRateTranslator.getSampleBits(), actualSampleRateTranslator.getSampleBits());
     
     DutyCycleTranslator expectedDutyCycleTranslator = expectedChannelTranslator.getDutyCycles().get(0);
     DutyCycleTranslator actualDutyCycleTranslator = actualChannelTranslator.getDutyCycles().get(0);
-    assertEquals(((DefaultTimeTranslator) expectedDutyCycleTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualDutyCycleTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedDutyCycleTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualDutyCycleTranslator.getEndTime()).getTime());
+    assertEquals((expectedDutyCycleTranslator.getStartTime()).getTime(), (actualDutyCycleTranslator.getStartTime()).getTime());
+    assertEquals((expectedDutyCycleTranslator.getEndTime()).getTime(), (actualDutyCycleTranslator.getEndTime()).getTime());
     assertEquals(expectedDutyCycleTranslator.getDuration(), actualDutyCycleTranslator.getDuration());
     assertEquals(expectedDutyCycleTranslator.getInterval(), actualDutyCycleTranslator.getInterval());
     
     GainTranslator expectedGainTranslator = expectedChannelTranslator.getGains().get(0);
     GainTranslator actualGainTranslator = actualChannelTranslator.getGains().get(0);
-    assertEquals(((DefaultTimeTranslator) expectedGainTranslator.getStartTime()).getTime(), ((DefaultTimeTranslator) actualGainTranslator.getStartTime()).getTime());
-    assertEquals(((DefaultTimeTranslator) expectedGainTranslator.getEndTime()).getTime(), ((DefaultTimeTranslator) actualGainTranslator.getEndTime()).getTime());
+    assertEquals((expectedGainTranslator.getStartTime()).getTime(), (actualGainTranslator.getStartTime()).getTime());
+    assertEquals((expectedGainTranslator.getEndTime()).getTime(), (actualGainTranslator.getEndTime()).getTime());
     assertEquals(expectedGainTranslator.getGain(), actualGainTranslator.getGain());
   }
 }

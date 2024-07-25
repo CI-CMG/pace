@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.data.object;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -19,9 +18,9 @@ public abstract class AudioDataPackage extends Package implements DataQuality {
   private final LocalDateTime recoveryTime;
   private final String comments;
   @NotEmpty @NotNull
-  private final List<@NotBlank String> sensors;
+  private final List<@NotNull @Valid PackageSensor> sensors;
   @NotEmpty @NotNull
-  private final List<@Valid Channel> channels;
+  private final List<@Valid @NotNull Channel> channels;
   private final Float hydrophoneSensitivity;
   private final Float frequencyRange;
   private final Float gain;
@@ -32,5 +31,5 @@ public abstract class AudioDataPackage extends Package implements DataQuality {
   private final List<DataQualityEntry> qualityEntries;
   
   public abstract AudioDataPackage updateChannels(List<Channel> channels);
-  public abstract AudioDataPackage updateSensors(List<String> sensors);
+  public abstract AudioDataPackage updateSensors(List<PackageSensor> sensors);
 }
