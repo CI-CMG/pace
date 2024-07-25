@@ -11,6 +11,8 @@ import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,7 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   
   
   public abstract T createObject(String uniqueField, boolean withUUID);
-  protected abstract String getRepositoryFileName();
+  protected abstract String getRepositoryDirectory();
   protected abstract String getCommandPrefix();
   protected abstract TypeReference<List<T>> getTypeReference();
   protected abstract Class<T> getClazz();
@@ -436,10 +438,16 @@ public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends C
   }
   
   private List<T> getWrittenObjects() throws IOException {
-    return objectMapper.readValue(
-        testPath.resolve("test-metadata").resolve(getRepositoryFileName()).toFile(),
-        getTypeReference()
-    );
+    return Files.walk(testPath.resolve("test-metadata").resolve(getRepositoryDirectory()))
+        .map(Path::toFile)
+        .filter(File::isFile)
+        .map(file -> {
+          try {
+            return objectMapper.readValue(file, getClazz());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }).toList();
   }
   
   private void assertObjects(T original, T created) throws IOException {

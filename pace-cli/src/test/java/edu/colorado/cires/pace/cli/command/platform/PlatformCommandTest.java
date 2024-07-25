@@ -21,8 +21,8 @@ public class PlatformCommandTest extends TranslateCommandTest<Platform, Platform
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "platforms.json";
+  protected String getRepositoryDirectory() {
+    return "platforms";
   }
 
   @Override

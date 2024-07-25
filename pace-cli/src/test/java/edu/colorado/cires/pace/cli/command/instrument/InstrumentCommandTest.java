@@ -51,8 +51,8 @@ public class InstrumentCommandTest extends TranslateCommandTest<Instrument, Inst
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "instruments.json";
+  protected String getRepositoryDirectory() {
+    return "instruments";
   }
 
   @Override

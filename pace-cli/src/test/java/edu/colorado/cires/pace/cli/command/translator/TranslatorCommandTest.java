@@ -10,8 +10,8 @@ import java.util.List;
 abstract class TranslatorCommandTest<T extends Translator> extends CRUDCommandTest<T> {
 
   @Override
-  protected String getRepositoryFileName() {
-    return "translators.json";
+  protected String getRepositoryDirectory() {
+    return "translators";
   }
 
   @Override

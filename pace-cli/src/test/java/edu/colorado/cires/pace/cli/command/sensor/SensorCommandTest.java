@@ -23,8 +23,8 @@ abstract class SensorCommandTest<S extends Sensor, T extends SensorTranslator> e
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "sensors.json";
+  protected String getRepositoryDirectory() {
+    return "sensors";
   }
 
   @Override

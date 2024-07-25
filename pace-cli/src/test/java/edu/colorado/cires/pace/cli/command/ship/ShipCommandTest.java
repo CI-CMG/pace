@@ -22,8 +22,8 @@ class ShipCommandTest extends TranslateCommandTest<Ship, ShipTranslator> {
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "ships.json";
+  protected String getRepositoryDirectory() {
+    return "ships";
   }
 
   @Override

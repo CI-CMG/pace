@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -30,8 +29,7 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
   protected abstract JsonDatastore<O> createDatastore(Path storagePath, ObjectMapper objectMapper) throws IOException;
   protected abstract String getExpectedUniqueFieldName();
   private JsonDatastore<O> datastore;
-  protected abstract TypeReference<List<O>> getTypeReference();
-  
+
   @BeforeEach
   void beforeEach() throws IOException {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
@@ -166,12 +164,13 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     try (Stream<Path> paths = Files.walk(TEST_PATH)) {
       paths.map(Path::toFile)
           .filter(File::isFile)
+          .filter(f -> f.toString().endsWith(String.format(
+              "%s.json", actual.getUuid()
+          )))
           .findFirst().ifPresentOrElse(
               (f) -> {
                 try {
-                  O actualObject = OBJECT_MAPPER.readValue(f, getTypeReference()).stream()
-                      .filter(o -> o.getUuid().equals(actual.getUuid()))
-                      .findFirst().orElseThrow();
+                  O actualObject = OBJECT_MAPPER.readValue(f, getClazz());
                   assertObjectsEqual(
                       expected,
                       actualObject

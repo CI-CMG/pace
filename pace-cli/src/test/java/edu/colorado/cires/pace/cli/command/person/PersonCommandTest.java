@@ -31,8 +31,8 @@ public class PersonCommandTest extends ObjectWithEditableUUIDCommandTest<Person,
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "people.json";
+  protected String getRepositoryDirectory() {
+    return "people";
   }
 
   @Override

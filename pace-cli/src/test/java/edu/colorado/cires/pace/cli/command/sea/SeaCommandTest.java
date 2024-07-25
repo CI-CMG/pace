@@ -21,8 +21,8 @@ public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "seas.json";
+  protected String getRepositoryDirectory() {
+    return "seas";
   }
 
   @Override

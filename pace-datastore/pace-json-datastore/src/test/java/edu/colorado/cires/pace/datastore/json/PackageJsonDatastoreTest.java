@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.datastore.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.AudioPackage;
 import edu.colorado.cires.pace.data.object.Channel;
@@ -38,11 +37,6 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
   @Override
   protected String getExpectedUniqueFieldName() {
     return "packageId";
-  }
-
-  @Override
-  protected TypeReference<List<Package>> getTypeReference() {
-    return new TypeReference<>() {};
   }
 
   @Override

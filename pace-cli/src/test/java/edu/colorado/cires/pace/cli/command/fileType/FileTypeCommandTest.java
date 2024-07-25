@@ -26,8 +26,8 @@ public class FileTypeCommandTest extends TranslateCommandTest<FileType, FileType
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "file-types.json";
+  protected String getRepositoryDirectory() {
+    return "file-types";
   }
 
   @Override

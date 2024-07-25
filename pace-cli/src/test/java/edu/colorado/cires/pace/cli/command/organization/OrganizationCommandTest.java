@@ -27,8 +27,8 @@ public class OrganizationCommandTest extends ObjectWithEditableUUIDCommandTest<O
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "organizations.json";
+  protected String getRepositoryDirectory() {
+    return "organizations";
   }
 
   @Override

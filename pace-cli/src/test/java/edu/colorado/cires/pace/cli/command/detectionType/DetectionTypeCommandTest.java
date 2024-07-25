@@ -26,8 +26,8 @@ class DetectionTypeCommandTest extends TranslateCommandTest<DetectionType, Detec
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "detection-types.json";
+  protected String getRepositoryDirectory() {
+    return "detection-types";
   }
 
   @Override

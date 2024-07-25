@@ -193,8 +193,8 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected abstract void addLocationDetailTypeSpecificFields(List<String> fields, LocationDetail locationDetail);
 
   @Override
-  protected String getRepositoryFileName() {
-    return "packages.json";
+  protected String getRepositoryDirectory() {
+    return "packages";
   }
 
   @Override

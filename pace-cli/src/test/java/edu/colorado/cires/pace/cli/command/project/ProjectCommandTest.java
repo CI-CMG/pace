@@ -23,8 +23,8 @@ public class ProjectCommandTest extends TranslateCommandTest<Project, ProjectTra
   }
 
   @Override
-  protected String getRepositoryFileName() {
-    return "projects.json";
+  protected String getRepositoryDirectory() {
+    return "projects";
   }
 
   @Override

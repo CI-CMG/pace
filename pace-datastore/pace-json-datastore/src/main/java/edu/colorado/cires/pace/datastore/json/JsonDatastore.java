@@ -1,14 +1,13 @@
 package edu.colorado.cires.pace.datastore.json;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,36 +22,33 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
   
   private final Logger LOGGER;
   
-  private final Path storageFile;
+  private final Path storageDirectory;
   private final ObjectMapper objectMapper;
   private final Class<O> clazz;
   private final Function<O, String> uniqueFieldGetter;
   private final Map<String, O> objectsMap = new HashMap<>(0);
-  private final TypeReference<List<O>> typeReference;
-  
+
   private boolean initialized = false;
 
-  protected JsonDatastore(Path storagePath, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter,
-      TypeReference<List<O>> typeReference) throws IOException {
+  protected JsonDatastore(Path storageDirectory, ObjectMapper objectMapper, Class<O> clazz, Function<O, String> uniqueFieldGetter) throws IOException {
     this.LOGGER = LoggerFactory.getLogger(this.getClass());
-    this.storageFile = storagePath;
+    this.storageDirectory = storageDirectory;
     this.objectMapper = objectMapper;
     this.clazz = clazz;
     this.uniqueFieldGetter = uniqueFieldGetter;
-    this.typeReference = typeReference;
   }
   
   private void init() throws IOException {
-    if (!storageFile.toFile().exists()) {
-      LOGGER.debug("Creating {}", storageFile);
-      Path parentPath = storageFile.getParent();
+    if (!storageDirectory.toFile().exists()) {
+      LOGGER.debug("Creating {}", storageDirectory);
+      Path parentPath = storageDirectory.getParent();
       if (parentPath != null && !parentPath.toFile().exists()) {
         Files.createDirectories(parentPath);
       }
-      objectMapper.writeValue(storageFile.toFile(), Collections.emptyList());
+      Files.createDirectories(storageDirectory);
     }
 
-    readStorageFile();
+    readStorageFiles();
     
     initialized = true;
   }
@@ -72,8 +68,8 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
       }
       
       objectsMap.put(uniqueField, object);
-      writeStorageFile();
-      LOGGER.debug("Wrote {} with {} = {}, uuid = {} to {}", getClassName(), getUniqueFieldName(), uniqueField, object.getUuid(), storageFile);
+      writeStorageFile(object);
+      LOGGER.debug("Wrote {} with {} = {}, uuid = {} to {}", getClassName(), getUniqueFieldName(), uniqueField, object.getUuid(), storageDirectory);
       return object;
     } catch (Exception e) {
       throw new DatastoreException(String.format(
@@ -89,12 +85,22 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
     try {
       objectsMap.remove(uniqueField);
       LOGGER.debug("Removed {} with {} = {} from objects", getClassName(), getUniqueFieldName(), uniqueField);
-      writeStorageFile();
+      deleteStorageFile(object);
     } catch (IOException e) {
       throw new DatastoreException(String.format(
           "%s delete failed", object.getUuid()
       ), e);
     }
+  }
+
+  private void deleteStorageFile(O object) throws IOException {
+    Files.delete(storageDirectory.resolve(fileNameFromObject(object)));
+  }
+
+  private String fileNameFromObject(O object) {
+    return String.format(
+        "%s.json", object.getUuid()
+    );
   }
 
   @Override
@@ -119,21 +125,29 @@ abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datasto
     return objectsMap.values().stream();
   }
 
-  private void readStorageFile() throws IOException {
-    LOGGER.debug("Reading all {} objects from {}", getClassName(), storageFile);
-    List<O> objects = objectMapper.readValue(storageFile.toFile(), typeReference);
-    objects.forEach(o -> objectsMap.put(
-        uniqueFieldGetter.apply(o), o
-    ));
+  private void readStorageFiles() throws IOException {
+    LOGGER.debug("Reading all {} objects from {}", getClassName(), storageDirectory);
+    Files.walk(storageDirectory)
+        .map(Path::toFile)
+        .filter(File::isFile)
+        .forEach(
+            file -> {
+              try {
+                O object = objectMapper.readValue(file, clazz);
+                objectsMap.put(object.getUniqueField(), object);
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+            }
+        );
   }
   
-  private void writeStorageFile() throws IOException {
-    LOGGER.debug("Writing {} objects to {}", getClassName(), storageFile);
-    objectMapper.writerFor(typeReference).writeValue(
-        storageFile.toFile(),
-        objectsMap.values().stream().toList()
+  private void writeStorageFile(O object) throws IOException {
+    LOGGER.debug("Writing {} objects to {}", getClassName(), storageDirectory);
+    objectMapper.writerFor(clazz).writeValue(
+        storageDirectory.resolve(fileNameFromObject(object)).toFile(),
+        object
     );
-    readStorageFile();
   }
 
   @Override
