@@ -17,7 +17,6 @@ import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.Organization;
 import edu.colorado.cires.pace.data.object.Person;
 import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Project;
 import edu.colorado.cires.pace.data.object.QualityLevel;
 import edu.colorado.cires.pace.data.object.SampleRate;
@@ -111,21 +110,11 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
     sensor1 = saveObject(DepthSensor.builder()
         .name("depthSensor")
         .description("description")
-        .position(Position.builder()
-            .x(101f)
-            .y(201f)
-            .z(301f)
-            .build())
         .build(), "sensor");
     
     sensor2 = saveObject(DepthSensor.builder()
         .name("depthSensor 1")
         .description("sensorDescription")
-        .position(Position.builder()
-            .x(102f)
-            .y(202f)
-            .z(302f)
-            .build())
         .build(), "sensor");
   }
 

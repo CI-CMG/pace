@@ -1,18 +1,15 @@
 package edu.colorado.cires.pace.translator.converter;
 
-import static edu.colorado.cires.pace.translator.converter.ConversionUtils.floatFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
 import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
 import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.translator.SensorTranslator;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
@@ -41,19 +38,10 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     }
   }
 
-  private static Position positionFromMap(PositionTranslator positionTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
-    return Position.builder()
-        .x(floatFromMap(properties, positionTranslator.getX(), row, runtimeException))
-        .y(floatFromMap(properties, positionTranslator.getY(), row, runtimeException))
-        .z(floatFromMap(properties, positionTranslator.getZ(), row, runtimeException))
-        .build();
-  }
-
   private static DepthSensor depthSensorFromMap(DepthSensorTranslator depthSensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return DepthSensor.builder()
         .uuid(uuidFromMap(properties, depthSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, depthSensorTranslator.getSensorName()))
-        .position(positionFromMap(depthSensorTranslator.getPositionTranslator(), properties, row, runtimeException))
         .description(stringFromMap(properties, depthSensorTranslator.getDescription()))
         .build();
   }
@@ -62,7 +50,6 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     return AudioSensor.builder()
         .uuid(uuidFromMap(properties, audioSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, audioSensorTranslator.getSensorName()))
-        .position(positionFromMap(audioSensorTranslator.getPositionTranslator(), properties, row, runtimeException))
         .description(stringFromMap(properties, audioSensorTranslator.getDescription()))
         .hydrophoneId(stringFromMap(properties, audioSensorTranslator.getHydrophoneId()))
         .preampId(stringFromMap(properties, audioSensorTranslator.getPreampId()))
@@ -73,7 +60,6 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     return OtherSensor.builder()
         .uuid(uuidFromMap(properties, otherSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, otherSensorTranslator.getSensorName()))
-        .position(positionFromMap(otherSensorTranslator.getPositionTranslator(), properties, row, runtimeException))
         .description(stringFromMap(properties, otherSensorTranslator.getDescription()))
         .properties(stringFromMap(properties, otherSensorTranslator.getProperties()))
         .sensorType(stringFromMap(properties, otherSensorTranslator.getSensorType()))

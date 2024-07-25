@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,11 +31,6 @@ class SensorJsonDatastoreTest extends JsonDatastoreTest<Sensor> {
     return AudioSensor.builder()
         .uuid(UUID.randomUUID())
         .name(UUID.randomUUID().toString())
-        .position(Position.builder()
-            .x(1f)
-            .y(1f)
-            .z(1f)
-            .build())
         .description(UUID.randomUUID().toString())
         .hydrophoneId(UUID.randomUUID().toString())
         .preampId(UUID.randomUUID().toString())
@@ -48,6 +42,5 @@ class SensorJsonDatastoreTest extends JsonDatastoreTest<Sensor> {
     assertEquals(expected.getUuid(), actual.getUuid());
     assertEquals(expected.getName(), actual.getName());
     assertEquals(expected.getDescription(), actual.getDescription());
-    assertEquals(expected.getPosition(), actual.getPosition());
   }
 }

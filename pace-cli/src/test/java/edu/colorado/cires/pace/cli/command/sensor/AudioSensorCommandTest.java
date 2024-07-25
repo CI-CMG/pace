@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.cli.command.sensor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
 import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import java.util.UUID;
@@ -22,11 +21,6 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
         .uuid(withUUID ? UUID.randomUUID() : null)
         .name(uniqueField)
         .description("description")
-        .position(Position.builder()
-            .x(1f)
-            .y(1f)
-            .z(1f)
-            .build())
         .hydrophoneId("hydrophoneId")
         .preampId("preampId")
         .build();
@@ -45,9 +39,6 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
         "UUID",
         "sensorName",
         "description",
-        "position (X)",
-        "position (Y)",
-        "position (Z)",
         "hydrophoneId",
         "preampId"
     };
@@ -76,9 +67,6 @@ class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorT
         object.getUuid() == null ? "" : object.getUuid().toString(),
         object.getName(),
         object.getDescription(),
-        object.getPosition().getX().toString(),
-        object.getPosition().getY().toString(),
-        object.getPosition().getZ().toString(),
         object.getHydrophoneId(),
         object.getPreampId()
     };

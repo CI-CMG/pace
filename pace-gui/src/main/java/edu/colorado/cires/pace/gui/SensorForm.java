@@ -5,7 +5,6 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import edu.colorado.cires.pace.data.object.AudioSensor;
 import edu.colorado.cires.pace.data.object.DepthSensor;
 import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.translator.SensorType;
@@ -22,9 +21,6 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
   
   private static Sensor initialSensor;
   
-  private JTextField xField;
-  private JTextField yField;
-  private JTextField zField;
   private JTextField descriptionField;
   private JTextField hydrophoneIdField;
   private JTextField preampIdField;
@@ -93,17 +89,11 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
   @Override
   protected Sensor objectFromFormFields(UUID uuid, String uniqueField, boolean visible) {
     String description = descriptionField.getText();
-    Position position = Position.builder()
-        .x(Float.valueOf(xField.getText()))
-        .y(Float.valueOf(yField.getText()))
-        .z(Float.valueOf(zField.getText()))
-        .build();
 
     return switch (sensorType) {
       case other -> OtherSensor.builder()
           .uuid(uuid)
           .name(uniqueField)
-          .position(position)
           .description(description)
           .sensorType(sensorTypeField.getText())
           .properties(propertiesField.getText())
@@ -112,7 +102,6 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
       case audio -> AudioSensor.builder()
           .uuid(uuid)
           .name(uniqueField)
-          .position(position)
           .description(description)
           .hydrophoneId(hydrophoneIdField.getText())
           .preampId(preampIdField.getText())
@@ -121,7 +110,6 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
       case depth -> DepthSensor.builder()
           .uuid(uuid)
           .name(uniqueField)
-          .position(position)
           .description(description)
           .visible(visible)
           .build();
@@ -130,9 +118,6 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
 
   @Override
   protected void addAdditionalFields(JPanel contentPanel, CRUDRepository<?>... dependencyRepositories) {
-    xField = new JTextField();
-    yField = new JTextField();
-    zField = new JTextField();
     descriptionField = new JTextField();
     hydrophoneIdField = new JTextField();
     preampIdField = new JTextField();
@@ -150,22 +135,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
       setSensorType(initialSensor);
       addSpecificFields(sensorType);
     }
-
-    JPanel positionPanel = new JPanel(new GridBagLayout());
-    positionPanel.setName("positionForm");
-    JPanel xPanel = new JPanel(new GridBagLayout());
-    xPanel.add(new JLabel("Position (X)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    xPanel.add(xField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    positionPanel.add(xPanel, configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    JPanel yPanel = new JPanel(new GridBagLayout());
-    yPanel.add(new JLabel("Position (Y)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    yPanel.add(yField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    positionPanel.add(yPanel, configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
-    JPanel zPanel = new JPanel(new GridBagLayout());
-    zPanel.add(new JLabel("Position (Z)"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
-    zPanel.add(zField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    positionPanel.add(zPanel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 1; }));
-    contentPanel.add(positionPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
+    
     contentPanel.add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
     contentPanel.add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
     contentPanel.add(specificFieldsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
@@ -173,9 +143,6 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
 
   @Override
   protected void initializeAdditionalFields(Sensor object, CRUDRepository<?>... dependencyRepositories) {
-    xField.setText(String.valueOf(object.getPosition().getX()));
-    yField.setText(String.valueOf(object.getPosition().getY()));
-    zField.setText(String.valueOf(object.getPosition().getZ()));
     descriptionField.setText(object.getDescription());
 
     if (object instanceof AudioSensor audioSensor) {

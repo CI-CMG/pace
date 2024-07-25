@@ -3,9 +3,7 @@ package edu.colorado.cires.pace.cli.command.sensor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
 import java.util.UUID;
 
 class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorTranslator> {
@@ -24,11 +22,6 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
         .sensorType("sensorType")
         .properties("properties")
         .description("description")
-        .position(Position.builder()
-            .x(1f)
-            .y(2f)
-            .z(3f)
-            .build())
         .build();
   }
 
@@ -45,9 +38,6 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
         "UUID",
         "sensorName",
         "description",
-        "position (X)",
-        "position (Y)",
-        "position (Z)",
         "sensorType",
         "properties"
     };
@@ -60,11 +50,6 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
         .sensorUUID("UUID")
         .sensorName("sensorName")
         .description("description")
-        .positionTranslator(PositionTranslator.builder()
-            .x("position (X)")
-            .y("position (Y)")
-            .z("position (Z)")
-            .build())
         .sensorType("sensorType")
         .properties("properties")
         .build();
@@ -76,9 +61,6 @@ class OtherSensorCommandTest extends SensorCommandTest<OtherSensor, OtherSensorT
         object.getUuid() == null ? "" : object.getUuid().toString(),
         object.getName(),
         object.getDescription(),
-        object.getPosition().getX().toString(),
-        object.getPosition().getY().toString(),
-        object.getPosition().getZ().toString(),
         object.getSensorType(),
         object.getProperties()
     };

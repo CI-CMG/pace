@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.Position;
 import edu.colorado.cires.pace.data.object.Sensor;
 
 class AudioSensorRepositoryTest extends SensorRepositoryTest {
@@ -12,11 +11,6 @@ class AudioSensorRepositoryTest extends SensorRepositoryTest {
   protected Sensor createNewObject(int suffix) {
     return AudioSensor.builder()
         .description(String.format("description-%s", suffix))
-        .position(Position.builder()
-            .x(1f)
-            .y(1f)
-            .z(1f)
-            .build())
         .name(String.format("name-%s", suffix))
         .hydrophoneId(String.format("hydrophoneId-%s", suffix))
         .preampId(String.format("preampId-%s", suffix))
@@ -33,8 +27,7 @@ class AudioSensorRepositoryTest extends SensorRepositoryTest {
   @Override
   protected void assertObjectsEqual(Sensor expected, Sensor actual, boolean checkUUID) {
     assertEquals(expected.getName(), actual.getName());
-    assertEquals(expected.getPosition(), actual.getPosition());
-    assertEquals(expected.getDescription(), expected.getDescription());
+    assertEquals(expected.getDescription(), actual.getDescription());
     if (checkUUID) {
       assertEquals(expected.getUuid(), actual.getUuid());
     }
