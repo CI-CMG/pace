@@ -4,9 +4,13 @@
     <Console name="ConsoleAppender" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
     </Console>
-    <File name="FileAppender" fileName="${sys:user.home}/.pace/logs/application.log" append="true">
+    <RollingFile name="FileAppender" fileName="${sys:user.home}/.pace/logs/application.log" append="true" filePattern="${sys:user.home}/.pace/logs/application-%d{yyyy-MM-dd}-%i.log.gz">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
-    </File>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="25MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
   </Appenders>
   <Loggers>
     <AsyncRoot level="warn" additivity="false">
