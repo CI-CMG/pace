@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.cli.command.fileType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
-import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.json.InstrumentJsonDatastore;
 import edu.colorado.cires.pace.datastore.sqlite.FileTypeSQLiteDatastore;

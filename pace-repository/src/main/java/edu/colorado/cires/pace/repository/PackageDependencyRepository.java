@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 
 abstract class PackageDependencyRepository<O extends ObjectWithUniqueField> extends UpstreamDependencyRepository<O, Package> {

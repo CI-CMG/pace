@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.List;
 

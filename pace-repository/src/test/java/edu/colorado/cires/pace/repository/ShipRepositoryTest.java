@@ -2,12 +2,12 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.LocationDetail;
-import edu.colorado.cires.pace.data.object.MobileMarineLocation;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.ship.Ship;
+import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import java.util.UUID;
 
 class ShipRepositoryTest extends PackageDependencyRepositoryTest<Ship> {

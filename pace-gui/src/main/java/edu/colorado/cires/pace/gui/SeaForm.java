@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.data.object.sea.Sea;
 import java.util.UUID;
 
 public class SeaForm extends ObjectWithNameForm<Sea> {

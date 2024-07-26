@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;

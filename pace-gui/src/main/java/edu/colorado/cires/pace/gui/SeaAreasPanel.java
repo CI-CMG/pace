@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Sea;
-import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import edu.colorado.cires.pace.data.object.sea.Sea;
+import edu.colorado.cires.pace.data.object.sea.translator.SeaTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.SeaConverter;

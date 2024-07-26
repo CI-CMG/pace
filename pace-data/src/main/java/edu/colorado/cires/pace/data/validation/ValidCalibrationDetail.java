@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.data.validation;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import edu.colorado.cires.pace.data.object.CalibrationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.CalibrationDetail;
 import edu.colorado.cires.pace.data.validation.ValidCalibrationDetail.ValidCalibrationDetailValidator;
 import edu.colorado.cires.pace.data.validation.ValidationUtils.AbstractTimeRange;
 import jakarta.validation.Constraint;

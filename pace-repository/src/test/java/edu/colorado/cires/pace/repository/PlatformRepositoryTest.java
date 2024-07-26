@@ -2,10 +2,10 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.platform.Platform;
 import java.util.UUID;
 
 class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {

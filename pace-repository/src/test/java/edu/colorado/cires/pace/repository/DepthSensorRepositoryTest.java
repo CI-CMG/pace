@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 
 class DepthSensorRepositoryTest extends SensorRepositoryTest {
 

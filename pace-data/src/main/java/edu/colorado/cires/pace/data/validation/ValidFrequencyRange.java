@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.validation;
 
-import edu.colorado.cires.pace.data.object.FrequencyRange;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.FrequencyRange;
 import edu.colorado.cires.pace.data.validation.ValidFrequencyRange.ValidFrequencyRangeValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;

@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.translator;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.util.function.Supplier;
 import java.util.stream.Stream;

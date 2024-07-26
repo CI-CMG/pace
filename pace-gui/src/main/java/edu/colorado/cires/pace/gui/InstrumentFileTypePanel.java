@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
-import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.FileTypeRepository;
 import java.awt.GridBagLayout;

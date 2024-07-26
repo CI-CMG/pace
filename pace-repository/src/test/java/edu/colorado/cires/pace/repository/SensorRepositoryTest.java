@@ -1,13 +1,13 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.AudioDataPackage;
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.Channel;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.PackageSensor;
-import edu.colorado.cires.pace.data.object.Position;
-import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioDataPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
+import edu.colorado.cires.pace.data.object.position.Position;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
+import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import java.util.Collections;
 import java.util.UUID;
 

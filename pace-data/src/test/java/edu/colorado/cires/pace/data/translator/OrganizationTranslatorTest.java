@@ -1,8 +1,7 @@
 package edu.colorado.cires.pace.data.translator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import edu.colorado.cires.pace.data.ObjectWithUniqueFieldTest;
+import edu.colorado.cires.pace.data.object.contact.organization.translator.OrganizationTranslator;
 
 class OrganizationTranslatorTest extends ObjectWithUniqueFieldTest<OrganizationTranslator> {
 

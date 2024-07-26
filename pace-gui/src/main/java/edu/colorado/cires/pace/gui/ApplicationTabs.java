@@ -1,14 +1,14 @@
 package edu.colorado.cires.pace.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.object.Sea;
-import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.platform.Platform;
+import edu.colorado.cires.pace.data.object.project.Project;
+import edu.colorado.cires.pace.data.object.sea.Sea;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
+import edu.colorado.cires.pace.data.object.ship.Ship;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.json.DetectionTypeJsonDatastore;
 import edu.colorado.cires.pace.datastore.json.FileTypeJsonDatastore;

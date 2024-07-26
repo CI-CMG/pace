@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import java.util.UUID;
 
 public class OrganizationForm extends ContactForm<Organization> {

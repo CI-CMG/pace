@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
-import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
+import edu.colorado.cires.pace.data.object.instrument.translator.InstrumentTranslator;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -21,7 +21,7 @@ import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.GetByNam
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Translate;
 import edu.colorado.cires.pace.cli.command.instrument.InstrumentCommand.Update;
-import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

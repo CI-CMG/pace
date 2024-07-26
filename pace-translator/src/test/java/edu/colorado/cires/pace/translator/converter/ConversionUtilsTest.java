@@ -1,10 +1,10 @@
 package edu.colorado.cires.pace.translator.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
-import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
-import edu.colorado.cires.pace.data.translator.DateTranslator;
-import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.data.translator.TimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTimeSeparatedTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.nio.file.Path;

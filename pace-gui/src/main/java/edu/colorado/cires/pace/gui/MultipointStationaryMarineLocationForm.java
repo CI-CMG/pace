@@ -4,8 +4,8 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.MarineInstrumentLocationTranslator;
-import edu.colorado.cires.pace.data.translator.MultipointStationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MarineInstrumentLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MultipointStationaryMarineLocationTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class MultipointStationaryMarineLocationForm extends BaseLocationDetailTranslatorForm<MultipointStationaryMarineLocationTranslator> {
   

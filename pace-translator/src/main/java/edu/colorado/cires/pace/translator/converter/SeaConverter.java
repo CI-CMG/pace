@@ -3,8 +3,8 @@ package edu.colorado.cires.pace.translator.converter;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
 
-import edu.colorado.cires.pace.data.object.Sea;
-import edu.colorado.cires.pace.data.translator.SeaTranslator;
+import edu.colorado.cires.pace.data.object.sea.Sea;
+import edu.colorado.cires.pace.data.object.sea.translator.SeaTranslator;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 

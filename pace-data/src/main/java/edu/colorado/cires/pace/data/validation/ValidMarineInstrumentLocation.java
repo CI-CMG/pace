@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.validation;
 
-import edu.colorado.cires.pace.data.object.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.validation.ValidMarineInstrumentLocation.ValidMarineInstrumentLocationValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;

@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import java.util.UUID;
 import javax.swing.JPanel;
 

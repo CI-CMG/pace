@@ -3,9 +3,9 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.DateTimeSeparatedTimeTranslator;
-import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.data.translator.TimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTimeSeparatedTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import java.awt.GridBagLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;

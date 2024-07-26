@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.migrator;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 
 public class MigrationRepositoryPair<O extends ObjectWithUniqueField> {

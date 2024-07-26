@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.datastore.Datastore;
 
 public class ProjectRepository extends PackageDependencyRepository<Project> {

@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.ObjectWithEditableUUIDCommandTest;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.translator.PersonTranslator;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.contact.person.translator.PersonTranslator;
 import java.util.List;
 import java.util.UUID;
 

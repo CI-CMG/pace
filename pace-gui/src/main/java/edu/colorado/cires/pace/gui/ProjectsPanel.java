@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.translator.ProjectTranslator;
+import edu.colorado.cires.pace.data.object.project.Project;
+import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.ProjectConverter;

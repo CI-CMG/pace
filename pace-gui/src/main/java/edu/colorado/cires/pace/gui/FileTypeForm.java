@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 
-import edu.colorado.cires.pace.data.object.FileType;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import java.util.UUID;
 import javax.swing.JLabel;

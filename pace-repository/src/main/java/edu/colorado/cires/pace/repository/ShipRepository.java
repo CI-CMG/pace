@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.LocationDetail;
-import edu.colorado.cires.pace.data.object.MobileMarineLocation;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.ship.Ship;
 import edu.colorado.cires.pace.datastore.Datastore;
 
 public class ShipRepository extends PackageDependencyRepository<Ship> {

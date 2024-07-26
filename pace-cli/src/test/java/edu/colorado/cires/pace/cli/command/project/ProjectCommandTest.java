@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
-import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.translator.ProjectTranslator;
-import edu.colorado.cires.pace.data.translator.SeaTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.project.Project;
+import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
+import edu.colorado.cires.pace.data.object.sea.translator.SeaTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.List;
 import java.util.UUID;
 

@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JComboBox;

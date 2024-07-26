@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.datastore.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;

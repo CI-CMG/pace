@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.translator;
 
-import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.depth.translator.DepthSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 
 class DepthSensorTranslatorCommandTest extends SensorTranslatorCommandTest<DepthSensorTranslator> {
 

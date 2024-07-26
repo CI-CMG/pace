@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.ObjectWithName;
+import edu.colorado.cires.pace.data.object.base.ObjectWithName;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import javax.swing.JPanel;
 

@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.datastore.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.ship.Ship;
 import java.io.IOException;
 import java.nio.file.Path;
 

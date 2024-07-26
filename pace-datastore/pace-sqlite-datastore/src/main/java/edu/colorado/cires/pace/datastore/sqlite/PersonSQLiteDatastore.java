@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.datastore.sqlite;
 
-import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;

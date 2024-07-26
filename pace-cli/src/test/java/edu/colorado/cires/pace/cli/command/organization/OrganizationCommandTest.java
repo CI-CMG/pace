@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.ObjectWithEditableUUIDCommandTest;
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.contact.organization.translator.OrganizationTranslator;
 import java.util.List;
 import java.util.UUID;
 

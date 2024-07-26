@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Platform;
-import edu.colorado.cires.pace.data.translator.PlatformTranslator;
+import edu.colorado.cires.pace.data.object.platform.Platform;
+import edu.colorado.cires.pace.data.object.platform.translator.PlatformTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.PlatformConverter;

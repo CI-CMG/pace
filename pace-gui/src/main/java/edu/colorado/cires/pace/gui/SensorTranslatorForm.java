@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
-import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
-import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.audio.translator.AudioSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.depth.translator.DepthSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.other.translator.OtherSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

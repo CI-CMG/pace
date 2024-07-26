@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.UUID;
 import javax.swing.JPanel;
 

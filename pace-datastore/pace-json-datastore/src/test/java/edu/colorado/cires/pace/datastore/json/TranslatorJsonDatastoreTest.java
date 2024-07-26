@@ -3,8 +3,8 @@ package edu.colorado.cires.pace.datastore.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.translator.ShipTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.ship.translator.ShipTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;

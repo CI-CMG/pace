@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.util.UUID;
 import java.util.function.Supplier;
 

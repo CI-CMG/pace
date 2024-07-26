@@ -15,7 +15,7 @@ import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.FindAll;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByName;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorCommand.Update;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

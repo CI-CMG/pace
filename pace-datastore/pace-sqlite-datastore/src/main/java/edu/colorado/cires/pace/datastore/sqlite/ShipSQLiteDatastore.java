@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.datastore.sqlite;
 
-import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.ship.Ship;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;

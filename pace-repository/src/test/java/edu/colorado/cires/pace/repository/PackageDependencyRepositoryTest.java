@@ -3,8 +3,8 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.util.HashMap;
 import java.util.Map;

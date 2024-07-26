@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.translator;
 
-import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 
 public enum SensorType {
   audio, depth, other;

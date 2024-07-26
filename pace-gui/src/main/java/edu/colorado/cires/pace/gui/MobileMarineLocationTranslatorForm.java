@@ -3,12 +3,12 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.MobileMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MobileMarineLocationTranslator;
 import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTranslatorForm<edu.colorado.cires.pace.data.translator.MobileMarineLocationTranslator> {
+public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTranslatorForm<MobileMarineLocationTranslator> {
   
   private final JComboBox<String> seaAreaField = new JComboBox<>();
   private final JComboBox<String> vesselField = new JComboBox<>();

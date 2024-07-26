@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.audio.translator.AudioSensorTranslator;
 import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JComboBox;

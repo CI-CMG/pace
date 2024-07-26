@@ -4,14 +4,13 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.DateTranslator;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Label;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class CalibrationTranslatorForm extends JPanel {
   

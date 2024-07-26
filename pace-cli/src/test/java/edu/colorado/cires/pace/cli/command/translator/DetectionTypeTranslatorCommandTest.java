@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
+import edu.colorado.cires.pace.data.object.detectionType.translator.DetectionTypeTranslator;
 import java.util.UUID;
 
 class DetectionTypeTranslatorCommandTest extends TranslatorCommandTest<DetectionTypeTranslator> {

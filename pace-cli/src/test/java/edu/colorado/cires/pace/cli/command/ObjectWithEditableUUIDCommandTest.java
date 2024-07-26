@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command;
 
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 

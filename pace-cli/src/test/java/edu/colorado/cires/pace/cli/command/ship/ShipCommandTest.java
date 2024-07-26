@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
-import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.translator.ShipTranslator;
+import edu.colorado.cires.pace.data.object.ship.Ship;
+import edu.colorado.cires.pace.data.object.ship.translator.ShipTranslator;
 import java.util.List;
 import java.util.UUID;
 

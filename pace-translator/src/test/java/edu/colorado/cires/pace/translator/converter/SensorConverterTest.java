@@ -2,14 +2,14 @@ package edu.colorado.cires.pace.translator.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
-import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
-import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
+import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
+import edu.colorado.cires.pace.data.object.sensor.other.OtherSensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.audio.translator.AudioSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.depth.translator.DepthSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.other.translator.OtherSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.ObjectWithName;
+import edu.colorado.cires.pace.data.object.base.ObjectWithName;
 import javax.swing.JPanel;
 
 abstract class ObjectWithNameFormTest<O extends ObjectWithName, F extends ObjectWithNameForm<O>> extends MetadataFormTest<O, F> {

@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
-import static org.junit.jupiter.api.Assertions.*;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 
 class StationaryMarineLocationTest extends MarineLocationTest<StationaryMarineLocation> {
 

@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.Person;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
 import java.util.UUID;
 import javax.swing.JPanel;
 

@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 
 class AudioSensorRepositoryTest extends SensorRepositoryTest {
 

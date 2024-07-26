@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;

@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.util.Collections;
 import java.util.UUID;

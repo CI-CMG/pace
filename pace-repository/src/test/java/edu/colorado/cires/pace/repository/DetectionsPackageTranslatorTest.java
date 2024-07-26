@@ -2,14 +2,14 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
-import edu.colorado.cires.pace.data.translator.DateTranslator;
-import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.data.translator.DetectionsPackageTranslator;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
-import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
-import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.detections.translator.DetectionsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.QualityControlDetailTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.Collections;
 
 public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {

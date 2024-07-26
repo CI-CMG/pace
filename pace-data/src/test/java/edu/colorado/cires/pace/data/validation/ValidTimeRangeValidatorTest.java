@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.data.validation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.colorado.cires.pace.data.object.TimeRange;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

@@ -2,11 +2,11 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
-import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
-import edu.colorado.cires.pace.data.translator.MobileMarineLocationTranslator;
-import edu.colorado.cires.pace.data.translator.MultipointStationaryMarineLocationTranslator;
-import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
-import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.LocationDetailTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MobileMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MultipointStationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;

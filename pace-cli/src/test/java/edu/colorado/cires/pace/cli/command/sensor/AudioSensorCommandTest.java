@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.cli.command.sensor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.translator.AudioSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
+import edu.colorado.cires.pace.data.object.sensor.audio.translator.AudioSensorTranslator;
 import java.util.UUID;
 
 class AudioSensorCommandTest extends SensorCommandTest<AudioSensor, AudioSensorTranslator> {

@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.pace.data.object.Contact;
+import edu.colorado.cires.pace.data.object.contact.Contact;
 import javax.swing.JPanel;
 
 abstract class ContactFormTest<C extends Contact, F extends ContactForm<C>> extends ObjectWithNameFormTest<C, F> {

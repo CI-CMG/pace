@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Ship;
-import edu.colorado.cires.pace.data.translator.ShipTranslator;
+import edu.colorado.cires.pace.data.object.ship.Ship;
+import edu.colorado.cires.pace.data.object.ship.translator.ShipTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.ShipConverter;

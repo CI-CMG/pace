@@ -4,7 +4,7 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.DutyCycleTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.function.Consumer;

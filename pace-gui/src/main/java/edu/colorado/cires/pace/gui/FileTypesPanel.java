@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.FileType;
-import edu.colorado.cires.pace.data.translator.FileTypeTranslator;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
+import edu.colorado.cires.pace.data.object.fileType.translator.FileTypeTranslator;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.FileTypeConverter;

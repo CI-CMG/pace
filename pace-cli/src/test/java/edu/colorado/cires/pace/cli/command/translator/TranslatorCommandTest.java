@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.CRUDCommandTest;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.List;
 
 abstract class TranslatorCommandTest<T extends Translator> extends CRUDCommandTest<T> {

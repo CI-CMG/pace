@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.translator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import edu.colorado.cires.pace.data.object.AudioSensor;
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.object.OtherSensor;
-import edu.colorado.cires.pace.data.object.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
+import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
+import edu.colorado.cires.pace.data.object.sensor.other.OtherSensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import org.junit.jupiter.api.Test;
 
 class SensorTypeTest {

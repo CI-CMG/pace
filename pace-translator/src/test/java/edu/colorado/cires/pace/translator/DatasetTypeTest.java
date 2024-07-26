@@ -9,13 +9,13 @@ import static edu.colorado.cires.pace.translator.DatasetType.SOUND_PROPAGATION_M
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.CPODPackage;
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.SoundClipsPackage;
-import edu.colorado.cires.pace.data.object.SoundLevelMetricsPackage;
-import edu.colorado.cires.pace.data.object.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
+import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
+import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;

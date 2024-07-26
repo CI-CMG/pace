@@ -8,7 +8,7 @@ import edu.colorado.cires.pace.cli.command.common.GetByUUIDCommand;
 import edu.colorado.cires.pace.cli.command.common.GetByUniqueFieldCommand;
 import edu.colorado.cires.pace.cli.command.common.RepositoryFactory;
 import edu.colorado.cires.pace.cli.command.common.TranslateCommand;
-import edu.colorado.cires.pace.data.translator.OrganizationTranslator;
+import edu.colorado.cires.pace.data.object.contact.organization.translator.OrganizationTranslator;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.OrganizationConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -21,7 +21,7 @@ import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.GetB
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.Translate;
 import edu.colorado.cires.pace.cli.command.organization.OrganizationCommand.Update;
-import edu.colorado.cires.pace.data.object.Organization;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

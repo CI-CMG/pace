@@ -1,8 +1,7 @@
 package edu.colorado.cires.pace.data.object;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import edu.colorado.cires.pace.data.ObjectWithUniqueFieldTest;
+import edu.colorado.cires.pace.data.object.sensor.other.OtherSensor;
 
 class OtherSensorTest extends ObjectWithUniqueFieldTest<OtherSensor> {
 

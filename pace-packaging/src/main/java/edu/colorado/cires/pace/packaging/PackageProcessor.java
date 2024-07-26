@@ -1,10 +1,10 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.project.Project;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;

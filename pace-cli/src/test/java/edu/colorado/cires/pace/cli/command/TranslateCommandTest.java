@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.translator.ProjectTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;

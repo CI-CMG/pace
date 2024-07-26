@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.data.object;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import org.junit.jupiter.api.Test;
 
 class QualityLevelTest {

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.project.Project;
 import java.util.UUID;
 
 class ProjectFormTest extends ObjectWithNameFormTest<Project, ProjectForm> {

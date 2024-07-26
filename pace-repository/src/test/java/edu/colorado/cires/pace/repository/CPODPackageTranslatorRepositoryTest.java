@@ -2,20 +2,20 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.CPODPackageTranslator;
-import edu.colorado.cires.pace.data.translator.ChannelTranslator;
-import edu.colorado.cires.pace.data.translator.DataQualityEntryTranslator;
-import edu.colorado.cires.pace.data.translator.DateTranslator;
-import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
-import edu.colorado.cires.pace.data.translator.GainTranslator;
-import edu.colorado.cires.pace.data.translator.PackageSensorTranslator;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
-import edu.colorado.cires.pace.data.translator.PositionTranslator;
-import edu.colorado.cires.pace.data.translator.QualityControlDetailTranslator;
-import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
-import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.dataset.audio.translator.CPODPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.ChannelTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.DutyCycleTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.GainTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.PackageSensorTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.PositionTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.QualityControlDetailTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.SampleRateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.Collections;
 
 public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTest {

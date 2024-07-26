@@ -6,11 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.FileType;
-import edu.colorado.cires.pace.data.object.Instrument;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.cli.command.translator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.OtherSensorTranslator;
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.other.translator.OtherSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 
 class OtherSensorTranslatorCommandTest extends SensorTranslatorCommandTest<OtherSensorTranslator> {
 

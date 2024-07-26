@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Platform;
+import edu.colorado.cires.pace.data.object.platform.Platform;
 import java.util.UUID;
 
 public class PlatformForm extends ObjectWithNameForm<Platform> {

@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
-import edu.colorado.cires.pace.data.translator.ChannelTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.ChannelTranslator;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
 import java.util.List;

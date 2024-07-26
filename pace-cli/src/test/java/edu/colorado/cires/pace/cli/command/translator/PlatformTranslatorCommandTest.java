@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.cli.command.translator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.PlatformTranslator;
+import edu.colorado.cires.pace.data.object.platform.translator.PlatformTranslator;
 import java.util.UUID;
 
 class PlatformTranslatorCommandTest extends TranslatorCommandTest<PlatformTranslator> {

@@ -2,6 +2,9 @@ package edu.colorado.cires.pace.data.object;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.Dataset;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.object.Ship;
+import edu.colorado.cires.pace.data.object.ship.Ship;
 import java.util.UUID;
 
 class ShipFormTest extends ObjectWithNameFormTest<Ship, ShipForm> {

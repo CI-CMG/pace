@@ -4,13 +4,11 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.StationaryMarineLocationTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryMarineLocationTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.border.TitledBorder;
 
 public class StationaryMarineLocationForm extends BaseLocationDetailTranslatorForm<StationaryMarineLocationTranslator> {
   

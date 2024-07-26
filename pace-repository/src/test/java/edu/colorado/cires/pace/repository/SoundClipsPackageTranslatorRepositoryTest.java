@@ -2,12 +2,12 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.translator.DateTranslator;
-import edu.colorado.cires.pace.data.translator.DefaultTimeTranslator;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
-import edu.colorado.cires.pace.data.translator.SoundClipsPackageTranslator;
-import edu.colorado.cires.pace.data.translator.StationaryTerrestrialLocationTranslator;
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundClips.translator.SoundClipsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 
 public class SoundClipsPackageTranslatorRepositoryTest extends TranslatorRepositoryTest {
 

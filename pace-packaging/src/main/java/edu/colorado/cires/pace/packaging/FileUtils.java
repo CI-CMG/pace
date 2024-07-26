@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Dataset;
-import edu.colorado.cires.pace.data.object.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.Dataset;
+import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object;
 
-import static org.junit.jupiter.api.Assertions.*;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 
 class AudioPackageTest extends AudioDataTest<AudioPackage>{
 

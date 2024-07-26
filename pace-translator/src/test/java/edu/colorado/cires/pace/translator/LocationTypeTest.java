@@ -3,11 +3,11 @@ package edu.colorado.cires.pace.translator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import edu.colorado.cires.pace.data.object.LocationDetail;
-import edu.colorado.cires.pace.data.object.MobileMarineLocation;
-import edu.colorado.cires.pace.data.object.MultiPointStationaryMarineLocation;
-import edu.colorado.cires.pace.data.object.StationaryMarineLocation;
-import edu.colorado.cires.pace.data.object.StationaryTerrestrialLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiPointStationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;

@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.translator.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
+import edu.colorado.cires.pace.data.object.detectionType.translator.DetectionTypeTranslator;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;

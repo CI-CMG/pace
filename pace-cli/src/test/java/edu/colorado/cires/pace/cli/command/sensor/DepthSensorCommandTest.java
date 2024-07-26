@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.cli.command.sensor;
 
-import edu.colorado.cires.pace.data.object.DepthSensor;
-import edu.colorado.cires.pace.data.translator.DepthSensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
+import edu.colorado.cires.pace.data.object.sensor.depth.translator.DepthSensorTranslator;
 import java.util.UUID;
 
 class DepthSensorCommandTest extends SensorCommandTest<DepthSensor, DepthSensorTranslator> {

@@ -10,7 +10,7 @@ import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.json.PackageJsonDatastore;
 import edu.colorado.cires.pace.repository.CRUDRepository;

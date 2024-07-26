@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.pace.data.ObjectWithUniqueFieldTest;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import org.junit.jupiter.api.Test;
 
 class FileTypeTest extends ObjectWithUniqueFieldTest<FileType> {

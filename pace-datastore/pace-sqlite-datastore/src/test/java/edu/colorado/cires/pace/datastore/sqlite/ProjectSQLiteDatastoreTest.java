@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.datastore.sqlite;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import edu.colorado.cires.pace.data.object.Project;
+import edu.colorado.cires.pace.data.object.project.Project;
 import java.nio.file.Path;
 
 class ProjectSQLiteDatastoreTest extends SQLiteDatastoreTest<Project> {

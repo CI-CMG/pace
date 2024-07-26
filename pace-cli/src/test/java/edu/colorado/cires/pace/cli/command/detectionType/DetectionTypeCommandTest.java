@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
-import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.translator.DetectionTypeTranslator;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
+import edu.colorado.cires.pace.data.object.detectionType.translator.DetectionTypeTranslator;
 import java.util.List;
 import java.util.UUID;
 

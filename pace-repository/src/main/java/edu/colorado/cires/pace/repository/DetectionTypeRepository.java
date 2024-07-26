@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.DetectionType;
-import edu.colorado.cires.pace.data.object.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 
 public class DetectionTypeRepository extends PackageDependencyRepository<DetectionType> {

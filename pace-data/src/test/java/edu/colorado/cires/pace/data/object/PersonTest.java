@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.pace.data.ObjectWithUniqueFieldTest;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
 import org.junit.jupiter.api.Test;
 
 class PersonTest extends ObjectWithUniqueFieldTest<Person> {

@@ -4,8 +4,8 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;

@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.MarineLocation;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Sea;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.sea.Sea;
 import edu.colorado.cires.pace.datastore.Datastore;
 
 public class SeaRepository extends PackageDependencyRepository<Sea> {

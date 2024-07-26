@@ -1,9 +1,7 @@
 package edu.colorado.cires.pace.data.translator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import edu.colorado.cires.pace.data.ObjectWithUniqueFieldTest;
-import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.instrument.translator.InstrumentTranslator;
 
 class InstrumentTranslatorTest extends ObjectWithUniqueFieldTest<InstrumentTranslator> {
 

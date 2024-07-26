@@ -3,10 +3,10 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 
-import edu.colorado.cires.pace.data.translator.ChannelTranslator;
-import edu.colorado.cires.pace.data.translator.DutyCycleTranslator;
-import edu.colorado.cires.pace.data.translator.GainTranslator;
-import edu.colorado.cires.pace.data.translator.SampleRateTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.ChannelTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.DutyCycleTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.GainTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.SampleRateTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;

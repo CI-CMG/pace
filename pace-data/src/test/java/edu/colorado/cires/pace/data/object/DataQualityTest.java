@@ -3,6 +3,8 @@ package edu.colorado.cires.pace.data.object;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.DataQuality;
 import org.junit.jupiter.api.Test;
 
 public abstract class DataQualityTest<P extends Package> extends PackageTest<P> {

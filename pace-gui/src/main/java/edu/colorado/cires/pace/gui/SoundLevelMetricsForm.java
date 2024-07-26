@@ -3,11 +3,10 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 
-import edu.colorado.cires.pace.data.translator.SoundLevelMetricsPackageTranslator;
-import edu.colorado.cires.pace.data.translator.TimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.translator.SoundLevelMetricsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 public class SoundLevelMetricsForm extends JPanel {
   

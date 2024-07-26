@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
-import edu.colorado.cires.pace.data.translator.LocationDetailTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.LocationDetailTranslator;
 import javax.swing.JPanel;
 
 public abstract class BaseLocationDetailTranslatorForm<T extends LocationDetailTranslator> extends JPanel {

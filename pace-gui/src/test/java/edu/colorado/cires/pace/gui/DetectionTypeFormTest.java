@@ -2,7 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.pace.data.object.DetectionType;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
 import java.util.UUID;
 import javax.swing.JPanel;
 

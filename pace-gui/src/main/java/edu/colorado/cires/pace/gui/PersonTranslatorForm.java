@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.translator.PersonTranslator;
+import edu.colorado.cires.pace.data.object.contact.person.translator.PersonTranslator;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.Label;

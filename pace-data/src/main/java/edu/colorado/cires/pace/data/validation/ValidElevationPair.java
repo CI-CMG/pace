@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.validation;
 
-import edu.colorado.cires.pace.data.object.ElevationPair;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.ElevationPair;
 import edu.colorado.cires.pace.data.validation.ValidElevationPair.ValidElevationPairValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;

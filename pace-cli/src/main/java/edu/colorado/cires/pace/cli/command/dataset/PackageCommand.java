@@ -20,11 +20,11 @@ import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByPackageId
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Pack;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Update;
-import edu.colorado.cires.pace.data.object.Organization;
-import edu.colorado.cires.pace.data.object.Package;
-import edu.colorado.cires.pace.data.object.Person;
-import edu.colorado.cires.pace.data.object.Project;
-import edu.colorado.cires.pace.data.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.contact.organization.Organization;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.project.Project;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.repository.BadArgumentException;

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.translator.Translator;
+import edu.colorado.cires.pace.data.object.base.Translator;
 
 abstract class TranslatorRepositoryTest extends CrudRepositoryTest<Translator> {
 

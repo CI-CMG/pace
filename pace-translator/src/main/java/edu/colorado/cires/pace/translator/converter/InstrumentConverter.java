@@ -4,8 +4,8 @@ import static edu.colorado.cires.pace.translator.converter.ConversionUtils.strin
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringListFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
 
-import edu.colorado.cires.pace.data.object.Instrument;
-import edu.colorado.cires.pace.data.translator.InstrumentTranslator;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
+import edu.colorado.cires.pace.data.object.instrument.translator.InstrumentTranslator;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 

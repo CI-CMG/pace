@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.packaging;
 
-import edu.colorado.cires.pace.data.object.AudioPackage;
-import edu.colorado.cires.pace.data.object.CPODPackage;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

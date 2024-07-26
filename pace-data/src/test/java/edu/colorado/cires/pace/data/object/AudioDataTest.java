@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.data.object;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioDataPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
+import edu.colorado.cires.pace.data.object.position.Position;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

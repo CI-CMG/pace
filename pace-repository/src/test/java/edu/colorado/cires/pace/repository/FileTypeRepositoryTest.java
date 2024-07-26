@@ -2,8 +2,8 @@ package edu.colorado.cires.pace.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.colorado.cires.pace.data.object.FileType;
-import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

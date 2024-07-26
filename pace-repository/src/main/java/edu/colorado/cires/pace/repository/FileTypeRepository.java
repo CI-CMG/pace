@@ -1,9 +1,8 @@
 package edu.colorado.cires.pace.repository;
 
-import edu.colorado.cires.pace.data.object.FileType;
-import edu.colorado.cires.pace.data.object.Instrument;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import edu.colorado.cires.pace.datastore.Datastore;
-import java.util.UUID;
 
 public class FileTypeRepository extends UpstreamDependencyRepository<FileType, Instrument> {
 

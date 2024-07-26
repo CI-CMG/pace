@@ -12,7 +12,7 @@ import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.project.ProjectRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sea.SeaRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.ship.ShipRepositoryFactory;
-import edu.colorado.cires.pace.data.object.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.migrator.MigrationException;
 import edu.colorado.cires.pace.migrator.MigrationRepositoryPair;

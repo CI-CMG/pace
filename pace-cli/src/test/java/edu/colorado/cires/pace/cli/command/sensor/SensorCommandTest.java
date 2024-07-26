@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
-import edu.colorado.cires.pace.data.object.Sensor;
-import edu.colorado.cires.pace.data.translator.SensorTranslator;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.base.translator.SensorTranslator;
 import java.util.List;
 
 abstract class SensorCommandTest<S extends Sensor, T extends SensorTranslator> extends TranslateCommandTest<S, T> {
