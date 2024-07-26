@@ -9,6 +9,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.awt.BorderLayout;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -54,8 +55,17 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
             repository.findAll()
         );
         searchAction.run();
-      } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException | ConstraintViolationException ex) {
+      } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      } catch (ConstraintViolationException ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            ex.getConstraintViolations().stream()
+                .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
+                .collect(Collectors.joining("\n")),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
       }
     });
     
@@ -66,8 +76,17 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
             repository.findAll()
         );
         searchAction.run();
-      } catch (NotFoundException | DatastoreException | ConstraintViolationException | BadArgumentException ex ) {
+      } catch (NotFoundException | DatastoreException | BadArgumentException ex ) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+      } catch (ConstraintViolationException ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            ex.getConstraintViolations().stream()
+                .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
+            .collect(Collectors.joining("\n")),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
       }
     });
     

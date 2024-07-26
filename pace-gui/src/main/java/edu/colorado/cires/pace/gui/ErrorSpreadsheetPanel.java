@@ -115,7 +115,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
               }).map(ObjectWithRowError::throwable).map((t) -> {
                 if (t instanceof ConstraintViolationException constraintViolationException) {
                   return constraintViolationException.getConstraintViolations().stream()
-                      .map(ConstraintViolation::getMessage)
+                      .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
                       .collect(Collectors.joining("\n"));
                 }
                 
