@@ -31,7 +31,7 @@ public abstract class TranslatePanel<O extends ObjectWithUniqueField, T extends 
       throws DatastoreException {
     JDialog dialog = new JDialog();
     dialog.setName("translateDialog");
-    TranslateForm<O, T> translateForm = new TranslateForm<>(this::loadData, repository, clazz, translatorRepository, converter, translatorClazz);
+    TranslateForm<O, T> translateForm = new TranslateForm<>(this::searchData, repository, clazz, translatorRepository, converter, translatorClazz);
     translateForm.init();
     dialog.add(translateForm);
     dialog.setTitle("Translate");

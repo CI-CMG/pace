@@ -760,6 +760,9 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     if (qualityControlForm != null) {
       ((QualityControlForm) qualityControlForm.getComponent()).updateHeaderOptions(headerOptions);
     }
+    if (soundAnalysisForm != null) {
+      ((SoundAnalysisForm<?>) soundAnalysisForm.getComponent()).updateHeaderOptions(headerOptions);
+    }
     if (channelsForm != null) {
       ((ChannelsForm) channelsForm.getComponent()).updateHeaderOptions(headerOptions);
     }
