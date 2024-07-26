@@ -17,6 +17,7 @@ import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.utilities.TranslationType;
+import jakarta.validation.ConstraintViolationException;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -169,7 +170,7 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
               null
           );
         }
-      } catch (BadArgumentException | ConflictException | NotFoundException | DatastoreException e) {
+      } catch (ConstraintViolationException | BadArgumentException | ConflictException | NotFoundException | DatastoreException e) {
         return new ObjectWithRowError<>(
             object,
             o.row(),
