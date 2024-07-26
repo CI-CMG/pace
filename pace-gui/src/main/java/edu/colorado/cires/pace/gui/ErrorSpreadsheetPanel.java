@@ -10,6 +10,8 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.utilities.TranslationType;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -105,12 +107,20 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
             java.lang.Throwable t = o.throwable();
                 if (t instanceof FieldException fieldException) {
                   return fieldException.getColumn() == (col - 1) && fieldException.getRow() == (row + 2);
-                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
+                } else if (t instanceof ConstraintViolationException || t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
                   return (row + 2) == o.row() && col == 0;
                 } else {
                   return false;
                 }
-              }).map(ObjectWithRowError::throwable).map(java.lang.Throwable::getMessage)
+              }).map(ObjectWithRowError::throwable).map((t) -> {
+                if (t instanceof ConstraintViolationException constraintViolationException) {
+                  return constraintViolationException.getConstraintViolations().stream()
+                      .map(ConstraintViolation::getMessage)
+                      .collect(Collectors.joining("\n"));
+                }
+                
+                return t.getMessage();
+              })
               .collect(Collectors.toSet());
 
           if (!messages.isEmpty()) {
@@ -178,7 +188,8 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
                     .findFirst().map(ObjectWithRowError::throwable).orElse(null);
                 if (t == null) {
                   values.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
-                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
+                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException 
+                    || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
                   values.add(0, getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
                 } else if (t instanceof FieldException) {
                   values.add(0, getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
