@@ -1,8 +1,9 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.dataset.base.Dataset;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,16 +52,28 @@ final class FileUtils {
         Files.size(source) != Files.size(target);
   }
   
-  public static Path writeMetadata(Dataset dataset, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
-    String metadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(dataset);
+  public static Path writeMetadata(Package aPackage, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
+    ObjectNode metadata = (ObjectNode) objectMapper
+        .readTree(
+            objectMapper.writeValueAsString(aPackage)
+        );
+    metadata.remove("uuid");
+    metadata.remove("temperaturePath");
+    metadata.remove("biologicalPath");
+    metadata.remove("otherPath");
+    metadata.remove("documentsPath");
+    metadata.remove("calibrationDocumentsPath");
+    metadata.remove("navigationPath");
+    metadata.remove("sourcePath");
     
     mkdir(targetDirectory);
     
     Path targetPath = targetDirectory.resolve(String.format(
-        "%s.json", dataset.getPackageId()
+        "%s.json", aPackage.getPackageId()
     ));
     
-    Files.writeString(targetPath, metadata, StandardCharsets.UTF_8);
+    objectMapper.writerWithDefaultPrettyPrinter()
+        .writeValue(targetPath.toFile(), metadata);
     
     return targetPath;
   }

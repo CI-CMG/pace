@@ -11,12 +11,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
-import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
-import edu.colorado.cires.pace.data.object.dataset.base.Dataset;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
@@ -29,6 +26,7 @@ import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
+import edu.colorado.cires.pace.utilities.SerializationUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.io.FileWriter;
@@ -43,6 +41,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -67,8 +66,7 @@ class PackagerProcessorTest {
           .name("project")
       .build());
 
-  private final ObjectMapper objectMapper = new ObjectMapper()
-      .registerModule(new JavaTimeModule());
+  private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   private final Path testOutputPath = Paths.get("target").resolve("output");
   private final Path testSourcePath = Paths.get("target").resolve("source");
   
@@ -156,7 +154,18 @@ class PackagerProcessorTest {
         objectMapper.writeValueAsString(packingJob), Package.class
     );
 
-    String expectedMetadata = objectMapper.writerWithView(Dataset.class).writeValueAsString(packingJob);
+    Package expectedMetadataPackage = ((AudioPackage) packingJob).toBuilder()
+        .uuid(null)
+        .temperaturePath(null)
+        .biologicalPath(null)
+        .otherPath(null)
+        .documentsPath(null)
+        .calibrationDocumentsPath(null)
+        .navigationPath(null)
+        .sourcePath(null)
+        .build();
+    String expectedMetadata = objectMapper.writerWithDefaultPrettyPrinter()
+        .writeValueAsString(expectedMetadataPackage);
     String expectedPeople = objectMapper.writeValueAsString(PEOPLE);
     String expectedOrganizations = objectMapper.writeValueAsString(ORGANIZATIONS);
     String expectedProjects = objectMapper.writeValueAsString(PROJECTS);
@@ -200,7 +209,7 @@ class PackagerProcessorTest {
     checkTargetPaths(packingJob.getOtherPath(), baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packingJob.getTemperaturePath(), baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
-        (packingJob instanceof AudioPackage || packingJob instanceof CPODPackage) ? "acoustic_files" : "data_files"
+        "acoustic_files"
     ));
     
     String actualMetadata = FileUtils.readFileToString(baseExpectedOutputPath.resolve(String.format(
@@ -242,6 +251,7 @@ class PackagerProcessorTest {
       Path biologicalPath
   ) {
     return AudioPackage.builder()
+        .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)

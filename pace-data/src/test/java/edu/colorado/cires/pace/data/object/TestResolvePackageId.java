@@ -3,10 +3,8 @@ package edu.colorado.cires.pace.data.object;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
-import edu.colorado.cires.pace.data.object.dataset.base.Dataset;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import java.util.Collections;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -28,47 +26,24 @@ class TestResolvePackageId {
       ",,,"
   })
   void testResolvePackageId(String siteOrCruiseName, String deploymentId, String projectName, String expectedValue) {
-    Dataset dataset = new Dataset(
-        AudioPackage.builder()
-            .siteOrCruiseName(siteOrCruiseName)
-            .deploymentId(deploymentId)
-            .projects(Collections.singletonList(projectName))
-    ) {
-      @Override
-      public ObjectWithUniqueField setUuid(UUID uuid) {
-        return null;
-      }
-
-      @Override
-      public ObjectWithUniqueField setVisible(boolean visible) {
-        return null;
-      }
-    };
+    Package aPackage = AudioPackage.builder()
+        .siteOrCruiseName(siteOrCruiseName)
+        .deploymentId(deploymentId)
+        .projects(Collections.singletonList(projectName))
+        .build();
     
-    assertEquals(expectedValue, dataset.getPackageId());
+    assertEquals(expectedValue, aPackage.getPackageId());
   }
 
   @Test
   void testResolvePackageIdEmptyProjects() {
-    Dataset dataset = new Dataset(
-        AudioPackage.builder()
-            .siteOrCruiseName("socName")
-            .deploymentId("dId")
-    ) {
-      @Override
-      public ObjectWithUniqueField setUuid(UUID uuid) {
-        return null;
-      }
-
-      @Override
-      public ObjectWithUniqueField setVisible(boolean visible) {
-        return null;
-      }
-    };
+    Package aPackage = AudioPackage.builder()
+        .siteOrCruiseName("socName")
+        .deploymentId("dId").build();
 
     assertEquals(String.format(
-        "%s_%s", dataset.getSiteOrCruiseName(), dataset.getDeploymentId()
-    ), dataset.getPackageId());
+        "%s_%s", aPackage.getSiteOrCruiseName(), aPackage.getDeploymentId()
+    ), aPackage.getPackageId());
   }
 
 }
