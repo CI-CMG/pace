@@ -53,36 +53,6 @@ public abstract class Dataset extends ObjectWithUniqueField implements TimeRange
   @NotNull
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;
-
-  @Override
-  public LocalDate getPreDeploymentCalibrationDate() {
-    return preDeploymentCalibrationDate;
-  }
-
-  @Override
-  public LocalDate getPostDeploymentCalibrationDate() {
-    return postDeploymentCalibrationDate;
-  }
-
-  @Override
-  public String getCalibrationDescription() {
-    return calibrationDescription;
-  }
-
-  @Override
-  public LocalDateTime getStartTime() {
-    return startTime;
-  }
-
-  @Override
-  public LocalDateTime getEndTime() {
-    return endTime;
-  }
-
-  @Override
-  public String getUniqueField() {
-    return getPackageId();
-  }
   
   @JsonIgnore
   public String getPackageId() {
