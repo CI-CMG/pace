@@ -13,10 +13,10 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Builder(toBuilder = true)
 @Jacksonized
-public class Channel implements TimeRange {
+public class Channel<T> implements TimeRange {
   
   @NotNull @Valid
-  private final PackageSensor sensor;
+  private final PackageSensor<T> sensor;
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
   private final List<SampleRate> sampleRates;

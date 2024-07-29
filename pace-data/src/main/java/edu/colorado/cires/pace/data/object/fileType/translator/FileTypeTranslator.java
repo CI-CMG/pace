@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.fileType.translator;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.UUID;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class FileTypeTranslator extends Translator {
   private final String comment;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

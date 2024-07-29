@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.repository.search;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Builder(toBuilder = true)
-public class SearchParameters<O extends ObjectWithUniqueField> {
+public class SearchParameters<O extends AbstractObject> {
   
   @Default
   private final List<@NotBlank String> uniqueFields = new ArrayList<>(0);

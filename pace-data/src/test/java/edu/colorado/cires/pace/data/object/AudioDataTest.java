@@ -13,17 +13,17 @@ public abstract class AudioDataTest<P extends AudioDataPackage> extends DataQual
   
   @Test
   void testSetSensors() {
-    List<PackageSensor> sensors = List.of(
-        PackageSensor.builder()
-            .name("1")
+    List<PackageSensor<String>> sensors = List.of(
+        PackageSensor.<String>builder()
+            .sensor("1")
             .position(Position.builder()
                 .x(1f)
                 .y(2f)
                 .z(3f)
                 .build())
             .build(),
-        PackageSensor.builder()
-            .name("2")
+        PackageSensor.<String>builder()
+            .sensor("2")
             .position(Position.builder()
                 .x(4f)
                 .y(5f)
@@ -34,12 +34,12 @@ public abstract class AudioDataTest<P extends AudioDataPackage> extends DataQual
     P p = createObject();
     assertNull(p.getSensors());
     p = (P) p.updateSensors(sensors);
-    List<PackageSensor> actualSensors = p.getSensors();
+    List<PackageSensor<String>> actualSensors = p.getSensors();
     assertEquals(sensors.size(), actualSensors.size());
 
     for (int i = 0; i < sensors.size(); i++) {
-      PackageSensor expectedSensor = sensors.get(i);;
-      PackageSensor actualSensor = actualSensors.get(i);
+      PackageSensor<String> expectedSensor = sensors.get(i);;
+      PackageSensor<String> actualSensor = actualSensors.get(i);
       assertEquals(expectedSensor, actualSensor);
     }
   }

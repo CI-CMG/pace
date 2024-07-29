@@ -145,16 +145,16 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .build();
   }
 
-  private static List<PackageSensor> packageSensorsFromMap(Map<String, ValueWithColumnNumber> properties, List<PackageSensorTranslator> sensors,
+  private static List<PackageSensor<String>> packageSensorsFromMap(Map<String, ValueWithColumnNumber> properties, List<PackageSensorTranslator> sensors,
       int row, RuntimeException runtimeException) {
     return sensors.stream()
         .map(translator -> packageSensorFromMap(properties, translator, row, runtimeException))
         .toList();
   }
   
-  private static PackageSensor packageSensorFromMap(Map<String, ValueWithColumnNumber> properties, PackageSensorTranslator translator, int row, RuntimeException runtimeException) {
-    return PackageSensor.builder()
-        .name(stringFromMap(properties, translator.getName()))
+  private static PackageSensor<String> packageSensorFromMap(Map<String, ValueWithColumnNumber> properties, PackageSensorTranslator translator, int row, RuntimeException runtimeException) {
+    return PackageSensor.<String>builder()
+        .sensor(stringFromMap(properties, translator.getName()))
         .position(positionFromMap(translator.getPosition(), properties, row, runtimeException))
         .build();
   }
@@ -505,9 +505,9 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .toList();
   }
 
-  private static Channel channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
+  private static Channel<String> channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
-    return Channel.builder()
+    return Channel.<String>builder()
         .sensor(packageSensorFromMap(properties, channelTranslator.getSensor(), row, runtimeException))
         .startTime(localDateTimeFromMap(properties, channelTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, channelTranslator.getEndTime(), row, runtimeException))
@@ -561,7 +561,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .toList();
   }
 
-  private static List<Channel> channelsFromMap(List<ChannelTranslator> channelTranslators, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
+  private static List<Channel<String>> channelsFromMap(List<ChannelTranslator> channelTranslators, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return channelTranslators.stream()
         .map(channelTranslator -> {
           try {

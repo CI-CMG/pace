@@ -9,17 +9,10 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder(toBuilder = true)
-public abstract class ObjectWithUniqueField {
+public abstract class ObjectWithUniqueField implements AbstractObject {
   
   private final UUID uuid;
   @NotNull @Builder.Default
   private final boolean visible = true;
-  
-  @JsonIgnore
-  public abstract String getUniqueField();
-  
-  public abstract ObjectWithUniqueField setUuid(UUID uuid);
-  
-  public abstract ObjectWithUniqueField setVisible(boolean visible);
 
 }

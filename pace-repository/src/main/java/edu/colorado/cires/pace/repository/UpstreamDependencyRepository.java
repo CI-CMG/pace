@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.repository;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public abstract class UpstreamDependencyRepository<O extends ObjectWithUniqueField, D extends ObjectWithUniqueField> extends CRUDRepository<O> {
+public abstract class UpstreamDependencyRepository<O extends AbstractObject, D extends AbstractObject> extends CRUDRepository<O> {
   
   private final Datastore<D> dependencyDatastore;
   

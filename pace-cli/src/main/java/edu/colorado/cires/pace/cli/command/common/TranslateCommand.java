@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.cli.command.common;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.cli.command.translator.TranslatorRepositoryFactory;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -31,7 +32,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public abstract class TranslateCommand<O extends ObjectWithUniqueField, T extends Translator> implements Runnable {
+public abstract class TranslateCommand<O extends AbstractObject, T extends Translator> implements Runnable {
 
   protected abstract Supplier<TranslationType> getTranslationTypeSupplier();
   protected abstract Supplier<String> getTranslatorNameSupplier();

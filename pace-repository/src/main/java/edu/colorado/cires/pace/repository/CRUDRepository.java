@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.repository;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class CRUDRepository<O extends ObjectWithUniqueField> {
+public abstract class CRUDRepository<O extends AbstractObject> {
   private final Logger LOGGER;
 
   private final Datastore<O> datastore;

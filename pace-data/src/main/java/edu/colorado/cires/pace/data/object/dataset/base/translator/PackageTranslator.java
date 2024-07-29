@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.dataset.base.translator;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
@@ -45,7 +45,7 @@ public class PackageTranslator extends Translator {
   private final LocationDetailTranslator locationDetailTranslator;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

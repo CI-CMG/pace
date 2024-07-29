@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.contact.person;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.contact.Contact;
 import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class Person extends Contact {
   final String orcid;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

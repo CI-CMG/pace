@@ -20,8 +20,9 @@ public class PersonRepository extends PackageDependencyRepository<Person> {
     boolean applies = dependency.getScientists().contains(name) ||
         dependency.getDatasetPackager().equals(name);
     
-    if (dependency instanceof DataQuality dataQuality) {
-      applies = applies || dataQuality.getQualityAnalyst().equals(name);
+    if (dependency instanceof DataQuality<?> dataQuality) {
+      String analyst = (String) dataQuality.getQualityAnalyst(); 
+      applies = applies || analyst.equals(name);
     }
     
     return applies;
@@ -39,10 +40,11 @@ public class PersonRepository extends PackageDependencyRepository<Person> {
     Package updatedPackage = dependency.setScientists(scientists)
         .setDatasetPackager(datasetPacker);
     
-    if (updatedPackage instanceof DataQuality dataQuality) {
-      updatedPackage = (Package) dataQuality.setQualityAnalyst(
+    if (updatedPackage instanceof DataQuality<?> dataQuality) {
+      DataQuality<String> quality = (DataQuality<String>) dataQuality; 
+      updatedPackage = (Package) quality.setQualityAnalyst(
           replaceString(
-              dataQuality.getQualityAnalyst(), originalName, newName
+              quality.getQualityAnalyst(), originalName, newName
           )
       );
     }

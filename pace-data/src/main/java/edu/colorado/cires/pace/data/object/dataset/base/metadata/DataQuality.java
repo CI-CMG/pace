@@ -3,14 +3,14 @@ package edu.colorado.cires.pace.data.object.dataset.base.metadata;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import java.util.List;
 
-public interface DataQuality {
+public interface DataQuality<T> {
   
-  String getQualityAnalyst();
+  T getQualityAnalyst();
   String getQualityAnalysisObjectives();
   String getQualityAnalysisMethod();
   String getQualityAssessmentDescription();
   List<DataQualityEntry> getQualityEntries();
   
-  DataQuality setQualityAnalyst(String qualityAnalyst);
+  DataQuality<T> setQualityAnalyst(T qualityAnalyst);
 
 }

@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.translator;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.translator.converter.Converter;
@@ -8,7 +9,7 @@ import java.util.stream.Stream;
 
 public class SpreadsheetConverter {
   
-  public static <T extends Translator, O extends ObjectWithUniqueField> Stream<ObjectWithRowError<O>> execute(Supplier<Stream<MapWithRowNumber>> reader, T translator, Converter<T, O> converter) {
+  public static <T extends Translator, O extends AbstractObject> Stream<ObjectWithRowError<O>> execute(Supplier<Stream<MapWithRowNumber>> reader, T translator, Converter<T, O> converter) {
     RuntimeException runtimeException = new RuntimeException("Translation failed");
 
     return reader.get()

@@ -1,13 +1,8 @@
 package edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.AnalysisDescription;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.AudioTimeRange;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.DataQuality;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.SoftwareDescription;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class SoundLevelMetricsPackage extends Package implements AnalysisDescription, DataQuality, SoftwareDescription, AudioTimeRange {
+public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelMetricsPackage<String> {
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
   private final String qualityAnalyst;
@@ -85,7 +80,7 @@ public class SoundLevelMetricsPackage extends Package implements AnalysisDescrip
   }
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public SoundLevelMetricsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

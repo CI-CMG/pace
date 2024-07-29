@@ -6,12 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-abstract class UpstreamDependencyRepositoryTest<O extends ObjectWithUniqueField, D extends ObjectWithUniqueField> extends CrudRepositoryTest<O> {
+abstract class UpstreamDependencyRepositoryTest<O extends AbstractObject, D extends AbstractObject> extends CrudRepositoryTest<O> {
   protected abstract Class<D> getDependentObjectClass();
 
   protected String getDependentObjectUniqueFieldName() {

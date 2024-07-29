@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.cli.command.common;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -8,7 +9,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-public abstract class UpdateCommand<O extends ObjectWithUniqueField> extends JsonBlobCommand<O> {
+public abstract class UpdateCommand<O extends AbstractObject> extends JsonBlobCommand<O> {
 
   @Override
   protected O runCommandWithDeserializedObject(O object)

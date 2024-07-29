@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
+abstract class CrudRepositoryTest<O extends AbstractObject> {
   
   protected final Map<UUID, O> map = new HashMap<>(0);
   
@@ -39,7 +40,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     return createDatastore(map, getObjectClass(), getUniqueFieldName());
   }
   
-  protected <C extends ObjectWithUniqueField> Datastore<C> createDatastore(Map<UUID, C> map, Class<C> clazz, String uniqueFieldName) {
+  protected <C extends AbstractObject> Datastore<C> createDatastore(Map<UUID, C> map, Class<C> clazz, String uniqueFieldName) {
     return new Datastore<>() {
       @Override
       public C save(C object) {
@@ -85,7 +86,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
 
   private SearchParameters<O> createSearchParameters(List<O> objects, List<Boolean> visibilityStates) {
     return SearchParameters.<O>builder()
-        .uniqueFields(objects.stream().map(ObjectWithUniqueField::getUniqueField).toList())
+        .uniqueFields(objects.stream().map(AbstractObject::getUniqueField).toList())
         .visibilityStates(visibilityStates)
         .build();
   }
@@ -199,7 +200,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
             one, two
         ),
         repository.findAll()
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
   }
@@ -215,7 +216,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         List.of(one, three),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
   }
@@ -231,7 +232,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         Collections.emptyList(),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
 
@@ -239,7 +240,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         List.of(one, three),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
     
@@ -247,14 +248,14 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         List.of(two, four),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
     searchParameters = createSearchParameters(List.of(two), List.of(true));
     assertEquals(
         List.of(two),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
     
@@ -262,7 +263,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         List.of(one, four),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
   }
@@ -278,7 +279,7 @@ abstract class CrudRepositoryTest<O extends ObjectWithUniqueField> {
     assertEquals(
         List.of(one, two, three, four),
         repository.search(searchParameters)
-            .sorted(Comparator.comparing(ObjectWithUniqueField::getUniqueField))
+            .sorted(Comparator.comparing(AbstractObject::getUniqueField))
             .toList()
     );
   }

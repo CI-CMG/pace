@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public abstract class CRUDCommandTest<T extends ObjectWithUniqueField> extends CLITest {
+public abstract class CRUDCommandTest<T extends AbstractObject> extends CLITest {
   
   
   public abstract T createObject(String uniqueField, boolean withUUID);

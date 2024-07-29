@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.data.object.instrument;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithName;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ public class Instrument extends ObjectWithName {
   private final List<@NotBlank String> fileTypes;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

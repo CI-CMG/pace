@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.getImageIcon;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -43,7 +44,7 @@ import org.apache.commons.csv.CSVParser;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
-public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPanel {
+public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
   
   private final boolean autoResizeColumns;
   private final File file;

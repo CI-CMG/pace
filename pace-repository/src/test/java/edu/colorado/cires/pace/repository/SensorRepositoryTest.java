@@ -33,8 +33,8 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
     AudioPackage p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1));
     p = p.toBuilder()
         .uuid(UUID.randomUUID())
-        .sensors(Collections.singletonList(PackageSensor.builder()
-                .name(object.getName())
+        .sensors(Collections.singletonList(PackageSensor.<String>builder()
+                .sensor(object.getName())
                 .position(Position.builder()
                     .x(1f)
                     .y(2f)
@@ -44,7 +44,7 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
         .channels(p.getChannels().stream()
             .map(c -> c.toBuilder()
                 .sensor(c.getSensor().toBuilder()
-                    .name(object.getName())
+                    .sensor(object.getName())
                     .build())
                 .build())
             .toList())
@@ -58,10 +58,10 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
     Package p = packages.get(dependentObjectUUID);
     
     if (p instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList().contains(updated.getName()) &&
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(updated.getName()) &&
           audioDataPackage.getChannels().stream()
               .map(Channel::getSensor)
-              .map(PackageSensor::getName)
+              .map(PackageSensor::getSensor)
               .toList().contains(updated.getName());
     }
     

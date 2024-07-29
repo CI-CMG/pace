@@ -17,10 +17,10 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Sensor object) {
     if (dependency instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList().contains(object.getName()) ||
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(object.getName()) ||
           audioDataPackage.getChannels().stream()
               .map(Channel::getSensor)
-              .anyMatch(s -> s.getName().equals(object.getName()));
+              .anyMatch(s -> s.getSensor().equals(object.getName()));
     }
     
     return false;
@@ -29,20 +29,20 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
   @Override
   protected Package applyObjectToDependentObjects(Sensor original, Sensor updated, Package dependency) {
     AudioDataPackage audioDataPackage = (AudioDataPackage) dependency;
-    List<PackageSensor> sensors = audioDataPackage.getSensors().stream()
+    List<PackageSensor<String>> sensors = audioDataPackage.getSensors().stream()
         .map(s -> s.toBuilder()
-            .name(replaceString(s.getName(), original.getName(), updated.getName()))
+            .sensor(replaceString(s.getSensor(), original.getName(), updated.getName()))
             .build())
         .toList();
-    List<Channel> channels = audioDataPackage.getChannels().stream()
+    List<Channel<String>> channels = audioDataPackage.getChannels().stream()
         .map(c -> c.toBuilder()
             .sensor(c.getSensor().toBuilder()
-                .name(replaceString(c.getSensor().getName(), original.getName(), updated.getName()))
+                .sensor(replaceString(c.getSensor().getSensor(), original.getName(), updated.getName()))
                 .build())
             .build())
         .toList();
 
-    return audioDataPackage.updateChannels(channels)
+    return (Package) audioDataPackage.updateChannels(channels)
         .updateSensors(sensors);
   }
 }

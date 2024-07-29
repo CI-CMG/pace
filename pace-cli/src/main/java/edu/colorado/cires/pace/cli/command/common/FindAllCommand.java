@@ -1,13 +1,13 @@
 package edu.colorado.cires.pace.cli.command.common;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FindAllCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+public abstract class FindAllCommand<O extends AbstractObject> extends CRUDCommand<O> {
   
   protected abstract List<String> getUniqueFields();
   protected abstract Boolean getShowHidden();

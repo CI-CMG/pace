@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 
-abstract class JsonBlobCommand<O extends ObjectWithUniqueField> extends CRUDCommand<O> {
+abstract class JsonBlobCommand<O extends AbstractObject> extends CRUDCommand<O> {
   
   protected abstract Supplier<File> getJsonBlobProvider();
   protected abstract Class<O> getJsonClass();

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
@@ -21,7 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
+abstract class JsonDatastoreTest<O extends AbstractObject> {
   
   private static final Path TEST_PATH = Paths.get("target").resolve("test-dir");
   protected static final ObjectMapper OBJECT_MAPPER = SerializationUtils.createObjectMapper();
@@ -145,9 +146,9 @@ abstract class JsonDatastoreTest<O extends ObjectWithUniqueField> {
     object2 = datastore.save(object2);
     
     List<O> results = datastore.findAll()
-        .sorted((Comparator.comparing(ObjectWithUniqueField::getUuid)))
+        .sorted((Comparator.comparing(AbstractObject::getUuid)))
         .toList();
-    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(ObjectWithUniqueField::getUuid))
+    List<O> expected = Stream.of(object1, object2).sorted(Comparator.comparing(AbstractObject::getUuid))
         .toList();
     
     assertEquals(expected.size(), results.size());

@@ -135,8 +135,8 @@ class PackageConverterTest {
         .recoveryTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .comments("comments")
         .sensors(List.of(
-           PackageSensor.builder()
-               .name("depthSensor")
+           PackageSensor.<String>builder()
+               .sensor("depthSensor")
                .position(Position.builder()
                    .x(1f)
                    .y(2f)
@@ -145,9 +145,9 @@ class PackageConverterTest {
                .build() 
         ))
         .channels(List.of(
-            Channel.builder()
-                .sensor(PackageSensor.builder()
-                    .name("audioSensor")
+            Channel.<String>builder()
+                .sensor(PackageSensor.<String>builder()
+                    .sensor("audioSensor")
                     .position(Position.builder()
                         .x(4f)
                         .y(5f)
@@ -197,9 +197,9 @@ class PackageConverterTest {
                         .build()
                 ))
                 .build(),
-            Channel.builder()
-                .sensor(PackageSensor.builder()
-                    .name("depthSensor")
+            Channel.<String>builder()
+                .sensor(PackageSensor.<String>builder()
+                    .sensor("depthSensor")
                     .position(Position.builder()
                         .x(4f)
                         .y(5f)
@@ -552,14 +552,14 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getComments()), 60));
 
     for (int i = 0; i < audioPackageTranslator.getSensors().size(); i++) {
-      map.put(audioPackageTranslator.getSensors().get(i).getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getSensors().get(i).getName()), 61));
+      map.put(audioPackageTranslator.getSensors().get(i).getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getSensors().get(i).getSensor()), 61));
       map.put(audioPackageTranslator.getSensors().get(i).getPosition().getX(), new ValueWithColumnNumber(Optional.of(audioPackage.getSensors().get(i).getPosition().getX().toString()), 61));
       map.put(audioPackageTranslator.getSensors().get(i).getPosition().getY(), new ValueWithColumnNumber(Optional.of(audioPackage.getSensors().get(i).getPosition().getY().toString()), 61));
       map.put(audioPackageTranslator.getSensors().get(i).getPosition().getZ(), new ValueWithColumnNumber(Optional.of(audioPackage.getSensors().get(i).getPosition().getZ().toString()), 61));
     }
     
     ChannelTranslator channelTranslator = audioPackageTranslator.getChannelTranslators().get(0);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getName()), 62));
+    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getSensor()), 62));
     map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getX().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getY().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getZ().toString()), 62));
@@ -601,7 +601,7 @@ class PackageConverterTest {
     map.put(gainTranslator.getGain(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getGains().get(1).getGain().toString()), 86));
 
     channelTranslator = audioPackageTranslator.getChannelTranslators().get(1);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getName()), 87));
+    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getSensor()), 87));
     map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getX().toString()), 87));
     map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getY().toString()), 87));
     map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getZ().toString()), 87));
@@ -717,8 +717,8 @@ class PackageConverterTest {
         .recoveryTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .comments("comments")
         .sensors(List.of(
-            PackageSensor.builder()
-                .name("depthSensor")
+            PackageSensor.<String>builder()
+                .sensor("depthSensor")
                 .position(Position.builder()
                     .x(1f)
                     .y(2f)
@@ -727,9 +727,9 @@ class PackageConverterTest {
                 .build()
         ))
         .channels(List.of(
-            Channel.builder()
-                .sensor(PackageSensor.builder()
-                    .name("audioSensor")
+            Channel.<String>builder()
+                .sensor(PackageSensor.<String>builder()
+                    .sensor("audioSensor")
                     .position(Position.builder()
                         .x(4f)
                         .y(5f)
@@ -779,9 +779,9 @@ class PackageConverterTest {
                         .build()
                 ))
                 .build(),
-            Channel.builder()
-                .sensor(PackageSensor.builder()
-                    .name("depthSensor")
+            Channel.<String>builder()
+                .sensor(PackageSensor.<String>builder()
+                    .sensor("depthSensor")
                     .position(Position.builder()
                         .x(4f)
                         .y(5f)
@@ -1207,14 +1207,14 @@ class PackageConverterTest {
     map.put((cpodPackageTranslator.getRecoveryTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getRecoveryTime().toString()), 59));
     map.put(cpodPackageTranslator.getComments(), new ValueWithColumnNumber(Optional.of(cpodPackage.getComments()), 60));
     for (int i = 0; i < cpodPackageTranslator.getSensors().size(); i++) {
-      map.put(cpodPackageTranslator.getSensors().get(i).getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getName()), 61));
+      map.put(cpodPackageTranslator.getSensors().get(i).getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getSensor()), 61));
       map.put(cpodPackageTranslator.getSensors().get(i).getPosition().getX(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getPosition().getX().toString()), 61));
       map.put(cpodPackageTranslator.getSensors().get(i).getPosition().getY(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getPosition().getY().toString()), 61));
       map.put(cpodPackageTranslator.getSensors().get(i).getPosition().getZ(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getPosition().getZ().toString()), 61));
     }
 
     ChannelTranslator channelTranslator = cpodPackageTranslator.getChannelTranslators().get(0);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getName()), 62));
+    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getSensor()), 62));
     map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getX().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getY().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getZ().toString()), 62));
@@ -1256,7 +1256,7 @@ class PackageConverterTest {
     map.put(gainTranslator.getGain(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getGains().get(1).getGain().toString()), 86));
 
     channelTranslator = cpodPackageTranslator.getChannelTranslators().get(1);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getName()), 62));
+    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getSensor()), 62));
     map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getX().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getY().toString()), 62));
     map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getZ().toString()), 62));

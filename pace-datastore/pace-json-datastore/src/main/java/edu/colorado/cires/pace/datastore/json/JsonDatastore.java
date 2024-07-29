@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.datastore.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.Datastore;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class JsonDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
+abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
   
   private final Logger LOGGER;
   

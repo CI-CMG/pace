@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.data.object.dataset.audio;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import java.util.List;
 import java.util.UUID;
@@ -58,12 +58,12 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public AudioPackage updateChannels(List<Channel> channels) {
+  public AudioPackage updateChannels(List<Channel<String>> channels) {
     return toBuilder().channels(channels).build();
   }
 
   @Override
-  public AudioPackage updateSensors(List<PackageSensor> sensors) {
+  public AudioPackage updateSensors(List<PackageSensor<String>> sensors) {
     return toBuilder().sensors(sensors).build();
   }
 
@@ -73,7 +73,7 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

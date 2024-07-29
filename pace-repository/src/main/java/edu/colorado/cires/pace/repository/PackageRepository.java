@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.repository;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioDataPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.DataQuality;
@@ -9,7 +10,6 @@ import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
@@ -92,15 +92,16 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     if (object instanceof DetectionsPackage detectionsPackage) {
       checkDependency(detectionsPackage.getSoundSource(), detectionTypeDatastore, "soundSource", constraintViolations);
     } else if (object instanceof AudioDataPackage audioDataPackage) {
-      checkDependencies(audioDataPackage.getSensors().stream().map(PackageSensor::getName).toList(), sensorDatastore, "sensors", constraintViolations);
-      List<Channel> channels = audioDataPackage.getChannels();
+      checkDependencies(audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList(), sensorDatastore, "sensors", constraintViolations);
+      List<Channel<String>> channels = audioDataPackage.getChannels();
       for (int i = 0; i < channels.size(); i++) {
-        checkDependency(channels.get(i).getSensor().getName(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
+        checkDependency(channels.get(i).getSensor().getSensor(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
       }
     }
     
-    if (object instanceof DataQuality dataQuality) {
-      checkDependency(dataQuality.getQualityAnalyst(), personDatastore, "qualityAnalyst", constraintViolations);
+    if (object instanceof DataQuality<?> dataQuality) {
+      String analyst = (String) dataQuality.getQualityAnalyst();
+      checkDependency(analyst, personDatastore, "qualityAnalyst", constraintViolations);
     }
     
     if (!constraintViolations.isEmpty()) {
@@ -111,7 +112,7 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     
   }
   
-  private <T extends ObjectWithUniqueField> void checkDependencies(List<String> objectUniqueFields, Datastore<T> datastore, String rootPath, Set<ConstraintViolation<Package>> constraintViolations)
+  private <T extends AbstractObject> void checkDependencies(List<String> objectUniqueFields, Datastore<T> datastore, String rootPath, Set<ConstraintViolation<Package>> constraintViolations)
       throws DatastoreException {
     for (int i = 0; i < objectUniqueFields.size(); i++) {
       checkDependency(
@@ -123,7 +124,7 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     }
   }
   
-  private <T extends ObjectWithUniqueField> void checkDependency(String objectUniqueField, Datastore<T> datastore, String path, Set<ConstraintViolation<Package>> constraintViolations)
+  private <T extends AbstractObject> void checkDependency(String objectUniqueField, Datastore<T> datastore, String path, Set<ConstraintViolation<Package>> constraintViolations)
       throws DatastoreException {
     Optional<T> maybeObject = datastore.findByUniqueField(objectUniqueField);
     if (maybeObject.isEmpty()) {

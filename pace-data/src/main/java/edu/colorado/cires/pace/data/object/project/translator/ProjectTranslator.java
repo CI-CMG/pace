@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.project.translator;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.UUID;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class ProjectTranslator extends Translator {
   }
 
   @Override
-  public ObjectWithUniqueField setVisible(boolean visible) {
+  public AbstractObject setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
   }
 }

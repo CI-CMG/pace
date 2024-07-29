@@ -1,12 +1,9 @@
 package edu.colorado.cires.pace.data.object.dataset.detections;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.AnalysisDescription;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.DataQuality;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.SoftwareDescription;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class DetectionsPackage extends Package implements DataQuality, SoftwareDescription, AnalysisDescription {
+public class DetectionsPackage extends Package implements BaseDetectionsPackage<String> {
   @NotBlank
   private final String soundSource;
   
@@ -83,18 +80,19 @@ public class DetectionsPackage extends Package implements DataQuality, SoftwareD
   public DetectionsPackage setInstrument(String instrument) {
     return toBuilder().instrument(instrument).build();
   }
-  
-  public DetectionsPackage setSoundSource(String soundSource) {
-    return toBuilder().soundSource(soundSource).build();
-  }
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
   @Override
   public DetectionsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
+  }
+
+  @Override
+  public DetectionsPackage setSoundSource(String soundSource) {
+    return toBuilder().soundSource(soundSource).build();
   }
 }

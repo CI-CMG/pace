@@ -176,7 +176,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   @Override
   protected void addPackageTypeSpecificFields(List<String> fields, AudioPackage object) {
     DataQualityEntry qualityEntry = object.getQualityEntries().get(0);
-    Channel channel = object.getChannels().get(0);
+    Channel<String> channel = object.getChannels().get(0);
     SampleRate sampleRate = channel.getSampleRates().get(0);
     DutyCycle dutyCycle = channel.getDutyCycles().get(0);
     Gain gain = channel.getGains().get(0);
@@ -189,7 +189,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       object.getDeploymentTime().toString(),
       object.getRecoveryTime().toString(),
       object.getComments(),
-      object.getSensors().get(0).getName(),
+      object.getSensors().get(0).getSensor(),
       object.getSensors().get(0).getPosition().getX().toString(),
       object.getSensors().get(0).getPosition().getY().toString(),
       object.getSensors().get(0).getPosition().getZ().toString(),
@@ -203,7 +203,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       qualityEntry.getMaxFrequency().toString(),
       qualityEntry.getQualityLevel().getName(),
       qualityEntry.getComments(),
-      channel.getSensor().getName(),
+      channel.getSensor().getSensor(),
         channel.getSensor().getPosition().getX().toString(),
         channel.getSensor().getPosition().getY().toString(),
         channel.getSensor().getPosition().getZ().toString(),
@@ -418,7 +418,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
     }
   }
   
-  private void assertChannelsEqual(Channel expected, Channel actual) throws JsonProcessingException {
+  private void assertChannelsEqual(Channel<String> expected, Channel<String> actual) throws JsonProcessingException {
     assertEquals(
         objectMapper.writeValueAsString(expected.getSensor()),
         objectMapper.writeValueAsString(actual.getSensor())
@@ -547,19 +547,19 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .deploymentTime(LocalDateTime.of(2019, 12, 31, 12, 1, 1))
         .recoveryTime(LocalDateTime.of(2019, 12, 31, 22, 59, 1))
         .comments("deployment comments")
-        .sensors(List.of(PackageSensor.builder()
-                .name(sensor1.getName())
+        .sensors(List.of(PackageSensor.<String>builder()
+                .sensor(sensor1.getName())
                 .position(Position.builder()
                     .x(1f)
                     .y(2f)
                     .z(3f)
                     .build())
             .build()))
-        .channels(List.of(Channel.builder()
+        .channels(List.of(Channel.<String>builder()
                 .startTime(LocalDateTime.of(2019, 12, 31, 12, 5, 1))
                 .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
-                .sensor(PackageSensor.builder()
-                    .name(sensor2.getName())
+                .sensor(PackageSensor.<String>builder()
+                    .sensor(sensor2.getName())
                     .position(Position.builder()
                         .x(1f)
                         .y(2f)

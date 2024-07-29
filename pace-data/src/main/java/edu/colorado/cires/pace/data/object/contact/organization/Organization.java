@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.contact.organization;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.contact.Contact;
 import java.util.UUID;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 public class Organization extends Contact {
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.sea.translator;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.UUID;
 import lombok.Data;
@@ -17,7 +17,7 @@ public class SeaTranslator extends Translator {
   private final String seaName;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

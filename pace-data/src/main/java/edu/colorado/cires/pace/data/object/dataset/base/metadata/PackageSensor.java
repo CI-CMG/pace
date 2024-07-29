@@ -13,9 +13,9 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode
 @Builder(toBuilder = true)
 @Jacksonized
-public class PackageSensor {
-  @NotBlank
-  private final String name;
+public class PackageSensor<T> {
+  @NotNull @Valid
+  private final T sensor;
   @NotNull @Valid
   private final Position position;
 }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
 import edu.colorado.cires.pace.data.object.base.Translator;
@@ -21,7 +22,7 @@ import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.junit.jupiter.api.Test;
 
-public abstract class TranslateCommandTest<O extends ObjectWithUniqueField, T extends Translator> extends CRUDCommandTest<O> {
+public abstract class TranslateCommandTest<O extends AbstractObject, T extends Translator> extends CRUDCommandTest<O> {
   
   protected abstract String[] getTranslatorFields();
   protected abstract T createTranslator(String name);

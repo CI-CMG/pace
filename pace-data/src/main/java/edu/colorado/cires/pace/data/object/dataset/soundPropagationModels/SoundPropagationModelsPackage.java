@@ -1,9 +1,9 @@
 package edu.colorado.cires.pace.data.object.dataset.soundPropagationModels;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.AudioTimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.SoftwareDescription;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,7 +19,7 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class SoundPropagationModelsPackage extends Package implements SoftwareDescription, AudioTimeRange {
+public class SoundPropagationModelsPackage extends Package implements BaseSoundPropagationModelsPackage {
   @Positive @NotNull
   private final Float modeledFrequency;
   private final String softwareNames;
@@ -71,7 +71,7 @@ public class SoundPropagationModelsPackage extends Package implements SoftwareDe
   }
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

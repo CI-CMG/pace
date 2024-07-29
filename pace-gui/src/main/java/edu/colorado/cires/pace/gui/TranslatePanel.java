@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -10,7 +11,7 @@ import java.awt.Dimension;
 import java.util.function.Function;
 import javax.swing.JDialog;
 
-public abstract class TranslatePanel<O extends ObjectWithUniqueField, T extends Translator> extends DataPanel<O> {
+public abstract class TranslatePanel<O extends AbstractObject, T extends Translator> extends DataPanel<O> {
 
   private final Class<O> clazz;
   private final TranslatorRepository translatorRepository;

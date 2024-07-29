@@ -30,6 +30,6 @@ public class SeaRepository extends PackageDependencyRepository<Sea> {
         )
     );
 
-    return dependency.setLocationDetail(locationDetail);
+    return (Package) dependency.setLocationDetail(locationDetail);
   }
 }

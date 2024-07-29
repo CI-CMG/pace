@@ -1,9 +1,8 @@
 package edu.colorado.cires.pace.data.object.dataset.soundClips;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.SoftwareDescription;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
@@ -15,8 +14,8 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class SoundClipsPackage extends Package implements SoftwareDescription {
-private final String softwareNames;
+public class SoundClipsPackage extends Package implements BaseSoundClipsPackage {
+  private final String softwareNames;
   private final String softwareVersions;
   private final String softwareProtocolCitation;
   private final String softwareDescription;
@@ -63,7 +62,7 @@ private final String softwareNames;
   }
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

@@ -1,6 +1,6 @@
 package edu.colorado.cires.pace.data.object.sensor.other;
 
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class OtherSensor extends Sensor {
   private String properties;
 
   @Override
-  public ObjectWithUniqueField setUuid(UUID uuid) {
+  public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

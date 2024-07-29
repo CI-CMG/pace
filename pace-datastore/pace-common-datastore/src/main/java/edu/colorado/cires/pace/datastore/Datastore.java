@@ -1,11 +1,12 @@
 package edu.colorado.cires.pace.datastore;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public interface Datastore<O extends ObjectWithUniqueField> {
+public interface Datastore<O extends AbstractObject> {
 
   O save(O object) throws DatastoreException;
   void delete(O object) throws DatastoreException;

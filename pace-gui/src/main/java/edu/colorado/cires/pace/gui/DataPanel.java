@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
@@ -27,7 +28,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class DataPanel<O extends ObjectWithUniqueField> extends JPanel {
+public abstract class DataPanel<O extends AbstractObject> extends JPanel {
   
   protected final DefaultTableModel tableModel;
   protected final CRUDRepository<O> repository;
