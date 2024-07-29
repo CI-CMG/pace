@@ -7,15 +7,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.packaging.PackageInflator;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.PlatformRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
@@ -58,6 +63,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private final PersonRepository personRepository;
   private final OrganizationRepository organizationRepository;
   private final ProjectRepository projectRepository;
+  private final PlatformRepository platformRepository;
+  private final InstrumentRepository instrumentRepository;
+  private final SensorRepository sensorRepository;
+  private final DetectionTypeRepository detectionTypeRepository;
 
   public PackagesPanel(CRUDRepository<Package> repository, String[] headers,
       Function<Package, Object[]> objectConversion,
@@ -65,12 +74,17 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       ObjectMapper objectMapper,
       TranslatorRepository translatorRepository,
       Converter<PackageTranslator, Package> converter, PersonRepository personRepository, OrganizationRepository organizationRepository,
-      ProjectRepository projectRepository) {
+      ProjectRepository projectRepository, PlatformRepository platformRepository, InstrumentRepository instrumentRepository,
+      SensorRepository sensorRepository, DetectionTypeRepository detectionTypeRepository) {
     super("packagesPanel", repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
     this.objectMapper = objectMapper;
     this.personRepository = personRepository;
     this.organizationRepository = organizationRepository;
     this.projectRepository = projectRepository;
+    this.platformRepository = platformRepository;
+    this.instrumentRepository = instrumentRepository;
+    this.sensorRepository = sensorRepository;
+    this.detectionTypeRepository = detectionTypeRepository;
   }
 
   @Override
@@ -215,6 +229,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
           try {
             PackageProcessor packageProcessor = new PackageProcessor(
                 objectMapper,
+                new PackageInflator(
+                    personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+                    sensorRepository, detectionTypeRepository
+                ),
                 personRepository.findAll().toList(),
                 organizationRepository.findAll().toList(),
                 projectRepository.findAll().toList(),

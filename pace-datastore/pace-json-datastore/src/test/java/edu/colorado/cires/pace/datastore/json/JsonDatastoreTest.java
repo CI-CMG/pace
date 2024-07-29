@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.File;

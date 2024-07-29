@@ -3,16 +3,17 @@ package edu.colorado.cires.pace.data.object.dataset.audio;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
+@Jacksonized
 public class DetailedAudioPackage extends DetailedAudioDataPackage {
 
   @Override

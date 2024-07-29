@@ -2,9 +2,7 @@ package edu.colorado.cires.pace.data.object.dataset.soundPropagationModels;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.AudioTimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.SoftwareDescription;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;

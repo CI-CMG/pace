@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

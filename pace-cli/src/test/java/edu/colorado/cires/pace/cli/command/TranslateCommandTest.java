@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.io.File;

@@ -38,7 +38,7 @@ public abstract class AudioDataTest<P extends AudioDataPackage> extends DataQual
     assertEquals(sensors.size(), actualSensors.size());
 
     for (int i = 0; i < sensors.size(); i++) {
-      PackageSensor<String> expectedSensor = sensors.get(i);;
+      PackageSensor<String> expectedSensor = sensors.get(i);
       PackageSensor<String> actualSensor = actualSensors.get(i);
       assertEquals(expectedSensor, actualSensor);
     }

@@ -2,17 +2,19 @@ package edu.colorado.cires.pace.packaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
+import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
@@ -21,11 +23,25 @@ import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
+import edu.colorado.cires.pace.data.object.platform.Platform;
 import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
+import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
+import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
+import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
+import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.PlatformRepository;
+import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -65,6 +81,19 @@ class PackagerProcessorTest {
   private static final List<Project> PROJECTS = List.of(Project.builder()
           .name("project")
       .build());
+  
+  private final PersonRepository personRepository = mock(PersonRepository.class);
+  private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
+  private final ProjectRepository projectRepository = mock(ProjectRepository.class);
+  private final PlatformRepository platformRepository = mock(PlatformRepository.class);
+  private final InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
+  private final SensorRepository sensorRepository = mock(SensorRepository.class);
+  private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
+  
+  PackageInflator packageInflator = new PackageInflator(
+      personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+      sensorRepository, detectionTypeRepository
+  );
 
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper();
   private final Path testOutputPath = Paths.get("target").resolve("output");
@@ -90,7 +119,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
+        objectMapper, packageInflator, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -123,7 +152,7 @@ class PackagerProcessorTest {
       String otherPath,
       String temperaturePath,
       String sourcePath
-  ) throws IOException, PackagingException {
+  ) throws IOException, PackagingException, NotFoundException, DatastoreException {
     Path sp = sourcePath == null ? null : Path.of(sourcePath).toAbsolutePath();
     Path tp = temperaturePath == null ? null : Path.of(temperaturePath).toAbsolutePath();
     Path op = otherPath == null ? null : Path.of(otherPath).toAbsolutePath();
@@ -154,7 +183,15 @@ class PackagerProcessorTest {
         objectMapper.writeValueAsString(packingJob), Package.class
     );
 
-    Package expectedMetadataPackage = ((AudioPackage) packingJob).toBuilder()
+    DetailedPackage expectedMetadataPackage = ((DetailedAudioPackage) createDetailedPackingJob(
+        sp,
+        tp,
+        op,
+        np,
+        dp,
+        cdp,
+        bp
+    )).toBuilder()
         .uuid(null)
         .temperaturePath(null)
         .biologicalPath(null)
@@ -195,7 +232,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     List<Package> packages = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
+        objectMapper, packageInflator, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, progressIndicator
     ).process();
     assertTrue(packages.stream().noneMatch(Package::isVisible));
     verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
@@ -228,17 +265,227 @@ class PackagerProcessorTest {
     
     String actualProjects = FileUtils.readFileToString(baseExpectedOutputPath.resolve("projects.json").toFile(), StandardCharsets.UTF_8);
     assertEquals(expectedProjects, actualProjects);
+  }
+  
+  private DetailedPackage createDetailedPackingJob(
+      Path sourcePath,
+      Path temperaturePath,
+      Path otherPath,
+      Path navigationPath,
+      Path documentsPath,
+      Path calibrationDocumentsPath,
+      Path biologicalPath
+  ) throws NotFoundException, DatastoreException {
+    DetailedAudioPackage detailedPackage = DetailedAudioPackage.builder()
+        .uuid(UUID.randomUUID())
+        .sourcePath(sourcePath)
+        .temperaturePath(temperaturePath)
+        .otherPath(otherPath)
+        .navigationPath(navigationPath)
+        .documentsPath(documentsPath)
+        .calibrationDocumentsPath(calibrationDocumentsPath)
+        .biologicalPath(biologicalPath)
+        .siteOrCruiseName("siteOrCruiseName")
+        .deploymentId("deploymentId")
+        .datasetPackager(Person.builder()
+            .name("dataset-packager")
+            .build())
+        .projects(List.of(
+            Project.builder()
+                .name("project-name-1")
+                .build(),
+            Project.builder()
+                .name("project-name-2")
+                .build()
+        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .scientists(List.of(
+            Person.builder()
+                .name("scientist-1")
+                .build(),
+            Person.builder()
+                .name("scientist-2")
+                .build()
+        )).sponsors(List.of(
+            Organization.builder()
+                .name("organization-1")
+                .build(),
+            Organization.builder()
+                .name("organization-2")
+                .build()
+        )).funders(List.of(
+            Organization.builder()
+                .name("organization-3")
+                .build(),
+            Organization.builder()
+                .name("organization-4")
+                .build()
+        )).platform(
+            Platform.builder()
+                .name("platform")
+                .build()
+        ).instrument(Instrument.builder()
+            .name("instrument")
+            .build())
+        .instrumentId("instrumentId")
+        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
+        .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .calibrationDescription("calibration-description")
+        .hydrophoneSensitivity(10f)
+        .frequencyRange(5f)
+        .gain(1f)
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
+        .deploymentDescription("deployment-description")
+        .alternateSiteName("alternate-site-name")
+        .alternateDeploymentName("alternate-deployment-name")
+        .qualityAnalyst(Person.builder()
+            .name("qualityAnalyst")
+            .build())
+        .qualityAnalysisObjectives("quality-analyst-objectives")
+        .qualityAnalysisMethod("quality-analysis-method")
+        .qualityAssessmentDescription("quality-assessment-description")
+        .qualityEntries(List.of(
+            DataQualityEntry.builder()
+                .comments("comment-1")
+                .qualityLevel(QualityLevel.good)
+                .maxFrequency(10f)
+                .minFrequency(5f)
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+                .build(),
+            DataQualityEntry.builder()
+                .comments("comment-2")
+                .qualityLevel(QualityLevel.unusable)
+                .maxFrequency(10f)
+                .minFrequency(5f)
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                .build()
+        )).deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(4))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(1))
+        .comments("deployment-comments")
+        .sensors(List.of(
+            PackageSensor.<AbstractObject>builder()
+                .sensor(AudioSensor.builder()
+                    .name("audio-sensor")
+                    .build())
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(),
+            PackageSensor.<AbstractObject>builder()
+                .sensor(DepthSensor.builder()
+                    .name("depth-sensor")
+                    .build())
+                .position(Position.builder()
+                    .x(4f)
+                    .y(5f)
+                    .z(6f)
+                    .build())
+                .build()
+        )).channels(List.of(
+            Channel.<AbstractObject>builder()
+                .sensor(PackageSensor.<AbstractObject>builder()
+                    .sensor(AudioSensor.builder()
+                        .name("audioSensor")
+                        .build())
+                    .position(Position.builder()
+                        .x(7f)
+                        .y(8f)
+                        .z(9f)
+                        .build())
+                    .build())
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(2))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+                .sampleRates(List.of(
+                    SampleRate.builder()
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+                        .sampleBits(10)
+                        .sampleRate(10f)
+                        .build()
+                )).dutyCycles(List.of(
+                    DutyCycle.builder()
+                        .duration(100f)
+                        .interval(100f)
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
+                        .build()
+                )).gains(List.of(
+                    Gain.builder()
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
+                        .gain(1000f)
+                        .build()
+                ))
+                .build()
+        )).locationDetail(StationaryMarineLocation.builder()
+            .seaArea("seaArea")
+            .deploymentLocation(MarineInstrumentLocation.builder()
+                .instrumentDepth(-10f)
+                .seaFloorDepth(-100f)
+                .longitude(10d)
+                .latitude(10d)
+                .build())
+            .recoveryLocation(MarineInstrumentLocation.builder()
+                .instrumentDepth(-20f)
+                .seaFloorDepth(-110f)
+                .longitude(15d)
+                .latitude(15d)
+                .build())
+            .build())
+        .build();
+
+    for (AbstractObject scientist : detailedPackage.getScientists()) {
+      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
+    }
+    when(personRepository.getByUniqueField(detailedPackage.getQualityAnalyst().getUniqueField())).thenReturn(
+        (Person) detailedPackage.getQualityAnalyst());
+    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+        (Person) detailedPackage.getDatasetPackager()
+    );
+
+    for (AbstractObject project : detailedPackage.getProjects()) {
+      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
+          (Project) project
+      );
+    }
+
+    for (AbstractObject funder : detailedPackage.getFunders()) {
+      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
+          (Organization) funder
+      );
+    }
+    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
+      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
+          (Organization) sponsor
+      );
+    }
     
-    Package dataset = objectMapper.readValue(actualMetadata, Package.class);
-    assertInstanceOf(AudioPackage.class, dataset);
-    assertNull(dataset.getUuid());
-    assertNull(dataset.getTemperaturePath());
-    assertNull(dataset.getBiologicalPath());
-    assertNull(dataset.getOtherPath());
-    assertNull(dataset.getDocumentsPath());
-    assertNull(dataset.getCalibrationDocumentsPath());
-    assertNull(dataset.getNavigationPath());
-    assertNull(dataset.getSourcePath());
+    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
+        (Platform) detailedPackage.getPlatform()
+    );
+    
+    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
+        (Instrument) detailedPackage.getInstrument()
+    );
+
+    for (PackageSensor<AbstractObject> sensor : detailedPackage.getSensors()) {
+      when(sensorRepository.getByUniqueField(sensor.getSensor().getUniqueField())).thenReturn(
+          (Sensor) sensor.getSensor()
+      );
+    }
+    for (Channel<AbstractObject> channel : detailedPackage.getChannels()) {
+      when(sensorRepository.getByUniqueField(channel.getSensor().getSensor().getUniqueField())).thenReturn(
+          (Sensor) channel.getSensor().getSensor()
+      );
+    }
+    
+    return detailedPackage;
   }
 
   private Package createPackingJob(
@@ -264,7 +511,7 @@ class PackagerProcessorTest {
         .datasetPackager("dataset-packager")
         .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
@@ -275,10 +522,10 @@ class PackagerProcessorTest {
             "platform"
         ).instrument("instrument")
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.now().minusMinutes(1))
-        .endTime(LocalDateTime.now())
-        .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
-        .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
+        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
+        .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
@@ -298,19 +545,19 @@ class PackagerProcessorTest {
                 .qualityLevel(QualityLevel.good)
                 .maxFrequency(10f)
                 .minFrequency(5f)
-                .startTime(LocalDateTime.now().minusMinutes(10))
-                .endTime(LocalDateTime.now())
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
                 .build(),
             DataQualityEntry.builder()
                 .comments("comment-2")
                 .qualityLevel(QualityLevel.unusable)
                 .maxFrequency(10f)
                 .minFrequency(5f)
-                .startTime(LocalDateTime.now().minusMinutes(20))
-                .endTime(LocalDateTime.now().minusMinutes(10))
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
                 .build()
-        )).deploymentTime(LocalDateTime.now().minusDays(4))
-        .recoveryTime(LocalDateTime.now().minusDays(1))
+        )).deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(4))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(1))
         .comments("deployment-comments")
         .sensors(List.of(
             PackageSensor.<String>builder()
@@ -339,12 +586,12 @@ class PackagerProcessorTest {
                         .z(9f)
                         .build())
                     .build())
-                .startTime(LocalDateTime.now().minusMinutes(2))
-                .endTime(LocalDateTime.now().minusMinutes(1))
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(2))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
                 .sampleRates(List.of(
                     SampleRate.builder()
-                        .startTime(LocalDateTime.now().minusMinutes(1))
-                        .endTime(LocalDateTime.now())
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
                         .sampleBits(10)
                         .sampleRate(10f)
                         .build()
@@ -352,13 +599,13 @@ class PackagerProcessorTest {
                     DutyCycle.builder()
                         .duration(100f)
                         .interval(100f)
-                        .startTime(LocalDateTime.now().minusMinutes(10))
-                        .endTime(LocalDateTime.now().minusMinutes(5))
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
                         .build()
                 )).gains(List.of(
                     Gain.builder()
-                        .startTime(LocalDateTime.now().minusMinutes(20))
-                        .endTime(LocalDateTime.now().minusMinutes(5))
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
                         .gain(1000f)
                         .build()
                 ))

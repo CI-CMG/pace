@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
@@ -173,19 +172,7 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
         .visibilityStates(visibilityStateSearchTerms)
         .build();
   }
-  
-  protected void loadData() {
-    cleanUpTable();
-    
-    try {
-      repository.findAll().forEach(
-          o -> tableModel.addRow(objectConversion.apply(o))
-      );
-    } catch (DatastoreException e) {
-      throw new RuntimeException(e);
-    }
-  }
-  
+
   protected void searchData() {
     cleanUpTable();
 

@@ -31,6 +31,6 @@ public class ShipRepository extends PackageDependencyRepository<Ship> {
         replaceString(locationDetail.getVessel(), original.getName(), updated.getName())
     );
 
-    return (Package) dependency.setLocationDetail(locationDetail);
+    return dependency.setLocationDetail(locationDetail);
   }
 }

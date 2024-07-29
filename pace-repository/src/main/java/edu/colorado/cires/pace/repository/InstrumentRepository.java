@@ -35,7 +35,7 @@ public class InstrumentRepository extends PackageDependencyRepository<Instrument
 
   @Override
   protected Package applyObjectToDependentObjects(Instrument original, Instrument updated, Package dependency) {
-    return (Package) dependency.setInstrument(
+    return dependency.setInstrument(
         replaceString(
             dependency.getInstrument(), original.getName(), updated.getName()
         )

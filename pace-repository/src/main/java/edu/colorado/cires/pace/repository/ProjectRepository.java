@@ -17,7 +17,7 @@ public class ProjectRepository extends PackageDependencyRepository<Project> {
 
   @Override
   protected Package applyObjectToDependentObjects(Project original, Project updated, Package dependency) {
-    return (Package) dependency.setProjects(
+    return dependency.setProjects(
         replaceStringInList(
             dependency.getProjects(), original.getName(), updated.getName()
         )

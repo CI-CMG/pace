@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.packaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -52,7 +53,7 @@ final class FileUtils {
         Files.size(source) != Files.size(target);
   }
   
-  public static Path writeMetadata(Package aPackage, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
+  public static Path writeMetadata(DetailedPackage aPackage, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
     ObjectNode metadata = (ObjectNode) objectMapper
         .readTree(
             objectMapper.writeValueAsString(aPackage)

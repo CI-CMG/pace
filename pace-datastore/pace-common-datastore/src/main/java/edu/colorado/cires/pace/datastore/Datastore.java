@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.datastore;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;

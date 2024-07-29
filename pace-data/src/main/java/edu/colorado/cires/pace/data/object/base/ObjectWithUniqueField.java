@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.data.object.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.Builder;

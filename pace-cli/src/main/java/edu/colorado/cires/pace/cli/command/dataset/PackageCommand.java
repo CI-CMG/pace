@@ -20,17 +20,29 @@ import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByPackageId
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Pack;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Update;
+import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.packaging.PackageInflator;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.repository.OrganizationRepository;
+import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.pace.repository.PlatformRepository;
+import edu.colorado.cires.pace.repository.ProjectRepository;
+import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import edu.colorado.cires.pace.translator.converter.PackageConverter;
 import edu.colorado.cires.pace.utilities.TranslationType;
@@ -269,10 +281,23 @@ public class PackageCommand {
         ObjectMapper objectMapper = createObjectMapper();
 
         CRUDRepository<Package> packageRepository = PackageRepositoryFactory.createRepository(workDir, objectMapper);
+
+        PersonRepository personRepository = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        OrganizationRepository organizationRepository = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        ProjectRepository projectRepository = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        PlatformRepository platformRepository = PlatformRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        InstrumentRepository instrumentRepository = InstrumentRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        SensorRepository sensorRepository = SensorRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        DetectionTypeRepository detectionTypeRepository = DetectionTypeRepositoryFactory.createJsonRepository(workDir, objectMapper);
         
-        List<Person> people = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
-        List<Organization> organizations = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
-        List<Project> projects = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper).findAll().toList();
+        List<Person> people = personRepository.findAll().toList();
+        List<Organization> organizations = organizationRepository.findAll().toList();
+        List<Project> projects = projectRepository.findAll().toList();
+
+        PackageInflator packageInflator = new PackageInflator(
+            personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+            sensorRepository, detectionTypeRepository
+        );
         
         Path outputPath = outputDirectory.toPath();
         
@@ -294,7 +319,7 @@ public class PackageCommand {
         );
 
         PackageProcessor packageProcessor = new PackageProcessor(
-            objectMapper, people, organizations, projects, packages, outputPath, progressIndicators
+            objectMapper, packageInflator, people, organizations, projects, packages, outputPath, progressIndicators
         );
 
         List<Package> processedPackages = packageProcessor.process().stream()

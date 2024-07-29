@@ -17,7 +17,7 @@ public class PlatformRepository extends PackageDependencyRepository<Platform> {
 
   @Override
   protected Package applyObjectToDependentObjects(Platform original, Platform updated, Package dependency) {
-    return (Package) dependency.setPlatform(
+    return dependency.setPlatform(
         replaceString(
             dependency.getPlatform(), original.getName(), updated.getName()
         )

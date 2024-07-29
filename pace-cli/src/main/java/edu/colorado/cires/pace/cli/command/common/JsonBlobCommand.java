@@ -2,7 +2,6 @@ package edu.colorado.cires.pace.cli.command.common;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.ConflictException;

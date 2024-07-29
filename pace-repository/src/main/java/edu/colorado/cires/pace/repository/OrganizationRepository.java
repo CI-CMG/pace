@@ -26,7 +26,7 @@ public class OrganizationRepository extends PackageDependencyRepository<Organiza
     List<String> sponsors = replaceStringInList(dependency.getSponsors(), originalName, newName);
     List<String> funders = replaceStringInList(dependency.getFunders(), originalName, newName);
 
-    return (Package) dependency.setSponsors(sponsors)
+    return dependency.setSponsors(sponsors)
         .setFunders(funders);
   }
 

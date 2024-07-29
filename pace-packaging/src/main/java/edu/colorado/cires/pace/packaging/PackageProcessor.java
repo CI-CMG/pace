@@ -5,6 +5,8 @@ import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.project.Project;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.NotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -26,6 +28,7 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 public class PackageProcessor {
   
   private final ObjectMapper objectMapper;
+  private final PackageInflator packageInflator;
   private final Validator validator;
   private final List<Person> people;
   private final List<Organization> organizations;
@@ -34,10 +37,11 @@ public class PackageProcessor {
   private final List<Package> packages;
   private final Path outputDir;
 
-  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
+  public PackageProcessor(ObjectMapper objectMapper, PackageInflator packageInflator, List<Person> people, List<Organization> organizations, List<Project> projects,
       List<Package> packages, Path outputDir,
       ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
+    this.packageInflator = packageInflator;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
     this.projects = Collections.unmodifiableList(projects);
@@ -47,7 +51,7 @@ public class PackageProcessor {
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
   
-  public List<Package> process() throws IOException, PackagingException {
+  public List<Package> process() throws IOException, PackagingException, NotFoundException, DatastoreException {
     FileUtils.mkdir(outputDir);
 
     for (Package aPackage : packages) {
@@ -98,14 +102,14 @@ public class PackageProcessor {
   }
 
   private void processPackage(Package packingJob, Path packageOutputDir, Logger logger)
-      throws PackagingException, IOException {
+      throws PackagingException, IOException, NotFoundException, DatastoreException {
     validatePackingJob(packingJob);
     
     Path outputDirectory = packageOutputDir.resolve("data");
 
     Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata(packingJob, objectMapper, outputDirectory),
+        FileUtils.writeMetadata(packageInflator.process(packingJob), objectMapper, outputDirectory),
         FileUtils.writeObjectsBlob(people, objectMapper, outputDirectory, "people.json"),
         FileUtils.writeObjectsBlob(organizations, objectMapper, outputDirectory, "organizations.json"),
         FileUtils.writeObjectsBlob(projects, objectMapper, outputDirectory, "projects.json"),
@@ -120,7 +124,7 @@ public class PackageProcessor {
         progressIndicators
     );
   }
-  
+
   private void validatePackingJob(Package packingJob) {
     Set<ConstraintViolation<Package>> violations = validator.validate(packingJob);
     if (!violations.isEmpty()) {

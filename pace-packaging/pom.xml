@@ -24,6 +24,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.github.ci-cmg</groupId>
+      <artifactId>pace-repository</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.16.1</version>

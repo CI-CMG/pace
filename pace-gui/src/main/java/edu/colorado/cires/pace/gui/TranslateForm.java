@@ -4,7 +4,6 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.utilities.TranslationType.csv;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
