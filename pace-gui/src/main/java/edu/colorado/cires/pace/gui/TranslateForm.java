@@ -196,8 +196,12 @@ public class TranslateForm<O extends ObjectWithUniqueField, T extends Translator
               ExcelReader.read(inputStream, 0)
                   .map(mapWithRowNumber -> {
                     try {
-                      O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), new RuntimeException());
-                      return new ObjectWithRowError<>(object, mapWithRowNumber.row(), null);
+                      RuntimeException runtimeException = new RuntimeException();
+                      O object = converter.convert(translator, mapWithRowNumber.map(), mapWithRowNumber.row(), runtimeException);
+                      if (runtimeException.getSuppressed().length == 0) {
+                        return new ObjectWithRowError<>(object, mapWithRowNumber.row(), null);
+                      }
+                      return new ObjectWithRowError<>(object, mapWithRowNumber.row(), runtimeException);
                     } catch (TranslationException e) {
                       return new ObjectWithRowError<>(null, mapWithRowNumber.row(), e);
                     }

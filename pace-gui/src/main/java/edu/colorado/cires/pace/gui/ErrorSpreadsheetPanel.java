@@ -10,7 +10,6 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.utilities.TranslationType;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -148,6 +147,7 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
           }
           Row row = rows.get(0);
           List<String> headerNames = new ArrayList<>(0);
+          headerNames.add(0, "Status");
           for (int i = 0; i < row.getCellCount(); i++) {
             headerNames.add(row.getCell(i).getText());
           }
@@ -156,6 +156,19 @@ public class ErrorSpreadsheetPanel<O extends ObjectWithUniqueField> extends JPan
           for (int i = 1; i < rows.size(); i++) {
             Row currentRow = rows.get(i);
             List<Object> rowValues = new ArrayList<>(0);
+            Throwable t = exceptions.stream()
+                .filter(oObjectWithRowError -> currentRow.getRowNum() == oObjectWithRowError.row() - 1)
+                .findFirst().map(ObjectWithRowError::throwable).orElse(null);
+            if (t == null) {
+              rowValues.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+            } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException
+                || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
+              rowValues.add(0, getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+            } else if (t instanceof FieldException) {
+              rowValues.add(0, getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+            } else {
+              rowValues.add(0, null);
+            }
             for (int j = 0; j < currentRow.getCellCount(); j++) {
               rowValues.add(currentRow.getCell(j).getText());
             }
