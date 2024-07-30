@@ -92,16 +92,7 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
   }
 
   @Override
-  protected int delete(CRUDRepository<O> repository) throws NotFoundException, DatastoreException, BadArgumentException {
-    int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to proceed? This action cannot be undone.", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-    if (result == JOptionPane.YES_OPTION) {
-      repository.delete(UUID.fromString(uuid.getText()));
-    } else if (result == JOptionPane.NO_OPTION) {
-      System.out.println("User chose NO");
-    } else {
-      System.out.println("User closed the dialog");
-    }
-
-    return result;
+  protected void delete(CRUDRepository<O> repository) throws NotFoundException, DatastoreException, BadArgumentException {
+    repository.delete(UUID.fromString(uuid.getText()));
   }
 }

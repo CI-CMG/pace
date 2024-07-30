@@ -71,8 +71,10 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
     
     deleteButton.addActionListener((e) -> {
       try {
-        int choice = form.delete(repository);
-        if (choice == JOptionPane.YES_OPTION) {
+        int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to proceed? This action cannot be undone.", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+          form.delete(repository);
+          
           updatedObjectsConsumer.accept(
               repository.findAll()
           );
