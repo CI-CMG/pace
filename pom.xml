@@ -28,6 +28,13 @@
     
     <log4j.version>2.23.1</log4j.version>
   </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com/CI-CMG/pace.git</connection>
+    <developerConnection>scm:git:https://github.com/CI-CMG/pace.git</developerConnection>
+    <url>https://github.com/CI-CMG/pace</url>
+    <tag>HEAD</tag>
+  </scm>
   
   <dependencyManagement>
     <dependencies>
@@ -105,5 +112,12 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.1.1</version>
+      </plugin>
+    </plugins>
   </build>
 </project>
