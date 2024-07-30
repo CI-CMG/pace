@@ -2,7 +2,7 @@ name: Maven CI testing/artifact generation
 
 on:
   push:
-    branches: [ "trunk" ]
+    branches: [ "**" ]
 
 jobs:
   build-artifacts:
