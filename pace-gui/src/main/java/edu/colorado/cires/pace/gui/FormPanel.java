@@ -71,11 +71,13 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
     
     deleteButton.addActionListener((e) -> {
       try {
-        form.delete(repository);
-        updatedObjectsConsumer.accept(
-            repository.findAll()
-        );
-        searchAction.run();
+        int choice = form.delete(repository);
+        if (choice == JOptionPane.YES_OPTION) {
+          updatedObjectsConsumer.accept(
+              repository.findAll()
+          );
+          searchAction.run();
+        }
       } catch (NotFoundException | DatastoreException | BadArgumentException ex ) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
       } catch (ConstraintViolationException ex) {
