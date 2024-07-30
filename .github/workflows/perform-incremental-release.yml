@@ -1,0 +1,35 @@
+name: Perform Incremental Release
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Setup Git
+        run: git config --global user.email "actions@github.com" && git config --global user.name "GitHub Actions"
+      - id: tag
+        run: |
+          majorVersion=$(mvn build-helper:parse-version help:evaluate -Dexpression=parsedVersion.majorVersion  -q -DforceStdout)
+          minorVersion=$(mvn build-helper:parse-version help:evaluate -Dexpression=parsedVersion.minorVersion  -q -DforceStdout)
+          incrementalVersion=$(mvn build-helper:parse-version help:evaluate -Dexpression=parsedVersion.incrementalVersion  -q -DforceStdout)
+          tag="v${majorVersion}.${minorVersion}.${incrementalVersion}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+      - name: Release with Maven
+        run: mvn -B build-helper:parse-version -Dtag='v${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}' -DreleaseVersion='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}' -DdevelopmentVersion='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion}-SNAPSHOT' release:prepare
+  
+  build-artifacts:
+    needs: 
+      - release
+    uses: ./.github/workflows/build-artifacts.yml
+    with:
+      ref: ${{ needs.release.outputs.tag }}

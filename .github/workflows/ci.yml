@@ -1,0 +1,11 @@
+name: Maven CI testing/artifact generation
+
+on:
+  push:
+    branches: [ "trunk" ]
+
+jobs:
+  build-artifacts:
+    uses: ./.github/workflows/build-artifacts.yml
+    with:
+      ref: ${{ github.ref_name }}

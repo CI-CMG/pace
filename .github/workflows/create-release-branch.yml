@@ -1,0 +1,28 @@
+name: Create Release Branch
+on:
+  workflow_dispatch:
+    inputs:
+      major_release:
+        description: 'Major release'
+        required: true
+        default: 'false'
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Setup Git
+        run: git config --global user.email "actions@github.com" && git config --global user.name "GitHub Actions"
+      - if: github.event.inputs.major_release == 'true'
+        name: Create Major Release Branch
+        run: mvn -B build-helper:parse-version -DbranchName='${parsedVersion.nextMajorVersion}.0' -DreleaseVersion='${parsedVersion.nextMajorVersion}.0.0-SNAPSHOT' -DupdateBranchVersions=true -DdevelopmentVersion='${parsedVersion.nextMajorVersion}.1.0-SNAPSHOT' release:branch
+      - if: github.event.inputs.major_release == 'false'
+        name: Create Minor Release Branch
+        run: mvn -B build-helper:parse-version -DbranchName='${parsedVersion.majorVersion}.${parsedVersion.minorVersion}' -DdevelopmentVersion='${parsedVersion.majorVersion}.${parsedVersion.nextMinorVersion}.0-SNAPSHOT' release:branch
