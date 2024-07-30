@@ -33,3 +33,4 @@ jobs:
     uses: ./.github/workflows/build-artifacts.yml
     with:
       ref: ${{ needs.release.outputs.tag }}
+    secrets: inherit
