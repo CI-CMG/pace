@@ -9,4 +9,5 @@ jobs:
     uses: ./.github/workflows/build-artifacts.yml
     with:
       ref: ${{ github.ref_name }}
+      is_tag: false
     secrets: inherit

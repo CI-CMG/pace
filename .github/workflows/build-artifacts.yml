@@ -6,7 +6,10 @@ on:
       ref:
         required: true
         type: string
-        
+      is_tag:
+        required: true
+        type: boolean
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -434,7 +437,7 @@ jobs:
       - name: Update branch release
         uses: eine/tip@master
         with:
-          tag: ${{ inputs.ref }}
+          tag: ${{ inputs.is_tag == true && inputs.ref || format('{0}-latest', inputs.ref)  }}
           rm: true
           token: ${{ secrets.RELEASE_PAT }}
           files: release/*
