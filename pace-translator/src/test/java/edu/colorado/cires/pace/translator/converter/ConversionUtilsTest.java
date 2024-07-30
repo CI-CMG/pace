@@ -27,13 +27,13 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of(uuid.toString()), 1));
 
-    UUID result = ConversionUtils.uuidFromMap(map, "test-property", 2, new RuntimeException());
+    UUID result = ConversionUtils.uuidFromMap(map, "TEST PROPERTY", "test-property", 2, new RuntimeException());
     assertEquals(uuid, result);
 
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    result = ConversionUtils.uuidFromMap(map, "test-property", 2, runtimeException);
+    result = ConversionUtils.uuidFromMap(map, "TEST PROPERTY", "test-property", 2, runtimeException);
     assertNull(result);
 
     assertEquals(1, runtimeException.getSuppressed().length);
@@ -41,6 +41,7 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     FieldException fieldException = (FieldException) throwable;
     assertEquals("test-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid UUID format", fieldException.getMessage());
@@ -51,13 +52,13 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of("1"), 1));
 
-    Float result = ConversionUtils.floatFromMap(map, "test-property", 2, new RuntimeException());
+    Float result = ConversionUtils.floatFromMap(map, "TEST PROPERTY", "test-property", 2, new RuntimeException());
     assertEquals(result, 1);
 
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    result = ConversionUtils.floatFromMap(map, "test-property", 2, runtimeException);
+    result = ConversionUtils.floatFromMap(map, "TEST PROPERTY", "test-property", 2, runtimeException);
     assertNull(result);
 
     assertEquals(1, runtimeException.getSuppressed().length);
@@ -65,6 +66,7 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     FieldException fieldException = (FieldException) throwable;
     assertEquals("test-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid float format", fieldException.getMessage());
@@ -75,13 +77,13 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of("1"), 1));
     
-    Integer result = ConversionUtils.integerFromMap(map, "test-property", 2, new RuntimeException());
+    Integer result = ConversionUtils.integerFromMap(map, "TEST PROPERTY", "test-property", 2, new RuntimeException());
     assertEquals(result, 1);
     
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
     
-    result = ConversionUtils.integerFromMap(map, "test-property", 2, runtimeException);
+    result = ConversionUtils.integerFromMap(map, "TEST PROPERTY", "test-property", 2, runtimeException);
     assertNull(result);
     
     assertEquals(1, runtimeException.getSuppressed().length);
@@ -89,6 +91,7 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     FieldException fieldException = (FieldException) throwable;
     assertEquals("test-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid integer format", fieldException.getMessage());
@@ -99,7 +102,7 @@ class ConversionUtilsTest {
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    Path result = ConversionUtils.pathFromMap(map, "test-property", 2, new RuntimeException());
+    Path result = ConversionUtils.pathFromMap(map, "TEST PROPERTY", "test-property", 2, new RuntimeException());
     assertEquals(result, Path.of("test"));
   }
 
@@ -110,7 +113,7 @@ class ConversionUtilsTest {
     map.put("test-zone", new ValueWithColumnNumber(Optional.of("UTC"), 2));
 
     RuntimeException runtimeException = new RuntimeException();
-    LocalDate result = ConversionUtils.localDateFromMap(map, DateTranslator.builder()
+    LocalDate result = ConversionUtils.localDateFromMap(map, "TEST PROPERTY", DateTranslator.builder()
             .date("test-property")
             .timeZone("test-zone")
         .build(), 2, runtimeException);
@@ -118,7 +121,7 @@ class ConversionUtilsTest {
 
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
     runtimeException = new RuntimeException();
-    result = ConversionUtils.localDateFromMap(map, DateTranslator.builder()
+    result = ConversionUtils.localDateFromMap(map, "TEST PROPERTY", DateTranslator.builder()
             .date("test-property")
             .timeZone("test-zone")
         .build(), 2, runtimeException);
@@ -129,6 +132,7 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     FieldException fieldException = (FieldException) throwable;
     assertEquals("test-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid date format", fieldException.getMessage());
@@ -153,6 +157,7 @@ class ConversionUtilsTest {
             "date", new ValueWithColumnNumber(Optional.of(inputDate), 1),
             "timeZone", new ValueWithColumnNumber(Optional.of("UTC"), 2)
         ),
+        "TEST PROPERTY",
         DateTranslator.builder()
             .date("date")
             .timeZone("timeZone")
@@ -179,6 +184,7 @@ class ConversionUtilsTest {
             "date", new ValueWithColumnNumber(Optional.of(inputDate), 1),
             "timeZone", new ValueWithColumnNumber(Optional.of("UTC"), 2)
         ),
+        "TEST PROPERTY",
         DefaultTimeTranslator.builder()
             .time("date")
             .timeZone("timeZone")
@@ -804,6 +810,7 @@ class ConversionUtilsTest {
             "date", new ValueWithColumnNumber(Optional.of("1/1/24 01:02:03"), 1),
             "timeZone", new ValueWithColumnNumber(Optional.of(zone), 2)
         ),
+        "TEST PROPERTY",
         DefaultTimeTranslator.builder()
             .time("date")
             .timeZone("timeZone")
@@ -821,7 +828,7 @@ class ConversionUtilsTest {
     map.put("test-property", new ValueWithColumnNumber(Optional.of("2024-01-01T01:00:00"), 1));
     map.put("test-zone", new ValueWithColumnNumber(Optional.of("UTC"), 2));
 
-    LocalDateTime result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder()
+    LocalDateTime result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DefaultTimeTranslator.builder()
         .timeZone("test-zone")
         .time("test-property")
         .build(), 2, new RuntimeException());
@@ -830,7 +837,7 @@ class ConversionUtilsTest {
     RuntimeException runtimeException = new RuntimeException();
     map.put("test-property", new ValueWithColumnNumber(Optional.of("test"), 1));
 
-    result = ConversionUtils.localDateTimeFromMap(map, DefaultTimeTranslator.builder()
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DefaultTimeTranslator.builder()
         .timeZone("test-zone")
         .time("test-property").build(), 2, runtimeException);
     assertNull(result);
@@ -840,6 +847,7 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     FieldException fieldException = (FieldException) throwable;
     assertEquals("test-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(1, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid date time format", fieldException.getMessage());
@@ -848,7 +856,7 @@ class ConversionUtilsTest {
     map.put("test-other-property", new ValueWithColumnNumber(Optional.of("12:00:00"), 2));
 
     runtimeException = new RuntimeException();
-    result = ConversionUtils.localDateTimeFromMap(map, new TimeTranslator() {
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", new TimeTranslator() {
       @Override
       public String getTime() {
         return "test-property";
@@ -862,7 +870,7 @@ class ConversionUtilsTest {
     assertNull(result);
     assertEquals(0, runtimeException.getSuppressed().length);
     
-    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DateTimeSeparatedTimeTranslator.builder()
             .date("test-property")
             .time("test-other-property")
             .timeZone("test-zone")
@@ -872,7 +880,7 @@ class ConversionUtilsTest {
     
     runtimeException = new RuntimeException();
     map.put("test-other-property", new ValueWithColumnNumber(Optional.of("-"), 2));
-    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DateTimeSeparatedTimeTranslator.builder()
         .date("test-property")
         .time("test-other-property")
         .timeZone("test-zone")
@@ -884,13 +892,14 @@ class ConversionUtilsTest {
     assertInstanceOf(FieldException.class, throwable);
     fieldException = (FieldException) throwable;
     assertEquals("test-other-property", fieldException.getProperty());
+    assertEquals("TEST PROPERTY", fieldException.getTargetProperty());
     assertEquals(2, fieldException.getColumn());
     assertEquals(2, fieldException.getRow());
     assertEquals("Invalid time format", fieldException.getMessage());
 
     runtimeException = new RuntimeException();
     map.remove("test-other-property");
-    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DateTimeSeparatedTimeTranslator.builder()
         .date("test-property")
         .time("test-other-property")
         .timeZone("test-zone")
@@ -901,7 +910,7 @@ class ConversionUtilsTest {
 
     runtimeException = new RuntimeException();
     map.remove("test-property");
-    result = ConversionUtils.localDateTimeFromMap(map, DateTimeSeparatedTimeTranslator.builder()
+    result = ConversionUtils.localDateTimeFromMap(map, "TEST PROPERTY", DateTimeSeparatedTimeTranslator.builder()
         .date("test-property")
         .time("test-other-property")
         .timeZone("test-zone")

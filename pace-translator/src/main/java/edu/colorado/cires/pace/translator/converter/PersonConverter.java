@@ -13,7 +13,7 @@ public class PersonConverter extends Converter<PersonTranslator, Person> {
   @Override
   public Person convert(PersonTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Person.builder()
-        .uuid(uuidFromMap(properties, translator.getPersonUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getPersonUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getPersonName()))
         .organization(stringFromMap(properties, translator.getOrganization()))
         .position(stringFromMap(properties, translator.getPosition()))

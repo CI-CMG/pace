@@ -13,7 +13,7 @@ public class ShipConverter extends Converter<ShipTranslator, Ship> {
   @Override
   public Ship convert(ShipTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Ship.builder()
-        .uuid(uuidFromMap(properties, translator.getShipUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getShipUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getShipName()))
         .build();
   }

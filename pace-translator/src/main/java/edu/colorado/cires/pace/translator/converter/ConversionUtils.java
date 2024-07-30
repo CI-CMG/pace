@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 final class ConversionUtils {
   
-  private static <T> T transformedPropertyFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException, Function<String, T> transform, String errorMessage) {
+  private static <T> T transformedPropertyFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException, Function<String, T> transform, String errorMessage) {
     ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, propertyName);
     String property = stringFromProperty(valueWithColumnNumber);
     
@@ -38,37 +38,37 @@ final class ConversionUtils {
       return transform.apply(property);
     } catch (Throwable e) {
       runtimeException.addSuppressed(new FieldException(
-          propertyName, errorMessage, valueWithColumnNumber.column(), row
+          propertyName, targetProperty, errorMessage, valueWithColumnNumber.column(), row
       ));
       return null;
     }
   } 
   
-  public static UUID uuidFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, UUID::fromString, "Invalid UUID format");
+  public static UUID uuidFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, targetProperty, propertyName, row, runtimeException, UUID::fromString, "Invalid UUID format");
   }
   
-  public static Float floatFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Float::parseFloat, "Invalid float format");
+  public static Float floatFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, targetProperty, propertyName, row, runtimeException, Float::parseFloat, "Invalid float format");
   }
   
-  public static Double doubleFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Double::parseDouble, "Invalid double format");
+  public static Double doubleFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, targetProperty, propertyName, row, runtimeException, Double::parseDouble, "Invalid double format");
   }
   
-  public static Integer integerFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Integer::parseInt, "Invalid integer format");
+  public static Integer integerFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, targetProperty, propertyName, row, runtimeException, Integer::parseInt, "Invalid integer format");
   }
   
-  public static Path pathFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    return transformedPropertyFromMap(properties, propertyName, row, runtimeException, Paths::get, "Invalid path format");
+  public static Path pathFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    return transformedPropertyFromMap(properties, targetProperty, propertyName, row, runtimeException, Paths::get, "Invalid path format");
   }
   
-  public static LocalDate localDateFromMap(Map<String, ValueWithColumnNumber> properties, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
-    return parseLocalDate(properties, dateTranslator, row, runtimeException);
+  public static LocalDate localDateFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
+    return parseLocalDate(properties, targetProperty, dateTranslator, row, runtimeException);
   }
   
-  private static LocalDate parseLocalDate(Map<String, ValueWithColumnNumber> properties, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
+  private static LocalDate parseLocalDate(Map<String, ValueWithColumnNumber> properties, String targetProperty, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
     ValueWithColumnNumber timeZone = propertyFromMap(properties, dateTranslator.getTimeZone());
     ValueWithColumnNumber date = propertyFromMap(properties, dateTranslator.getDate());
     
@@ -96,7 +96,7 @@ final class ConversionUtils {
           .withZone(ZoneId.of(zoneValue));
     } catch (Throwable e) {
       runtimeException.addSuppressed(new FieldException(
-          dateTranslator.getTimeZone(), "Invalid time zone", timeZone.column(), row
+          dateTranslator.getTimeZone(), "Time Zone", "Invalid time zone", timeZone.column(), row
       ));
       return null;
     }
@@ -108,13 +108,13 @@ final class ConversionUtils {
       return LocalDate.parse(inputValue, dateTimeFormatter);
     } catch (Throwable e) {
       runtimeException.addSuppressed(new FieldException(
-          dateTranslator.getDate(), "Invalid date format", date.column(), row 
+          dateTranslator.getDate(), targetProperty, "Invalid date format", date.column(), row 
       ));
       return null;
     }
   }
   
-  public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+  public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
     ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, timeTranslator.getTimeZone());
     String timeZone = valueWithColumnNumber.value().orElse(null);
     if (timeZone == null) {
@@ -133,13 +133,13 @@ final class ConversionUtils {
             .withZone(ZoneId.of(timeZone));
       } catch (Exception e) {
         runtimeException.addSuppressed(new FieldException(
-            timeTranslator.getTimeZone(), "Invalid time zone", valueWithColumnNumber.column(), row
+            timeTranslator.getTimeZone(), "Time Zone", "Invalid time zone", valueWithColumnNumber.column(), row
         ));
         return null;
       }
-      return transformedPropertyFromMap(properties, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, dateTimeFormatter), "Invalid date time format");
+      return transformedPropertyFromMap(properties, targetProperty, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, dateTimeFormatter), "Invalid date time format");
     } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
-      return localDateTimeFromMap(properties, dateTimeSeparatedTimeTranslator, row, runtimeException);
+      return localDateTimeFromMap(properties, targetProperty, dateTimeSeparatedTimeTranslator, row, runtimeException);
     }
     return null;
   }
@@ -185,7 +185,7 @@ final class ConversionUtils {
     return LocalTime.parse(input, formatter);
   }
 
-  private static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, DateTimeSeparatedTimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+  private static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, DateTimeSeparatedTimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
     String zoneId = stringFromMap(properties, timeTranslator.getTimeZone());
     
     DateTranslator dateTranslator = DateTranslator.builder()
@@ -195,6 +195,7 @@ final class ConversionUtils {
     
     LocalDate date = parseLocalDate(
         properties,
+        targetProperty,
         dateTranslator,
         row,
         runtimeException
@@ -202,7 +203,7 @@ final class ConversionUtils {
     if (date == null) {
       return null;
     }
-    LocalTime time = transformedPropertyFromMap(properties, timeTranslator.getTime(), row, runtimeException, (s) -> parseLocalTime(s, zoneId), "Invalid time format");
+    LocalTime time = transformedPropertyFromMap(properties, targetProperty, timeTranslator.getTime(), row, runtimeException, (s) -> parseLocalTime(s, zoneId), "Invalid time format");
     if (time == null) {
       return date.atTime(0, 0);
     }
@@ -253,7 +254,7 @@ final class ConversionUtils {
           .matcher(latitudeString);
       
       if (!matcher.matches()) {
-        return doubleFromMap(properties, propertyName, row, runtimeException);
+        return doubleFromMap(properties, "Latitude", propertyName, row, runtimeException);
       } else {
         String degreesString = matcher.group("degrees");
         String minutesString = matcher.group("minutes");
@@ -300,7 +301,7 @@ final class ConversionUtils {
           .matcher(latitudeString);
 
       if (!matcher.matches()) {
-        return doubleFromMap(properties, propertyName, row, runtimeException);
+        return doubleFromMap(properties, "Longitude", propertyName, row, runtimeException);
       } else {
         String degreesString = matcher.group("degrees");
         String minutesString = matcher.group("minutes");

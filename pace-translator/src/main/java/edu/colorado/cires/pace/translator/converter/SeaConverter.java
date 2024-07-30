@@ -13,7 +13,7 @@ public class SeaConverter extends Converter<SeaTranslator, Sea> {
   @Override
   public Sea convert(SeaTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Sea.builder()
-        .uuid(uuidFromMap(properties, translator.getSeaUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getSeaUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getSeaName()))
         .build();
   }

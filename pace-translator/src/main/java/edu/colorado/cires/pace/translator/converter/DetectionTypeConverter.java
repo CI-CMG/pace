@@ -14,7 +14,7 @@ public class DetectionTypeConverter extends Converter<DetectionTypeTranslator, D
   public DetectionType convert(DetectionTypeTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
     return DetectionType.builder()
-        .uuid(uuidFromMap(properties, translator.getDetectionTypeUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getDetectionTypeUUID(), row, runtimeException))
         .source(stringFromMap(properties, translator.getSource()))
         .scienceName(stringFromMap(properties, translator.getScienceName()))
         .build();

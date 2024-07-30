@@ -40,7 +40,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
 
   private static DepthSensor depthSensorFromMap(DepthSensorTranslator depthSensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return DepthSensor.builder()
-        .uuid(uuidFromMap(properties, depthSensorTranslator.getSensorUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", depthSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, depthSensorTranslator.getSensorName()))
         .description(stringFromMap(properties, depthSensorTranslator.getDescription()))
         .build();
@@ -48,7 +48,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
 
   private static AudioSensor audioSensorFromMap(AudioSensorTranslator audioSensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return AudioSensor.builder()
-        .uuid(uuidFromMap(properties, audioSensorTranslator.getSensorUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", audioSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, audioSensorTranslator.getSensorName()))
         .description(stringFromMap(properties, audioSensorTranslator.getDescription()))
         .hydrophoneId(stringFromMap(properties, audioSensorTranslator.getHydrophoneId()))
@@ -58,7 +58,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
 
   private static OtherSensor otherSensorFromMap(OtherSensorTranslator otherSensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return OtherSensor.builder()
-        .uuid(uuidFromMap(properties, otherSensorTranslator.getSensorUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", otherSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, otherSensorTranslator.getSensorName()))
         .description(stringFromMap(properties, otherSensorTranslator.getDescription()))
         .properties(stringFromMap(properties, otherSensorTranslator.getProperties()))

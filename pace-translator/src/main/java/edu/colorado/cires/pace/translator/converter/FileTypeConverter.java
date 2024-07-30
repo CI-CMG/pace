@@ -14,7 +14,7 @@ public class FileTypeConverter extends Converter<FileTypeTranslator, FileType> {
   public FileType convert(FileTypeTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
     return FileType.builder()
-        .uuid(uuidFromMap(properties, translator.getFileTypeUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getFileTypeUUID(), row, runtimeException))
         .type(stringFromMap(properties, translator.getType()))
         .comment(stringFromMap(properties, translator.getComment()))
         .build();

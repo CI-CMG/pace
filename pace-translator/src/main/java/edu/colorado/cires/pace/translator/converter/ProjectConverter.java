@@ -13,7 +13,7 @@ public class ProjectConverter extends Converter<ProjectTranslator, Project> {
   @Override
   public Project convert(ProjectTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Project.builder()
-        .uuid(uuidFromMap(properties, translator.getProjectUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getProjectUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getProjectName()))
         .build();
   }

@@ -14,7 +14,7 @@ public class PlatformConverter extends Converter<PlatformTranslator, Platform> {
   public Platform convert(PlatformTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
     return Platform.builder()
-        .uuid(uuidFromMap(properties, translator.getPlatformUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getPlatformUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getPlatformName()))
         .build();
   }

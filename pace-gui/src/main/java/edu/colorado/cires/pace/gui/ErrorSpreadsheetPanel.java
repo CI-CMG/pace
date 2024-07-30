@@ -116,8 +116,15 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                   return constraintViolationException.getConstraintViolations().stream()
                       .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
                       .collect(Collectors.joining("\n"));
+                } else if (t instanceof FieldException fieldException) {
+                  return String.format(
+                    "Failed to resolve %s from %s: %s",
+                    fieldException.getTargetProperty(),
+                    fieldException.getProperty(),
+                    fieldException.getMessage()  
+                  );
                 }
-                
+
                 return t.getMessage();
               })
               .collect(Collectors.toSet());

@@ -15,7 +15,7 @@ public class InstrumentConverter extends Converter<InstrumentTranslator, Instrum
   public Instrument convert(InstrumentTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
     return Instrument.builder()
-        .uuid(uuidFromMap(properties, translator.getInstrumentUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getInstrumentUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getInstrumentName()))
         .fileTypes(stringListFromMap(properties, translator.getFileTypes()))
         .build();

@@ -14,7 +14,7 @@ public class OrganizationConverter extends Converter<OrganizationTranslator, Org
   public Organization convert(OrganizationTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
     return Organization.builder()
-        .uuid(uuidFromMap(properties, translator.getOrganizationUUID(), row, runtimeException))
+        .uuid(uuidFromMap(properties, "UUID", translator.getOrganizationUUID(), row, runtimeException))
         .name(stringFromMap(properties, translator.getOrganizationName()))
         .street(stringFromMap(properties, translator.getStreet()))
         .city(stringFromMap(properties, translator.getCity()))
