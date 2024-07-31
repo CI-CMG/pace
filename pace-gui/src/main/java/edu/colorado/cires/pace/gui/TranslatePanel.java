@@ -39,7 +39,6 @@ public abstract class TranslatePanel<O extends AbstractObject, T extends Transla
     dialog.setSize(size);
     dialog.setPreferredSize(size);
     dialog.setLocationRelativeTo(this);
-    dialog.setModal(true);
     dialog.pack();
     dialog.setVisible(true);
   }
