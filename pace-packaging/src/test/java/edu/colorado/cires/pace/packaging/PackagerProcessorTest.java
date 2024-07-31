@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
@@ -201,7 +202,9 @@ class PackagerProcessorTest {
         .navigationPath(null)
         .sourcePath(null)
         .build();
-    String expectedMetadata = objectMapper.writerWithDefaultPrettyPrinter()
+    String expectedMetadata = SerializationUtils.createObjectMapper()
+        .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
+        .writerWithDefaultPrettyPrinter()
         .writeValueAsString(expectedMetadataPackage);
     String expectedPeople = objectMapper.writeValueAsString(PEOPLE);
     String expectedOrganizations = objectMapper.writeValueAsString(ORGANIZATIONS);

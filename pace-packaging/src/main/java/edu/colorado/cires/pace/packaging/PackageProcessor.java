@@ -109,7 +109,7 @@ public class PackageProcessor {
 
     Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata(packageInflator.process(packingJob), objectMapper, outputDirectory),
+        FileUtils.writeMetadata(packageInflator.process(packingJob), outputDirectory),
         FileUtils.writeObjectsBlob(people, objectMapper, outputDirectory, "people.json"),
         FileUtils.writeObjectsBlob(organizations, objectMapper, outputDirectory, "organizations.json"),
         FileUtils.writeObjectsBlob(projects, objectMapper, outputDirectory, "projects.json"),

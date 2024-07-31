@@ -1,9 +1,11 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
+import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,19 +54,21 @@ final class FileUtils {
         Files.size(source) != Files.size(target);
   }
   
-  public static Path writeMetadata(DetailedPackage aPackage, ObjectMapper objectMapper, Path targetDirectory) throws IOException {
+  public static Path writeMetadata(DetailedPackage aPackage, Path targetDirectory) throws IOException {
+    ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
+        .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
     ObjectNode metadata = (ObjectNode) objectMapper
         .readTree(
             objectMapper.writeValueAsString(aPackage)
         );
-    metadata.remove("uuid");
-    metadata.remove("temperature_path");
-    metadata.remove("biological_path");
-    metadata.remove("other_path");
-    metadata.remove("documents_path");
-    metadata.remove("calibration_documents_path");
-    metadata.remove("navigation_path");
-    metadata.remove("source_path");
+    metadata.remove("UUID");
+    metadata.remove("TEMPERATURE_PATH");
+    metadata.remove("BIOLOGICAL_PATH");
+    metadata.remove("OTHER_PATH");
+    metadata.remove("DOCUMENTS_PATH");
+    metadata.remove("CALIBRATION_DOCUMENTS_PATH");
+    metadata.remove("NAVIGATION_PATH");
+    metadata.remove("SOURCE_PATH");
     
     mkdir(targetDirectory);
     
