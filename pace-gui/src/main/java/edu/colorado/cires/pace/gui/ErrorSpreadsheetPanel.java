@@ -164,7 +164,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
             Row currentRow = rows.get(i);
             List<Object> rowValues = new ArrayList<>(0);
             Throwable t = exceptions.stream()
-                .filter(oObjectWithRowError -> currentRow.getRowNum() == oObjectWithRowError.row() - 1)
+                .filter(oObjectWithRowError -> currentRow.getRowNum() == oObjectWithRowError.row())
                 .findFirst().map(ObjectWithRowError::throwable).orElse(null);
             if (t == null) {
               rowValues.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
