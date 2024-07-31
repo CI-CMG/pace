@@ -39,7 +39,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -47,6 +46,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
@@ -280,12 +280,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private JToolBar createPackageToolbar() {
     JToolBar toolBar = new JToolBar();
     ButtonGroup group = new ButtonGroup();
-    JCheckBox viewModeButton = createModeToggleCheckbox("View", this::setViewMode);
+    JRadioButton viewModeButton = createModeToggleCheckbox("View", this::setViewMode);
     viewModeButton.setSelected(true);
     setViewMode(true);
-    JCheckBox packageModeButton = createModeToggleCheckbox("Package", this::setPackageMode);
+    JRadioButton packageModeButton = createModeToggleCheckbox("Package", this::setPackageMode);
     setPackageMode(false);
-    JCheckBox editVisibilityModeButton = createModeToggleCheckbox("Edit Visibility", this::setEditVisibilityModel);
+    JRadioButton editVisibilityModeButton = createModeToggleCheckbox("Edit Visibility", this::setEditVisibilityModel);
     setEditVisibilityModel(false);
     group.add(viewModeButton);
     group.add(packageModeButton);
@@ -359,8 +359,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     resetTable();
   }
 
-  private JCheckBox createModeToggleCheckbox(String text, Consumer<Boolean> itemListener) {
-    JCheckBox checkBox = new JCheckBox(text);
+  private JRadioButton createModeToggleCheckbox(String text, Consumer<Boolean> itemListener) {
+    JRadioButton checkBox = new JRadioButton(text);
     checkBox.addItemListener(e -> itemListener.accept(checkBox.isSelected()));
     return checkBox;
   }
