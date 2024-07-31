@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
-import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,13 +58,13 @@ final class FileUtils {
             objectMapper.writeValueAsString(aPackage)
         );
     metadata.remove("uuid");
-    metadata.remove("temperaturePath");
-    metadata.remove("biologicalPath");
-    metadata.remove("otherPath");
-    metadata.remove("documentsPath");
-    metadata.remove("calibrationDocumentsPath");
-    metadata.remove("navigationPath");
-    metadata.remove("sourcePath");
+    metadata.remove("temperature_path");
+    metadata.remove("biological_path");
+    metadata.remove("other_path");
+    metadata.remove("documents_path");
+    metadata.remove("calibration_documents_path");
+    metadata.remove("navigation_path");
+    metadata.remove("source_path");
     
     mkdir(targetDirectory);
     

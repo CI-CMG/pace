@@ -18,7 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
-@JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "datasetType")
+@JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "type")
 @JsonSubTypes({
     @Type(value = DetailedAudioPackage.class, name = "audio"),
     @Type(value = DetailedCPODPackage.class, name = "CPOD"),
