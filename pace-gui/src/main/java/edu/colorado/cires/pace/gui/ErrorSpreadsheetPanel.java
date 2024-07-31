@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -87,6 +88,12 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         return c;
       }
     };
+    table.setDefaultRenderer(ImageIcon.class, (table1, value, isSelected, hasFocus, row, column) -> {
+      ImageIcon imageIcon = (ImageIcon) value;
+      JLabel label = new JLabel(imageIcon);
+      label.setToolTipText(imageIcon.getDescription());
+      return label;
+    });
     table.setCellSelectionEnabled(false);
     table.setRowSelectionAllowed(false);
     if (!autoResizeColumns) {
@@ -167,12 +174,18 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                 .filter(oObjectWithRowError -> currentRow.getRowNum() == oObjectWithRowError.row())
                 .findFirst().map(ObjectWithRowError::throwable).orElse(null);
             if (t == null) {
-              rowValues.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+              ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+              imageIcon.setDescription("Package saved");
+              rowValues.add(0, imageIcon);
             } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException
                 || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
-              rowValues.add(0, getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+              ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+              imageIcon.setDescription("Package validation error");
+              rowValues.add(0, imageIcon);
             } else if (t instanceof FieldException) {
-              rowValues.add(0, getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+              ImageIcon imageIcon = getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+              imageIcon.setDescription("Spreadsheet validation error");
+              rowValues.add(0, imageIcon);
             } else {
               rowValues.add(0, null);
             }
@@ -207,12 +220,18 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                     .filter(oObjectWithRowError -> record.getRecordNumber() == oObjectWithRowError.row() - 1)
                     .findFirst().map(ObjectWithRowError::throwable).orElse(null);
                 if (t == null) {
-                  values.add(0, getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+                  ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+                  imageIcon.setDescription("Package saved");
+                  values.add(0, imageIcon);
                 } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException 
                     || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
-                  values.add(0, getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+                  ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+                  imageIcon.setDescription("Package validation error");
+                  values.add(0, imageIcon);
                 } else if (t instanceof FieldException) {
-                  values.add(0, getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()));
+                  ImageIcon imageIcon = getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+                  imageIcon.setDescription("Spreadsheet validation error");
+                  values.add(0, imageIcon);
                 } else {
                   values.add(0, null);
                 }
