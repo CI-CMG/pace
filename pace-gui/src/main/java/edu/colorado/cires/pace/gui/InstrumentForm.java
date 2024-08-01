@@ -22,7 +22,6 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
   
   private JPanel fileTypesPanel;
   private FileTypeRepository fileTypeRepository;
-  private JPanel fluff;
 
   private InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
     super(initialInstrument, false, false, fileTypeRepository);
@@ -40,7 +39,6 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
       } else {
         initialFileType = fileTypeRepository.getByUniqueField(initialFileTypeName);
       }
-      fileTypesPanel.remove(fluff);
       InstrumentFileTypePanel instrumentFileTypePanel = new InstrumentFileTypePanel(
           initialFileType, fileTypeRepository, (p) -> {
             fileTypesPanel.remove(p);
@@ -53,7 +51,6 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
         instrumentFileTypePanel.setName(initialFileType.getType());
       }
       fileTypesPanel.add(instrumentFileTypePanel, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; }));
-      fileTypesPanel.add(fluff, configureLayout((c) -> { c.gridx = 0; c.gridy = fileTypesPanel.getComponentCount(); c.weightx = 1; c.weighty = 1; }));
       revalidate();
     } catch (DatastoreException | NotFoundException e) {
       throw new RuntimeException(e);
@@ -65,8 +62,7 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
     fileTypeRepository = (FileTypeRepository) dependencyRepositories[0];
     
     fileTypesPanel = new JPanel(new GridBagLayout());
-    fluff = new JPanel();
-    
+    fileTypesPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 1000; c.weightx = 1; c.weighty = 1; }));
     JPanel controlPanel = new JPanel(new GridBagLayout());
     controlPanel.setName("controlPanel");
     controlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
