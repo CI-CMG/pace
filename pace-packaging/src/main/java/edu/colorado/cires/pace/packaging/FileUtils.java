@@ -31,7 +31,7 @@ final class FileUtils {
   public static void appendChecksumToManifest(FileWriter fileWriter, Path path, Path manifestParentDirectory) throws IOException {
     String checksum;
     try (InputStream inputStream = new FileInputStream(path.toFile())) {
-      checksum = DigestUtils.sha256Hex(inputStream);
+      checksum = computeChecksum(inputStream);
     }
 
     fileWriter.append(String.format(
@@ -49,9 +49,18 @@ final class FileUtils {
     return Files.isRegularFile(path) && !Files.isHidden(path);
   }
 
-  public static boolean filterTimeSize(Path source, Path target) throws IOException {
-    return !Files.exists(target) || Files.getLastModifiedTime(source).toMillis() != Files.getLastModifiedTime(target).toMillis() ||
-        Files.size(source) != Files.size(target);
+  public static boolean filterByChecksum(Path source, Path target) throws IOException {
+    if (Files.exists(target)) {
+      try (InputStream sourceStream = new FileInputStream(source.toFile()); InputStream targetStream = new FileInputStream(target.toFile())) {
+        return !computeChecksum(sourceStream).equals(computeChecksum(targetStream));
+      }
+    }
+    
+    return true;
+  }
+  
+  private static String computeChecksum(InputStream inputStream) throws IOException {
+    return DigestUtils.sha256Hex(inputStream);
   }
   
   public static Path writeMetadata(DetailedPackage aPackage, Path targetDirectory) throws IOException {

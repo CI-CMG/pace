@@ -46,23 +46,18 @@ class FileUtilTest {
   }
   
   @Test
-  void testFilterTimeSize() throws IOException, InterruptedException {
+  void testFilterByChecksum() throws IOException {
     Path path = TEST_PATH.resolve("test.txt");
     org.apache.commons.io.FileUtils.createParentDirectories(path.toFile());
     Files.createFile(path);
     
-    assertFalse(FileUtils.filterTimeSize(path, path)); // same file = fail
+    assertFalse(FileUtils.filterByChecksum(path, path)); // same file = fail
     
     Path path2 = TEST_PATH.resolve("test1.txt");
-    assertTrue(FileUtils.filterTimeSize(path, path2)); // target does not exist = pass
-
-    Thread.sleep(10);    
-    org.apache.commons.io.FileUtils.createParentDirectories(path2.toFile());
-    Files.createFile(path2);
-    assertTrue(FileUtils.filterTimeSize(path, path2)); // modified times not equal = pass
+    assertTrue(FileUtils.filterByChecksum(path, path2)); // target does not exist = pass
 
     org.apache.commons.io.FileUtils.writeStringToFile(path2.toFile(), "Hello World", StandardCharsets.UTF_8);
-    assertTrue(FileUtils.filterTimeSize(path, path2)); // size not equal = pass
+    assertTrue(FileUtils.filterByChecksum(path, path2)); // size not equal = pass
   }
 
 }

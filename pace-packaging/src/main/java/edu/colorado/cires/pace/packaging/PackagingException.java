@@ -6,10 +6,4 @@ public class PackagingException extends Exception {
     super(message, cause);
   }
 
-  public PackagingException(String message, Throwable[] causes) {
-    super(message);
-    for (Throwable cause : causes) {
-      super.addSuppressed(cause);
-    }
-  }
 }

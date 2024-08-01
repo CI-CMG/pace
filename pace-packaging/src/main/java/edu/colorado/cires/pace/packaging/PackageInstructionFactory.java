@@ -117,7 +117,7 @@ class PackageInstructionFactory {
             try {
               boolean regularFile = FileUtils.filterHidden(p);
               if (!regularFile) {
-                logger.warn("Filtered file will not be moved: {}", p);
+                logger.warn("Hidden file will not be moved: {}", p);
               }
               return regularFile;
             } catch (IOException e) {
@@ -131,9 +131,9 @@ class PackageInstructionFactory {
               )
           ).filter(packageInstruction -> {
             try {
-              boolean shouldMoveFile = FileUtils.filterTimeSize(packageInstruction.source(), packageInstruction.target());
+              boolean shouldMoveFile = FileUtils.filterByChecksum(packageInstruction.source(), packageInstruction.target());
               if (!shouldMoveFile) {
-                logger.warn("Filtered file will not be moved: {}", packageInstruction.source());
+                logger.warn("Identical file already exists: {}", packageInstruction.target());
               }
               return shouldMoveFile;
             } catch (IOException e) {

@@ -206,8 +206,9 @@ class PackagerTest {
   void testFileProcessingFailure() throws IOException {
     try (MockedStatic<edu.colorado.cires.pace.packaging.FileUtils> mockedStatic = Mockito.mockStatic(
         edu.colorado.cires.pace.packaging.FileUtils.class)) {
+      Exception exception = new IOException("test file error");
       mockedStatic.when(() -> edu.colorado.cires.pace.packaging.FileUtils.appendChecksumToManifest(any(), any(), any())).thenThrow(
-          new IOException("test file error")
+          exception
       );
       mockedStatic.when(() -> edu.colorado.cires.pace.packaging.FileUtils.mkdir(any())).thenCallRealMethod();
 
@@ -215,11 +216,10 @@ class PackagerTest {
       
       ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
 
-      Exception exception = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, LogManager.getLogger("test"), progressIndicator));
-      assertEquals("Packaging failed", exception.getMessage());
-      for (Throwable throwable : exception.getSuppressed()) {
-        assertEquals("java.io.IOException: test file error", throwable.getMessage());
-      }
+      Exception packagingException = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, LogManager.getLogger("test"), progressIndicator));
+      assertEquals(String.format(
+          "Packaging failed: java.io.IOException: %s", exception.getMessage()
+      ), packagingException.getMessage());
       
       verify(progressIndicator, times(0)).incrementProcessedRecords();
     }
@@ -231,7 +231,7 @@ class PackagerTest {
     
     Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test")));
     assertEquals(String.format(
-        "Failed to write %s", TARGET_DIR.resolve("manifest-sha256.txt")
+        "Packaging failed: %s (No such file or directory)", TARGET_DIR.resolve("manifest-sha256.txt")
     ), exception.getMessage());
     
     verify(progressIndicator, times(0)).incrementProcessedRecords();

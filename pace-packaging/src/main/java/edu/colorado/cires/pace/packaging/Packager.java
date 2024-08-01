@@ -3,11 +3,9 @@ package edu.colorado.cires.pace.packaging;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
 
@@ -63,8 +61,8 @@ class Packager {
     Path outputFile = outputDir.resolve("manifest-sha256.txt");
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
-      RuntimeException exception = moveInstructions
-          .map(packageInstruction -> {
+      moveInstructions
+          .forEach(packageInstruction -> {
             try {
               FileUtils.copyFile(packageInstruction.source(), packageInstruction.target());
               logger.info("Copied {} to {}", packageInstruction.source(), packageInstruction.target());
@@ -72,29 +70,14 @@ class Packager {
               logger.info("Appended {} checksum to {}", packageInstruction.target(), outputFile);
               
               incrementProgressFn.run();
-              return null;
-            } catch (FileAlreadyExistsException e) {
-              return new RuntimeException(String.format(
-                  "Path already exists: %s", packageInstruction.target()
-              ));
             } catch (IOException e) {
-              return new RuntimeException(e);
+              throw new RuntimeException(e);
             }
-          }).filter(Objects::nonNull)
-          .reduce(new RuntimeException("Packaging failed"), (o1, o2) -> {
-            o1.addSuppressed(o2);
-            return o1;
           });
-      if (exception.getSuppressed().length != 0) {
-        throw new PackagingException(
-            exception.getMessage(),
-            exception.getSuppressed()
-        );
-      }
       
-    } catch (IOException e) {
+    } catch (IOException | RuntimeException e) {
       throw new PackagingException(String.format(
-          "Failed to write %s", outputFile
+          "Packaging failed: %s", e.getMessage()
       ), e);
     }
     
