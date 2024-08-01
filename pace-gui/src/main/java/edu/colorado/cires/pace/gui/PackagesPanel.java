@@ -143,10 +143,17 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     updateBooleanTableValue(7);
   }
   
+  private void togglePackageDeleteStatuses(){
+    updateBooleanTableValue(9);
+  }
+  
   private void updateBooleanTableValue(int columnIndex) {
     Boolean newValue = null;
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       Boolean selected = (Boolean) tableModel.getValueAt(i, columnIndex);
+      if (selected == null) {
+        newValue = false;
+      }
       if (newValue == null) {
         newValue = !selected;
       }
@@ -171,12 +178,42 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     searchData();
   }
+
+  private void deleteSelectedRows() {
+    List<UUID> uuidsToDelete = new ArrayList<>(0);
+    for (int i = 0; i < tableModel.getRowCount(); i++) {
+      Boolean selected = (Boolean) tableModel.getValueAt(i, 9);
+      Package p = (Package) tableModel.getValueAt(i, 8);
+
+      if (selected) {
+        uuidsToDelete.add(p.getUuid());
+      }
+    }
+    
+    if (!uuidsToDelete.isEmpty()) {
+      int result = JOptionPane.showConfirmDialog(this, String.format(
+          "Are you sure you want to proceed? This action cannot be undone. %s packages will be deleted", uuidsToDelete.size()
+      ), "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+      if (result == JOptionPane.YES_OPTION) {
+        try {
+          for (UUID uuid : uuidsToDelete) {
+            repository.delete(uuid);
+          }
+        } catch (DatastoreException | NotFoundException | BadArgumentException e) {
+          JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        searchData();
+      }
+    }
+  }
   
   private void resetTable() {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       tableModel.setValueAt(false, i, 6);
       Package p = (Package) tableModel.getValueAt(i, 8);
       tableModel.setValueAt(p.isVisible(), i, 7);
+      tableModel.setValueAt(false, i, 9);
     }
   }
   
@@ -287,12 +324,15 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     setPackageMode(false);
     JRadioButton editVisibilityModeButton = createModeToggleCheckbox("Edit Visibility", this::setEditVisibilityModel);
     setEditVisibilityModel(false);
+    JRadioButton deleteModeButton = createModeToggleCheckbox("Delete", this::setDeleteModel);
     group.add(viewModeButton);
     group.add(packageModeButton);
     group.add(editVisibilityModeButton);
+    group.add(deleteModeButton);
     toolBar.add(viewModeButton);
     toolBar.add(packageModeButton);
     toolBar.add(editVisibilityModeButton);
+    toolBar.add(deleteModeButton);
     return toolBar;
   }
   
@@ -338,7 +378,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       );
       
       actionButton.addActionListener(e -> saveRowVisibility());
-      actionButton.setText("Submit");
+      actionButton.setText("Save");
       
       getTableColumnModel().addColumn(
           getHiddenColumnByHeaderValue("Visible")
@@ -359,6 +399,34 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     resetTable();
   }
 
+  private void setDeleteModel(Boolean enabled) {
+    if (enabled) {
+      Arrays.stream(actionButton.getActionListeners()).forEach(
+          actionButton::removeActionListener
+      );
+
+      actionButton.addActionListener(e -> deleteSelectedRows());
+      actionButton.setText("Delete");
+
+      getTableColumnModel().addColumn(
+          getHiddenColumnByHeaderValue("Select for Deletion")
+      );
+
+      Arrays.stream(toggleAllButton.getActionListeners()).forEach(
+          toggleAllButton::removeActionListener
+      );
+
+      toggleAllButton.addActionListener(e -> togglePackageDeleteStatuses());
+    } else {
+      TableColumn tableColumn = getHiddenColumnByHeaderValue("Select for Deletion");
+      if (tableColumn != null) {
+        getTableColumnModel().removeColumn(tableColumn);
+      }
+    }
+
+    resetTable();
+  }
+
   private JRadioButton createModeToggleCheckbox(String text, Consumer<Boolean> itemListener) {
     JRadioButton checkBox = new JRadioButton(text);
     checkBox.addItemListener(e -> itemListener.accept(checkBox.isSelected()));
@@ -375,7 +443,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     public Class<?> getColumnClass(int columnIndex) {
       return switch (columnIndex) {
         case 0 -> UUID.class;
-        case 6, 7 -> Boolean.class;
+        case 6, 7, 9 -> Boolean.class;
         case 8 -> Package.class;
         default -> String.class;
       };
@@ -383,7 +451,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-      return column == 6 || column == 7;
+      return column == 6 || column == 7 || column == 9;
     }
   }
 }

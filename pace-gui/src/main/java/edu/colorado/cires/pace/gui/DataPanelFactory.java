@@ -105,7 +105,7 @@ public class DataPanelFactory {
   public DataPanel<Package> createPackagesPanel() {
     PackagesPanel panel = new PackagesPanel(
         packageRepository,
-        new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Visible", "Object" },
+        new String[] { "UUID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Visible", "Object", "Select for Deletion" },
         (p) -> new Object[] { 
             p.getUuid(),
             p.getSiteOrCruiseName(),
@@ -115,7 +115,8 @@ public class DataPanelFactory {
             LocationType.fromLocationDetail(p.getLocationDetail()).getName(),
             false,
             p.isVisible(),
-            p
+            p,
+            false
         },
         Package.class,
         objectMapper,
@@ -132,7 +133,7 @@ public class DataPanelFactory {
     ) {
       @Override
       protected List<String> getHiddenColumns() {
-        return List.of("UUID", "Object", "Visible", "Select for Packaging");
+        return List.of("UUID", "Object", "Visible", "Select for Packaging", "Select for Deletion");
       }
     };
     panel.init();
