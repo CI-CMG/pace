@@ -14,10 +14,12 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -195,11 +197,10 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   }
   
   private static String[] getInitialHeaderOptions(SensorTranslator initialTranslator) {
-    List<String> options = new ArrayList<>(List.of(
-        initialTranslator.getSensorUUID(),
-        initialTranslator.getSensorName(),
-        initialTranslator.getDescription()
-    ));
+    List<String> options = new ArrayList<>(0);
+    options.add(initialTranslator.getSensorUUID());
+    options.add(initialTranslator.getSensorName());
+    options.add(initialTranslator.getDescription());
 
     if (initialTranslator instanceof AudioSensorTranslator audioSensorTranslator) {
       options.add(audioSensorTranslator.getHydrophoneId());
@@ -209,7 +210,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
       options.add(otherSensorTranslator.getProperties());
     }
     
-    return options.toArray(String[]::new);
+    return options.stream().filter(Objects::nonNull).toArray(String[]::new);
   }
 
   @Override
@@ -224,9 +225,14 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
   @Override
   protected SensorTranslator toTranslator(UUID uuid, String name) {
-    return sensorTypeSpecificTranslatorForm.toTranslator(
-        uuid, name, this.uuidField, this.nameField, descriptionField
-    );
+    if (sensorTypeComboBox.getSelectedItem() == null) {
+      JOptionPane.showMessageDialog(this, "Please select a sensor type", "Error", JOptionPane.ERROR_MESSAGE);
+      throw new RuntimeException("Sensor type not selected");
+    } else {
+      return sensorTypeSpecificTranslatorForm.toTranslator(
+          uuid, name, this.uuidField, this.nameField, descriptionField
+      );
+    }
   }
 
   @Override
