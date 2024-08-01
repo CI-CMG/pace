@@ -85,25 +85,13 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     setLayout(new BorderLayout());
     
     if (initialTranslator == null) {
-      tabbedPane.add(String.format(
-          "%s. Package Type", tabbedPane.getComponentCount() + 1
-      ), getComboBoxPanel(packageTypeComboBox));
+      tabbedPane.add("Package Type", getComboBoxPanel(packageTypeComboBox));
     }
-    tabbedPane.add(String.format(
-        "%s. Package Info", tabbedPane.getComponentCount() + 1
-    ), new JScrollPane(packageInfoForm));
-    tabbedPane.add(String.format(
-        "%s. File Paths", tabbedPane.getComponentCount() + 1
-    ), new JScrollPane(filePathsTranslatorForm));
-    tabbedPane.add(String.format(
-        "%s. Contacts", tabbedPane.getComponentCount() + 1
-    ), new JScrollPane(contactsTranslatorForm));
-    tabbedPane.add(String.format(
-        "%s. Calibration", tabbedPane.getComponentCount() + 1
-    ), new JScrollPane(calibrationTranslatorForm));
-    tabbedPane.add(String.format(
-        "%s. Location", tabbedPane.getComponentCount() + 1
-    ), new JScrollPane(locationDetailForm));
+    tabbedPane.add("Package Info", new JScrollPane(packageInfoForm));
+    tabbedPane.add("File Paths", new JScrollPane(filePathsTranslatorForm));
+    tabbedPane.add("Contacts", new JScrollPane(contactsTranslatorForm));
+    tabbedPane.add("Calibration", new JScrollPane(calibrationTranslatorForm));
+    tabbedPane.add("Location", new JScrollPane(locationDetailForm));
 
     add(tabbedPane, BorderLayout.CENTER);
   }
@@ -125,15 +113,9 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             new QualityControlForm(getHeaderOptions(), audioDataPackageTranslator.getQualityControlDetailTranslator())
         );
         
-        tabbedPane.add(String.format(
-            "%s. Package Detail", tabbedPane.getComponentCount() + 1
-        ), packageDetailForm);
-        tabbedPane.add(String.format(
-            "%s. Quality Control", tabbedPane.getComponentCount() + 1
-        ), qualityControlForm);
-        tabbedPane.add(String.format(
-            "%s. Channels", tabbedPane.getComponentCount() + 1
-        ), channelsForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
+        tabbedPane.add("Quality Control", qualityControlForm);
+        tabbedPane.add("Channels", channelsForm);
       } else if (initialTranslator instanceof DetectionsPackageTranslator detectionsPackageTranslator) {
         soundAnalysisForm = new ScrollPane(
             new SoundAnalysisForm<>(getHeaderOptions(), detectionsPackageTranslator)
@@ -148,18 +130,10 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             new DetectionsForm(getHeaderOptions(), detectionsPackageTranslator)
         );
 
-        tabbedPane.add(String.format(
-            "%s. Package Detail", tabbedPane.getComponentCount() + 1
-        ), packageDetailForm);
-        tabbedPane.add(String.format(
-            "%s. Quality Control", tabbedPane.getComponentCount() + 1
-        ), qualityControlForm);
-        tabbedPane.add(String.format(
-            "%s. Software", tabbedPane.getComponentCount() + 1
-        ), softwareForm);
-        tabbedPane.add(String.format(
-            "%s. Sound Analysis", tabbedPane.getComponentCount() + 1
-        ), soundAnalysisForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
+        tabbedPane.add("Quality Control", qualityControlForm);
+        tabbedPane.add("Software", softwareForm);
+        tabbedPane.add("Sound Analysis", soundAnalysisForm);
       } else if (initialTranslator instanceof SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator) {
         soundAnalysisForm = new ScrollPane(
             new SoundAnalysisForm<>(getHeaderOptions(), soundLevelMetricsPackageTranslator)
@@ -173,18 +147,10 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         packageDetailForm = new ScrollPane(
             new SoundLevelMetricsForm(getHeaderOptions(), soundLevelMetricsPackageTranslator)
         );
-        tabbedPane.add(String.format(
-            "%s. Package Detail", tabbedPane.getComponentCount() + 1
-        ), packageDetailForm);
-        tabbedPane.add(String.format(
-            "%s. Quality Control", tabbedPane.getComponentCount() + 1
-        ), qualityControlForm);
-        tabbedPane.add(String.format(
-            "%s. Software", tabbedPane.getComponentCount() + 1
-        ), softwareForm);
-        tabbedPane.add(String.format(
-            "%s. Sound Analysis", tabbedPane.getComponentCount() + 1
-        ), soundAnalysisForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
+        tabbedPane.add("Quality Control", qualityControlForm);
+        tabbedPane.add("Software", softwareForm);
+        tabbedPane.add("Sound Analysis", soundAnalysisForm);
       } else if (initialTranslator instanceof SoundPropagationModelsPackageTranslator soundPropagationModelsPackageTranslator) {
         softwareForm = new ScrollPane(
             new SoftwareForm<>(getHeaderOptions(), soundPropagationModelsPackageTranslator)
@@ -192,19 +158,13 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         packageDetailForm = new ScrollPane(
             new SoundPropagationModelsForm(getHeaderOptions(), soundPropagationModelsPackageTranslator)
         );
-        tabbedPane.add(String.format(
-            "%s. Package Detail", tabbedPane.getComponentCount() + 1
-        ), packageDetailForm);
-        tabbedPane.add(String.format(
-            "%s. Software", tabbedPane.getComponentCount() + 1
-        ), softwareForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
+        tabbedPane.add("Software", softwareForm);
       } else if (initialTranslator instanceof SoundClipsPackageTranslator soundClipsPackageTranslator) {
         softwareForm = new ScrollPane(
             new SoftwareForm<>(getHeaderOptions(), soundClipsPackageTranslator)
         );
-        tabbedPane.add(String.format(
-            "%s. Software", tabbedPane.getComponentCount() + 1
-        ), softwareForm);
+        tabbedPane.add("Software", softwareForm);
       }
     }
   }
@@ -456,9 +416,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             qualityControlForm = new ScrollPane(
                 new QualityControlForm(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Quality Control", tabbedPane.getComponentCount() + 1
-            ), qualityControlForm);
+            tabbedPane.add("Quality Control", qualityControlForm);
           }
         } else {
           if (qualityControlForm != null) {
@@ -472,9 +430,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             channelsForm = new ScrollPane(
                 new ChannelsForm(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Channels", tabbedPane.getComponentCount() + 1
-            ), channelsForm);
+            tabbedPane.add("Channels", channelsForm);
           }
         } else {
           if (channelsForm != null) {
@@ -490,9 +446,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             packageDetailForm = new ScrollPane(
                 new AudioDataForm<>(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Package Detail", tabbedPane.getComponentCount() + 1
-            ), packageDetailForm);
+            tabbedPane.add("Package Detail", packageDetailForm);
           }
         } else if (choice.equals("Sound Propagation Models")) {
           if (packageDetailForm == null || !(packageDetailForm.getComponent() instanceof SoundPropagationModelsForm)) {
@@ -502,9 +456,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             packageDetailForm = new ScrollPane(
                 new SoundPropagationModelsForm(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Package Detail", tabbedPane.getComponentCount() + 1
-            ), packageDetailForm);
+            tabbedPane.add("Package Detail", packageDetailForm);
           }
         } else if (choice.equals("Detections")) {
           if (packageDetailForm == null || !(packageDetailForm.getComponent() instanceof DetectionsForm)) {
@@ -514,9 +466,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             packageDetailForm = new ScrollPane(
                 new DetectionsForm(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Package Detail", tabbedPane.getComponentCount() + 1
-            ), packageDetailForm);
+            tabbedPane.add("Package Detail", packageDetailForm);
           }
         } else if (choice.equals("Sound Level Metrics")) {
           if (packageDetailForm == null || !(packageDetailForm.getComponent() instanceof SoundLevelMetricsForm)) {
@@ -526,9 +476,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             packageDetailForm = new ScrollPane(
                 new SoundLevelMetricsForm(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Package Detail", tabbedPane.getComponentCount() + 1
-            ), packageDetailForm);
+            tabbedPane.add("Package Detail", packageDetailForm);
           }
         } else {
           if (packageDetailForm != null) {
@@ -545,9 +493,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             softwareForm = new ScrollPane(
                 new SoftwareForm<>(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Software Info", tabbedPane.getComponentCount() + 1
-            ), softwareForm);
+            tabbedPane.add("Software Info", softwareForm);
           }
         } else {
           if (softwareForm != null) {
@@ -560,9 +506,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             soundAnalysisForm = new ScrollPane(
                 new SoundAnalysisForm<>(headerOptions, null)
             );
-            tabbedPane.add(String.format(
-                "%s. Sound Analysis Info", tabbedPane.getComponentCount() + 1
-            ), soundAnalysisForm);
+            tabbedPane.add("Sound Analysis Info", soundAnalysisForm);
           }
         } else {
           if (soundAnalysisForm != null) {
