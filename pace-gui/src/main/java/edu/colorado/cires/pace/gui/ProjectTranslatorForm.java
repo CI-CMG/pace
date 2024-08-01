@@ -31,7 +31,7 @@ public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator>
   protected void addUniqueFields() {
     setLayout(new BorderLayout());
 
-    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     JPanel formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
@@ -39,7 +39,7 @@ public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator>
     formPanel.add(nameField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     formPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weighty = 1; }));
     
-    tabbedPane.add("1. Project Info", new JScrollPane(formPanel));
+    tabbedPane.add("Project", new JScrollPane(formPanel));
     add(tabbedPane, BorderLayout.CENTER);
   }
 

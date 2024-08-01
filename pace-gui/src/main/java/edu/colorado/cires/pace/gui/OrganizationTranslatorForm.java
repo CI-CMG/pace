@@ -45,7 +45,7 @@ public class OrganizationTranslatorForm  extends BaseTranslatorForm<Organization
     phoneField.setName("phone");
     setLayout(new BorderLayout());
 
-    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     JPanel formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
@@ -66,7 +66,7 @@ public class OrganizationTranslatorForm  extends BaseTranslatorForm<Organization
     formPanel.add(new JLabel("Phone"), configureLayout(c -> { c.gridx = 0; c.gridy = 16; c.weightx = 1; }));
     formPanel.add(phoneField, configureLayout(c -> { c.gridx = 0; c.gridy = 17; c.weightx = 1; }));
     formPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 18; c.weighty = 1; }));
-    tabbedPane.add("1. Organization Info", new JScrollPane(formPanel));
+    tabbedPane.add("Organization", new JScrollPane(formPanel));
     
     add(tabbedPane, BorderLayout.CENTER);
   }

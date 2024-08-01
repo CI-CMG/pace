@@ -106,7 +106,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   protected void addUniqueFields() {
     setLayout(new BorderLayout());
 
-    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
@@ -120,12 +120,12 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     formPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 8; c.weighty = 1; }));
     
     if (initialTranslator != null) {
-      tabbedPane.add("1. Sensor Info", new JScrollPane(formPanel));
+      tabbedPane.add("Sensor", new JScrollPane(formPanel));
     } else {
       JPanel sensorTypePanel = getSensorTypePanel(formPanel);
       
-      tabbedPane.add("1. Sensor Type", sensorTypePanel);
-      tabbedPane.add("2. Sensor Info", new JScrollPane(formPanel));
+      tabbedPane.add("Sensor Type", sensorTypePanel);
+      tabbedPane.add("Sensor", new JScrollPane(formPanel));
     }
     
     add(tabbedPane, BorderLayout.CENTER);

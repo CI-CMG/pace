@@ -33,7 +33,7 @@ public class InstrumentTranslatorForm extends BaseTranslatorForm<InstrumentTrans
   protected void addUniqueFields() {
     setLayout(new BorderLayout());
 
-    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     JPanel formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
@@ -43,7 +43,7 @@ public class InstrumentTranslatorForm extends BaseTranslatorForm<InstrumentTrans
     formPanel.add(fileTypesField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     formPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 6; c.weighty = 1; }));
     
-    tabbedPane.add("1. Instrument Info", new JScrollPane(formPanel));
+    tabbedPane.add("Instrument", new JScrollPane(formPanel));
     add(tabbedPane, BorderLayout.CENTER);
   }
 
