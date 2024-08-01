@@ -36,6 +36,7 @@ public class TranslatorPanel extends DataPanel<Translator> {
         JTable table = (JTable) e.getSource();
         Point point = e.getPoint();
         int row = table.rowAtPoint(point);
+        row = table.convertRowIndexToModel(row);
         if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
           List<Object> values = new ArrayList<>(0);
           for (int i = 0; i < headers.length; i++) {
