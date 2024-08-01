@@ -10,8 +10,8 @@ public abstract class ObjectWithNameForm<O extends ObjectWithName> extends Metad
     super(initialObject, "Name", dependencyRepositories);
   }
   
-  public ObjectWithNameForm(O initialObject, boolean addSpaceToFormBottom, CRUDRepository<?>... dependencyRepositories) {
-    super(initialObject, "Name", addSpaceToFormBottom, dependencyRepositories);
+  public ObjectWithNameForm(O initialObject, boolean addSpaceToFormBottom, boolean scrollableContentForm, CRUDRepository<?>... dependencyRepositories) {
+    super(initialObject, "Name", addSpaceToFormBottom, scrollableContentForm, dependencyRepositories);
   }
 
   @Override

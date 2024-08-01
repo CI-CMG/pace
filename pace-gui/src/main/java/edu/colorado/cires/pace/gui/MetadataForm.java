@@ -13,8 +13,8 @@ import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.util.UUID;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -31,14 +31,14 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
   protected abstract void initializeAdditionalFields(O object, CRUDRepository<?>... dependencyRepositories);
   
   protected MetadataForm(O initialObject, String humanReadableUniqueFieldName, CRUDRepository<?>... dependencyRepositories) {
-    createForm(initialObject, humanReadableUniqueFieldName, true, dependencyRepositories);
+    createForm(initialObject, humanReadableUniqueFieldName, true, true, dependencyRepositories);
   }
 
-  protected MetadataForm(O initialObject, String humanReadableUniqueFieldName, boolean addSpaceToFormBottom, CRUDRepository<?>... dependencyRepositories) {
-    createForm(initialObject, humanReadableUniqueFieldName, addSpaceToFormBottom, dependencyRepositories);
+  protected MetadataForm(O initialObject, String humanReadableUniqueFieldName, boolean addSpaceToFormBottom, boolean scrollableContentPanel, CRUDRepository<?>... dependencyRepositories) {
+    createForm(initialObject, humanReadableUniqueFieldName, addSpaceToFormBottom, scrollableContentPanel, dependencyRepositories);
   }
   
-  private void createForm(O initialObject, String humanReadableUniqueFieldName, boolean addSpaceToFormBottom, CRUDRepository<?>... dependencyRepositories) {
+  private void createForm(O initialObject, String humanReadableUniqueFieldName, boolean addSpaceToFormBottom, boolean scrollableContentPanel, CRUDRepository<?>... dependencyRepositories) {
     uuid.setName("uuid");
     uniqueField.setName("uniqueField");
     visible.setName("visible");
@@ -56,7 +56,9 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
     if (addSpaceToFormBottom) {
       contentPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weighty = 1; }));
     }
-    add(new JScrollPane(contentPanel), BorderLayout.CENTER);
+
+    JComponent component = !scrollableContentPanel ? contentPanel : new JScrollPane(contentPanel); 
+    add(component, BorderLayout.CENTER);
 
     uuid.setEnabled(false);
 

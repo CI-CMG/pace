@@ -25,7 +25,7 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
   private JPanel fluff;
 
   private InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
-    super(initialInstrument, false, fileTypeRepository);
+    super(initialInstrument, false, false, fileTypeRepository);
   }
   
   public static InstrumentForm create(Instrument initialInstrument, FileTypeRepository repository) {

@@ -66,7 +66,7 @@ public class TranslatorForm extends ObjectWithNameForm<Translator> {
   };
 
   private TranslatorForm(Translator initialTranslator) {
-    super(initialTranslator, false);
+    super(initialTranslator, false, false);
   }
   
   public static TranslatorForm create(Translator translator) {
