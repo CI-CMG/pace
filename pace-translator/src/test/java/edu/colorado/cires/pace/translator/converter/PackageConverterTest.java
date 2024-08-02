@@ -70,6 +70,7 @@ class PackageConverterTest {
   void convertAudioPackage() throws TranslationException, JsonProcessingException {
     AudioPackage audioPackage = AudioPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -270,6 +271,7 @@ class PackageConverterTest {
 
     AudioPackageTranslator audioPackageTranslator = AudioPackageTranslator.builder()
         .packageUUID("packageUUID")
+        .dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -474,6 +476,7 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(audioPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(audioPackage.getUuid().toString()), 1));
+    map.put(audioPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(audioPackage.getDataCollectionName()), 1));
     map.put(audioPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(audioPackage.getTemperaturePath().toString()), 2));
     map.put(audioPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getBiologicalPath().toString()), 3));
     map.put(audioPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getOtherPath().toString()), 4));
@@ -652,6 +655,7 @@ class PackageConverterTest {
   void convertCPODPackage() throws TranslationException, JsonProcessingException {
     CPODPackage cpodPackage = CPODPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -840,6 +844,7 @@ class PackageConverterTest {
 
     CPODPackageTranslator cpodPackageTranslator = CPODPackageTranslator.builder()
         .packageUUID("packageUUID")
+        .dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -1140,6 +1145,7 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(cpodPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(cpodPackage.getUuid().toString()), 1));
+    map.put(cpodPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDataCollectionName()), 1));
     map.put(cpodPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getTemperaturePath().toString()), 2));
     map.put(cpodPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getBiologicalPath().toString()), 3));
     map.put(cpodPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getOtherPath().toString()), 4));
@@ -1307,6 +1313,7 @@ class PackageConverterTest {
   void convertDetectionsPackage() throws TranslationException, JsonProcessingException {
     DetectionsPackage detectionsPackage = DetectionsPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -1385,6 +1392,7 @@ class PackageConverterTest {
 
     DetectionsPackageTranslator detectionsPackageTranslator = DetectionsPackageTranslator.builder()
         .packageUUID("packageUUID")
+.dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -1484,6 +1492,7 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(detectionsPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getUuid().toString()), 1));
+    map.put(detectionsPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDataCollectionName()), 1));
     map.put(detectionsPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getTemperaturePath().toString()), 2));
     map.put(detectionsPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getBiologicalPath().toString()), 3));
     map.put(detectionsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getOtherPath().toString()), 4));
@@ -1566,6 +1575,7 @@ class PackageConverterTest {
   void convertSoundClipsPackage() throws TranslationException, JsonProcessingException {
     SoundClipsPackage soundClipsPackage = SoundClipsPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -1627,6 +1637,7 @@ class PackageConverterTest {
 
     SoundClipsPackageTranslator soundClipsPackageTranslator = SoundClipsPackageTranslator.builder()
         .packageUUID("packageUUID")
+        .dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -1695,6 +1706,7 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(soundClipsPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getUuid().toString()), 1));
+    map.put(soundClipsPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDataCollectionName()), 1));
     map.put(soundClipsPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getTemperaturePath().toString()), 2));
     map.put(soundClipsPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getBiologicalPath().toString()), 3));
     map.put(soundClipsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getOtherPath().toString()), 4));
@@ -1758,6 +1770,7 @@ class PackageConverterTest {
   void convertSoundLevelMetricsPackage() throws TranslationException, JsonProcessingException {
     SoundLevelMetricsPackage soundLevelMetricsPackage = SoundLevelMetricsPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -1848,6 +1861,7 @@ class PackageConverterTest {
 
     SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator = SoundLevelMetricsPackageTranslator.builder()
         .packageUUID("packageUUID")
+        .dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -1958,13 +1972,14 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .audioEndTimeTranslator(DefaultTimeTranslator.builder()
-            .timeZone("audio-end-time")
+            .time("audio-end-time")
             .timeZone("timeZone")
             .build())
         .build();
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(soundLevelMetricsPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getUuid().toString()), 1));
+    map.put(soundLevelMetricsPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDataCollectionName()), 1));
     map.put(soundLevelMetricsPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getTemperaturePath().toString()), 2));
     map.put(soundLevelMetricsPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getBiologicalPath().toString()), 3));
     map.put(soundLevelMetricsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getOtherPath().toString()), 4));
@@ -2057,6 +2072,7 @@ class PackageConverterTest {
   void convertSoundPropagationModels() throws TranslationException, JsonProcessingException {
     SoundPropagationModelsPackage soundPropagationModelsPackage = SoundPropagationModelsPackage.builder()
         .uuid(UUID.randomUUID())
+        .dataCollectionName("dataCollectionName")
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -2119,6 +2135,7 @@ class PackageConverterTest {
 
     SoundPropagationModelsPackageTranslator soundPropagationModelsTranslator = SoundPropagationModelsPackageTranslator.builder()
         .packageUUID("packageUUID")
+        .dataCollectionName("dataCollectionNAME")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -2194,6 +2211,7 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(soundPropagationModelsTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getUuid().toString()), 1));
+    map.put(soundPropagationModelsTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDataCollectionName()), 1));
     map.put(soundPropagationModelsTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getTemperaturePath().toString()), 2));
     map.put(soundPropagationModelsTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getBiologicalPath().toString()), 3));
     map.put(soundPropagationModelsTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getOtherPath().toString()), 4));

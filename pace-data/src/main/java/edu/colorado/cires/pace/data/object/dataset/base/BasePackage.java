@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 @EqualsAndHashCode
@@ -38,10 +39,12 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   @NotNull
   private final Path sourcePath;
 
-  @NotBlank
+  private final String dataCollectionName;
   private final String siteOrCruiseName;
-  @NotBlank
   private final String deploymentId;
+  @NotNull
+  protected abstract List<@NotNull @Valid T> getProjects();
+  
   @NotNull
   private final LocalDate publicReleaseDate;
   @NotNull @Valid
@@ -67,9 +70,6 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   @NotNull
   @NotEmpty
   protected abstract List<@NotNull @Valid T> getScientists();
-  @NotNull
-  @NotEmpty
-  protected abstract List<@NotNull @Valid T> getProjects();
   @NotNull @NotEmpty
   protected abstract List<@NotNull @Valid T> getSponsors();
   @NotNull @NotEmpty
@@ -89,6 +89,10 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
 
   @JsonIgnore
   public String getPackageId() {
+    if (StringUtils.isNotBlank(dataCollectionName)) {
+      return dataCollectionName;
+    }
+    
     String packageId = null;
 
     List<String> projects = getProjects() == null ? Collections.emptyList() : getProjectNames();
@@ -117,7 +121,7 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
         );
       }
     }
-
+    
     return packageId;
   }
 

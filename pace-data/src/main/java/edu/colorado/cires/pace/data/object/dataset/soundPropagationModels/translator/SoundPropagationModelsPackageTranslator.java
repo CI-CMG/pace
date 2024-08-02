@@ -22,6 +22,7 @@ public class SoundPropagationModelsPackageTranslator extends SoftwareDependentPa
   public static SoundPropagationModelsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundPropagationModelsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())
+        .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())
         .temperaturePath(packageTranslator.getTemperaturePath())

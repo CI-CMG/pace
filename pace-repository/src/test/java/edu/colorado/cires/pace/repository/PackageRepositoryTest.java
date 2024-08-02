@@ -242,16 +242,18 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     ), exception.getMessage());
 
     Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-    assertEquals(3, constraintViolations.size());
+    assertEquals(4, constraintViolations.size());
     List<ConstraintViolation<?>> constraintViolation = constraintViolations.stream()
         .sorted((Comparator.comparing(o -> o.getPropertyPath().toString())))
         .toList();
-    assertEquals("deploymentId", constraintViolation.get(0).getPropertyPath().toString());
-    assertEquals("must not be blank", constraintViolation.get(0).getMessage());
-    assertEquals("projects[0].<list element>", constraintViolation.get(1).getPropertyPath().toString());
-    assertEquals("must not be blank", constraintViolation.get(1).getMessage());
-    assertEquals("siteOrCruiseName", constraintViolation.get(2).getPropertyPath().toString());
+    assertEquals("dataCollectionName", constraintViolation.get(0).getPropertyPath().toString());
+    assertEquals("at least dataCollectionName, siteOrCruiseName, or deploymentId required", constraintViolation.get(0).getMessage());
+    assertEquals("deploymentId", constraintViolation.get(1).getPropertyPath().toString());
+    assertEquals("at least dataCollectionName, siteOrCruiseName, or deploymentId required", constraintViolation.get(1).getMessage());
+    assertEquals("projects[0].<list element>", constraintViolation.get(2).getPropertyPath().toString());
     assertEquals("must not be blank", constraintViolation.get(2).getMessage());
+    assertEquals("siteOrCruiseName", constraintViolation.get(3).getPropertyPath().toString());
+    assertEquals("at least dataCollectionName, siteOrCruiseName, or deploymentId required", constraintViolation.get(3).getMessage());
   }
 
   @Test

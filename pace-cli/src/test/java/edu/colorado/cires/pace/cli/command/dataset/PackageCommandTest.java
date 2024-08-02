@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.cli.command.dataset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,6 +67,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected String[] getTranslatorFields() {
     List<String> fields = new ArrayList<>(List.of(
         "UUID",
+        "dataCollectionName",
         "timeZone",
         "temperaturePath",
         "biologicalPath",
@@ -105,6 +107,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     PackageTranslator packageTranslator = PackageTranslator.builder()
         .name(name)
         .packageUUID("UUID")
+        .dataCollectionName("dataCollectionName")
         .temperaturePath("temperaturePath")
         .biologicalPath("biologicalPath")
         .otherPath("otherPath")
@@ -156,6 +159,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
   protected String[] objectToRow(P object) {
     List<String> fields = new ArrayList<>(List.of(
         object.getUuid() == null ? "" : object.getUuid().toString(),
+        object.getDataCollectionName(),
         "UTC",
         object.getTemperaturePath().toString(),
         object.getBiologicalPath().toString(),
@@ -237,6 +241,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     assertEquals(expected.getSiteOrCruiseName(), actual.getSiteOrCruiseName());
     assertEquals(expected.getDeploymentId(), actual.getDeploymentId());
     assertEquals(expected.getDatasetPackager(), actual.getDatasetPackager());
+    assertEquals(expected.getDataCollectionName(), actual.getDataCollectionName());
 
     for (int i = 0; i < expected.getProjects().size(); i++) {
       assertEquals(
@@ -326,22 +331,22 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     execute("package", "process", packageFile.toString(), outputDirectory.toString());
 
     Set<String> expectedPaths = Set.of(
-      "target/test-dir/output/project 1_siteOrCruiseName_test/bagit.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/bag-info.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/process.log",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/tagmanifest-sha256.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/nav_files/navigationPath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/calibration/calibrationDocumentsPath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/project 1_siteOrCruiseName_test.json",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/other/otherPath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/organizations.json",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/docs/documentsPath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/projects.json",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/acoustic_files/sourcePath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/biological/biologicalPath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/people.json",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/data/temperature/temperaturePath.txt",
-      "target/test-dir/output/project 1_siteOrCruiseName_test/manifest-sha256.txt"
+      "target/test-dir/output/test/bagit.txt",
+      "target/test-dir/output/test/bag-info.txt",
+      "target/test-dir/output/test/process.log",
+      "target/test-dir/output/test/tagmanifest-sha256.txt",
+      "target/test-dir/output/test/data/nav_files/navigationPath.txt",
+      "target/test-dir/output/test/data/calibration/calibrationDocumentsPath.txt",
+      "target/test-dir/output/test/data/test.json",
+      "target/test-dir/output/test/data/other/otherPath.txt",
+      "target/test-dir/output/test/data/organizations.json",
+      "target/test-dir/output/test/data/docs/documentsPath.txt",
+      "target/test-dir/output/test/data/projects.json",
+      "target/test-dir/output/test/data/acoustic_files/sourcePath.txt",
+      "target/test-dir/output/test/data/biological/biologicalPath.txt",
+      "target/test-dir/output/test/data/people.json",
+      "target/test-dir/output/test/data/temperature/temperaturePath.txt",
+      "target/test-dir/output/test/manifest-sha256.txt"
     );
 
     Set<String> actualPaths = Files.walk(outputDirectory.toPath())
@@ -411,9 +416,26 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     ), exception.message());
 
     ArrayList<?> detail = (ArrayList<?>) exception.detail();
-    assertEquals(1, detail.size());
-    Map<String, Object> map = (Map<String, Object>) detail.get(0);
-    assertEquals("deploymentId", map.get("field"));
-    assertEquals("must not be blank", map.get("message"));
+    assertEquals(3, detail.size());
+    
+    Map<String, String> map = detail.stream()
+        .map(o -> (Map<String, Object>) o)
+        .collect(Collectors.toMap(
+           d -> (String) d.get("field"),
+           d -> (String) d.get("message") 
+        ));
+    
+    assertEquals(3, map.keySet().size());
+    
+    assertEquals(
+        Set.of("deploymentId","siteOrCruiseName","dataCollectionName"),
+        map.keySet()
+    );
+    
+    assertTrue(
+        map.values().stream().allMatch(
+            v -> v.equals("at least dataCollectionName, siteOrCruiseName, or deploymentId required")
+        )
+    );
   }
 }

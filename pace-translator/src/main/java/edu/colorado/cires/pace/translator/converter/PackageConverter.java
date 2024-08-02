@@ -100,6 +100,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     QualityControlDetailTranslator qualityControlDetailTranslator = cpodPackageTranslator.getQualityControlDetailTranslator();
     return CPODPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", cpodPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, cpodPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", cpodPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", cpodPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", cpodPackageTranslator.getOtherPath(), row, runtimeException))
@@ -173,6 +174,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     
     return AudioPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", audioPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, audioPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", audioPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", audioPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", audioPackageTranslator.getOtherPath(), row, runtimeException))
@@ -226,6 +228,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     QualityControlDetailTranslator qualityControlDetailTranslator = detectionsPackageTranslator.getQualityControlDetailTranslator();
     return DetectionsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", detectionsPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, detectionsPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", detectionsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", detectionsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", detectionsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -337,6 +340,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
       throws TranslationException {
     return SoundClipsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundClipsPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, soundClipsPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundClipsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundClipsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundClipsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -378,6 +382,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     QualityControlDetailTranslator qualityControlDetailTranslator = soundLevelMetricsPackageTranslator.getQualityControlDetailTranslator();
     return SoundLevelMetricsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundLevelMetricsPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, soundLevelMetricsPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundLevelMetricsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundLevelMetricsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundLevelMetricsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -430,6 +435,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
       Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) throws TranslationException {
     return SoundPropagationModelsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundPropagationModelsPackageTranslator.getPackageUUID(), row, runtimeException))
+        .dataCollectionName(stringFromMap(properties, soundPropagationModelsPackageTranslator.getDataCollectionName()))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundPropagationModelsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundPropagationModelsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundPropagationModelsPackageTranslator.getOtherPath(), row, runtimeException))

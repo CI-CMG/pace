@@ -12,6 +12,7 @@ import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.validation.ValidPackageIdentifiers;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -33,12 +34,13 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
+@ValidPackageIdentifiers
 public abstract class Package extends BasePackage<String> {
   @NotBlank
   private final String datasetPackager;
   @NotEmpty @NotNull
   private final List<@NotBlank String> scientists;
-  @NotNull @NotEmpty
+  @NotNull
   private final List<@NotBlank String> projects;
   @NotNull @NotEmpty
   private final List<@NotBlank String> sponsors;

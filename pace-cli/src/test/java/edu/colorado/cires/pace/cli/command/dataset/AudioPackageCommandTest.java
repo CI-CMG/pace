@@ -508,8 +508,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .calibrationDocumentsPath(testPath.resolve("calibrationDocumentsPath").toAbsolutePath())
         .navigationPath(testPath.resolve("navigationPath").toAbsolutePath())
         .sourcePath(testPath.resolve("sourcePath").toAbsolutePath())
-        .siteOrCruiseName("siteOrCruiseName")
+        .siteOrCruiseName(uniqueField)
         .deploymentId(uniqueField)
+        .dataCollectionName(uniqueField)
         .datasetPackager(datasetPackager.getName())
         .projects(List.of(project.getName()))
         .publicReleaseDate(LocalDate.of(2020, 1,1))
@@ -606,6 +607,8 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   protected AudioPackage updateObject(AudioPackage original, String uniqueField) {
     return original.toBuilder()
         .deploymentId(uniqueField)
+        .siteOrCruiseName(uniqueField)
+        .dataCollectionName(uniqueField)
         .build();
   }
 }
