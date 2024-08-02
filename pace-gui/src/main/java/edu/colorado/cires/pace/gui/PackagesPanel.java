@@ -55,6 +55,11 @@ import org.apache.commons.lang3.StringUtils;
 
 public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
+  private static final int PACKAGING_SELECTED_COLUMN = 7;
+  private static final int VISIBLE_COLUMN = 8;
+  private static final int PACKAGE_COLUMN = 9;
+  private static final int DELETE_COLUMN = 10;
+  
   private static final JProgressBar progressBar = new JProgressBar();
   private final ObjectMapper objectMapper;
   private static final JButton actionButton = new JButton();
@@ -77,6 +82,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       ProjectRepository projectRepository, PlatformRepository platformRepository, InstrumentRepository instrumentRepository,
       SensorRepository sensorRepository, DetectionTypeRepository detectionTypeRepository) {
     super("packagesPanel", repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
+    
     this.objectMapper = objectMapper;
     this.personRepository = personRepository;
     this.organizationRepository = organizationRepository;
@@ -126,9 +132,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     List<Package> packages = new ArrayList<>();
     
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      Boolean selected = (Boolean) tableModel.getValueAt(i, 6);
+      Boolean selected = (Boolean) tableModel.getValueAt(i, PACKAGING_SELECTED_COLUMN);
       if (selected) {
-        packages.add((Package) tableModel.getValueAt(i, 8));
+        packages.add((Package) tableModel.getValueAt(i, PACKAGE_COLUMN));
       }
     }
     
@@ -136,15 +142,15 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   }
 
   private void toggleSelectedPackages() {
-    updateBooleanTableValue(6);
+    updateBooleanTableValue(PACKAGING_SELECTED_COLUMN);
   }
 
   private void togglePackageVisibilities() {
-    updateBooleanTableValue(7);
+    updateBooleanTableValue(VISIBLE_COLUMN);
   }
   
   private void togglePackageDeleteStatuses(){
-    updateBooleanTableValue(9);
+    updateBooleanTableValue(DELETE_COLUMN);
   }
   
   private void updateBooleanTableValue(int columnIndex) {
@@ -163,8 +169,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
   private void saveRowVisibility() {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      Boolean selected = (Boolean) tableModel.getValueAt(i, 7);
-      Package p = (Package) tableModel.getValueAt(i, 8);
+      Boolean selected = (Boolean) tableModel.getValueAt(i, VISIBLE_COLUMN);
+      Package p = (Package) tableModel.getValueAt(i, PACKAGE_COLUMN);
       Package packageToUpdate = (Package) p.setVisible(selected);
 
       if (p.isVisible() != packageToUpdate.isVisible()) {
@@ -182,8 +188,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private void deleteSelectedRows() {
     List<UUID> uuidsToDelete = new ArrayList<>(0);
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      Boolean selected = (Boolean) tableModel.getValueAt(i, 9);
-      Package p = (Package) tableModel.getValueAt(i, 8);
+      Boolean selected = (Boolean) tableModel.getValueAt(i, DELETE_COLUMN);
+      Package p = (Package) tableModel.getValueAt(i, PACKAGE_COLUMN);
 
       if (selected) {
         uuidsToDelete.add(p.getUuid());
@@ -210,10 +216,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
   private void resetTable() {
     for (int i = 0; i < tableModel.getRowCount(); i++) {
-      tableModel.setValueAt(false, i, 6);
-      Package p = (Package) tableModel.getValueAt(i, 8);
-      tableModel.setValueAt(p.isVisible(), i, 7);
-      tableModel.setValueAt(false, i, 9);
+      tableModel.setValueAt(false, i, PACKAGING_SELECTED_COLUMN);
+      Package p = (Package) tableModel.getValueAt(i, PACKAGE_COLUMN);
+      tableModel.setValueAt(p.isVisible(), i, VISIBLE_COLUMN);
+      tableModel.setValueAt(false, i, DELETE_COLUMN);
     }
   }
   
@@ -443,15 +449,15 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     public Class<?> getColumnClass(int columnIndex) {
       return switch (columnIndex) {
         case 0 -> UUID.class;
-        case 6, 7, 9 -> Boolean.class;
-        case 8 -> Package.class;
+        case PACKAGING_SELECTED_COLUMN, VISIBLE_COLUMN, DELETE_COLUMN -> Boolean.class;
+        case PACKAGE_COLUMN -> Package.class;
         default -> String.class;
       };
     }
 
     @Override
     public boolean isCellEditable(int row, int column) {
-      return column == 6 || column == 7 || column == 9;
+      return column == PACKAGING_SELECTED_COLUMN || column == VISIBLE_COLUMN || column == DELETE_COLUMN;
     }
   }
 }
