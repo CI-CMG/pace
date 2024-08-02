@@ -69,22 +69,22 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("packager-name")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.now().plusDays(1))
+        )).publishDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform("platform")
-        .instrument("instrument")
+        )).platformName("platform")
+        .instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
@@ -94,11 +94,11 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")

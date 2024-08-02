@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -46,7 +46,7 @@ public class ValidPackageIdentifiersValidatorTest {
 
     AudioPackage audioPackage = createAudio(UUID.randomUUID()).toBuilder()
         .deploymentId(deploymentId)
-        .siteOrCruiseName(siteOrCruiseName)
+        .site(siteOrCruiseName)
         .dataCollectionName(dataCollectionName)
         .build();
     Set<ConstraintViolation<AudioPackage>> constraintViolations = validator.validate(audioPackage);
@@ -59,11 +59,11 @@ public class ValidPackageIdentifiersValidatorTest {
       assertTrue(
           constraintViolations.stream()
               .allMatch(constraintViolation -> constraintViolation.getMessage()
-                  .equals("at least dataCollectionName, siteOrCruiseName, or deploymentId required"))
+                  .equals("at least dataCollectionName, site, or deploymentId required"))
       );
       
       assertEquals(
-          Set.of("deploymentId","siteOrCruiseName","dataCollectionName"),
+          Set.of("deploymentId","site","dataCollectionName"),
           constraintViolations.stream()
               .map(ConstraintViolation::getPropertyPath)
               .map(Path::toString).collect(Collectors.toSet())
@@ -81,21 +81,21 @@ public class ValidPackageIdentifiersValidatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -105,11 +105,11 @@ public class ValidPackageIdentifiersValidatorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")

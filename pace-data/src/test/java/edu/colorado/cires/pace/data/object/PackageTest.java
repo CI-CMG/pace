@@ -36,18 +36,18 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setProjects() {
     List<String> projects = List.of("1", "2");
     P p = createPackage();
-    assertNull(p.getProjects());
-    p = (P) p.setProjects(projects);
-    assertEquals(projects, p.getProjects());
+    assertNull(p.getProjectName());
+    p = (P) p.setProjectName(projects);
+    assertEquals(projects, p.getProjectName());
   }
 
   @Test
   void setPlatform() {
     String platform = "platform";
     P p = createPackage();
-    assertNull(p.getPlatform());
-    p = (P) p.setPlatform(platform);
-    assertEquals(platform, p.getPlatform());
+    assertNull(p.getPlatformName());
+    p = (P) p.setPlatformName(platform);
+    assertEquals(platform, p.getPlatformName());
   }
 
   @Test
@@ -90,8 +90,8 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setInstrument() {
     String instrument = "instrument";
     P p = createPackage();
-    assertNull(p.getInstrument());
-    p = (P) p.setInstrument(instrument);
-    assertEquals(instrument, p.getInstrument());
+    assertNull(p.getInstrumentType());
+    p = (P) p.setInstrumentType(instrument);
+    assertEquals(instrument, p.getInstrumentType());
   }
 }

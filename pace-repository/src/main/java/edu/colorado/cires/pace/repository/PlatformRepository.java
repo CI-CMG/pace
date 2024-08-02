@@ -12,14 +12,14 @@ public class PlatformRepository extends PackageDependencyRepository<Platform> {
 
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Platform object) {
-    return dependency.getPlatform().equals(object.getName());
+    return dependency.getPlatformName().equals(object.getName());
   }
 
   @Override
   protected Package applyObjectToDependentObjects(Platform original, Platform updated, Package dependency) {
-    return dependency.setPlatform(
+    return dependency.setPlatformName(
         replaceString(
-            dependency.getPlatform(), original.getName(), updated.getName()
+            dependency.getPlatformName(), original.getName(), updated.getName()
         )
     );
   }

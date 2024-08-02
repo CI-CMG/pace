@@ -50,14 +50,14 @@ class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {
 
   @Override
   protected boolean objectInDependentObject(Platform updated, UUID dependentObjectUUID) {
-    return packages.get(dependentObjectUUID).getPlatform().equals(updated.getName());
+    return packages.get(dependentObjectUUID).getPlatformName().equals(updated.getName());
   }
 
   @Override
   protected Package createAndSaveDependentObject(Platform object) {
     Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .platform(object.getName())
+        .platformName(object.getName())
         .build();
     packages.put(p.getUuid(), p);
     return packages.get(p.getUuid());
@@ -67,7 +67,7 @@ class PlatformRepositoryTest extends PackageDependencyRepositoryTest<Platform> {
   protected Package createAndSaveIndependentDependentObject() {
     Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .platform("unrelated-platform")
+        .platformName("unrelated-platform")
         .build();
     
     packages.put(p.getUuid(), p);

@@ -6,7 +6,6 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.CalibrationDeta
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
@@ -40,20 +39,20 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   private final Path sourcePath;
 
   private final String dataCollectionName;
-  private final String siteOrCruiseName;
+  private final String site;
   private final String deploymentId;
   @NotNull
-  protected abstract List<@NotNull @Valid T> getProjects();
+  protected abstract List<@NotNull @Valid T> getProjectName();
   
   @NotNull
-  private final LocalDate publicReleaseDate;
+  private final LocalDate publishDate;
   @NotNull @Valid
   private final LocationDetail locationDetail;
-  private final String deploymentTitle;
-  private final String deploymentPurpose;
+  private final String title;
+  private final String purpose;
   private final String deploymentDescription;
   private final String alternateSiteName;
-  private final String alternateDeploymentName;
+  private final String deploymentAlias;
   @NotNull
   private final LocalDateTime startTime;
   @NotNull
@@ -75,9 +74,9 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   @NotNull @NotEmpty
   protected abstract List<@NotNull @Valid T> getFunders();
   @NotNull @Valid
-  protected abstract T getPlatform();
+  protected abstract T getPlatformName();
   @NotNull @Valid
-  protected abstract T getInstrument();
+  protected abstract T getInstrumentType();
   
   @JsonIgnore
   protected abstract List<String> getProjectNames();
@@ -95,12 +94,12 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
     
     String packageId = null;
 
-    List<String> projects = getProjects() == null ? Collections.emptyList() : getProjectNames();
+    List<String> projects = getProjectName() == null ? Collections.emptyList() : getProjectNames();
     if (!projects.isEmpty()) {
       packageId = projects.get(0);
     }
 
-    String siteCruiseName = getSiteOrCruiseName();
+    String siteCruiseName = getSite();
     if (siteCruiseName != null) {
       if (packageId == null) {
         packageId = siteCruiseName;

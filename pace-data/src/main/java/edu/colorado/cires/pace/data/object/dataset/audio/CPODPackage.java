@@ -23,13 +23,13 @@ public class CPODPackage extends AudioDataPackage {
   }
 
   @Override
-  public CPODPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
+  public CPODPackage setProjectName(List<String> projectName) {
+    return toBuilder().projectName(projectName).build();
   }
 
   @Override
-  public CPODPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
+  public CPODPackage setPlatformName(String platformName) {
+    return toBuilder().platformName(platformName).build();
   }
 
   @Override
@@ -68,8 +68,8 @@ public class CPODPackage extends AudioDataPackage {
   }
 
   @Override
-  public CPODPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
+  public CPODPackage setInstrumentType(String instrumentType) {
+    return toBuilder().instrumentType(instrumentType).build();
   }
 
   @Override

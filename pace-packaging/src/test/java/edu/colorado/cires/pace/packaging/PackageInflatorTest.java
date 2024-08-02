@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
+import edu.colorado.cires.pace.data.object.base.AbstractObjectWithName;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
@@ -143,21 +144,21 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -167,11 +168,11 @@ class PackageInflatorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -276,47 +277,39 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -326,11 +319,11 @@ class PackageInflatorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst(Person.builder()
             .name("qualityAnalyst")
             .build())
@@ -431,39 +424,36 @@ class PackageInflatorTest {
             .build())
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
+    for (Object scientist : detailedPackage.getScientists()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+        when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+            Person.builder()
+                  .name(object.getName())
+                  .build()
+        );
     }
     when(personRepository.getByUniqueField(detailedPackage.getQualityAnalyst().getUniqueField())).thenReturn(
         (Person) detailedPackage.getQualityAnalyst());
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     for (PackageSensor<AbstractObject> sensor : detailedPackage.getSensors()) {
       when(sensorRepository.getByUniqueField(sensor.getSensor().getUniqueField())).thenReturn(
@@ -490,21 +480,21 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -514,11 +504,11 @@ class PackageInflatorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -623,47 +613,39 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -673,11 +655,11 @@ class PackageInflatorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange(5f)
         .gain(1f)
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst(Person.builder()
             .name("qualityAnalyst")
             .build())
@@ -778,39 +760,36 @@ class PackageInflatorTest {
             .build())
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
-    }
+      for (Object scientist : detailedPackage.getScientists()) {
+          AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+          when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+                  Person.builder()
+                          .name(object.getName())
+                          .build()
+          );
+      }
     when(personRepository.getByUniqueField(detailedPackage.getQualityAnalyst().getUniqueField())).thenReturn(
         (Person) detailedPackage.getQualityAnalyst());
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     for (PackageSensor<AbstractObject> sensor : detailedPackage.getSensors()) {
       when(sensorRepository.getByUniqueField(sensor.getSensor().getUniqueField())).thenReturn(
@@ -837,31 +816,31 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -923,57 +902,49 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst(Person.builder()
             .name("qualityAnalyst")
             .build())
@@ -1029,39 +1000,36 @@ class PackageInflatorTest {
             .build())
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
-    }
+      for (Object scientist : detailedPackage.getScientists()) {
+          AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+          when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+                  Person.builder()
+                          .name(object.getName())
+                          .build()
+          );
+      }
     when(personRepository.getByUniqueField(detailedPackage.getQualityAnalyst().getUniqueField())).thenReturn(
         (Person) detailedPackage.getQualityAnalyst());
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     when(detectionTypeRepository.getByUniqueField(detailedPackage.getSoundSource().getUniqueField())).thenReturn(
         (DetectionType) detailedPackage.getSoundSource()
@@ -1081,31 +1049,31 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("seaArea")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -1140,57 +1108,49 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("seaArea")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -1213,37 +1173,34 @@ class PackageInflatorTest {
         .softwareProcessingDescription("softwareProcessingDescription")
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
-    }
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+      for (Object scientist : detailedPackage.getScientists()) {
+          AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+          when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+                  Person.builder()
+                          .name(object.getName())
+                          .build()
+          );
+      }
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     return detailedPackage;
   }
@@ -1259,31 +1216,31 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -1346,57 +1303,49 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .qualityAnalyst(Person.builder()
             .name("qualityAnalyst")
             .build())
@@ -1449,39 +1398,36 @@ class PackageInflatorTest {
         .audioEndTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(1))
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
-    }
+      for (Object scientist : detailedPackage.getScientists()) {
+          AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+          when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+                  Person.builder()
+                          .name(object.getName())
+                          .build()
+          );
+      }
     when(personRepository.getByUniqueField(detailedPackage.getQualityAnalyst().getUniqueField())).thenReturn(
         (Person) detailedPackage.getQualityAnalyst());
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     return detailedPackage;
   }
@@ -1497,31 +1443,31 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-name-1", "project-name-2"
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platform(
+        )).platformName(
             "platform"
-        ).instrument("instrument")
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("seaArea")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -1559,57 +1505,49 @@ class PackageInflatorTest {
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projects(List.of(
-            Project.builder()
-                .name("project-name-1")
-                .build(),
-            Project.builder()
-                .name("project-name-2")
-                .build()
-        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .projectName(List.of(
+            "project-name-1",
+            "project-name-2"
+        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-1")
                 .build(),
-            Person.builder()
+            AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
         )).sponsors(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-2")
                 .build()
         )).funders(List.of(
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-3")
                 .build(),
-            Organization.builder()
+            AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platform(
-            Platform.builder()
-                .name("platform")
-                .build()
-        ).instrument(Instrument.builder()
-            .name("instrument")
-            .build())
+        )).platformName(
+            "platform"
+        ).instrumentType("instrument")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
-        .deploymentTitle("deployment-title")
-        .deploymentPurpose("deployment-purpose")
+        .title("deployment-title")
+        .purpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .alternateDeploymentName("alternate-deployment-name")
+        .deploymentAlias("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("seaArea")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -1635,37 +1573,34 @@ class PackageInflatorTest {
         .modeledFrequency(1000f)
         .build();
 
-    for (AbstractObject scientist : detailedPackage.getScientists()) {
-      when(personRepository.getByUniqueField(scientist.getUniqueField())).thenReturn((Person) scientist);
-    }
-    when(personRepository.getByUniqueField(detailedPackage.getDatasetPackager().getUniqueField())).thenReturn(
+      for (Object scientist : detailedPackage.getScientists()) {
+          AbstractObjectWithName object = (AbstractObjectWithName) scientist;
+          when(personRepository.getByUniqueField(((AbstractObjectWithName)scientist).getName())).thenReturn(
+                  Person.builder()
+                          .name(object.getName())
+                          .build()
+          );
+      }
+    when(personRepository.getByUniqueField(((AbstractObject) detailedPackage.getDatasetPackager()).getUniqueField())).thenReturn(
         (Person) detailedPackage.getDatasetPackager()
     );
 
-    for (AbstractObject project : detailedPackage.getProjects()) {
-      when(projectRepository.getByUniqueField(project.getUniqueField())).thenReturn(
-          (Project) project
+    for (Object funder : detailedPackage.getFunders()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) funder;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-
-    for (AbstractObject funder : detailedPackage.getFunders()) {
-      when(organizationRepository.getByUniqueField(funder.getUniqueField())).thenReturn(
-          (Organization) funder
+    for (Object sponsor : detailedPackage.getSponsors()) {
+        AbstractObjectWithName object = (AbstractObjectWithName) sponsor;
+      when(organizationRepository.getByUniqueField(object.getName())).thenReturn(
+          Organization.builder()
+                  .name(object.getName())
+                  .build()
       );
     }
-    for (AbstractObject sponsor : detailedPackage.getSponsors()) {
-      when(organizationRepository.getByUniqueField(sponsor.getUniqueField())).thenReturn(
-          (Organization) sponsor
-      );
-    }
-
-    when(platformRepository.getByUniqueField(detailedPackage.getPlatform().getUniqueField())).thenReturn(
-        (Platform) detailedPackage.getPlatform()
-    );
-
-    when(instrumentRepository.getByUniqueField(detailedPackage.getInstrument().getUniqueField())).thenReturn(
-        (Instrument) detailedPackage.getInstrument()
-    );
 
     return detailedPackage;
   }

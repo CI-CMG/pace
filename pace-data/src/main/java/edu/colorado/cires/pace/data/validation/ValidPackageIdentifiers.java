@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 @Documented
 public @interface ValidPackageIdentifiers {
 
-  String message() default "at least dataCollectionName, siteOrCruiseName, or deploymentId required";
+  String message() default "at least dataCollectionName, site, or deploymentId required";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
   
@@ -28,21 +28,21 @@ public @interface ValidPackageIdentifiers {
     @Override
     public boolean isValid(Package aPackage, ConstraintValidatorContext context) {
       String dataCollectionName = aPackage.getDataCollectionName();
-      String siteOrCruiseName = aPackage.getSiteOrCruiseName();
+      String site = aPackage.getSite();
       String deploymentId = aPackage.getDeploymentId();
       
       if (
           StringUtils.isBlank(dataCollectionName) && 
-          StringUtils.isBlank(siteOrCruiseName) &&
+          StringUtils.isBlank(site) &&
           StringUtils.isBlank(deploymentId)
       ) {
         context.disableDefaultConstraintViolation();
-        String message = "at least dataCollectionName, siteOrCruiseName, or deploymentId required";
+        String message = "at least dataCollectionName, site, or deploymentId required";
         context.buildConstraintViolationWithTemplate(message)
             .addPropertyNode("dataCollectionName")
             .addConstraintViolation();
         context.buildConstraintViolationWithTemplate(message)
-            .addPropertyNode("siteOrCruiseName")
+            .addPropertyNode("site")
             .addConstraintViolation();
         context.buildConstraintViolationWithTemplate(message)
             .addPropertyNode("deploymentId")

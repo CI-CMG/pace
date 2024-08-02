@@ -34,13 +34,13 @@ public class SoundPropagationModelsPackage extends Package implements BaseSoundP
   }
 
   @Override
-  public SoundPropagationModelsPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
+  public SoundPropagationModelsPackage setProjectName(List<String> projectName) {
+    return toBuilder().projectName(projectName).build();
   }
 
   @Override
-  public SoundPropagationModelsPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
+  public SoundPropagationModelsPackage setPlatformName(String platformName) {
+    return toBuilder().platformName(platformName).build();
   }
 
   @Override
@@ -64,8 +64,8 @@ public class SoundPropagationModelsPackage extends Package implements BaseSoundP
   }
 
   @Override
-  public SoundPropagationModelsPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
+  public SoundPropagationModelsPackage setInstrumentType(String instrumentType) {
+    return toBuilder().instrumentType(instrumentType).build();
   }
 
   @Override

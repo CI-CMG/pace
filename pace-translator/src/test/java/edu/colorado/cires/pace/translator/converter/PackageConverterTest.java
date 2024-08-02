@@ -78,13 +78,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -94,8 +94,8 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
@@ -105,11 +105,11 @@ class PackageConverterTest {
         .hydrophoneSensitivity(1f)
         .frequencyRange(2f)
         .gain(3f)
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("qualityAnalysisObjectives")
         .qualityAnalysisMethod("qualityAnalysisMethod")
@@ -484,17 +484,17 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(audioPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getNavigationPath().toString()), 7));
     map.put(audioPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(audioPackage.getSourcePath().toString()), 8));
-    map.put(audioPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(audioPackage.getSiteOrCruiseName()), 9));
+    map.put(audioPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(audioPackage.getSite()), 9));
     map.put(audioPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentId()), 10));
     map.put(audioPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(audioPackage.getDatasetPackager()), 11));
-    map.put(audioPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getProjects())), 12));
-    map.put(audioPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPublicReleaseDate().toString()), 13));
+    map.put(audioPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getProjectName())), 12));
+    map.put(audioPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPublishDate().toString()), 13));
     map.put(audioPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(audioPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getScientists())), 14));
     map.put(audioPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getSponsors())), 15));
     map.put(audioPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getFunders())), 16));
-    map.put(audioPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(audioPackage.getPlatform()), 17));
-    map.put(audioPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrument()), 18));
+    map.put(audioPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(audioPackage.getPlatformName()), 17));
+    map.put(audioPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrumentType()), 18));
     map.put((audioPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getStartTime().toString()), 19));
     map.put((audioPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getEndTime().toString()), 20));
     map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -502,11 +502,11 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(audioPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDescription()), 23));
-    map.put(audioPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTitle()), 24));
-    map.put(audioPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentPurpose()), 25));
+    map.put(audioPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(audioPackage.getTitle()), 24));
+    map.put(audioPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(audioPackage.getPurpose()), 25));
     map.put(audioPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentDescription()), 26));
     map.put(audioPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateSiteName()), 27));
-    map.put(audioPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateDeploymentName()), 28));
+    map.put(audioPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentAlias()), 28));
 
     MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator = (MultipointStationaryMarineLocationTranslator) audioPackageTranslator.getLocationDetailTranslator();
     map.put(multipointStationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getSeaArea()), 29));
@@ -663,13 +663,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -679,8 +679,8 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
@@ -690,11 +690,11 @@ class PackageConverterTest {
         .hydrophoneSensitivity(1f)
         .frequencyRange(2f)
         .gain(3f)
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("qualityAnalysisObjectives")
         .qualityAnalysisMethod("qualityAnalysisMethod")
@@ -1153,17 +1153,17 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(cpodPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getNavigationPath().toString()), 7));
     map.put(cpodPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSourcePath().toString()), 8));
-    map.put(cpodPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSiteOrCruiseName()), 9));
+    map.put(cpodPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSite()), 9));
     map.put(cpodPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentId()), 10));
     map.put(cpodPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDatasetPackager()), 11));
-    map.put(cpodPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getProjects())), 12));
-    map.put(cpodPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPublicReleaseDate().toString()), 13));
+    map.put(cpodPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getProjectName())), 12));
+    map.put(cpodPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPublishDate().toString()), 13));
     map.put(cpodPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(cpodPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getScientists())), 14));
     map.put(cpodPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getSponsors())), 15));
     map.put(cpodPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getFunders())), 16));
-    map.put(cpodPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPlatform()), 17));
-    map.put(cpodPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrument()), 18));
+    map.put(cpodPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPlatformName()), 17));
+    map.put(cpodPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrumentType()), 18));
     map.put((cpodPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getStartTime().toString()), 19));
     map.put((cpodPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getEndTime().toString()), 20));
     map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -1171,11 +1171,11 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(cpodPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDescription()), 23));
-    map.put(cpodPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentTitle()), 24));
-    map.put(cpodPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentPurpose()), 25));
+    map.put(cpodPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(cpodPackage.getTitle()), 24));
+    map.put(cpodPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPurpose()), 25));
     map.put(cpodPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentDescription()), 26));
     map.put(cpodPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateSiteName()), 27));
-    map.put(cpodPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateDeploymentName()), 28));
+    map.put(cpodPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentAlias()), 28));
 
     MobileMarineLocationTranslator mobileMarineLocationTranslator = (MobileMarineLocationTranslator) cpodPackageTranslator.getLocationDetailTranslator();
     map.put(mobileMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getSeaArea()), 29));
@@ -1321,13 +1321,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -1337,18 +1337,18 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("qualityAnalysisObjectives")
         .qualityAnalysisMethod("qualityAnalysisMethod")
@@ -1500,17 +1500,17 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(detectionsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getNavigationPath().toString()), 7));
     map.put(detectionsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSourcePath().toString()), 8));
-    map.put(detectionsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSiteOrCruiseName()), 9));
+    map.put(detectionsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSite()), 9));
     map.put(detectionsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentId()), 10));
     map.put(detectionsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDatasetPackager()), 11));
-    map.put(detectionsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getProjects())), 12));
-    map.put(detectionsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(detectionsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getProjectName())), 12));
+    map.put(detectionsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPublishDate().toString()), 13));
     map.put(detectionsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(detectionsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getScientists())), 14));
     map.put(detectionsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getSponsors())), 15));
     map.put(detectionsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getFunders())), 16));
-    map.put(detectionsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPlatform()), 17));
-    map.put(detectionsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getInstrument()), 18));
+    map.put(detectionsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPlatformName()), 17));
+    map.put(detectionsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getInstrumentType()), 18));
     map.put((detectionsPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getStartTime().toString()), 19));
     map.put((detectionsPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getEndTime().toString()), 20));
     map.put(detectionsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -1518,11 +1518,11 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(detectionsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(detectionsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getCalibrationDescription()), 23));
-    map.put(detectionsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentTitle()), 24));
-    map.put(detectionsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentPurpose()), 25));
+    map.put(detectionsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getTitle()), 24));
+    map.put(detectionsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPurpose()), 25));
     map.put(detectionsPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentDescription()), 26));
     map.put(detectionsPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getAlternateSiteName()), 27));
-    map.put(detectionsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getAlternateDeploymentName()), 28));
+    map.put(detectionsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentAlias()), 28));
 
     StationaryTerrestrialLocationTranslator stationaryTerrestrialLocationTranslator = (StationaryTerrestrialLocationTranslator) detectionsPackageTranslator.getLocationDetailTranslator();
     map.put(stationaryTerrestrialLocationTranslator.getLatitude(), new ValueWithColumnNumber(Optional.of(((StationaryTerrestrialLocation) detectionsPackage.getLocationDetail()).getLatitude().toString()), 29));
@@ -1583,13 +1583,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -1599,18 +1599,18 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .softwareNames("softwareNames")
         .softwareVersions("softwareVersions")
         .softwareProtocolCitation("softwareProtocolCitation")
@@ -1714,17 +1714,17 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(soundClipsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getNavigationPath().toString()), 7));
     map.put(soundClipsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSourcePath().toString()), 8));
-    map.put(soundClipsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSiteOrCruiseName()), 9));
+    map.put(soundClipsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSite()), 9));
     map.put(soundClipsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentId()), 10));
     map.put(soundClipsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDatasetPackager()), 11));
-    map.put(soundClipsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getProjects())), 12));
-    map.put(soundClipsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundClipsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getProjectName())), 12));
+    map.put(soundClipsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPublishDate().toString()), 13));
     map.put(soundClipsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundClipsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getScientists())), 14));
     map.put(soundClipsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getSponsors())), 15));
     map.put(soundClipsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getFunders())), 16));
-    map.put(soundClipsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPlatform()), 17));
-    map.put(soundClipsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getInstrument()), 18));
+    map.put(soundClipsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPlatformName()), 17));
+    map.put(soundClipsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getInstrumentType()), 18));
     map.put((soundClipsPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getStartTime().toString()), 19));
     map.put((soundClipsPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getEndTime().toString()), 20));
     map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -1732,11 +1732,11 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundClipsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getCalibrationDescription()), 23));
-    map.put(soundClipsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentTitle()), 24));
-    map.put(soundClipsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentPurpose()), 25));
+    map.put(soundClipsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getTitle()), 24));
+    map.put(soundClipsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPurpose()), 25));
     map.put(soundClipsPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentDescription()), 26));
     map.put(soundClipsPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getAlternateSiteName()), 27));
-    map.put(soundClipsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getAlternateDeploymentName()), 28));
+    map.put(soundClipsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentAlias()), 28));
 
     MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator = (MultipointStationaryMarineLocationTranslator) soundClipsPackageTranslator.getLocationDetailTranslator();
     map.put(multipointStationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) soundClipsPackage.getLocationDetail()).getSeaArea()), 29));
@@ -1778,13 +1778,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -1794,18 +1794,18 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("qualityAnalysisObjectives")
         .qualityAnalysisMethod("qualityAnalysisMethod")
@@ -1987,17 +1987,17 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(soundLevelMetricsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getNavigationPath().toString()), 7));
     map.put(soundLevelMetricsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSourcePath().toString()), 8));
-    map.put(soundLevelMetricsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSiteOrCruiseName()), 9));
+    map.put(soundLevelMetricsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSite()), 9));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentId()), 10));
     map.put(soundLevelMetricsPackageTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDatasetPackager()), 11));
-    map.put(soundLevelMetricsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getProjects())), 12));
-    map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundLevelMetricsPackageTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getProjectName())), 12));
+    map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPublishDate().toString()), 13));
     map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundLevelMetricsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getScientists())), 14));
     map.put(soundLevelMetricsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getSponsors())), 15));
     map.put(soundLevelMetricsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getFunders())), 16));
-    map.put(soundLevelMetricsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPlatform()), 17));
-    map.put(soundLevelMetricsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getInstrument()), 18));
+    map.put(soundLevelMetricsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPlatformName()), 17));
+    map.put(soundLevelMetricsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getInstrumentType()), 18));
     map.put((soundLevelMetricsPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getStartTime().toString()), 19));
     map.put((soundLevelMetricsPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getEndTime().toString()), 20));
     map.put(soundLevelMetricsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -2005,11 +2005,11 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(soundLevelMetricsPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundLevelMetricsPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getCalibrationDescription()), 23));
-    map.put(soundLevelMetricsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentTitle()), 24));
-    map.put(soundLevelMetricsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentPurpose()), 25));
+    map.put(soundLevelMetricsPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getTitle()), 24));
+    map.put(soundLevelMetricsPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPurpose()), 25));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentDescription()), 26));
     map.put(soundLevelMetricsPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAlternateSiteName()), 27));
-    map.put(soundLevelMetricsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAlternateDeploymentName()), 28));
+    map.put(soundLevelMetricsPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentAlias()), 28));
     map.put((soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAudioStartTime().toString()), 27));
     map.put(soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 27));
     map.put((soundLevelMetricsPackageTranslator.getAudioEndTimeTranslator()).getTime(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getAudioEndTime().toString()), 28));
@@ -2080,13 +2080,13 @@ class PackageConverterTest {
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
         .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
-        .siteOrCruiseName("siteOrCruiseName")
+        .site("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projects(List.of(
+        .projectName(List.of(
             "project-1", "project-2"
         ))
-        .publicReleaseDate(LocalDate.parse("2020-01-01"))
+        .publishDate(LocalDate.parse("2020-01-01"))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
@@ -2096,18 +2096,18 @@ class PackageConverterTest {
         .funders(List.of(
             "organization-3", "organization-4"
         ))
-        .platform("platform")
-        .instrument("instrument")
+        .platformName("platform")
+        .instrumentType("instrument")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .deploymentTitle("deploymentTitle")
-        .deploymentPurpose("deploymentPurpose")
+        .title("deploymentTitle")
+        .purpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
         .alternateSiteName("alternateSiteName")
-        .alternateDeploymentName("alternateDeploymentName")
+        .deploymentAlias("alternateDeploymentName")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("sea-1")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -2219,17 +2219,17 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getCalibrationDocumentsPath().toString()), 6));
     map.put(soundPropagationModelsTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getNavigationPath().toString()), 7));
     map.put(soundPropagationModelsTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSourcePath().toString()), 8));
-    map.put(soundPropagationModelsTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSiteOrCruiseName()), 9));
+    map.put(soundPropagationModelsTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSite()), 9));
     map.put(soundPropagationModelsTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentId()), 10));
     map.put(soundPropagationModelsTranslator.getDatasetPackager(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDatasetPackager()), 11));
-    map.put(soundPropagationModelsTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getProjects())), 12));
-    map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPublicReleaseDate().toString()), 13));
+    map.put(soundPropagationModelsTranslator.getProjects(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getProjectName())), 12));
+    map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPublishDate().toString()), 13));
     map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundPropagationModelsTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getScientists())), 14));
     map.put(soundPropagationModelsTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getSponsors())), 15));
     map.put(soundPropagationModelsTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getFunders())), 16));
-    map.put(soundPropagationModelsTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPlatform()), 17));
-    map.put(soundPropagationModelsTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getInstrument()), 18));
+    map.put(soundPropagationModelsTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPlatformName()), 17));
+    map.put(soundPropagationModelsTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getInstrumentType()), 18));
     map.put((soundPropagationModelsTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getStartTime().toString()), 19));
     map.put((soundPropagationModelsTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getEndTime().toString()), 20));
     map.put(soundPropagationModelsTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPreDeploymentCalibrationDate().toString()), 21));
@@ -2237,11 +2237,11 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPostDeploymentCalibrationDate().toString()), 22));
     map.put(soundPropagationModelsTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
     map.put(soundPropagationModelsTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getCalibrationDescription()), 23));
-    map.put(soundPropagationModelsTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentTitle()), 24));
-    map.put(soundPropagationModelsTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentPurpose()), 25));
+    map.put(soundPropagationModelsTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getTitle()), 24));
+    map.put(soundPropagationModelsTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPurpose()), 25));
     map.put(soundPropagationModelsTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentDescription()), 26));
     map.put(soundPropagationModelsTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getAlternateSiteName()), 27));
-    map.put(soundPropagationModelsTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getAlternateDeploymentName()), 28));
+    map.put(soundPropagationModelsTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentAlias()), 28));
 
     StationaryMarineLocationTranslator stationaryMarineLocationTranslator = (StationaryMarineLocationTranslator) soundPropagationModelsTranslator.getLocationDetailTranslator();
     map.put(stationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((StationaryMarineLocation) soundPropagationModelsPackage.getLocationDetail()).getSeaArea()), 29));

@@ -109,9 +109,9 @@ public class DataPanelFactory {
         (p) -> new Object[] { 
             p.getUuid(),
             p.getPackageId(),
-            p.getSiteOrCruiseName(),
+            p.getSite(),
             p.getDeploymentId(),
-            String.join(", ", p.getProjects().toArray(String[]::new)),
+            String.join(", ", p.getProjectName().toArray(String[]::new)),
             DatasetType.fromPackage(p).getName(),
             LocationType.fromLocationDetail(p.getLocationDetail()).getName(),
             false,

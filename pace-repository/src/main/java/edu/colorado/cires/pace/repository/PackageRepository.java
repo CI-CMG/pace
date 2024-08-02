@@ -72,9 +72,9 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
   public void checkDownstreamDependencies(Package object) throws DatastoreException {
     Set<ConstraintViolation<Package>> constraintViolations = new HashSet<>(0);
     
-    checkDependency(object.getInstrument(), instrumentDatastore, "instrument", constraintViolations);
-    checkDependency(object.getPlatform(), platformDatastore, "platform", constraintViolations);
-    checkDependencies(object.getProjects(), projectDatastore, "projects", constraintViolations);
+    checkDependency(object.getInstrumentType(), instrumentDatastore, "instrument", constraintViolations);
+    checkDependency(object.getPlatformName(), platformDatastore, "platform", constraintViolations);
+    checkDependencies(object.getProjectName(), projectDatastore, "projects", constraintViolations);
     checkDependencies(object.getScientists(), personDatastore, "scientists", constraintViolations);
     checkDependency(object.getDatasetPackager(), personDatastore, "datasetPackager", constraintViolations);
     checkDependencies(object.getFunders(), organizationDatastore, "funders", constraintViolations);
