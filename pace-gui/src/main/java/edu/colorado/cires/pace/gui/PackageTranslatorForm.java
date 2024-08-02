@@ -544,6 +544,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .preDeploymentCalibrationDate(calibrationTranslatorForm.getPreDeploymentCalibrationDateTranslator())
         .postDeploymentCalibrationDate(calibrationTranslatorForm.getPostDeploymentCalibrationDateTranslator())
         .packageUUID(packageInfoForm.getUuidValue())
+        .dataCollectionName(packageInfoForm.getDataCollectionNameValue())
         .siteOrCruiseName(packageInfoForm.getSiteOrCruiseNameValue())
         .deploymentId(packageInfoForm.getDeploymentIdValue())
         .projects(packageInfoForm.getProjectsValue())
