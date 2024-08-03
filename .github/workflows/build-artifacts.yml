@@ -333,6 +333,8 @@ jobs:
       matrix:
         os: [ windows-2019 ]
     runs-on: ${{ matrix.os }}
+    outputs:
+      appver: ${{ steps.appver.outputs.appver }}
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -348,10 +350,15 @@ jobs:
         with:
           name: cli-jar
           path: jars
-      - name: Package jar as app-image
+      - id: appver
+        run: |
+          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_OUTPUT
+          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_ENV
+        shell: bash
+      - name: Package jar as msi
         run: >
           jpackage
-          --type app-image
+          --type msi
           --verbose
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
@@ -359,11 +366,15 @@ jobs:
           --dest application
           --main-class edu.colorado.cires.pace.cli.Application
           --main-jar pace-cli-${{ needs.build.outputs.version }}.jar
+          --win-dir-chooser
+          --win-per-user-install
+          --app-version ${{ env.appver }}
+          --win-console
       - name: Upload app image
         uses: actions/upload-artifact@v4
         with:
           name: pace-cli-${{ env.os }}-${{ env.arch }}
-          path: application
+          path: "application/*.msi"
 
   package-gui-windows:
     needs: build
@@ -371,6 +382,8 @@ jobs:
       matrix:
         os: [ windows-2019 ]
     runs-on: ${{ matrix.os }}
+    outputs:
+      appver: ${{ steps.appver.outputs.appver }}
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -391,23 +404,34 @@ jobs:
         with:
           name: gui-icons
           path: icons
-      - name: Package jar as exe application
+      - id: appver
+        run: |
+          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_OUTPUT
+          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_ENV
+        shell: bash
+      - name: Package jar as msi
         run: >
-          jpackage
-          --verbose
-          --dest application
-          --name "pace"
-          -i jars
+          jpackage 
+          --verbose 
+          --dest application 
+          --name "pace" 
+          -i jars 
           --main-class edu.colorado.cires.pace.gui.Application
-          --main-jar pace-gui-${{ needs.build.outputs.version }}.jar
-          -t app-image
-          --icon icons/pace.ico
-          --vendor "CIRES - University of Colorado"
+          --main-jar 
+          pace-gui-${{ needs.build.outputs.version }}.jar 
+          -t msi 
+          --icon icons/pace.ico 
+          --vendor "CIRES - University of Colorado" 
+          --win-shortcut
+          --win-menu
+          --win-dir-chooser
+          --win-per-user-install
+          --app-version ${{ env.appver }}
       - name: Upload application
         uses: actions/upload-artifact@v4
         with:
           name: pace-gui-${{ env.os }}-${{ env.arch }}
-          path: application
+          path: "application/*.msi"
 
   release:
     needs:
@@ -429,8 +453,8 @@ jobs:
       - run: cp pace-cli-macOS-X64/*.pkg release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.pkg
       - run: cp pace-gui-macOS-ARM64/*.dmg release/pace-gui-macOS-ARM64-${{ needs.build.outputs.version }}.dmg
       - run: cp pace-gui-macOS-X64/*.dmg release/pace-gui-macOS-X64-${{ needs.build.outputs.version }}.dmg
-      - run: zip -r release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.zip pace-cli-Windows-X64
-      - run: zip -r release/pace-gui-Windows-X64-${{ needs.build.outputs.version }}.zip pace-gui-Windows-X64
+      - run: cp pace-cli-Windows-X64/pace-cli-${{ needs.package-cli-windows.outputs.appver }}.msi release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.msi
+      - run: cp pace-gui-Windows-X64/pace-${{ needs.package-gui-windows.outputs.appver }}.msi release/pace-gui-Windows-X64-${{ needs.build.outputs.version }}.msi
       - run: cp cli-jar/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
       - run: cp gui-jar/* release/pace-gui-${{ needs.build.outputs.version }}-exe.jar
       - run: zip -r release/pace-json-schema-${{ needs.build.outputs.version }}.zip json-schema

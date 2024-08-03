@@ -42,17 +42,20 @@ public class Application extends JFrame {
     }
 
     try {
-      Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
       
+      Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
+      JFrame mainFrame = new JFrame();
+      mainFrame.setIconImage(UIUtils.getImageIcon("pace.png", this.getClass()).getImage());
       ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper);
       applicationTabs.init();
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      setContentPane(applicationTabs);
-      setTitle("PACE");
-      setSize(size);
-      setPreferredSize(size);
-      setLocationRelativeTo(null);
-      setVisible(true);
+      mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      mainFrame.setContentPane(applicationTabs);
+      mainFrame.setTitle("PACE");
+      mainFrame.setSize(size);
+      mainFrame.setPreferredSize(size);
+      mainFrame.setLocationRelativeTo(null);
+      
+      mainFrame.setVisible(true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
