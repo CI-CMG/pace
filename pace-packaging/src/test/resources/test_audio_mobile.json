@@ -1,0 +1,166 @@
+{
+    "DATA_COLLECTION_NAME": "test_audio_mobile",
+    "PUBLISH_DATE": "2023-03-24",
+    "PROJECT_NAME": [
+        "project 1"
+    ],
+    "DEPLOYMENT_NAME": "",
+    "DEPLOYMENT_ALIAS": "",
+    "SITE": "CI01",
+    "SITE_ALIASES": [],
+    "TITLE": "test",
+    "ABSTRACT": "test",
+    "PURPOSE": "test",
+    "CHANNELS": {
+        "1": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60",
+                        "INTERVAL": "0"
+                    }
+                ]
+            }
+        },
+        "2": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60",
+                        "INTERVAL": "0"
+                    }
+                ]
+            }
+        },
+        "3": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60",
+                        "INTERVAL": "0"
+                    }
+                ]
+            }
+        }
+    },
+    "QUALITY_DETAILS": {
+        "analyst": "Chuck Anderson",
+        "analyst_uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "quality_details": [
+            {
+                "quality": "Good",
+                "low_freq": "0",
+                "high_freq": "12000",
+                "start": "2010-01-01T13:00:00",
+                "end": "2011-01-01T13:00:00",
+                "comments": "",
+                "channels": "1,2,3"
+            }
+        ],
+        "method": "",
+        "objectives": "",
+        "abstract": ""
+    },
+    "PLATFORM_NAME": "Glider",
+    "INSTRUMENT_TYPE": "DMON",
+    "INSTRUMENT_ID": "",
+    "DEPLOYMENT": {
+        "DEPLOYMENT_TIME": "2010-01-01T13:00:00",
+        "RECOVERY_TIME": "2011-01-01T13:00:00",
+        "AUDIO_START": "2010-01-01T13:00:00",
+        "AUDIO_END": "2011-01-01T13:00:00",
+        "DEPLOY_TYPE": "Mobile Marine",
+        "SEA_AREA": "Chukchi Sea",
+        "DEPLOY_SHIP": "R/V Fulmar",
+        "FILES": "/Volumes/Fortress/test_data/POS/pos-1.txt,/Volumes/Fortress/test_data/POS/pos-2.txt",
+        "POSITION_DETAILS": "These files contain the location key"
+    },
+    "DATASET_DETAILS": {
+        "TYPE": "Raw",
+        "SUB_TYPE": "Audio",
+        "SOURCE_PATH": "/Volumes/Fortress/test_data/acoustic_files",
+        "DATA_COMMENT": ""
+    },
+    "CALIBRATION_INFO": {
+        "CAL_STATE": "Calibrated Pre-Deployment",
+        "CAL_DOCS_PATH": "/Volumes/Fortress/test_data/calibration",
+        "SENSITIVITY": "23",
+        "FREQUENCY": "2-20000",
+        "GAIN": "-3",
+        "COMMENT": "THIS IS DESCRIPTIVE TEXT ABOUT THE CALIBBRATION",
+        "CAL_DATE": "2010-01-01"
+    },
+    "SCIENTISTS": [
+        {
+            "name": "Chuck Anderson",
+            "uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66"
+        }
+    ],
+    "SPONSORS": [
+        {
+            "name": "NOAA ONMS",
+            "uuid": "1e78f564-ac17-4ebc-9a96-5caaecf7663b"
+        }
+    ],
+    "FUNDERS": [
+        {
+            "name": "BOEM",
+            "uuid": "fee4d17a-a7dd-4f13-ade5-817b4f1fc86d"
+        }
+    ],
+    "METADATA_AUTHOR": {
+        "NAME": "Chuck Anderson",
+        "UUID": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "ORGANIZATION": "NESDIS/NCEI",
+        "POSITION": "Water Column Data Manager",
+        "STREET": "NOAA/NCEI, 325 Broadway",
+        "CITY": "Boulder",
+        "STATE": "CO",
+        "ZIP": "80305",
+        "COUNTRY": "USA",
+        "EMAIL": "",
+        "PHONE": ""
+    }
+}

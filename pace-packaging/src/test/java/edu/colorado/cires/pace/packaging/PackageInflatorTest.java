@@ -32,10 +32,7 @@ import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelM
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.DetailedSoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
-import edu.colorado.cires.pace.data.object.instrument.Instrument;
-import edu.colorado.cires.pace.data.object.platform.Platform;
 import edu.colorado.cires.pace.data.object.position.Position;
-import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
 import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
@@ -166,7 +163,7 @@ class PackageInflatorTest {
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")
@@ -317,7 +314,7 @@ class PackageInflatorTest {
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")
@@ -502,7 +499,7 @@ class PackageInflatorTest {
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")
@@ -653,7 +650,7 @@ class PackageInflatorTest {
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")

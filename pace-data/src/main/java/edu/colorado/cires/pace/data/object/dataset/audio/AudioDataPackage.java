@@ -20,13 +20,15 @@ public abstract class AudioDataPackage extends Package implements BaseAudioDataP
   private final String instrumentId;
   private final LocalDateTime deploymentTime;
   private final LocalDateTime recoveryTime;
+  private final LocalDateTime audioStartTime;
+  private final LocalDateTime audioEndTime;
   private final String comments;
   @NotEmpty @NotNull
   private final List<@NotNull @Valid PackageSensor<String>> sensors;
   @NotEmpty @NotNull
   private final List<@Valid @NotNull Channel<String>> channels;
   private final Float hydrophoneSensitivity;
-  private final Float frequencyRange;
+  private final String frequencyRange;
   private final Float gain;
   private final String qualityAnalyst;
   private final String qualityAnalysisObjectives;

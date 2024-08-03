@@ -1,11 +1,12 @@
 package edu.colorado.cires.pace.data.object.dataset.audio;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.AudioTimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.DataQuality;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import java.util.List;
 
-public interface BaseAudioDataPackage<T> extends DataQuality<T> {
+public interface BaseAudioDataPackage<T> extends DataQuality<T>, AudioTimeRange {
 
   BaseAudioDataPackage<T> updateChannels(List<Channel<T>> channels);
 
@@ -25,7 +26,7 @@ public interface BaseAudioDataPackage<T> extends DataQuality<T> {
 
   Float getHydrophoneSensitivity();
 
-  Float getFrequencyRange();
+  String getFrequencyRange();
 
   Float getGain();
 }

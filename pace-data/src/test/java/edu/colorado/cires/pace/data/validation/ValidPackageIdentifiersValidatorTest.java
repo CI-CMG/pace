@@ -103,7 +103,7 @@ public class ValidPackageIdentifiersValidatorTest {
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")

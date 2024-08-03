@@ -22,6 +22,8 @@ public abstract class DetailedAudioDataPackage extends DetailedPackage implement
   private final String instrumentId;
   private final LocalDateTime deploymentTime;
   private final LocalDateTime recoveryTime;
+  private final LocalDateTime audioStartTime;
+  private final LocalDateTime audioEndTime;
   private final String comments;
   @NotEmpty
   @NotNull
@@ -29,7 +31,7 @@ public abstract class DetailedAudioDataPackage extends DetailedPackage implement
   @NotEmpty @NotNull
   private final List<@Valid @NotNull Channel<AbstractObject>> channels;
   private final Float hydrophoneSensitivity;
-  private final Float frequencyRange;
+  private final String frequencyRange;
   private final Float gain;
   private final AbstractObject qualityAnalyst;
   private final String qualityAnalysisObjectives;

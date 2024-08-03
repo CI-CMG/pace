@@ -92,7 +92,7 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(5f)
+        .frequencyRange("1-5")
         .gain(1f)
         .title("deployment-title")
         .purpose("deployment-purpose")

@@ -526,7 +526,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .postDeploymentCalibrationDate(LocalDate.of(2020, 1, 10))
         .calibrationDescription("calibrationDescription")
         .hydrophoneSensitivity(10f)
-        .frequencyRange(1f)
+        .frequencyRange("0-1")
         .gain(100f)
         .title("deploymentTitle")
         .deploymentDescription("deploymentDescription")
