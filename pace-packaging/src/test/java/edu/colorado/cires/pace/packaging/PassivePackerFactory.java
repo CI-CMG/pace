@@ -103,7 +103,7 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerDeployment addAudioDeploymentFields(AudioDataPackage audioDataPackage, PassivePackerDeployment deployment) {
-    return PassivePackerUtils.builderFromBaseDeployment(deployment, PassivePackerAudioDeployment.builder())
+    return PassivePackerUtils.fromBaseDeployment(deployment, PassivePackerAudioDeployment.builder()).toBuilder()
         .audioStart(audioDataPackage.getAudioStartTime())
         .audioEnd(audioDataPackage.getAudioEndTime())
         .deploymentTime(audioDataPackage.getDeploymentTime())
@@ -126,7 +126,7 @@ public class PassivePackerFactory {
   private PassivePackerLocation addStationaryMarineLocationFields(StationaryMarineLocation stationaryMarineLocation, PassivePackerLocation location) {
     MarineInstrumentLocation deploymentLocation = stationaryMarineLocation.getDeploymentLocation();
     MarineInstrumentLocation recoveryLocation = stationaryMarineLocation.getRecoveryLocation();
-    return PassivePackerUtils.builderFromBaseLocation(location, PassivePackerStationaryMarineLocation.builder())
+    return PassivePackerUtils.fromBaseLocation(location, PassivePackerStationaryMarineLocation.builder()).toBuilder()
         .seaArea(stationaryMarineLocation.getSeaArea())
         .deployBottomDepth(String.valueOf(deploymentLocation.getSeaFloorDepth()))
         .deployInstrumentDepth(String.valueOf(deploymentLocation.getInstrumentDepth()))
@@ -160,7 +160,7 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerDatasetDetails addAudioDetailFields(AudioDataPackage audioDataPackage, PassivePackerDatasetDetails datasetDetails) {
-    return PassivePackerUtils.builderFromBaseDatasetDetails(datasetDetails, PassivePackerAudioDatasetDetails.builder())
+    return PassivePackerUtils.fromBaseDatasetDetails(datasetDetails, PassivePackerAudioDatasetDetails.builder()).toBuilder()
         .sourcePath(audioDataPackage.getSourcePath().toString())
         .dataComment(audioDataPackage.getComments())
         .build();
@@ -223,7 +223,7 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerCalibrationInfo addAudioCalibrationFields(PassivePackerCalibrationInfo calibrationInfo, AudioDataPackage audioDataPackage) {
-    return PassivePackerUtils.builderFromBaseCalibrationInfo(calibrationInfo, PassivePackerAudioCalibrationInfo.builder())
+    return PassivePackerUtils.fromBaseCalibrationInfo(calibrationInfo, PassivePackerAudioCalibrationInfo.builder()).toBuilder()
         .sensitivity(String.valueOf(audioDataPackage.getHydrophoneSensitivity()))
         .frequency(String.valueOf(audioDataPackage.getFrequencyRange()))
         .gain(String.valueOf(audioDataPackage.getGain()))
@@ -277,7 +277,7 @@ public class PassivePackerFactory {
 
   private PassivePackerPackage addAudioFields(PassivePackerPackage passivePackerPackage, AudioDataPackage audioDataPackage)
       throws NotFoundException, DatastoreException {
-    return PassivePackerUtils.builderFromBasePackage(passivePackerPackage, PassivePackerAudioPackage.builder())
+    return PassivePackerUtils.fromBasePackage(passivePackerPackage, PassivePackerAudioPackage.builder()).toBuilder()
         .channels(getChannels(audioDataPackage))
         .qualityDetails(getQualityDetails(audioDataPackage))
         .instrumentId(audioDataPackage.getInstrumentId())

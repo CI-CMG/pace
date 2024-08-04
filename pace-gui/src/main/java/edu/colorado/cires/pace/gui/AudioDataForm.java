@@ -29,10 +29,14 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
   
   private final TimeTranslatorForm deploymentTimeForm;
   private final TimeTranslatorForm recoveryTimeForm;
+  private final TimeTranslatorForm audioStartTimeForm;
+  private final TimeTranslatorForm audioEndTimeForm;
 
   public AudioDataForm(String[] headerOptions, T initialTranslator) {
     this.deploymentTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getDeploymentTime());
     this.recoveryTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getRecoveryTime());
+    this.audioStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioStartTime());
+    this.audioEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -78,6 +82,14 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     add(recoveryTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 10; c.weightx = 1;
     }));
+    audioStartTimeForm.setBorder(createEtchedBorder("Audio Start Time"));
+    add(audioStartTimeForm, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 11; c.weightx = 1;
+    }));
+    audioEndTimeForm.setBorder(createEtchedBorder("Audio End Time"));
+    add(audioEndTimeForm, configureLayout(c -> {
+      c.gridx = 1; c.gridy = 11; c.weightx = 1;
+    }));
     
     JPanel sensorsPanel = new JPanel(new GridBagLayout());
     sensorsPanel.add(sensorTranslatorsPanel, configureLayout(c -> {
@@ -88,10 +100,10 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     }));
     sensorsPanel.setBorder(createEtchedBorder("Sensors"));
     add(sensorsPanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 12; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(new JPanel(), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 12; c.weighty = 1;
+      c.gridx = 0; c.gridy = 13; c.weighty = 1;
     }));
   }
   
@@ -152,6 +164,8 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
 
     deploymentTimeForm.updateHeaderOptions(headerOptions);
     recoveryTimeForm.updateHeaderOptions(headerOptions);
+    audioStartTimeForm.updateHeaderOptions(headerOptions);
+    audioEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
   public String getInstrumentIdValue() {
@@ -189,5 +203,13 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
 
   public TimeTranslator getRecoveryTimeTranslator() {
     return recoveryTimeForm.toTranslator();
+  }
+
+  public TimeTranslator getAudioStartTimeTranslator() {
+    return audioStartTimeForm.toTranslator();
+  }
+
+  public TimeTranslator getAudioEndTimeTranslator() {
+    return audioEndTimeForm.toTranslator();
   }
 }

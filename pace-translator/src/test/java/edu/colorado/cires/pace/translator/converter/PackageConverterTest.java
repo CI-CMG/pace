@@ -134,6 +134,8 @@ class PackageConverterTest {
         ))
         .deploymentTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .recoveryTime(LocalDateTime.parse("2020-01-01T02:01:01"))
+        .audioStartTime(LocalDateTime.parse("2020-01-01T01:01:01"))
+        .audioEndTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .comments("comments")
         .sensors(List.of(
            PackageSensor.<String>builder()
@@ -355,6 +357,8 @@ class PackageConverterTest {
             .build())
         .deploymentTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("deploymentTime").build())
         .recoveryTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("recoveryTime").build())
+        .audioStartTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("audioStartTime").build())
+        .audioEndTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("audioEndTime").build())
         .comments("comments")
         .sensors(List.of(
             PackageSensorTranslator.builder()
@@ -552,6 +556,8 @@ class PackageConverterTest {
     
     map.put(audioPackageTranslator.getDeploymentTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTime().toString()), 58));
     map.put(audioPackageTranslator.getRecoveryTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getRecoveryTime().toString()), 59));
+    map.put(audioPackageTranslator.getAudioStartTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getAudioStartTime().toString()), 58));
+    map.put(audioPackageTranslator.getAudioEndTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getAudioEndTime().toString()), 59));
     map.put(audioPackageTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getComments()), 60));
 
     for (int i = 0; i < audioPackageTranslator.getSensors().size(); i++) {
@@ -719,6 +725,8 @@ class PackageConverterTest {
         ))
         .deploymentTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .recoveryTime(LocalDateTime.parse("2020-01-01T02:01:01"))
+        .audioStartTime(LocalDateTime.parse("2020-01-01T01:01:01"))
+        .audioEndTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .comments("comments")
         .sensors(List.of(
             PackageSensor.<String>builder()
@@ -938,6 +946,14 @@ class PackageConverterTest {
             .build())
         .recoveryTime(DefaultTimeTranslator.builder()
             .time("recoveryTime")
+            .timeZone("timeZone")
+            .build())
+        .audioStartTime(DefaultTimeTranslator.builder()
+            .time("audioStartTime")
+            .timeZone("timeZone")
+            .build())
+        .audioEndTime(DefaultTimeTranslator.builder()
+            .time("audioEndTime")
             .timeZone("timeZone")
             .build())
         .comments("comments")
@@ -1211,6 +1227,8 @@ class PackageConverterTest {
 
     map.put((cpodPackageTranslator.getDeploymentTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentTime().toString()), 58));
     map.put((cpodPackageTranslator.getRecoveryTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getRecoveryTime().toString()), 59));
+    map.put((cpodPackageTranslator.getAudioStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAudioStartTime().toString()), 59));
+    map.put((cpodPackageTranslator.getAudioEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAudioEndTime().toString()), 59));
     map.put(cpodPackageTranslator.getComments(), new ValueWithColumnNumber(Optional.of(cpodPackage.getComments()), 60));
     for (int i = 0; i < cpodPackageTranslator.getSensors().size(); i++) {
       map.put(cpodPackageTranslator.getSensors().get(i).getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSensors().get(i).getSensor()), 61));

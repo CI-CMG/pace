@@ -1,1 +1,175 @@
-{"DATA_COLLECTION_NAME": "test_audio", "PUBLISH_DATE": "2023-03-24", "PROJECT_NAME": ["project 1"], "DEPLOYMENT_NAME": "deployment name", "DEPLOYMENT_ALIAS": "deployment alias", "SITE": "CI01", "SITE_ALIASES": ["site alias"], "TITLE": "test title", "ABSTRACT": "test abstract", "PURPOSE": "test purpose", "CHANNELS": {"1": {"CHANNEL_START": "2010-01-01T13:00:00", "CHANNEL_END": "2011-01-01T13:00:00", "SENSOR": "sensor 1", "SAMPLING_DETAILS": {"SAMPLING": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "SAMPLE_RATE": "24.0", "SAMPLE_BITS": "16"}], "GAIN": [], "DUTY_CYCLE": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "DURATION": "60.0", "INTERVAL": "0.0"}]}}, "2": {"CHANNEL_START": "2010-01-01T13:00:00", "CHANNEL_END": "2011-01-01T13:00:00", "SENSOR": "sensor 2", "SAMPLING_DETAILS": {"SAMPLING": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "SAMPLE_RATE": "24.0", "SAMPLE_BITS": "16"}], "GAIN": [], "DUTY_CYCLE": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "DURATION": "60.0", "INTERVAL": "0.0"}]}}, "3": {"CHANNEL_START": "2010-01-01T13:00:00", "CHANNEL_END": "2011-01-01T13:00:00", "SENSOR": "sensor 3", "SAMPLING_DETAILS": {"SAMPLING": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "SAMPLE_RATE": "24.0", "SAMPLE_BITS": "16"}], "GAIN": [], "DUTY_CYCLE": [{"START": "2010-01-01T13:00:00", "END": "2011-01-01T13:00:00", "DURATION": "60.0", "INTERVAL": "0.0"}]}}}, "QUALITY_DETAILS": {"analyst": "Chuck Anderson", "analyst_uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66", "quality_details": [{"quality": "Good", "low_freq": "0.0", "high_freq": "12000.0", "start": "2010-01-01T13:00:00", "end": "2011-01-01T13:00:00", "comments": "quality comments", "channels": "1,2,3"}], "method": "quality method", "objectives": "quality objectives", "abstract": "quality abstract"}, "PLATFORM_NAME": "Glider", "INSTRUMENT_TYPE": "DMON", "INSTRUMENT_ID": "instrument id", "DEPLOYMENT": {"DEPLOYMENT_TIME": "2010-01-01T13:00:00", "RECOVERY_TIME": "2011-01-01T13:00:00", "AUDIO_START": "2010-01-01T13:00:00", "AUDIO_END": "2011-01-01T13:00:00", "DEPLOY_TYPE": "Stationary Marine", "SEA_AREA": "Bristol Channel", "DEPLOY_LAT": "12.0", "DEPLOY_LON": "12.0", "DEPLOY_SHIP": "", "DEPLOY_INSTRUMENT_DEPTH": "-11.0", "DEPLOY_BOTTOM_DEPTH": "-12.0", "RECOVER_LAT": "12.0", "RECOVER_LON": "12.0", "RECOVER_SHIP": "", "RECOVER_INSTRUMENT_DEPTH": "-11.0", "RECOVER_BOTTOM_DEPTH": "-12.0"}, "DATASET_DETAILS": {"TYPE": "Raw", "SUB_TYPE": "Audio", "SOURCE_PATH": "/Volumes/Fortress/test_data/audio_files", "DATA_COMMENT": "data comment"}, "CALIBRATION_INFO": {"CAL_STATE": "Calibrated Pre-Deployment", "CAL_DOCS_PATH": "/Volumes/Fortress/test_data/calibration", "SENSITIVITY": "23.0", "FREQUENCY": "2-20000", "GAIN": "-3.0", "COMMENT": "THIS IS DESCRIPTIVE TEXT ABOUT THE CALIBRATION", "CAL_DATE": "2010-01-01"}, "SCIENTISTS": [{"name": "Chuck Anderson", "uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66"}], "SPONSORS": [{"name": "NOAA ONMS", "uuid": "1e78f564-ac17-4ebc-9a96-5caaecf7663b"}], "FUNDERS": [{"name": "BOEM", "uuid": "fee4d17a-a7dd-4f13-ade5-817b4f1fc86d"}], "METADATA_AUTHOR": {"NAME": "Chuck Anderson", "UUID": "ad7776a0-6c05-11e2-bcfd-0800200c9a66", "ORGANIZATION": "NESDIS/NCEI", "POSITION": "Water Column Data Manager", "STREET": "NOAA/NCEI, 325 Broadway", "CITY": "Boulder", "STATE": "CO", "ZIP": "80305", "COUNTRY": "USA", "EMAIL": "email", "PHONE": "phone"}}
+{
+    "DATA_COLLECTION_NAME": "test_audio",
+    "PUBLISH_DATE": "2023-03-24",
+    "PROJECT_NAME": [
+        "project 1"
+    ],
+    "DEPLOYMENT_NAME": "deployment name",
+    "DEPLOYMENT_ALIAS": "deployment alias",
+    "SITE": "CI01",
+    "SITE_ALIASES": [
+        "site alias"
+    ],
+    "TITLE": "test title",
+    "ABSTRACT": "test abstract",
+    "PURPOSE": "test purpose",
+    "CHANNELS": {
+        "1": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "sensor 1",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24.0",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60.0",
+                        "INTERVAL": "0.0"
+                    }
+                ]
+            }
+        },
+        "2": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "sensor 2",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24.0",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60.0",
+                        "INTERVAL": "0.0"
+                    }
+                ]
+            }
+        },
+        "3": {
+            "CHANNEL_START": "2010-01-01T13:00:00",
+            "CHANNEL_END": "2011-01-01T13:00:00",
+            "SENSOR": "sensor 3",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "SAMPLE_RATE": "24.0",
+                        "SAMPLE_BITS": "16"
+                    }
+                ],
+                "GAIN": [],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2010-01-01T13:00:00",
+                        "END": "2011-01-01T13:00:00",
+                        "DURATION": "60.0",
+                        "INTERVAL": "0.0"
+                    }
+                ]
+            }
+        }
+    },
+    "QUALITY_DETAILS": {
+        "analyst": "Chuck Anderson",
+        "analyst_uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "quality_details": [
+            {
+                "quality": "Good",
+                "low_freq": "0.0",
+                "high_freq": "12000.0",
+                "start": "2010-01-01T13:00:00",
+                "end": "2011-01-01T13:00:00",
+                "comments": "quality comments",
+                "channels": "1,2,3"
+            }
+        ],
+        "method": "quality method",
+        "objectives": "quality objectives",
+        "abstract": "quality abstract"
+    },
+    "PLATFORM_NAME": "Glider",
+    "INSTRUMENT_TYPE": "DMON",
+    "INSTRUMENT_ID": "instrument id",
+    "DEPLOYMENT": {
+        "DEPLOYMENT_TIME": "2010-01-01T13:00:00",
+        "RECOVERY_TIME": "2011-01-01T13:00:00",
+        "AUDIO_START": "2010-01-01T13:00:00",
+        "AUDIO_END": "2011-01-01T13:00:00",
+        "DEPLOY_TYPE": "Stationary Marine",
+        "SEA_AREA": "Bristol Channel",
+        "DEPLOY_LAT": "12.0",
+        "DEPLOY_LON": "12.0",
+        "DEPLOY_SHIP": "",
+        "DEPLOY_INSTRUMENT_DEPTH": "-11.0",
+        "DEPLOY_BOTTOM_DEPTH": "-12.0",
+        "RECOVER_LAT": "12.0",
+        "RECOVER_LON": "12.0",
+        "RECOVER_SHIP": "",
+        "RECOVER_INSTRUMENT_DEPTH": "-11.0",
+        "RECOVER_BOTTOM_DEPTH": "-12.0"
+    },
+    "DATASET_DETAILS": {
+        "TYPE": "Raw",
+        "SUB_TYPE": "Audio",
+        "SOURCE_PATH": "/Volumes/Fortress/test_data/audio_files",
+        "DATA_COMMENT": "data comment"
+    },
+    "CALIBRATION_INFO": {
+        "CAL_STATE": "Calibrated Pre-Deployment",
+        "CAL_DOCS_PATH": "/Volumes/Fortress/test_data/calibration",
+        "SENSITIVITY": "23.0",
+        "FREQUENCY": "2-20000",
+        "GAIN": "-3.0",
+        "COMMENT": "THIS IS DESCRIPTIVE TEXT ABOUT THE CALIBRATION",
+        "CAL_DATE": "2010-01-01"
+    },
+    "SCIENTISTS": [
+        {
+            "name": "Chuck Anderson",
+            "uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66"
+        }
+    ],
+    "SPONSORS": [
+        {
+            "name": "NOAA ONMS",
+            "uuid": "1e78f564-ac17-4ebc-9a96-5caaecf7663b"
+        }
+    ],
+    "FUNDERS": [
+        {
+            "name": "BOEM",
+            "uuid": "fee4d17a-a7dd-4f13-ade5-817b4f1fc86d"
+        }
+    ],
+    "METADATA_AUTHOR": {
+        "NAME": "Chuck Anderson",
+        "UUID": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "ORGANIZATION": "NESDIS/NCEI",
+        "POSITION": "Water Column Data Manager",
+        "STREET": "NOAA/NCEI, 325 Broadway",
+        "CITY": "Boulder",
+        "STATE": "CO",
+        "ZIP": "80305",
+        "COUNTRY": "USA",
+        "EMAIL": "email",
+        "PHONE": "phone"
+    }
+}

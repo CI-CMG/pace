@@ -186,6 +186,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(initialTranslator.getCalibrationDocumentsPath());
     headerOptions.add(initialTranslator.getNavigationPath());
     headerOptions.add(initialTranslator.getSourcePath());
+    headerOptions.add(initialTranslator.getDataCollectionName());
     headerOptions.add(initialTranslator.getSiteOrCruiseName());
     headerOptions.add(initialTranslator.getDeploymentId());
     headerOptions.add(initialTranslator.getDatasetPackager());
@@ -279,6 +280,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     }
     addTimeTranslatorFields(audioDataPackageTranslator.getDeploymentTime(), headerOptions);
     addTimeTranslatorFields(audioDataPackageTranslator.getRecoveryTime(), headerOptions);
+    addTimeTranslatorFields(audioDataPackageTranslator.getAudioStartTime(), headerOptions);
+    addTimeTranslatorFields(audioDataPackageTranslator.getAudioEndTime(), headerOptions);
     addQualityDetailFields(audioDataPackageTranslator.getQualityControlDetailTranslator(), headerOptions);
     audioDataPackageTranslator.getChannelTranslators().forEach(
         t -> addChannelFields(t, headerOptions)
@@ -384,6 +387,9 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   }
   
   private void addTimeTranslatorFields(TimeTranslator timeTranslator, List<String> headerOptions) {
+    if (timeTranslator == null) {
+      return;
+    }
     headerOptions.add(
         timeTranslator.getTimeZone()
     );
@@ -607,6 +613,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .sensors(audioDataForm.getSensorsValue())
         .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
         .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
+        .audioStartTime(audioDataForm.getAudioStartTimeTranslator())
+        .audioEndTime(audioDataForm.getAudioEndTimeTranslator())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }
@@ -623,6 +631,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .sensors(audioDataForm.getSensorsValue())
         .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
         .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
+        .audioStartTime(audioDataForm.getAudioStartTimeTranslator())
+        .audioEndTime(audioDataForm.getAudioEndTimeTranslator())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }

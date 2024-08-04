@@ -115,6 +115,10 @@ final class ConversionUtils {
   }
   
   public static LocalDateTime localDateTimeFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, TimeTranslator timeTranslator, int row, RuntimeException runtimeException) {
+    if (timeTranslator == null) {
+      return null;
+    }
+    
     ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, timeTranslator.getTimeZone());
     String timeZone = valueWithColumnNumber.value().orElse(null);
     if (timeZone == null) {
