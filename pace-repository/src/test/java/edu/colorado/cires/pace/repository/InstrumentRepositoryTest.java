@@ -111,14 +111,14 @@ class InstrumentRepositoryTest extends PackageDependencyRepositoryTest<Instrumen
 
   @Override
   protected boolean objectInDependentObject(Instrument updated, UUID dependentObjectUUID) {
-    return packages.get(dependentObjectUUID).getInstrumentType().equals(updated.getName());
+    return packages.get(dependentObjectUUID).getInstrument().equals(updated.getName());
   }
 
   @Override
   protected Package createAndSaveDependentObject(Instrument object) {
     Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .instrumentType(object.getName())
+        .instrument(object.getName())
         .build();
     packages.put(p.getUuid(), p);
     return packages.get(p.getUuid());
@@ -128,7 +128,7 @@ class InstrumentRepositoryTest extends PackageDependencyRepositoryTest<Instrumen
   protected Package createAndSaveIndependentDependentObject() {
     Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .instrumentType("unrelated-instrument")
+        .instrument("unrelated-instrument")
         .build();
     
     packages.put(p.getUuid(), p);

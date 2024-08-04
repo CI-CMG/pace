@@ -27,9 +27,9 @@ class TestResolvePackageId {
   })
   void testResolvePackageId(String siteOrCruiseName, String deploymentId, String projectName, String expectedValue) {
     Package aPackage = AudioPackage.builder()
-        .site(siteOrCruiseName)
+        .siteOrCruiseName(siteOrCruiseName)
         .deploymentId(deploymentId)
-        .projectName(Collections.singletonList(projectName))
+        .projects(Collections.singletonList(projectName))
         .build();
     
     assertEquals(expectedValue, aPackage.getPackageId());
@@ -38,11 +38,11 @@ class TestResolvePackageId {
   @Test
   void testResolvePackageIdEmptyProjects() {
     Package aPackage = AudioPackage.builder()
-        .site("socName")
+        .siteOrCruiseName("socName")
         .deploymentId("dId").build();
 
     assertEquals(String.format(
-        "%s_%s", aPackage.getSite(), aPackage.getDeploymentId()
+        "%s_%s", aPackage.getSiteOrCruiseName(), aPackage.getDeploymentId()
     ), aPackage.getPackageId());
   }
 

@@ -28,7 +28,7 @@ public @interface ValidPackageIdentifiers {
     @Override
     public boolean isValid(Package aPackage, ConstraintValidatorContext context) {
       String dataCollectionName = aPackage.getDataCollectionName();
-      String site = aPackage.getSite();
+      String site = aPackage.getSiteOrCruiseName();
       String deploymentId = aPackage.getDeploymentId();
       
       if (

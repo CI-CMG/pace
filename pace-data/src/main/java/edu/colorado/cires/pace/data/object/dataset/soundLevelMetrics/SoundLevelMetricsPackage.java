@@ -40,13 +40,13 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   }
 
   @Override
-  public SoundLevelMetricsPackage setProjectName(List<String> projectName) {
-    return toBuilder().projectName(projectName).build();
+  public SoundLevelMetricsPackage setProjects(List<String> projects) {
+    return toBuilder().projects(projects).build();
   }
 
   @Override
-  public SoundLevelMetricsPackage setPlatformName(String platformName) {
-    return toBuilder().platformName(platformName).build();
+  public SoundLevelMetricsPackage setPlatform(String platform) {
+    return toBuilder().platform(platform).build();
   }
 
   @Override
@@ -75,8 +75,8 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   }
 
   @Override
-  public SoundLevelMetricsPackage setInstrumentType(String instrumentType) {
-    return toBuilder().instrumentType(instrumentType).build();
+  public SoundLevelMetricsPackage setInstrument(String instrument) {
+    return toBuilder().instrument(instrument).build();
   }
 
   @Override

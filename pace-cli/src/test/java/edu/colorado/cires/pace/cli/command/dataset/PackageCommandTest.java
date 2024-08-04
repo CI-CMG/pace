@@ -168,26 +168,26 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         object.getCalibrationDocumentsPath().toString(),
         object.getNavigationPath().toString(),
         object.getSourcePath().toString(),
-        object.getSite(),
+        object.getSiteOrCruiseName(),
         object.getDeploymentId(),
         object.getDatasetPackager(),
-        String.join(";", object.getProjectName()),
-        object.getPublishDate().toString(),
+        String.join(";", object.getProjects()),
+        object.getPublicReleaseDate().toString(),
         String.join(";", object.getScientists()),
         String.join(";", object.getSponsors()),
         String.join(";", object.getFunders()),
-        object.getPlatformName(),
-        object.getInstrumentType(),
+        object.getPlatform(),
+        object.getInstrument(),
         object.getStartTime().toString(),
         object.getEndTime().toString(),
         object.getPreDeploymentCalibrationDate().toString(),
         object.getPostDeploymentCalibrationDate().toString(),
         object.getCalibrationDescription(),
-        object.getTitle(),
-        object.getPurpose(),
+        object.getDeploymentTitle(),
+        object.getDeploymentPurpose(),
         object.getDeploymentDescription(),
         object.getAlternateSiteName(),
-        object.getDeploymentAlias()
+        object.getAlternateDeploymentName()
     ));
     addPackageTypeSpecificFields(fields, object);
     addLocationDetailTypeSpecificFields(fields, object.getLocationDetail());
@@ -238,19 +238,19 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     assertEquals(expected.getSourcePath(), actual.getSourcePath());
     assertEquals(expected.getPackageId(), actual.getPackageId());
 
-    assertEquals(expected.getSite(), actual.getSite());
+    assertEquals(expected.getSiteOrCruiseName(), actual.getSiteOrCruiseName());
     assertEquals(expected.getDeploymentId(), actual.getDeploymentId());
     assertEquals(expected.getDatasetPackager(), actual.getDatasetPackager());
     assertEquals(expected.getDataCollectionName(), actual.getDataCollectionName());
 
-    for (int i = 0; i < expected.getProjectName().size(); i++) {
+    for (int i = 0; i < expected.getProjects().size(); i++) {
       assertEquals(
-          expected.getProjectName().get(i),
-          actual.getProjectName().get(i)
+          expected.getProjects().get(i),
+          actual.getProjects().get(i)
       );
     }
     
-    assertEquals(expected.getPublishDate(), actual.getPublishDate());
+    assertEquals(expected.getPublicReleaseDate(), actual.getPublicReleaseDate());
 
     for (int i = 0; i < expected.getScientists().size(); i++) {
       assertEquals(
@@ -273,19 +273,19 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       );
     }
 
-    assertEquals(expected.getPlatformName(), actual.getPlatformName());
-    assertEquals(expected.getInstrumentType(), actual.getInstrumentType());
+    assertEquals(expected.getPlatform(), actual.getPlatform());
+    assertEquals(expected.getInstrument(), actual.getInstrument());
     
     assertEquals(expected.getStartTime(), actual.getStartTime());
     assertEquals(expected.getEndTime(), actual.getEndTime());
     assertEquals(expected.getPreDeploymentCalibrationDate(), actual.getPreDeploymentCalibrationDate());
     assertEquals(expected.getPostDeploymentCalibrationDate(), actual.getPostDeploymentCalibrationDate());
     assertEquals(expected.getCalibrationDescription(), actual.getCalibrationDescription());
-    assertEquals(expected.getTitle(), actual.getTitle());
-    assertEquals(expected.getPurpose(), actual.getPurpose());
+    assertEquals(expected.getDeploymentTitle(), actual.getDeploymentTitle());
+    assertEquals(expected.getDeploymentPurpose(), actual.getDeploymentPurpose());
     assertEquals(expected.getDeploymentDescription(), actual.getDeploymentDescription());
     assertEquals(expected.getAlternateSiteName(), actual.getAlternateSiteName());
-    assertEquals(expected.getDeploymentAlias(), actual.getDeploymentAlias());
+    assertEquals(expected.getAlternateDeploymentName(), actual.getAlternateDeploymentName());
    
     assertLocationDetailsEquals(expected.getLocationDetail(), actual.getLocationDetail());
     assertTypeSpecificPackagesEqual(expected, actual);

@@ -12,14 +12,14 @@ public class ProjectRepository extends PackageDependencyRepository<Project> {
 
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Project object) {
-    return dependency.getProjectName().contains(object.getName());
+    return dependency.getProjects().contains(object.getName());
   }
 
   @Override
   protected Package applyObjectToDependentObjects(Project original, Project updated, Package dependency) {
-    return dependency.setProjectName(
+    return dependency.setProjects(
         replaceStringInList(
-            dependency.getProjectName(), original.getName(), updated.getName()
+            dependency.getProjects(), original.getName(), updated.getName()
         )
     );
   }

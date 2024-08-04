@@ -42,13 +42,13 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   }
 
   @Override
-  public DetectionsPackage setProjectName(List<String> projectName) {
-    return toBuilder().projectName(projectName).build();
+  public DetectionsPackage setProjects(List<String> projects) {
+    return toBuilder().projects(projects).build();
   }
 
   @Override
-  public DetectionsPackage setPlatformName(String platformName) {
-    return toBuilder().platformName(platformName).build();
+  public DetectionsPackage setPlatform(String platform) {
+    return toBuilder().platform(platform).build();
   }
 
   @Override
@@ -77,8 +77,8 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   }
 
   @Override
-  public DetectionsPackage setInstrumentType(String instrumentType) {
-    return toBuilder().instrumentType(instrumentType).build();
+  public DetectionsPackage setInstrument(String instrument) {
+    return toBuilder().instrument(instrument).build();
   }
 
   @Override

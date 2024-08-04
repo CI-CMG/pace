@@ -48,13 +48,13 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public AudioPackage setProjectName(List<String> projectName) {
-    return toBuilder().projectName(projectName).build();
+  public AudioPackage setProjects(List<String> projects) {
+    return toBuilder().projects(projects).build();
   }
 
   @Override
-  public AudioPackage setPlatformName(String platformName) {
-    return toBuilder().platformName(platformName).build();
+  public AudioPackage setPlatform(String platform) {
+    return toBuilder().platform(platform).build();
   }
 
   @Override
@@ -68,8 +68,8 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public AudioPackage setInstrumentType(String instrumentType) {
-    return toBuilder().instrumentType(instrumentType).build();
+  public AudioPackage setInstrument(String instrument) {
+    return toBuilder().instrument(instrument).build();
   }
 
   @Override

@@ -140,43 +140,43 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     
     if (object instanceof AudioPackage) {
       return ((AudioPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof CPODPackage) {
       return ((CPODPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof DetectionsPackage) {
       return ((DetectionsPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundClipsPackage) {
       return ((SoundClipsPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundLevelMetricsPackage) {
       return ((SoundLevelMetricsPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
     if (object instanceof SoundPropagationModelsPackage) {
       return ((SoundPropagationModelsPackage) object).toBuilder()
-          .site(uniqueField)
-          .projectName(Collections.singletonList(uniqueField))
+          .siteOrCruiseName(uniqueField)
+          .projects(Collections.singletonList(uniqueField))
           .deploymentId(uniqueField)
           .build();
     }
@@ -251,7 +251,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     assertEquals("at least dataCollectionName, site, or deploymentId required", constraintViolation.get(0).getMessage());
     assertEquals("deploymentId", constraintViolation.get(1).getPropertyPath().toString());
     assertEquals("at least dataCollectionName, site, or deploymentId required", constraintViolation.get(1).getMessage());
-    assertEquals("projectName[0].<list element>", constraintViolation.get(2).getPropertyPath().toString());
+    assertEquals("projects[0].<list element>", constraintViolation.get(2).getPropertyPath().toString());
     assertEquals("must not be blank", constraintViolation.get(2).getMessage());
     assertEquals("site", constraintViolation.get(3).getPropertyPath().toString());
     assertEquals("at least dataCollectionName, site, or deploymentId required", constraintViolation.get(3).getMessage());
@@ -277,14 +277,14 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         instruments,
         Instrument.builder()
             .uuid(UUID.randomUUID())
-            .name(p.getInstrumentType())
+            .name(p.getInstrument())
             .fileTypes(Collections.singletonList("test"))
             .build()
     );
 
     insertObjectsIntoMap(
         projects,
-        (List<Project>) p.getProjectName().stream()
+        (List<Project>) p.getProjects().stream()
             .map(name -> Project.builder()
                 .uuid(UUID.randomUUID())
                 .name(name)
@@ -344,7 +344,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         platforms,
         Platform.builder()
             .uuid(UUID.randomUUID())
-            .name(p.getPlatformName())
+            .name(p.getPlatform())
             .build()
     );
   }
@@ -518,24 +518,24 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("packager-name")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
@@ -545,11 +545,11 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .hydrophoneSensitivity(10f)
         .frequencyRange("1-5")
         .gain(1f)
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -654,34 +654,34 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("packager-name")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -712,34 +712,34 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("packager-name")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -780,34 +780,34 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("dataset-packager")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .locationDetail(StationaryMarineLocation.builder()
             .seaArea("sea-area")
             .deploymentLocation(MarineInstrumentLocation.builder()
@@ -839,34 +839,34 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("dataset-packager")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")
@@ -906,24 +906,24 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
-        .site(String.format(
+        .siteOrCruiseName(String.format(
             "siteOrCruiseName-%s", suffix
         ))
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
         .datasetPackager("dataset-packager")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.now().plusDays(1))
+        )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName("platform")
-        .instrumentType("instrument")
+        )).platform("platform")
+        .instrument("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.now().minusMinutes(1))
         .endTime(LocalDateTime.now())
@@ -933,11 +933,11 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .hydrophoneSensitivity(10f)
         .frequencyRange("1-5")
         .gain(1f)
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst("quality-analyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")

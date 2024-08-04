@@ -30,14 +30,14 @@ public class InstrumentRepository extends PackageDependencyRepository<Instrument
 
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Instrument object) {
-    return object.getName().equals(dependency.getInstrumentType());
+    return object.getName().equals(dependency.getInstrument());
   }
 
   @Override
   protected Package applyObjectToDependentObjects(Instrument original, Instrument updated, Package dependency) {
-    return dependency.setInstrumentType(
+    return dependency.setInstrument(
         replaceString(
-            dependency.getInstrumentType(), original.getName(), updated.getName()
+            dependency.getInstrument(), original.getName(), updated.getName()
         )
     );
   }

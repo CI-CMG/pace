@@ -52,14 +52,14 @@ class ProjectRepositoryTest extends PackageDependencyRepositoryTest<Project> {
   @Override
   protected boolean objectInDependentObject(Project updated, UUID dependentObjectUUID) {
     Package p = packages.get(dependentObjectUUID);
-    return p.getProjectName().contains(updated.getName());
+    return p.getProjects().contains(updated.getName());
   }
 
   @Override
   protected Package createAndSaveDependentObject(Project object) {
     Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .projectName(Collections.singletonList(object.getName()))
+        .projects(Collections.singletonList(object.getName()))
         .build();
     packages.put(p.getUuid(), p);
     return packages.get(p.getUuid());
@@ -69,7 +69,7 @@ class ProjectRepositoryTest extends PackageDependencyRepositoryTest<Project> {
   protected Package createAndSaveIndependentDependentObject() {
     Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .projectName(Collections.singletonList("unrelated-project"))
+        .projects(Collections.singletonList("unrelated-project"))
         .build();
     
     packages.put(p.getUuid(), p);

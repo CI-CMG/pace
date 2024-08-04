@@ -289,15 +289,15 @@ class PackagerProcessorTest {
         .documentsPath(documentsPath)
         .calibrationDocumentsPath(calibrationDocumentsPath)
         .biologicalPath(biologicalPath)
-        .site("siteOrCruiseName")
+        .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager(Person.builder()
             .name("dataset-packager")
             .build())
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1",
             "project-name-2"
-        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             AbstractObjectWithName.builder()
                 .name("scientist-1")
@@ -319,9 +319,9 @@ class PackagerProcessorTest {
             AbstractObjectWithName.builder()
                 .name("organization-4")
                 .build()
-        )).platformName(
+        )).platform(
             "platform"
-        ).instrumentType(
+        ).instrument(
             "instrument"
         )
         .instrumentId("instrumentId")
@@ -333,11 +333,11 @@ class PackagerProcessorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange("1-5")
         .gain(1f)
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst(Person.builder()
             .name("qualityAnalyst")
             .build())
@@ -498,21 +498,21 @@ class PackagerProcessorTest {
         .documentsPath(documentsPath)
         .calibrationDocumentsPath(calibrationDocumentsPath)
         .biologicalPath(biologicalPath)
-        .site("siteOrCruiseName")
+        .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
         .datasetPackager("dataset-packager")
-        .projectName(List.of(
+        .projects(List.of(
             "project-name-1", "project-name-2"
-        )).publishDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
         )).sponsors(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
-        )).platformName(
+        )).platform(
             "platform"
-        ).instrumentType("instrument")
+        ).instrument("instrument")
         .instrumentId("instrumentId")
         .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
         .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
@@ -522,11 +522,11 @@ class PackagerProcessorTest {
         .hydrophoneSensitivity(10f)
         .frequencyRange("1-5")
         .gain(1f)
-        .title("deployment-title")
-        .purpose("deployment-purpose")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
         .deploymentDescription("deployment-description")
         .alternateSiteName("alternate-site-name")
-        .deploymentAlias("alternate-deployment-name")
+        .alternateDeploymentName("alternate-deployment-name")
         .qualityAnalyst("qualityAnalyst")
         .qualityAnalysisObjectives("quality-analyst-objectives")
         .qualityAnalysisMethod("quality-analysis-method")

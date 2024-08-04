@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.AbstractObjectWithName;
 import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.DetailedCPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.detections.DetailedDetectionsPackage;
@@ -34,15 +32,15 @@ import lombok.experimental.SuperBuilder;
 public abstract class DetailedPackage extends BasePackage<Object> {
   private final Object datasetPackager;
   private final List<Object> scientists;
-  private final List<Object> projectName;
+  private final List<Object> projects;
   private final List<Object> sponsors;
   private final List<Object> funders;
-  private final String platformName;
-  private final Object instrumentType;
+  private final String platform;
+  private final Object instrument;
 
   @Override
   protected List<String> getProjectNames() {
-    return getProjectName().stream()
+    return getProjects().stream()
             .map(o -> (String) o)
             .toList();
   }

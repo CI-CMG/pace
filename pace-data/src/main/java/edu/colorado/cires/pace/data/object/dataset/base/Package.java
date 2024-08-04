@@ -41,27 +41,27 @@ public abstract class Package extends BasePackage<String> {
   @NotEmpty @NotNull
   private final List<@NotBlank String> scientists;
   @NotNull
-  private final List<@NotBlank String> projectName;
+  private final List<@NotBlank String> projects;
   @NotNull @NotEmpty
   private final List<@NotBlank String> sponsors;
   @NotNull @NotEmpty
   private final List<@NotBlank String> funders;
   @NotBlank
-  private final String platformName;
+  private final String platform;
   @NotBlank
-  private final String instrumentType;
+  private final String instrument;
 
   @Override
   protected List<String> getProjectNames() {
-    return this.getProjectName() == null ? Collections.emptyList() : this.getProjectName();
+    return this.getProjects() == null ? Collections.emptyList() : this.getProjects();
   }
 
   public abstract Package setLocationDetail(LocationDetail locationDetail);
-  public abstract Package setProjectName(List<String> projectName);
-  public abstract Package setPlatformName(String platformName);
+  public abstract Package setProjects(List<String> projects);
+  public abstract Package setPlatform(String platform);
   public abstract Package setScientists(List<String> scientists);
   public abstract Package setDatasetPackager(String datasetPackager);
   public abstract Package setSponsors(List<String> sponsors);
   public abstract Package setFunders(List<String> funders);
-  public abstract Package setInstrumentType(String instrumentType);
+  public abstract Package setInstrument(String instrument);
 }

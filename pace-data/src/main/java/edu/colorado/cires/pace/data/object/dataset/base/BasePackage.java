@@ -41,20 +41,20 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   private final Path sourcePath;
 
   private final String dataCollectionName;
-  private final String site;
+  private final String siteOrCruiseName;
   private final String deploymentId;
   @NotNull
-  protected abstract List<@NotNull @Valid T> getProjectName();
+  protected abstract List<@NotNull @Valid T> getProjects();
   
   @NotNull
-  private final LocalDate publishDate;
+  private final LocalDate publicReleaseDate;
   @NotNull @Valid
   private final LocationDetail locationDetail;
-  private final String title;
-  private final String purpose;
+  private final String deploymentTitle;
+  private final String deploymentPurpose;
   private final String deploymentDescription;
   private final String alternateSiteName;
-  private final String deploymentAlias;
+  private final String alternateDeploymentName;
   @NotNull
   private final LocalDateTime startTime;
   @NotNull
@@ -76,9 +76,9 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   @NotNull @NotEmpty
   protected abstract List<@NotNull @Valid T> getFunders();
   @NotNull @Valid
-  protected abstract T getPlatformName();
+  protected abstract T getPlatform();
   @NotNull @Valid
-  protected abstract T getInstrumentType();
+  protected abstract T getInstrument();
   
   @JsonIgnore
   protected abstract List<String> getProjectNames();
@@ -96,12 +96,12 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
     
     String packageId = null;
 
-    List<String> projects = getProjectName() == null ? Collections.emptyList() : getProjectNames();
+    List<String> projects = getProjects() == null ? Collections.emptyList() : getProjectNames();
     if (!projects.isEmpty()) {
       packageId = projects.get(0);
     }
 
-    String siteCruiseName = getSite();
+    String siteCruiseName = getSiteOrCruiseName();
     if (siteCruiseName != null) {
       if (packageId == null) {
         packageId = siteCruiseName;

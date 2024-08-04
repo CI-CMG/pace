@@ -27,13 +27,13 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   }
 
   @Override
-  public SoundClipsPackage setProjectName(List<String> projectName) {
-    return toBuilder().projectName(projectName).build();
+  public SoundClipsPackage setProjects(List<String> projects) {
+    return toBuilder().projects(projects).build();
   }
 
   @Override
-  public SoundClipsPackage setPlatformName(String platformName) {
-    return toBuilder().platformName(platformName).build();
+  public SoundClipsPackage setPlatform(String platform) {
+    return toBuilder().platform(platform).build();
   }
 
   @Override
@@ -57,8 +57,8 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   }
 
   @Override
-  public SoundClipsPackage setInstrumentType(String instrumentType) {
-    return toBuilder().instrumentType(instrumentType).build();
+  public SoundClipsPackage setInstrument(String instrument) {
+    return toBuilder().instrument(instrument).build();
   }
 
   @Override
