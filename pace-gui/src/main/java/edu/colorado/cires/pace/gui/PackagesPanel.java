@@ -273,7 +273,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
             PackageProcessor packageProcessor = new PackageProcessor(
                 objectMapper,
                 new PackageInflator(
-                    personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+                    personRepository, organizationRepository,
                     sensorRepository, detectionTypeRepository
                 ),
                 personRepository.findAll().toList(),

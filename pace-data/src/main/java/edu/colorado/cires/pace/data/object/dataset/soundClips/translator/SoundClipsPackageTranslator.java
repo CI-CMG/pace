@@ -16,6 +16,7 @@ public class SoundClipsPackageTranslator extends SoftwareDependentPackageTransla
   public static SoundClipsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundClipsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())
+        .processingLevel(packageTranslator.getProcessingLevel())
         .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())

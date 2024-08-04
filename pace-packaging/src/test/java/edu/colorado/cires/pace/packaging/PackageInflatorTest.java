@@ -64,7 +64,7 @@ class PackageInflatorTest {
   private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
   
   private final PackageInflator packageInflator = new PackageInflator(
-      personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+      personRepository, organizationRepository,
       sensorRepository, detectionTypeRepository
   );
   

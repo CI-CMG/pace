@@ -23,6 +23,7 @@ public class SoundLevelMetricsPackageTranslator extends SoundAnalysisPackageTran
   public static SoundLevelMetricsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundLevelMetricsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())
+        .processingLevel(packageTranslator.getProcessingLevel())
         .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())

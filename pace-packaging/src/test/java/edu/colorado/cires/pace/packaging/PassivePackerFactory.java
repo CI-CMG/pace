@@ -148,7 +148,7 @@ public class PassivePackerFactory {
 
   private PassivePackerDatasetDetails getDatasetDetails(Package aPackage) {
     PassivePackerDatasetDetails datasetDetails = PassivePackerDatasetDetails.builder()
-        .type("Raw")
+        .type(aPackage.getProcessingLevel().name())
         .subType(subtypeFromPackage(aPackage))
         .build();
     

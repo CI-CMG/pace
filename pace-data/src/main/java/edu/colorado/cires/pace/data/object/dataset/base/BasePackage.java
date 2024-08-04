@@ -29,6 +29,8 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   @NotNull
   @Builder.Default
   private final boolean visible = true;
+  @NotNull
+  private final ProcessingLevel processingLevel;
   private final Path temperaturePath;
   private final Path biologicalPath;
   private final Path otherPath;

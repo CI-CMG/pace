@@ -21,12 +21,9 @@ import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundP
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
-import edu.colorado.cires.pace.repository.PlatformRepository;
-import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,21 +31,15 @@ import java.util.List;
 public final class PackageInflator {
   
   private final PersonRepository personRepository;
-  private final ProjectRepository projectRepository;
   private final OrganizationRepository organizationRepository;
-  private final PlatformRepository platformRepository;
-  private final InstrumentRepository instrumentRepository;
   private final SensorRepository sensorRepository;
   private final DetectionTypeRepository detectionTypeRepository;
 
-  public PackageInflator(PersonRepository personRepository, ProjectRepository projectRepository, OrganizationRepository organizationRepository,
-      PlatformRepository platformRepository, InstrumentRepository instrumentRepository, SensorRepository sensorRepository,
+  public PackageInflator(PersonRepository personRepository, OrganizationRepository organizationRepository,
+      SensorRepository sensorRepository,
       DetectionTypeRepository detectionTypeRepository) {
     this.personRepository = personRepository;
-    this.projectRepository = projectRepository;
     this.organizationRepository = organizationRepository;
-    this.platformRepository = platformRepository;
-    this.instrumentRepository = instrumentRepository;
     this.sensorRepository = sensorRepository;
     this.detectionTypeRepository = detectionTypeRepository;
   }
@@ -77,6 +68,7 @@ public final class PackageInflator {
     return DetailedAudioPackage.builder()
         .uuid(audioPackage.getUuid())
         .visible(audioPackage.isVisible())
+        .processingLevel(audioPackage.getProcessingLevel())
         .temperaturePath(audioPackage.getTemperaturePath())
         .biologicalPath(audioPackage.getBiologicalPath())
         .otherPath(audioPackage.getOtherPath())
@@ -127,6 +119,7 @@ public final class PackageInflator {
     return DetailedCPODPackage.builder()
         .uuid(cpodPackage.getUuid())
         .visible(cpodPackage.isVisible())
+        .processingLevel(cpodPackage.getProcessingLevel())
         .temperaturePath(cpodPackage.getTemperaturePath())
         .biologicalPath(cpodPackage.getBiologicalPath())
         .otherPath(cpodPackage.getOtherPath())
@@ -177,6 +170,7 @@ public final class PackageInflator {
     return DetailedDetectionsPackage.builder()
         .uuid(detectionsPackage.getUuid())
         .visible(detectionsPackage.isVisible())
+        .processingLevel(detectionsPackage.getProcessingLevel())
         .temperaturePath(detectionsPackage.getTemperaturePath())
         .biologicalPath(detectionsPackage.getBiologicalPath())
         .otherPath(detectionsPackage.getOtherPath())
@@ -229,6 +223,7 @@ public final class PackageInflator {
     return DetailedSoundClipsPackage.builder()
         .uuid(soundClipsPackage.getUuid())
         .visible(soundClipsPackage.isVisible())
+        .processingLevel(soundClipsPackage.getProcessingLevel())
         .temperaturePath(soundClipsPackage.getTemperaturePath())
         .biologicalPath(soundClipsPackage.getBiologicalPath())
         .otherPath(soundClipsPackage.getOtherPath())
@@ -270,6 +265,7 @@ public final class PackageInflator {
     return DetailedSoundLevelMetricsPackage.builder()
         .uuid(soundLevelMetricsPackage.getUuid())
         .visible(soundLevelMetricsPackage.isVisible())
+        .processingLevel(soundLevelMetricsPackage.getProcessingLevel())
         .temperaturePath(soundLevelMetricsPackage.getTemperaturePath())
         .biologicalPath(soundLevelMetricsPackage.getBiologicalPath())
         .otherPath(soundLevelMetricsPackage.getOtherPath())
@@ -324,6 +320,7 @@ public final class PackageInflator {
     return DetailedSoundPropagationModelsPackage.builder()
         .uuid(soundPropagationModelsPackage.getUuid())
         .visible(soundPropagationModelsPackage.isVisible())
+        .processingLevel(soundPropagationModelsPackage.getProcessingLevel())
         .temperaturePath(soundPropagationModelsPackage.getTemperaturePath())
         .biologicalPath(soundPropagationModelsPackage.getBiologicalPath())
         .otherPath(soundPropagationModelsPackage.getOtherPath())

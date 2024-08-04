@@ -16,6 +16,7 @@ public class AudioPackageTranslator extends AudioDataPackageTranslator {
     return AudioPackageTranslator
         .builder()
         .uuid(packageTranslator.getUuid())
+        .processingLevel(packageTranslator.getProcessingLevel())
         .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())

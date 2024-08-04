@@ -15,6 +15,7 @@ public class CPODPackageTranslator extends AudioDataPackageTranslator {
   public static CPODPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return CPODPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())
+        .processingLevel(packageTranslator.getProcessingLevel())
         .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())

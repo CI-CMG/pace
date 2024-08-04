@@ -13,6 +13,7 @@ import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
+import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
@@ -82,6 +83,7 @@ class PassivePackerFactoryTest {
 
   private AudioPackage createAudioPackage() {
     return AudioPackage.builder()
+        .processingLevel(ProcessingLevel.Raw)
         .dataCollectionName("test_audio")
         .publishDate(LocalDate.of(2023, 3, 24))
         .projectName(List.of("project 1"))

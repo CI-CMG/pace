@@ -21,8 +21,6 @@ import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Pack;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Update;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.instrument.InstrumentRepositoryFactory;
-import edu.colorado.cires.pace.cli.command.platform.PlatformRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
@@ -36,11 +34,9 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
-import edu.colorado.cires.pace.repository.PlatformRepository;
 import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
@@ -285,8 +281,6 @@ public class PackageCommand {
         PersonRepository personRepository = PersonRepositoryFactory.createJsonRepository(workDir, objectMapper);
         OrganizationRepository organizationRepository = OrganizationRepositoryFactory.createJsonRepository(workDir, objectMapper);
         ProjectRepository projectRepository = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper);
-        PlatformRepository platformRepository = PlatformRepositoryFactory.createJsonRepository(workDir, objectMapper);
-        InstrumentRepository instrumentRepository = InstrumentRepositoryFactory.createJsonRepository(workDir, objectMapper);
         SensorRepository sensorRepository = SensorRepositoryFactory.createJsonRepository(workDir, objectMapper);
         DetectionTypeRepository detectionTypeRepository = DetectionTypeRepositoryFactory.createJsonRepository(workDir, objectMapper);
         
@@ -295,7 +289,7 @@ public class PackageCommand {
         List<Project> projects = projectRepository.findAll().toList();
 
         PackageInflator packageInflator = new PackageInflator(
-            personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+            personRepository, organizationRepository,
             sensorRepository, detectionTypeRepository
         );
         

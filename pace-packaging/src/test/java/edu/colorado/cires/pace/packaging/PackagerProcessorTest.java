@@ -17,6 +17,7 @@ import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
@@ -91,7 +92,7 @@ class PackagerProcessorTest {
   private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
   
   PackageInflator packageInflator = new PackageInflator(
-      personRepository, projectRepository, organizationRepository, platformRepository, instrumentRepository,
+      personRepository, organizationRepository,
       sensorRepository, detectionTypeRepository
   );
 
@@ -281,6 +282,7 @@ class PackagerProcessorTest {
     DetailedAudioPackage detailedPackage = DetailedAudioPackage.builder()
         .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
+        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)
         .navigationPath(navigationPath)
@@ -489,6 +491,7 @@ class PackagerProcessorTest {
     return AudioPackage.builder()
         .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
+        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)
         .navigationPath(navigationPath)
