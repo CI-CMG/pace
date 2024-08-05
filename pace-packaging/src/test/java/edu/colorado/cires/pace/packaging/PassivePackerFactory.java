@@ -47,12 +47,14 @@ import edu.colorado.cires.pace.data.object.dataset.passivePacker.PassivePackerSt
 import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
 import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
 import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.data.object.sensor.other.OtherSensor;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
@@ -73,11 +75,14 @@ public class PassivePackerFactory {
   private final PersonRepository personRepository;
   private final OrganizationRepository organizationRepository;
   private final SensorRepository sensorRepository;
+  private final DetectionTypeRepository detectionTypeRepository;
 
-  public PassivePackerFactory(PersonRepository personRepository, OrganizationRepository organizationRepository, SensorRepository sensorRepository) {
+  public PassivePackerFactory(PersonRepository personRepository, OrganizationRepository organizationRepository, SensorRepository sensorRepository,
+      DetectionTypeRepository detectionTypeRepository) {
     this.personRepository = personRepository;
     this.organizationRepository = organizationRepository;
     this.sensorRepository = sensorRepository;
+    this.detectionTypeRepository = detectionTypeRepository;
   }
 
   public PassivePackerPackage createPackage(Package aPackage) throws NotFoundException, DatastoreException {
@@ -114,6 +119,10 @@ public class PassivePackerFactory {
     } else if (aPackage instanceof SoundLevelMetricsPackage soundLevelMetricsPackage) {
       passivePackerPackage = passivePackerPackage.toBuilder()
           .qualityDetails(getQualityDetails(soundLevelMetricsPackage))
+          .build();
+    } else if (aPackage instanceof DetectionsPackage detectionsPackage) {
+      passivePackerPackage = passivePackerPackage.toBuilder()
+          .qualityDetails(getQualityDetails(detectionsPackage))
           .build();
     }
 
@@ -234,7 +243,7 @@ public class PassivePackerFactory {
     return null;
   }
 
-  private PassivePackerDatasetDetails getDatasetDetails(Package aPackage) {
+  private PassivePackerDatasetDetails getDatasetDetails(Package aPackage) throws NotFoundException, DatastoreException {
     PassivePackerDatasetDetails datasetDetails = PassivePackerDatasetDetails.builder()
         .type(aPackage.getProcessingLevel().name())
         .subType(subtypeFromPackage(aPackage))
@@ -283,6 +292,35 @@ public class PassivePackerFactory {
           .modelStart(serializeDateTime(soundPropagationModelsPackage.getStartTime()))
           .modelEnd(serializeDateTime(soundPropagationModelsPackage.getEndTime()))
           .frequency(String.valueOf(soundPropagationModelsPackage.getModeledFrequency()))
+          .build();
+    } else if (aPackage instanceof DetectionsPackage detectionsPackage) {
+      String sourceName = detectionsPackage.getSoundSource();
+      String species = null;
+      String scientificName = null;
+      
+      if (sourceName != null) {
+        DetectionType detectionType = detectionTypeRepository.getByUniqueField(sourceName);
+        
+        species = detectionType.getSource();
+        scientificName = detectionType.getScienceName();
+      }
+      
+      datasetDetails = datasetDetails.toBuilder()
+          .dataFiles(String.valueOf(detectionsPackage.getSourcePath()))
+          .analysisStart(serializeDateTime(detectionsPackage.getStartTime()))
+          .analysisEnd(serializeDateTime(detectionsPackage.getEndTime()))
+          .analysisTimeZone(String.valueOf(detectionsPackage.getAnalysisTimeZone()))
+          .analysisEffort(String.valueOf(detectionsPackage.getAnalysisEffort()))
+          .minAnalysisFrequency(String.valueOf(detectionsPackage.getMinFrequency()))
+          .maxAnalysisFrequency(String.valueOf(detectionsPackage.getMaxFrequency()))
+          .analysisSampleRate(String.valueOf(detectionsPackage.getSampleRate()))
+          .species(species)
+          .scientificName(scientificName)
+          .softwareName(detectionsPackage.getSoftwareNames())
+          .softwareVersion(detectionsPackage.getSoftwareVersions())
+          .protocolReference(detectionsPackage.getSoftwareProtocolCitation())
+          .processingStatement(detectionsPackage.getSoftwareProcessingDescription())
+          .softwareStatement(detectionsPackage.getSoftwareDescription())
           .build();
     }
 
@@ -337,7 +375,7 @@ public class PassivePackerFactory {
     }
 
     PassivePackerCalibrationInfo calibrationInfo = PassivePackerCalibrationInfo.builder()
-        .calDate(String.valueOf(calDate))
+        .calDate(calDate == null ? null : String.valueOf(calDate))
         .calState(calState)
         .calDocsPath(aPackage.getCalibrationDocumentsPath().toString())
         .comment(aPackage.getCalibrationDescription())
@@ -350,7 +388,8 @@ public class PassivePackerFactory {
           .gain(String.valueOf(audioDataPackage.getGain()))
           .calDate2(calDate2 == null ? null : String.valueOf(calDate2))
           .build();
-    } else if (aPackage instanceof SoundClipsPackage || aPackage instanceof SoundLevelMetricsPackage || aPackage instanceof SoundPropagationModelsPackage) {
+    } else if (aPackage instanceof SoundClipsPackage || aPackage instanceof SoundLevelMetricsPackage 
+        || aPackage instanceof SoundPropagationModelsPackage || aPackage instanceof DetectionsPackage) {
       calibrationInfo = calibrationInfo.toBuilder()
           .calState(aPackage.getPreDeploymentCalibrationDate() != null ? "Calibration applied before processing" : "Not calibrated / not applicable")
           .calDate(null)

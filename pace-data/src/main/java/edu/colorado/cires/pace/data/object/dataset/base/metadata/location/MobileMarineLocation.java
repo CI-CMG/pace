@@ -15,6 +15,8 @@ public class MobileMarineLocation implements MarineLocation {
   private final String vessel;
   @NotBlank
   private final String locationDerivationDescription;
+  
+  // TODO: Add file list (List<Path>)
 
   @Override
   public MobileMarineLocation setSeaArea(String seaArea) {

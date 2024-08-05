@@ -4,6 +4,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.FrequencyRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class DataQualityEntry implements TimeRange, FrequencyRange {
   private final Float maxFrequency;
   private final QualityLevel qualityLevel;
   private final String comments;
-  private final List<Integer> channelNumbers;
+  @Builder.Default
+  private final List<Integer> channelNumbers = Collections.emptyList();
   
 }

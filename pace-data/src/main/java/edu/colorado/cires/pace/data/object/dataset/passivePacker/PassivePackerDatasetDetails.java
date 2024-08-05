@@ -39,6 +39,8 @@ public class PassivePackerDatasetDetails {
   private final String modelEnd;
   private final String frequency;
   private final String dataComment;
+  private final String species;
+  private final String scientificName;
   
 
 }

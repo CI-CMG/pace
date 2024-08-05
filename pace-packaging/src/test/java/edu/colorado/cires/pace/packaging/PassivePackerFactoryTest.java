@@ -27,15 +27,18 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiP
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.passivePacker.PassivePackerPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
+import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
 import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.data.object.sensor.other.OtherSensor;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.DetectionTypeRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
@@ -58,13 +61,15 @@ class PassivePackerFactoryTest {
 
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
       .configure(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS, false) // for testing only
+      .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
       .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
   
   private final PersonRepository personRepository = mock(PersonRepository.class);
   private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
   private final SensorRepository sensorRepository = mock(SensorRepository.class);
+  private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
   
-  private final PassivePackerFactory factory = new PassivePackerFactory(personRepository, organizationRepository, sensorRepository);
+  private final PassivePackerFactory factory = new PassivePackerFactory(personRepository, organizationRepository, sensorRepository, detectionTypeRepository);
   
   @BeforeEach
   void beforeEach() throws NotFoundException, DatastoreException {
@@ -109,6 +114,11 @@ class PassivePackerFactoryTest {
             .description("other sensor description")
             .sensorType("sensor type")
             .properties("sensor properties")
+        .build());
+    
+    when(detectionTypeRepository.getByUniqueField("Blue whale")).thenReturn(DetectionType.builder()
+            .source("Blue whale")
+            .scienceName("Balaenoptera musculus")
         .build());
   }
   
@@ -255,6 +265,62 @@ class PassivePackerFactoryTest {
         )
     );
   }
+  
+  @Test
+  void testDetections() throws NotFoundException, DatastoreException, IOException {
+    assertEquals(
+        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+            objectMapper.readValue(new File("src/test/resources/detections.json"), PassivePackerPackage.class)
+        ),
+        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+            factory.createPackage(createDetectionsPackage(createStationaryMarineLocation(), null))
+        )
+    );
+  }
+
+  private Package createDetectionsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
+    return createBasePackage(locationDetail).toInheritingType(DetectionsPackage.builder()).toBuilder()
+        .processingLevel(ProcessingLevel.Product)
+        .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
+        .postDeploymentCalibrationDate(null)
+        .soundSource("Blue whale")
+        .qualityAnalyst("Chuck Anderson")
+        .qualityEntries(List.of(
+            DataQualityEntry.builder()
+                .qualityLevel(QualityLevel.good)
+                .minFrequency(0f)
+                .maxFrequency(500f)
+                .startTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
+                .endTime(LocalDateTime.of(2011, 1, 1, 15, 0,0))
+                .comments("quality comments")
+                .channelNumbers(List.of(1, 2))
+                .build(),
+            DataQualityEntry.builder()
+                .qualityLevel(QualityLevel.unusable)
+                .minFrequency(1f)
+                .maxFrequency(20f)
+                .startTime(LocalDateTime.of(2011, 1, 6, 13, 0, 0))
+                .endTime(LocalDateTime.of(2012, 1, 8, 13, 0, 0))
+                .comments("quality comments 2")
+                .channelNumbers(List.of(2))
+                .build()
+        )).qualityAnalysisMethod("quality method")
+        .qualityAnalysisObjectives("quality objectives")
+        .qualityAssessmentDescription("quality assessment description")
+        .startTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
+        .endTime(LocalDateTime.of(2011, 1, 2, 13, 0, 0))
+        .analysisTimeZone(6)
+        .analysisEffort(20)
+        .minFrequency(200f)
+        .maxFrequency(400f)
+        .sampleRate(20000f)
+        .softwareNames("software name")
+        .softwareVersions("software version")
+        .softwareProtocolCitation("protocol citation")
+        .softwareDescription("software statement")
+        .softwareProcessingDescription("software processing description")
+        .build();
+  }
 
   private Package createSoundPropagationModelsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
     return createBasePackage(locationDetail).toInheritingType(SoundPropagationModelsPackage.builder()).toBuilder()
@@ -285,7 +351,7 @@ class PassivePackerFactoryTest {
         .softwareProcessingDescription("software processing description")
         .processingLevel(ProcessingLevel.Product)
         .audioStartTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
-        .audioEndTime(LocalDateTime.of(2010, 1, 1, 13, 10, 0))
+        .audioEndTime(LocalDateTime.of(2010, 1, 1, 13, 30, 0))
         .build();
   }
 
