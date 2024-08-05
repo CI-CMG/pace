@@ -239,11 +239,27 @@ final class ConversionUtils {
         propertyFromMap(properties, propertyName)
     );
   }
+
+  public static String pathListFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+    return stringFromProperty(
+        propertyFromMap(properties, propertyName)
+    );
+  }
   
   public static String stringFromProperty(ValueWithColumnNumber value) {
     return value.value()
         .map(string -> StringUtils.isBlank(string) ? null : string.trim())
         .orElse(null);
+  }
+
+  public static List<Path> pathListFromString(String string) {
+    if (string == null)
+      return null;
+    List<String> strings = Arrays.asList(string.split(";"));
+    List<Path> paths = strings.stream()
+            .map(o -> Paths.get(o))
+            .toList();
+    return paths;
   }
 
   public static Double latitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {

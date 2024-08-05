@@ -12,6 +12,7 @@ import static edu.colorado.cires.pace.translator.converter.ConversionUtils.strin
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromProperty;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringListFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
+import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathListFromString;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
@@ -335,6 +336,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .locationDerivationDescription(stringFromMap(properties, mobileMarineLocationTranslator.getLocationDerivationDescription()))
         .vessel(stringFromMap(properties, mobileMarineLocationTranslator.getVessel()))
         .seaArea(stringFromMap(properties, mobileMarineLocationTranslator.getSeaArea()))
+        .fileList(pathListFromString(stringFromMap(properties, mobileMarineLocationTranslator.getSingleStringFiles())))
         // TODO handle file lists here (split by ;)
         .build();
   }
