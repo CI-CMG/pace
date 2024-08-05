@@ -1,4 +1,4 @@
-package edu.colorado.cires.pace.data.object.dataset.passivePacker;
+package edu.colorado.cires.passivePacker.data;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

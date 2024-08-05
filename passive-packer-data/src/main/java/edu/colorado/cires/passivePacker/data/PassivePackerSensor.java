@@ -1,11 +1,10 @@
-package edu.colorado.cires.pace.data.object.dataset.passivePacker;
+package edu.colorado.cires.passivePacker.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;

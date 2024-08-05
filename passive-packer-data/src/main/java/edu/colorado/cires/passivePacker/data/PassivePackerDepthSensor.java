@@ -1,5 +1,4 @@
-package edu.colorado.cires.pace.data.object.dataset.passivePacker;
-
+package edu.colorado.cires.passivePacker.data;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,12 +6,8 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class PassivePackerTimeRange {
-  
-  private final String start;
-  private final String end;
-
+public class PassivePackerDepthSensor extends PassivePackerSensor {
 }

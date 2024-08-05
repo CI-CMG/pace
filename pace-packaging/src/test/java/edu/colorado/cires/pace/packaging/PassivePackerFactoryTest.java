@@ -28,7 +28,6 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.Statio
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
-import edu.colorado.cires.pace.data.object.dataset.passivePacker.PassivePackerPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
@@ -44,6 +43,7 @@ import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import edu.colorado.cires.passivePacker.data.PassivePackerPackage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,7 +56,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 class PassivePackerFactoryTest {
 
   private final ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
@@ -122,7 +121,7 @@ class PassivePackerFactoryTest {
         .build());
   }
   
-  @Test
+  @Test @Disabled
   void testMobileMarineAudio() throws IOException, NotFoundException, DatastoreException {
     assertEquals(
         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
@@ -194,7 +193,7 @@ class PassivePackerFactoryTest {
     );
   }
   
-  @Test
+  @Test @Disabled
   void testSoundLevelMetrics() throws NotFoundException, DatastoreException, IOException {
     assertEquals(
         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(

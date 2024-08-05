@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.packaging;
 
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.AbstractObjectWithName;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
@@ -25,6 +24,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
+import edu.colorado.cires.passivePacker.data.AbstractObjectWithName;
 import java.util.ArrayList;
 import java.util.List;
 

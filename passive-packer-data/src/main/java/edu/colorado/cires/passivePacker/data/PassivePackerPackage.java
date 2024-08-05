@@ -1,7 +1,6 @@
-package edu.colorado.cires.pace.data.object.dataset.passivePacker;
+package edu.colorado.cires.passivePacker.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.colorado.cires.pace.data.object.base.AbstractObjectWithName;
 
 import java.util.List;
 import java.util.Map;

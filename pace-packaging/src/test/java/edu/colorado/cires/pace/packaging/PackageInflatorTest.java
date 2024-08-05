@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
-import edu.colorado.cires.pace.data.object.base.AbstractObjectWithName;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
@@ -38,14 +37,12 @@ import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
-import edu.colorado.cires.pace.repository.PlatformRepository;
-import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import edu.colorado.cires.passivePacker.data.AbstractObjectWithName;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,9 +54,6 @@ class PackageInflatorTest {
   
   private final PersonRepository personRepository = mock(PersonRepository.class);
   private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
-  private final ProjectRepository projectRepository = mock(ProjectRepository.class);
-  private final PlatformRepository platformRepository = mock(PlatformRepository.class);
-  private final InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
   private final SensorRepository sensorRepository = mock(SensorRepository.class);
   private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
   
