@@ -167,7 +167,11 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         softwareForm = new ScrollPane(
             new SoftwareForm<>(getHeaderOptions(), soundClipsPackageTranslator)
         );
+        packageDetailForm = new ScrollPane(
+            new SoundClipsForm(headerOptions, soundClipsPackageTranslator)
+        );
         tabbedPane.add("Software", softwareForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
       }
     }
   }
@@ -231,6 +235,11 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     
     if (initialTranslator instanceof SoftwareDependentPackageTranslator softwareDependentPackageTranslator) {
       addSoftwareDependentPackageFields(softwareDependentPackageTranslator, headerOptions);
+    }
+    
+    if (initialTranslator instanceof SoundClipsPackageTranslator soundClipsPackageTranslator) {
+      addTimeTranslatorFields(soundClipsPackageTranslator.getAudioStartTime(), headerOptions);
+      addTimeTranslatorFields(soundClipsPackageTranslator.getAudioEndTime(), headerOptions);
     }
     
     if (initialTranslator instanceof SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator) {
@@ -488,6 +497,16 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             );
             tabbedPane.add("Package Detail", packageDetailForm);
           }
+        } else if (choice.equals("Sound Clips")) {
+          if (packageDetailForm == null || !(packageDetailForm.getComponent() instanceof SoundLevelMetricsForm)) {
+            if (packageDetailForm != null) {
+              tabbedPane.remove(packageDetailForm);
+            }
+            packageDetailForm = new ScrollPane(
+                new SoundClipsForm(headerOptions, null)
+            );
+            tabbedPane.add("Package Detail", packageDetailForm);
+          }
         } else {
           if (packageDetailForm != null) {
             tabbedPane.remove(packageDetailForm);
@@ -662,6 +681,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   }
   
   private SoundClipsPackageTranslator toSoundClipsTranslator(PackageTranslator packageTranslator) {
+    SoundClipsForm soundClipsForm = (SoundClipsForm) packageDetailForm.getComponent(); 
     SoftwareForm<?> softwareDetailForm = (SoftwareForm<?>) softwareForm.getComponent();
     return SoundClipsPackageTranslator.toBuilder(packageTranslator)
         .softwareNames(softwareDetailForm.getSoftwareNamesValue())
@@ -669,6 +689,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProtocolCitation(softwareDetailForm.getSoftwareProtocolCitationValue())
         .softwareDescription(softwareDetailForm.getSoftwareDescriptionValue())
         .softwareProcessingDescription(softwareDetailForm.getSoftwareProcessingDescriptionValue())
+        .audioStartTime(soundClipsForm.getAudioStartTimeTranslator())
+        .audioEndTime(soundClipsForm.getAudioEndTimeTranslator())
         .build();
   }
   
@@ -736,6 +758,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         ((DetectionsForm) component).updateHeaderOptions(headerOptions);
       } else if (component instanceof SoundLevelMetricsForm) {
         ((SoundLevelMetricsForm) component).updateHeaderOptions(headerOptions);
+      } else if (component instanceof SoundClipsForm) {
+        ((SoundClipsForm) component).updateHeaderOptions(headerOptions);
       }
     }
     if (softwareForm != null) {

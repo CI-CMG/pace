@@ -1632,6 +1632,8 @@ class PackageConverterTest {
         .instrument("instrument")
         .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
         .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
+        .audioStartTime(LocalDateTime.parse("2020-01-05T01:01:01"))
+        .audioEndTime(LocalDateTime.parse("2020-01-06T01:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
@@ -1696,6 +1698,14 @@ class PackageConverterTest {
             .time("endTime")
             .timeZone("timeZone")
             .build())
+        .audioStartTime(DefaultTimeTranslator.builder()
+            .time("audioStartTime")
+            .timeZone("timeZone")
+            .build())
+        .audioEndTime(DefaultTimeTranslator.builder()
+            .time("audioEndTime")
+            .timeZone("timeZone")
+            .build())
         .preDeploymentCalibrationDate(DateTranslator.builder()
             .date("preDeploymentCalibrationDate")
             .timeZone("timeZone")
@@ -1756,8 +1766,12 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getFunders())), 16));
     map.put(soundClipsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPlatform()), 17));
     map.put(soundClipsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getInstrument()), 18));
+    
     map.put((soundClipsPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getStartTime().toString()), 19));
     map.put((soundClipsPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getEndTime().toString()), 20));
+    map.put((soundClipsPackageTranslator.getAudioStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getAudioStartTime().toString()), 19));
+    map.put((soundClipsPackageTranslator.getAudioEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getAudioEndTime().toString()), 20));
+    
     map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPreDeploymentCalibrationDate().toString()), 21));
     map.put(soundClipsPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
     map.put(soundClipsPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPostDeploymentCalibrationDate().toString()), 22));

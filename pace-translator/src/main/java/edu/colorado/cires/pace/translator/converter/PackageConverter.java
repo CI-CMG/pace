@@ -369,6 +369,8 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .instrument(stringFromMap(properties, soundClipsPackageTranslator.getInstrument()))
         .startTime(localDateTimeFromMap(properties, "Start Time", soundClipsPackageTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, "End Time", soundClipsPackageTranslator.getEndTime(), row, runtimeException))
+        .audioStartTime(localDateTimeFromMap(properties, "Audio Start Time", soundClipsPackageTranslator.getAudioStartTime(), row, runtimeException))
+        .audioEndTime(localDateTimeFromMap(properties, "Audio End Time", soundClipsPackageTranslator.getAudioEndTime(), row, runtimeException))
         .preDeploymentCalibrationDate(localDateFromMap(properties, "Pre-Deployment Calibration Date", soundClipsPackageTranslator.getPreDeploymentCalibrationDate(), row, runtimeException))
         .postDeploymentCalibrationDate(localDateFromMap(properties, "Post-Deployment Calibration Date", soundClipsPackageTranslator.getPostDeploymentCalibrationDate(), row, runtimeException))
         .calibrationDescription(stringFromMap(properties, soundClipsPackageTranslator.getCalibrationDescription()))

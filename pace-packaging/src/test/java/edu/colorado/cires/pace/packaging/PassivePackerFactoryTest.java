@@ -281,6 +281,8 @@ class PassivePackerFactoryTest {
         .softwareDescription("software description")
         .softwareProcessingDescription("software processing description")
         .processingLevel(ProcessingLevel.Product)
+        .audioStartTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
+        .audioEndTime(LocalDateTime.of(2010, 1, 1, 13, 10, 0))
         .build();
   }
 

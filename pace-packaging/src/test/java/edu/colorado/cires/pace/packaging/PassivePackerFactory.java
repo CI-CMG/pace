@@ -142,6 +142,11 @@ public class PassivePackerFactory {
           .audioStart(serializeDateTime(soundPropagationModelsPackage.getAudioStartTime()))
           .audioEnd(serializeDateTime(soundPropagationModelsPackage.getAudioEndTime()))
           .build();
+    } else if (aPackage instanceof SoundClipsPackage soundClipsPackage) {
+      deployment = deployment.toBuilder()
+          .audioStart(serializeDateTime(soundClipsPackage.getAudioStartTime()))
+          .audioEnd(serializeDateTime(soundClipsPackage.getAudioEndTime()))
+          .build();
     }
 
     return deployment;

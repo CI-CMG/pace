@@ -1,8 +1,8 @@
 package edu.colorado.cires.pace.data.object.dataset.soundClips;
 
-import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
@@ -20,6 +20,8 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   private final String softwareProtocolCitation;
   private final String softwareDescription;
   private final String softwareProcessingDescription;
+  private final LocalDateTime audioStartTime;
+  private final LocalDateTime audioEndTime;
 
   @Override
   public SoundClipsPackage setLocationDetail(LocationDetail locationDetail) {

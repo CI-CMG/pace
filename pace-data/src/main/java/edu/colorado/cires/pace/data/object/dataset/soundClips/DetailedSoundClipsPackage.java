@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.soundClips;
 
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +18,8 @@ public class DetailedSoundClipsPackage extends DetailedPackage implements BaseSo
   private final String softwareProtocolCitation;
   private final String softwareDescription;
   private final String softwareProcessingDescription;
+  private final LocalDateTime audioStartTime;
+  private final LocalDateTime audioEndTime;
 
   @Override
   public DetailedSoundClipsPackage setUuid(UUID uuid) {
