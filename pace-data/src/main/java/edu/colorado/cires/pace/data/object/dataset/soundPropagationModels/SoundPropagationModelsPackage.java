@@ -69,7 +69,7 @@ public class SoundPropagationModelsPackage extends Package implements BaseSoundP
   }
 
   @Override
-  public AbstractObject setUuid(UUID uuid) {
+  public SoundPropagationModelsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

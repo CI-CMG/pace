@@ -73,7 +73,7 @@ public class AudioPackage extends AudioDataPackage {
   }
 
   @Override
-  public AbstractObject setUuid(UUID uuid) {
+  public AudioPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

@@ -18,6 +18,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -35,7 +37,10 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @ValidPackageIdentifiers
-public abstract class Package extends BasePackage<String> {
+public class Package extends BasePackage<String> {
+  private final UUID uuid;
+  @Default
+  private final boolean visible = true;
   @NotBlank
   private final String datasetPackager;
   @NotEmpty @NotNull
@@ -55,13 +60,74 @@ public abstract class Package extends BasePackage<String> {
   protected List<String> getProjectNames() {
     return this.getProjects() == null ? Collections.emptyList() : this.getProjects();
   }
+  
+  public Package setUuid(UUID uuid) {
+    return toBuilder().uuid(uuid).build();
+  }
+  
+  public Package setVisible(boolean visible) {
+    return toBuilder().visible(visible).build();
+  }
 
-  public abstract Package setLocationDetail(LocationDetail locationDetail);
-  public abstract Package setProjects(List<String> projects);
-  public abstract Package setPlatform(String platform);
-  public abstract Package setScientists(List<String> scientists);
-  public abstract Package setDatasetPackager(String datasetPackager);
-  public abstract Package setSponsors(List<String> sponsors);
-  public abstract Package setFunders(List<String> funders);
-  public abstract Package setInstrument(String instrument);
+  public Package setLocationDetail(LocationDetail locationDetail) {
+    return toBuilder().locationDetail(locationDetail).build();
+  }
+  public Package setProjects(List<String> projects) {
+    return toBuilder().projects(projects).build();
+  }
+  public Package setPlatform(String platform) {
+    return toBuilder().platform(platform).build();
+  }
+  public Package setScientists(List<String> scientists) {
+    return toBuilder().scientists(scientists).build();
+  }
+  public Package setDatasetPackager(String datasetPackager) {
+    return toBuilder().datasetPackager(datasetPackager).build();
+  }
+  public Package setSponsors(List<String> sponsors) {
+    return toBuilder().sponsors(sponsors).build();
+  }
+  public Package setFunders(List<String> funders) {
+    return toBuilder().funders(funders).build();
+  }
+  public Package setInstrument(String instrument) {
+    return toBuilder().instrument(instrument).build();
+  }
+  
+  public <P extends Package, B extends Package.PackageBuilder<P, ?>> P toInheritingType(B inheritingTypeBuilder) {
+    return inheritingTypeBuilder
+        .uuid(getUuid())
+        .visible(isVisible())
+        .processingLevel(getProcessingLevel())
+        .temperaturePath(getTemperaturePath())
+        .biologicalPath(getBiologicalPath())
+        .otherPath(getOtherPath())
+        .documentsPath(getDocumentsPath())
+        .calibrationDocumentsPath(getCalibrationDocumentsPath())
+        .navigationPath(getNavigationPath())
+        .sourcePath(getSourcePath())
+        .dataCollectionName(getDataCollectionName())
+        .siteOrCruiseName(getSiteOrCruiseName())
+        .deploymentId(getDeploymentId())
+        .projects(getProjects())
+        .publicReleaseDate(getPublicReleaseDate())
+        .locationDetail(getLocationDetail())
+        .deploymentTitle(getDeploymentTitle())
+        .deploymentPurpose(getDeploymentPurpose())
+        .deploymentDescription(getDeploymentDescription())
+        .alternateSiteName(getAlternateSiteName())
+        .alternateDeploymentName(getAlternateDeploymentName())
+        .startTime(getStartTime())
+        .endTime(getEndTime())
+        .preDeploymentCalibrationDate(getPreDeploymentCalibrationDate())
+        .postDeploymentCalibrationDate(getPostDeploymentCalibrationDate())
+        .calibrationDescription(getCalibrationDescription())
+        .datasetPackager(getDatasetPackager())
+        .scientists(getScientists())
+        .sponsors(getSponsors())
+        .funders(getFunders())
+        .platform(getPlatform())
+        .instrument(getInstrument())
+        .build();
+  }
 }

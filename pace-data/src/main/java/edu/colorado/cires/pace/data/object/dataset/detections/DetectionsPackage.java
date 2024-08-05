@@ -82,7 +82,7 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   }
 
   @Override
-  public AbstractObject setUuid(UUID uuid) {
+  public DetectionsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

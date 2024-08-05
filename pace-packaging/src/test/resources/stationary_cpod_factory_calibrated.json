@@ -1,0 +1,213 @@
+{
+    "DATA_COLLECTION_NAME": "project_site_deployment-id",
+    "PUBLISH_DATE": "2024-08-02",
+    "PROJECT_NAME": [
+        "project"
+    ],
+    "DEPLOYMENT_NAME": "deployment-id",
+    "DEPLOYMENT_ALIAS": "alternate deployment name",
+    "SITE": "site",
+    "SITE_ALIASES": [
+        "alternate site name"
+    ],
+    "TITLE": "deployment title",
+    "ABSTRACT": "deployment abstract",
+    "PURPOSE": "deployment purpose",
+    "CHANNELS": {
+        "1": {
+            "CHANNEL_START": "2011-01-01T13:00:00",
+            "CHANNEL_END": "2012-01-01T13:00:00",
+            "SENSOR": "1",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2011-01-01T13:00:00",
+                        "END": "2012-01-02T13:00:00",
+                        "SAMPLE_RATE": "1.0",
+                        "SAMPLE_BITS": "10"
+                    }
+                ],
+                "GAIN": [
+                    {
+                        "START": "2011-01-03T13:00:00",
+                        "END": "2012-01-04T13:00:00",
+                        "GAIN_dB": "2.0"
+                    }
+                ],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2011-01-05T13:00:00",
+                        "END": "2012-01-06T13:00:00",
+                        "DURATION": "3.0",
+                        "INTERVAL": "30.0"
+                    }
+                ]
+            }
+        },
+        "2": {
+            "CHANNEL_START": "2011-01-01T13:00:00",
+            "CHANNEL_END": "2012-01-01T13:00:00",
+            "SENSOR": "3",
+            "SAMPLING_DETAILS": {
+                "SAMPLING": [
+                    {
+                        "START": "2011-01-01T13:00:00",
+                        "END": "2012-01-01T14:00:00",
+                        "SAMPLE_RATE": "4.0",
+                        "SAMPLE_BITS": "40"
+                    }
+                ],
+                "GAIN": [
+                    {
+                        "START": "2011-01-01T14:00:00",
+                        "END": "2012-01-01T15:00:00",
+                        "GAIN_dB": "5.0"
+                    }
+                ],
+                "DUTY_CYCLE": [
+                    {
+                        "START": "2011-01-01T16:00:00",
+                        "END": "2012-01-01T17:00:00",
+                        "DURATION": "6.0",
+                        "INTERVAL": "60.0"
+                    }
+                ]
+            }
+        }
+    },
+    "QUALITY_DETAILS": {
+        "analyst": "Chuck Anderson",
+        "analyst_uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "quality_details": [
+            {
+                "quality": "Good",
+                "low_freq": "0.0",
+                "high_freq": "500.0",
+                "start": "2011-01-01T13:00:00",
+                "end": "2011-01-01T15:00:00",
+                "comments": "quality comments",
+                "channels": "1,2"
+            },
+            {
+                "quality": "Unusable",
+                "low_freq": "1.0",
+                "high_freq": "20.0",
+                "start": "2011-01-06T13:00:00",
+                "end": "2012-01-08T13:00:00",
+                "comments": "quality comments 2",
+                "channels": "2"
+            }
+        ],
+        "method": "quality method",
+        "objectives": "quality objectives",
+        "abstract": "quality assessment description"
+    },
+    "PLATFORM_NAME": "Drifter",
+    "INSTRUMENT_TYPE": "C-POD",
+    "INSTRUMENT_ID": "Instrument ID",
+    "DEPLOYMENT": {
+        "DEPLOYMENT_TIME": "2010-01-01T13:00:00",
+        "RECOVERY_TIME": "2011-01-01T13:00:00",
+        "AUDIO_START": "2011-01-01T13:00:00",
+        "AUDIO_END": "2012-01-01T13:00:00",
+        "DEPLOY_TYPE": "Stationary Marine",
+        "SEA_AREA": "Baltic Sea",
+        "DEPLOY_LAT": "-80.0",
+        "DEPLOY_LON": "80.0",
+        "DEPLOY_SHIP": "",
+        "DEPLOY_INSTRUMENT_DEPTH": "-100.0",
+        "DEPLOY_BOTTOM_DEPTH": "-200.0",
+        "RECOVER_LAT": "-85.0",
+        "RECOVER_LON": "85.0",
+        "RECOVER_SHIP": "",
+        "RECOVER_INSTRUMENT_DEPTH": "-90.0",
+        "RECOVER_BOTTOM_DEPTH": "-190.0"
+    },
+    "DATASET_DETAILS": {
+        "TYPE": "Raw",
+        "SUB_TYPE": "C-POD",
+        "SOURCE_PATH": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
+        "DATA_COMMENT": "deployment comments"
+    },
+    "CALIBRATION_INFO": {
+        "CAL_STATE": "Factory Calibrated",
+        "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
+        "SENSITIVITY": "9.0",
+        "FREQUENCY": "10",
+        "GAIN": "11.0",
+        "COMMENT": "calibration description"
+    },
+    "SCIENTISTS": [
+        {
+            "name": "Chuck Anderson",
+            "uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66"
+        }
+    ],
+    "SPONSORS": [
+        {
+            "name": "NOAA AFSC",
+            "uuid": "01082b23-154c-4c2d-bef7-5e35315d41e0"
+        }
+    ],
+    "FUNDERS": [
+        {
+            "name": "BOEM",
+            "uuid": "fee4d17a-a7dd-4f13-ade5-817b4f1fc86d"
+        }
+    ],
+    "METADATA_AUTHOR": {
+        "NAME": "Chuck Anderson",
+        "UUID": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "ORGANIZATION": "NESDIS/NCEI",
+        "POSITION": "Water Column Data Manager",
+        "STREET": "NOAA/NCEI, 325 Broadway",
+        "CITY": "Boulder",
+        "STATE": "CO",
+        "ZIP": "80305",
+        "COUNTRY": "USA",
+        "EMAIL": "",
+        "PHONE": ""
+    },
+    "SENSORS": {
+        "AUDIO": [
+            {
+                "type": "Audio Sensor",
+                "number": "1",
+                "id": "sensor id 1",
+                "name": "sensor name 1",
+                "pos_x": "1.0",
+                "pos_y": "2.0",
+                "pos_z": "3.0",
+                "description": "audio sensor description",
+                "HYDRO_ID": "hydrophone id",
+                "PRE_ID": "preamp id"
+            }
+        ],
+        "DEPTH": [
+            {
+                "type": "Depth Sensor",
+                "number": "2",
+                "id": "sensor id 2",
+                "name": "sensor name 2",
+                "pos_x": "4.0",
+                "pos_y": "5.0",
+                "pos_z": "6.0",
+                "description": "depth sensor description"
+            }
+        ],
+        "OTHER": [
+            {
+                "type": "Other Sensor",
+                "number": "3",
+                "id": "sensor id 3",
+                "name": "sensor name 3",
+                "pos_x": "7.0",
+                "pos_y": "8.0",
+                "pos_z": "9.0",
+                "description": "other sensor description",
+                "SENSOR_TYPE": "sensor type",
+                "PROPERTIES": "sensor properties"
+            }
+        ]
+    }
+}

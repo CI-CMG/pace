@@ -1,7 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.passivePacker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -13,9 +13,9 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class PassivePackerQualityEntry extends PassivePackerTimeRange {
   @JsonProperty("start")
-  private final LocalDateTime start;
+  private final String start;
   @JsonProperty("end")
-  private final LocalDateTime end;
+  private final String end;
   @JsonProperty("quality")
   private final String quality;
   @JsonProperty("low_freq")

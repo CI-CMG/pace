@@ -15,10 +15,19 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @JsonTypeInfo(use = Id.DEDUCTION)
 @JsonSubTypes({
-    @Type(value = PassivePackerStationaryMarineLocation.class, name = "Stationary Marine")
+    @Type(PassivePackerStationaryMarineLocation.class),
+    @Type(PassivePackerMobileMarineLocation.class),
+    @Type(PassivePackerMultipointStationaryMarineLocation.class),
+    @Type(PassivePackerStationaryTerrestrialLocation.class)
 })
 public class PassivePackerLocation {
   
   private final String deployType;
+  
+  public <L extends PassivePackerLocation, B extends PassivePackerLocation.PassivePackerLocationBuilder<L, ?>> L toInheritingType(B inheritingTypeBuilder) {
+    return inheritingTypeBuilder
+        .deployType(getDeployType())
+        .build();
+  }
 
 }

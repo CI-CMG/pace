@@ -1,6 +1,5 @@
 package edu.colorado.cires.pace.data.object.dataset.passivePacker;
 
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,11 +9,11 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode
 @Builder
 @Jacksonized
-public class PassivePackerChannel {
+public class PassivePackerMarineInstrumentLocation {
   
-  private final String channelStart;
-  private final String channelEnd;
-  private final String sensor;
-  private final PassivePackerSamplingDetails samplingDetails;
+  private final String latitude;
+  private final String longitude;
+  private final String bottomDepth;
+  private final String instrumentDepth;
 
 }

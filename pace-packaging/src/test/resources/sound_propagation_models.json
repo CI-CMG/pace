@@ -1,0 +1,95 @@
+{
+    "DATA_COLLECTION_NAME": "project_site_deployment-id",
+    "PUBLISH_DATE": "2024-08-02",
+    "PROJECT_NAME": [
+        "project"
+    ],
+    "DEPLOYMENT_NAME": "deployment-id",
+    "DEPLOYMENT_ALIAS": "alternate deployment name",
+    "SITE": "site",
+    "SITE_ALIASES": [
+        "alternate site name"
+    ],
+    "TITLE": "deployment title",
+    "ABSTRACT": "deployment abstract",
+    "PURPOSE": "deployment purpose",
+    "PLATFORM_NAME": "Drifter",
+    "INSTRUMENT_TYPE": "AUH",
+    "INSTRUMENT_ID": "",
+    "DEPLOYMENT": {
+        "DEPLOYMENT_TIME": "",
+        "RECOVERY_TIME": "",
+        "AUDIO_START": "2010-01-01T13:00:00",
+        "AUDIO_END": "2010-01-02T13:00:00",
+        "DEPLOY_TYPE": "Stationary Marine",
+        "SEA_AREA": "Baltic Sea",
+        "DEPLOY_LAT": "-80.0",
+        "DEPLOY_LON": "80.0",
+        "DEPLOY_SHIP": "",
+        "DEPLOY_INSTRUMENT_DEPTH": "-100.0",
+        "DEPLOY_BOTTOM_DEPTH": "-200.0",
+        "RECOVER_LAT": "-85.0",
+        "RECOVER_LON": "85.0",
+        "RECOVER_SHIP": "",
+        "RECOVER_INSTRUMENT_DEPTH": "-90.0",
+        "RECOVER_BOTTOM_DEPTH": "-190.0"
+    },
+    "DATASET_DETAILS": {
+        "TYPE": "Product",
+        "SUB_TYPE": "Sound Propagation Models",
+        "SOURCE_PATH": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
+        "DATA_FILES": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
+        "ANALYSIS_TIME_ZONE": "",
+        "ANALYSIS_EFFORT": "",
+        "MIN_ANALYSIS_FREQUENCY": "",
+        "MAX_ANALYSIS_FREQUENCY": "",
+        "ANALYSIS_SAMPLE_RATE": "",
+        "SOFTWARE_NAME": "software names",
+        "SOFTWARE_VERSION": "software versions",
+        "PROTOCOL_REFERENCE": "protocol citation",
+        "PROCESSING_STATEMENT": "software processing description",
+        "SOFTWARE_STATEMENT": "software description",
+        "MODEL_START": "2010-01-02T13:00:00",
+        "MODEL_END": "2011-01-06T13:00:00",
+        "FREQUENCY": "10000.0"
+    },
+    "CALIBRATION_INFO": {
+        "CAL_STATE": "Calibration applied before processing",
+        "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
+        "SENSITIVITY": "",
+        "FREQUENCY": "",
+        "GAIN": "",
+        "COMMENT": "calibration description"
+    },
+    "SCIENTISTS": [
+        {
+            "name": "Chuck Anderson",
+            "uuid": "ad7776a0-6c05-11e2-bcfd-0800200c9a66"
+        }
+    ],
+    "SPONSORS": [
+        {
+            "name": "NOAA AFSC",
+            "uuid": "01082b23-154c-4c2d-bef7-5e35315d41e0"
+        }
+    ],
+    "FUNDERS": [
+        {
+            "name": "BOEM",
+            "uuid": "fee4d17a-a7dd-4f13-ade5-817b4f1fc86d"
+        }
+    ],
+    "METADATA_AUTHOR": {
+        "NAME": "Chuck Anderson",
+        "UUID": "ad7776a0-6c05-11e2-bcfd-0800200c9a66",
+        "ORGANIZATION": "NESDIS/NCEI",
+        "POSITION": "Water Column Data Manager",
+        "STREET": "NOAA/NCEI, 325 Broadway",
+        "CITY": "Boulder",
+        "STATE": "CO",
+        "ZIP": "80305",
+        "COUNTRY": "USA",
+        "EMAIL": "",
+        "PHONE": ""
+    }
+}

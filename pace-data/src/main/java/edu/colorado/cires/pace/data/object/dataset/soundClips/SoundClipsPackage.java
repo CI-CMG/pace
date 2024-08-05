@@ -62,7 +62,7 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   }
 
   @Override
-  public AbstractObject setUuid(UUID uuid) {
+  public SoundClipsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

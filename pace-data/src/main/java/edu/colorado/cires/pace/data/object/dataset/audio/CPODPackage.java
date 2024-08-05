@@ -73,7 +73,7 @@ public class CPODPackage extends AudioDataPackage {
   }
 
   @Override
-  public AbstractObject setUuid(UUID uuid) {
+  public CPODPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 

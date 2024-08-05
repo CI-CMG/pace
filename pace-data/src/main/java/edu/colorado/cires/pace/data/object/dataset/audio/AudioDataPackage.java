@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
-public abstract class AudioDataPackage extends Package implements BaseAudioDataPackage<String> {
+public class AudioDataPackage extends Package implements BaseAudioDataPackage<String> {
   private final String instrumentId;
   private final LocalDateTime deploymentTime;
   private final LocalDateTime recoveryTime;
@@ -36,4 +36,18 @@ public abstract class AudioDataPackage extends Package implements BaseAudioDataP
   private final String qualityAssessmentDescription;
   private final List<DataQualityEntry> qualityEntries;
 
+  @Override
+  public AudioDataPackage updateChannels(List<Channel<String>> channels) {
+    return toBuilder().channels(channels).build();
+  }
+
+  @Override
+  public AudioDataPackage updateSensors(List<PackageSensor<String>> packageSensors) {
+    return toBuilder().sensors(packageSensors).build();
+  }
+
+  @Override
+  public AudioDataPackage setQualityAnalyst(String qualityAnalyst) {
+    return toBuilder().qualityAnalyst(qualityAnalyst).build();
+  }
 }

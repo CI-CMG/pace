@@ -9,10 +9,11 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class PassivePackerAudioCalibrationInfo extends PassivePackerCalibrationInfo {
+public class PassivePackerMobileMarineLocation extends PassivePackerLocation {
   
-  private final String sensitivity;
-  private final String frequency;
-  private final String gain;
+  private final String seaArea;
+  private final String deployShip;
+  private final String files;
+  private final String positionDetails;
 
 }

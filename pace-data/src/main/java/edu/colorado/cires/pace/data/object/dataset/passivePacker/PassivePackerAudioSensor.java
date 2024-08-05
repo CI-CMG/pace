@@ -1,18 +1,17 @@
 package edu.colorado.cires.pace.data.object.dataset.passivePacker;
 
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class PassivePackerTimeRange {
+public class PassivePackerAudioSensor extends PassivePackerSensor {
   
-  private final String start;
-  private final String end;
+  private final String hydroId;
+  private final String preId;
 
 }
