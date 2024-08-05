@@ -15,5 +15,6 @@ public class DataQualityEntryTranslator {
   private final String maxFrequency;
   private final String qualityLevel;
   private final String comments;
+  private final String channelNumbers;
 
 }

@@ -48,7 +48,8 @@ public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
   }
 
   @Override
-  protected OtherSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField) {
+  protected OtherSensorTranslator toTranslator(UUID translatorUUID, String translatorName, JComboBox<String> uuidField, JComboBox<String> nameField, JComboBox<String> descriptionField,
+      JComboBox<String> sensorIdField) {
     return OtherSensorTranslator.builder()
         .uuid(translatorUUID)
         .name(translatorName)
@@ -57,6 +58,7 @@ public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<
         .description((String) descriptionField.getSelectedItem())
         .sensorType((String) sensorTypeField.getSelectedItem())
         .properties((String) propertiesField.getSelectedItem())
+        .id((String) sensorIdField.getSelectedItem())
         .build();
   }
 }

@@ -358,6 +358,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(dataQualityEntryTranslator.getMaxFrequency());
     headerOptions.add(dataQualityEntryTranslator.getQualityLevel());
     headerOptions.add(dataQualityEntryTranslator.getComments());
+    headerOptions.add(dataQualityEntryTranslator.getChannelNumbers());
   }
 
   private void addLocationDetailTranslatorFields(LocationDetailTranslator locationDetailTranslator, List<String> headerOptions) {

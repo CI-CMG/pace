@@ -124,6 +124,7 @@ class PackageConverterTest {
                 .maxFrequency(11f)
                 .qualityLevel(QualityLevel.good)
                 .comments("comments-1")
+                .channelNumbers(List.of(1))
                 .build(),
             DataQualityEntry.builder()
                 .startTime(LocalDateTime.parse("2020-01-01T01:30:01"))
@@ -132,6 +133,7 @@ class PackageConverterTest {
                 .maxFrequency(13f)
                 .qualityLevel(QualityLevel.compromised)
                 .comments("comments-2")
+                .channelNumbers(List.of(1, 2))
                 .build()
         ))
         .deploymentTime(LocalDateTime.parse("2020-01-01T01:01:01"))
@@ -347,6 +349,7 @@ class PackageConverterTest {
                     .maxFrequency("quality-entry-maxFrequency-1")
                     .qualityLevel("quality-entry-qualityLevel-1")
                     .comments("quality-entry-comments-1")
+                    .channelNumbers("quality-entry-channel-1")
                     .build(),
                 DataQualityEntryTranslator.builder()
                     .startTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("quality-entry-startTime-2").build())
@@ -355,6 +358,7 @@ class PackageConverterTest {
                     .maxFrequency("quality-entry-maxFrequency-2")
                     .qualityLevel("quality-entry-qualityLevel-2")
                     .comments("quality-entry-comments-2")
+                    .channelNumbers("quality-entry-channel-2")
                     .build()
             ))
             .build())
@@ -549,6 +553,7 @@ class PackageConverterTest {
     map.put(dataQualityEntryTranslator.getMaxFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getMaxFrequency().toString()), 49));
     map.put(dataQualityEntryTranslator.getQualityLevel(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getQualityLevel().getName()), 50));
     map.put(dataQualityEntryTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getComments()), 51));
+    map.put(dataQualityEntryTranslator.getChannelNumbers(), new ValueWithColumnNumber(Optional.of("1"), 51));
 
     dataQualityEntryTranslator = qualityControlDetailTranslator.getQualityEntryTranslators().get(1);
     map.put(dataQualityEntryTranslator.getStartTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(1).getStartTime().toString()), 52));
@@ -557,6 +562,7 @@ class PackageConverterTest {
     map.put(dataQualityEntryTranslator.getMaxFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(1).getMaxFrequency().toString()), 55));
     map.put(dataQualityEntryTranslator.getQualityLevel(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(1).getQualityLevel().getName()), 56));
     map.put(dataQualityEntryTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(1).getComments()), 57));
+    map.put(dataQualityEntryTranslator.getChannelNumbers(), new ValueWithColumnNumber(Optional.of("1;2"), 51));
     
     map.put(audioPackageTranslator.getDeploymentTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTime().toString()), 58));
     map.put(audioPackageTranslator.getRecoveryTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getRecoveryTime().toString()), 59));

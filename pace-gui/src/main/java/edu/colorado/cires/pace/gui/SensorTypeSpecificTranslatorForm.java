@@ -22,6 +22,6 @@ public abstract class SensorTypeSpecificTranslatorForm<T extends SensorTranslato
       String translatorName,
       JComboBox<String> uuidField,
       JComboBox<String> nameField,
-      JComboBox<String> descriptionField
-  );
+      JComboBox<String> descriptionField,
+      JComboBox<String> sensorIdField);
 }

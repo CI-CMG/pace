@@ -66,7 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.IntStreams;
 
 public class PassivePackerFactory {
@@ -105,11 +104,12 @@ public class PassivePackerFactory {
         .build();
     
     if (aPackage instanceof AudioDataPackage audioDataPackage) {
+      Map<PassivePackerSensorType, List<PassivePackerSensor>> sensors = getSensors(audioDataPackage);
       passivePackerPackage = passivePackerPackage.toBuilder()
-          .channels(getChannels(audioDataPackage))
+          .sensors(sensors)
+          .channels(getChannels(audioDataPackage, sensors))
           .qualityDetails(getQualityDetails(audioDataPackage))
           .instrumentId(audioDataPackage.getInstrumentId())
-          .sensors(getSensors(audioDataPackage))
           .build();
     } else if (aPackage instanceof SoundLevelMetricsPackage soundLevelMetricsPackage) {
       passivePackerPackage = passivePackerPackage.toBuilder()
@@ -440,6 +440,7 @@ public class PassivePackerFactory {
         .positionY(String.valueOf(position.getY()))
         .positionZ(String.valueOf(position.getZ()))
         .description(sensor.getDescription())
+        .id(sensor.getId())
         .build();
     
     if (sensor instanceof AudioSensor audioSensor) {
@@ -496,11 +497,16 @@ public class PassivePackerFactory {
             .lowFreq(String.valueOf(e.getMinFrequency()))
             .highFreq(String.valueOf(e.getMaxFrequency()))
             .comments(e.getComments())
+            .channels(
+                e.getChannelNumbers().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","))
+            )
             .build())
         .toList();
   }
 
-  private Map<Integer, PassivePackerChannel> getChannels(AudioDataPackage audioDataPackage) {
+  private Map<Integer, PassivePackerChannel> getChannels(AudioDataPackage audioDataPackage, Map<PassivePackerSensorType, List<PassivePackerSensor>> sensors) {
     List<Channel<String>> channels = audioDataPackage.getChannels();
     
     return IntStream.range(0, channels.size()).boxed()
@@ -508,10 +514,16 @@ public class PassivePackerFactory {
             i -> i + 1,
             i -> {
               Channel<String> channel = channels.get(i);
+              String channelSensor = channel.getSensor().getSensor();
+              String sensorNumber = sensors.values().stream()
+                  .flatMap(List::stream)
+                  .filter(s -> s.getName().equals(channelSensor))
+                  .map(PassivePackerSensor::getNumber)
+                  .findFirst().orElse(null);
               return PassivePackerChannel.builder()
                   .channelStart(serializeDateTime(channel.getStartTime()))
                   .channelEnd(serializeDateTime(channel.getEndTime()))
-                  .sensor(channel.getSensor().getSensor())
+                  .sensor(sensorNumber)
                   .samplingDetails(getSamplingDetails(channel))
                   .build();
             }
@@ -564,14 +576,6 @@ public class PassivePackerFactory {
     }
     
     return dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
-  }
-  
-  private String serializeDate(LocalDate date) {
-    if (date == null) {
-      return null;
-    }
-    
-    return date.format(DateTimeFormatter.ISO_DATE);
   }
 
 }

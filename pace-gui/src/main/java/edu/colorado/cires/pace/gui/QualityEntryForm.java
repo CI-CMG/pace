@@ -21,6 +21,7 @@ public class QualityEntryForm extends JPanel {
   private final JComboBox<String> maxFrequencyField = new JComboBox<>();
   private final JComboBox<String> qualityLevelField = new JComboBox<>();
   private final JComboBox<String> commentsField = new JComboBox<>();
+  private final JComboBox<String> channelNumbers = new JComboBox<>();
   
   private final Consumer<QualityEntryForm> removeAction;
 
@@ -56,8 +57,12 @@ public class QualityEntryForm extends JPanel {
     add(endTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 6; c.weightx = 1;
     }));
+    add(new JLabel("Channel Number(s)"), configureLayout(c -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+    add(channelNumbers, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 8; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
     add(getRemoveButton(), configureLayout(c -> { 
-      c.gridx = 0; c.gridy = 7; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
   }
   
@@ -72,12 +77,14 @@ public class QualityEntryForm extends JPanel {
     updateComboBoxModel(maxFrequencyField, headerOptions);
     updateComboBoxModel(qualityLevelField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
+    updateComboBoxModel(channelNumbers, headerOptions);
     
     if (initialTranslator != null) {
       minFrequencyField.setSelectedItem(initialTranslator.getMinFrequency());
       maxFrequencyField.setSelectedItem(initialTranslator.getMaxFrequency());
       qualityLevelField.setSelectedItem(initialTranslator.getQualityLevel());
       commentsField.setSelectedItem(initialTranslator.getComments());
+      channelNumbers.setSelectedItem(initialTranslator.getChannelNumbers());
     }
   }
   
@@ -86,6 +93,7 @@ public class QualityEntryForm extends JPanel {
     updateComboBoxModel(maxFrequencyField, headerOptions);
     updateComboBoxModel(qualityLevelField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
+    updateComboBoxModel(channelNumbers, headerOptions);
     
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
@@ -99,6 +107,7 @@ public class QualityEntryForm extends JPanel {
         .maxFrequency((String) maxFrequencyField.getSelectedItem())
         .qualityLevel((String) qualityLevelField.getSelectedItem())
         .comments((String) commentsField.getSelectedItem())
+        .channelNumbers((String) channelNumbers.getSelectedItem())
         .build();
   }
 }

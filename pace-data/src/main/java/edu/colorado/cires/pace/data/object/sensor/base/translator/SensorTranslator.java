@@ -14,6 +14,7 @@ public class SensorTranslator extends Translator {
   private String sensorUUID;
   private String sensorName;
   private String description;
+  private String id;
 
   @Override
   public AbstractObject setUuid(UUID uuid) {

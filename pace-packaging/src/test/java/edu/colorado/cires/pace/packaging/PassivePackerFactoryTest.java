@@ -93,16 +93,19 @@ class PassivePackerFactoryTest {
     
     when(sensorRepository.getByUniqueField("sensor name 1")).thenReturn(AudioSensor.builder()
             .name("sensor name 1")
+            .id("sensor id 1")
             .description("audio sensor description")
             .hydrophoneId("hydrophone id")
             .preampId("preamp id")
         .build());
     when(sensorRepository.getByUniqueField("sensor name 2")).thenReturn(DepthSensor.builder()
             .name("sensor name 2")
+            .id("sensor id 2")
             .description("depth sensor description")
         .build());
     when(sensorRepository.getByUniqueField("sensor name 3")).thenReturn(OtherSensor.builder()
             .name("sensor name 3")
+            .id("sensor id 3")
             .description("other sensor description")
             .sensorType("sensor type")
             .properties("sensor properties")
@@ -423,6 +426,7 @@ class PassivePackerFactoryTest {
                 .startTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
                 .endTime(LocalDateTime.of(2011, 1, 1, 15, 0,0))
                 .comments("quality comments")
+                .channelNumbers(List.of(1, 2))
                 .build(),
             DataQualityEntry.builder()
                 .qualityLevel(QualityLevel.unusable)
@@ -431,6 +435,7 @@ class PassivePackerFactoryTest {
                 .startTime(LocalDateTime.of(2011, 1, 6, 13, 0, 0))
                 .endTime(LocalDateTime.of(2012, 1, 8, 13, 0, 0))
                 .comments("quality comments 2")
+                .channelNumbers(List.of(2))
                 .build()
         )).qualityAnalysisMethod("quality method")
         .qualityAnalysisObjectives("quality objectives")

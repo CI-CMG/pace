@@ -59,9 +59,11 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.transl
 import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 public class PackageConverter extends Converter<PackageTranslator, Package> {
 
@@ -496,7 +498,32 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .maxFrequency(floatFromMap(properties, "Max Frequency", dataQualityEntryTranslator.getMaxFrequency(), row, runtimeException))
         .qualityLevel(qualityLevelFromMap(properties, dataQualityEntryTranslator.getQualityLevel(), row, runtimeException))
         .comments(stringFromMap(properties, dataQualityEntryTranslator.getComments()))
+        .channelNumbers(getChannelNumbers(properties, dataQualityEntryTranslator.getChannelNumbers(), row, runtimeException))
         .build();
+  }
+
+  private static List<Integer> getChannelNumbers(Map<String, ValueWithColumnNumber> properties, String property, int row,
+      RuntimeException runtimeException) {
+    String rawValue = stringFromMap(properties, property);
+    if (StringUtils.isBlank(rawValue)) {
+      return null;
+    }
+    return Arrays.stream(rawValue.split(";"))
+        .map(v -> {
+          try {
+            return Integer.parseInt(v);
+          } catch (Throwable t) {
+            ValueWithColumnNumber propertyValue = properties.get(property);
+            if (property == null) {
+              return null;
+            }
+            runtimeException.addSuppressed(new FieldException(
+                "channelNumber", "Channel Number", "Invalid integer format", propertyValue.column(), row
+            ));
+            return null;
+          }
+        }).filter(Objects::nonNull)
+        .toList();
   }
 
   private static ProcessingLevel processingLevelFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {

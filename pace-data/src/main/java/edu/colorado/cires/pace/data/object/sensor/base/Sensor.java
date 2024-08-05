@@ -21,4 +21,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public abstract class Sensor extends ObjectWithName {
   private final String description;
+  private final String id;
 }

@@ -22,6 +22,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
   private static Sensor initialSensor;
   
   private JTextField descriptionField;
+  private JTextField sensorIdField;
   private JTextField hydrophoneIdField;
   private JTextField preampIdField;
   private JTextField sensorTypeField;
@@ -89,6 +90,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
   @Override
   protected Sensor objectFromFormFields(UUID uuid, String uniqueField, boolean visible) {
     String description = descriptionField.getText();
+    String sensorId = sensorIdField.getText();
 
     return switch (sensorType) {
       case other -> OtherSensor.builder()
@@ -97,6 +99,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
           .description(description)
           .sensorType(sensorTypeField.getText())
           .properties(propertiesField.getText())
+          .id(sensorId)
           .visible(visible)
           .build();
       case audio -> AudioSensor.builder()
@@ -105,12 +108,14 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
           .description(description)
           .hydrophoneId(hydrophoneIdField.getText())
           .preampId(preampIdField.getText())
+          .id(sensorId)
           .visible(visible)
           .build();
       case depth -> DepthSensor.builder()
           .uuid(uuid)
           .name(uniqueField)
           .description(description)
+          .id(sensorId)
           .visible(visible)
           .build();
     };
@@ -123,6 +128,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
     preampIdField = new JTextField();
     sensorTypeField = new JTextField();
     propertiesField = new JTextField();
+    sensorIdField = new JTextField();
 
     specificFieldsPanel = new JPanel(new GridBagLayout());
     
@@ -138,12 +144,15 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
     
     contentPanel.add(new JLabel("Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
     contentPanel.add(descriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
+    contentPanel.add(new JLabel("ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
+    contentPanel.add(sensorIdField, configureLayout((c) -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
     contentPanel.add(specificFieldsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = contentPanel.getComponentCount(); c.weightx = 1; }));
   }
 
   @Override
   protected void initializeAdditionalFields(Sensor object, CRUDRepository<?>... dependencyRepositories) {
     descriptionField.setText(object.getDescription());
+    sensorIdField.setText(object.getId());
 
     if (object instanceof AudioSensor audioSensor) {
       hydrophoneIdField.setText((audioSensor).getHydrophoneId());

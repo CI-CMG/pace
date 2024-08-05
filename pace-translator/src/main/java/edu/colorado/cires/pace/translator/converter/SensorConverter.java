@@ -42,6 +42,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     return DepthSensor.builder()
         .uuid(uuidFromMap(properties, "UUID", depthSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, depthSensorTranslator.getSensorName()))
+        .id(stringFromMap(properties, depthSensorTranslator.getId()))
         .description(stringFromMap(properties, depthSensorTranslator.getDescription()))
         .build();
   }
@@ -50,6 +51,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     return AudioSensor.builder()
         .uuid(uuidFromMap(properties, "UUID", audioSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, audioSensorTranslator.getSensorName()))
+        .id(stringFromMap(properties, audioSensorTranslator.getId()))
         .description(stringFromMap(properties, audioSensorTranslator.getDescription()))
         .hydrophoneId(stringFromMap(properties, audioSensorTranslator.getHydrophoneId()))
         .preampId(stringFromMap(properties, audioSensorTranslator.getPreampId()))
@@ -60,6 +62,7 @@ public class SensorConverter extends Converter<SensorTranslator, Sensor> {
     return OtherSensor.builder()
         .uuid(uuidFromMap(properties, "UUID", otherSensorTranslator.getSensorUUID(), row, runtimeException))
         .name(stringFromMap(properties, otherSensorTranslator.getSensorName()))
+        .id(stringFromMap(properties, otherSensorTranslator.getId()))
         .description(stringFromMap(properties, otherSensorTranslator.getDescription()))
         .properties(stringFromMap(properties, otherSensorTranslator.getProperties()))
         .sensorType(stringFromMap(properties, otherSensorTranslator.getSensorType()))
