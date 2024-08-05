@@ -239,12 +239,6 @@ final class ConversionUtils {
         propertyFromMap(properties, propertyName)
     );
   }
-
-  public static String pathListFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
-    return stringFromProperty(
-        propertyFromMap(properties, propertyName)
-    );
-  }
   
   public static String stringFromProperty(ValueWithColumnNumber value) {
     return value.value()
