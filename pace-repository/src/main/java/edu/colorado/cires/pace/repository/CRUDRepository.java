@@ -172,7 +172,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
     return datastore.getUniqueFieldName();
   }
   
-  private void validate(O object) throws ConstraintViolationException {
+  protected void validate(O object) throws ConstraintViolationException {
     Set<ConstraintViolation<O>> violations = validator.validate(object);
     if (!violations.isEmpty()) {
       LOGGER.error("{} failed validation: {}", datastore.getClassName(), violations);

@@ -70,6 +70,8 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
 
   @Override
   public void checkDownstreamDependencies(Package object) throws DatastoreException {
+    validate(object);
+    
     Set<ConstraintViolation<Package>> constraintViolations = new HashSet<>(0);
     
     checkDependency(object.getInstrument(), instrumentDatastore, "instrument", constraintViolations);

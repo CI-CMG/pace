@@ -50,6 +50,8 @@ public class InstrumentRepository extends PackageDependencyRepository<Instrument
 
   @Override
   public void checkDownstreamDependencies(Instrument object) throws DatastoreException, ConstraintViolationException {
+    validate(object);
+    
     Set<ConstraintViolation<Instrument>> constraintViolations = new HashSet<>(0);
     List<String> fileTypes = object.getFileTypes();
     for (int i = 0; i < fileTypes.size(); i++) {
