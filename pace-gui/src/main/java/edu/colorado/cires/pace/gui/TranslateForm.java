@@ -13,6 +13,7 @@ import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.CSVReader;
 import edu.colorado.cires.pace.translator.ExcelReader;
+import edu.colorado.cires.pace.translator.MapWithRowNumber;
 import edu.colorado.cires.pace.translator.ObjectWithRowError;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.converter.Converter;
@@ -194,6 +195,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
         try (InputStream inputStream = new FileInputStream(selectedFile)) {
           yield postProcessStream(
               ExcelReader.read(inputStream, 0)
+                  .filter(this::isProcessableRow)
                   .map(mapWithRowNumber -> {
                     try {
                       RuntimeException runtimeException = new RuntimeException();
@@ -218,6 +220,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
         try (InputStream inputStream = new FileInputStream(selectedFile); Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
           yield postProcessStream(
               CSVReader.read(reader)
+                  .filter(this::isProcessableRow)
                   .map(mapWithRowNumber -> {
                     try {
                       RuntimeException runtimeException = new RuntimeException();
@@ -255,6 +258,12 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
       errorDialog.setVisible(true);
     }
 
+  }
+  
+  private boolean isProcessableRow(MapWithRowNumber rowNumber) {
+    return !rowNumber.map().values().stream().allMatch(
+        v -> v.value().isEmpty()
+    );
   }
   
   private List<ObjectWithRowError<O>> postProcessStream(Stream<ObjectWithRowError<O>> stream, Function<ObjectWithRowError<O>, ObjectWithRowError<O>> saveAction, Runnable successAction) {

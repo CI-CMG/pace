@@ -12,6 +12,9 @@ public class SpreadsheetConverter {
     RuntimeException runtimeException = new RuntimeException("Translation failed");
 
     return reader.get()
+        .filter(m -> !m.map().values().stream().allMatch(
+            v -> v.value().isEmpty()
+        ))
         .map(mapWithRowNumber -> {
           try {
             RuntimeException rte = new RuntimeException();

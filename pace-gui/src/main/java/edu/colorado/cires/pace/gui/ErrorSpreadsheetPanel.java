@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
@@ -152,7 +153,9 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
     return switch (fileType) {
       case excel -> {
         try (InputStream inputStream = new FileInputStream(file); ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
-          List<Row> rows = workbook.getFirstSheet().read();
+          List<Row> rows = workbook.getFirstSheet().read().stream()
+              .filter(row -> row.getFirstNonEmptyCell().isPresent())
+              .toList();
           if (rows.isEmpty()) {
             yield new TableData(
                 Collections.emptyList(),
@@ -214,6 +217,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           List<String> headers = new ArrayList<>(parser.getHeaderNames());
           headers.add(0, "Status");
           List<List<Object>> data = parser.stream()
+              .filter(record -> !record.stream().allMatch(StringUtils::isBlank))
               .map(record -> {
                 List<Object> values  = new ArrayList<>(record.toList());
                 Throwable t = exceptions.stream()
