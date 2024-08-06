@@ -4,10 +4,10 @@ public class FieldException extends Exception {
   
   private final String property;
   private final String targetProperty;
-  private final int column;
-  private final int row;
+  private final Integer column;
+  private final Integer row;
 
-  public FieldException(String property, String targetProperty, String message, int column, int row) {
+  public FieldException(String property, String targetProperty, String message, Integer column, Integer row) {
     super(message);
     this.property = property;
     this.targetProperty = targetProperty;
@@ -15,11 +15,11 @@ public class FieldException extends Exception {
     this.row = row;
   }
 
-  public int getColumn() {
+  public Integer getColumn() {
     return column;
   }
 
-  public int getRow() {
+  public Integer getRow() {
     return row;
   }
 

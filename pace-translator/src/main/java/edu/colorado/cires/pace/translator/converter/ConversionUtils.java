@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class ConversionUtils {
   
@@ -214,7 +217,7 @@ final class ConversionUtils {
     return date.atTime(time);
   }
   
-  public static ValueWithColumnNumber propertyFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+  public static @NotNull ValueWithColumnNumber propertyFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
     ValueWithColumnNumber valueWithColumnNumber = properties.get(propertyName);
     
     if (valueWithColumnNumber == null) {
@@ -231,10 +234,14 @@ final class ConversionUtils {
   }
   
   public static List<String> stringListFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
-    return Arrays.stream(stringFromMap(properties, propertyName).split(";")).toList();
+    String value = stringFromMap(properties, propertyName);
+    if (value == null) {
+      return Collections.emptyList();
+    }
+    return Arrays.stream(value.split(";")).toList();
   }
   
-  public static String stringFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+  public static @Nullable String stringFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
     return stringFromProperty(
         propertyFromMap(properties, propertyName)
     );
@@ -247,18 +254,22 @@ final class ConversionUtils {
   }
 
   public static List<Path> pathListFromString(String string) {
-    if (string == null)
+    if (string == null) {
       return null;
-    List<String> strings = Arrays.asList(string.split(";"));
-    List<Path> paths = strings.stream()
-            .map(o -> Paths.get(o))
+    }
+    
+    return Arrays.stream(string.split(";"))
+            .map(Paths::get)
             .toList();
-    return paths;
   }
 
   public static Double latitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
     
     String latitudeString = stringFromMap(properties, propertyName);
+    
+    if (StringUtils.isBlank(latitudeString)) {
+      return null;
+    }
 
     Matcher matcher = Pattern.compile("^(?<degrees>\\d{1,2}[°Dd])\\s*(?<minutes>\\d{1,2}['Mm])\\s*(?<seconds>\\d{1,2}[\"Ss])\\s*(?<orientation>[NS])$")
         .matcher(latitudeString);
@@ -306,6 +317,10 @@ final class ConversionUtils {
   public static Double longitudeFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
 
     String latitudeString = stringFromMap(properties, propertyName);
+    
+    if (StringUtils.isBlank(latitudeString)) {
+      return null;
+    }
 
     Matcher matcher = Pattern.compile("^(?<degrees>\\d{1,3}[°Dd])\\s*(?<minutes>\\d{1,2}['Mm])\\s*(?<seconds>\\d{1,2}[\"Ss])\\s*(?<orientation>[EW])$")
         .matcher(latitudeString);
