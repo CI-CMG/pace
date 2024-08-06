@@ -41,33 +41,5 @@ public class PassivePackerPackage {
   private final String instrumentId = "";
   private final Map<Integer, PassivePackerChannel> channels;
   private final Map<PassivePackerSensorType, List<PassivePackerSensor>> sensors;
-  
-  public <P extends PassivePackerPackage, B extends PassivePackerPackage.PassivePackerPackageBuilder<P, ?>> P toInheritingType(B inheritingTypeBuilder) {
-    return inheritingTypeBuilder
-        .dataCollectionName(getDataCollectionName())
-        .publishDate(getPublishDate())
-        .projectName(getProjectName())
-        .deploymentName(getDeploymentName())
-        .deploymentAlias(getDeploymentAlias())
-        .site(getSite())
-        .siteAliases(getSiteAliases())
-        .title(getTitle())
-        .purpose(getPurpose())
-        .description(getDescription())
-        .platformName(getPlatformName())
-        .instrumentType(getInstrumentType())
-        .metadataAuthor(getMetadataAuthor())
-        .scientists(getScientists())
-        .sponsors(getSponsors())
-        .funders(getFunders())
-        .calibrationInfo(getCalibrationInfo())
-        .datasetDetails(getDatasetDetails())
-        .deployment(getDeployment())
-        .instrumentId(getInstrumentId())
-        .qualityDetails(getQualityDetails())
-        .channels(getChannels())
-        .sensors(getSensors())
-        .build();
-  }
 
 }

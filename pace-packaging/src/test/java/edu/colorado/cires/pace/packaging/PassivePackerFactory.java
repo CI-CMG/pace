@@ -356,7 +356,7 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerCalibrationInfo getCalibrationInfo(Package aPackage) {
-    String calState = null;
+    String calState;
     LocalDate calDate = null;
     LocalDate calDate2 = null;
     

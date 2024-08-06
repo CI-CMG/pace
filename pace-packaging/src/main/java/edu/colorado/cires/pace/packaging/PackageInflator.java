@@ -400,11 +400,6 @@ public final class PackageInflator {
   private AbstractObject getObject(CRUDRepository<?> repository, String uniqueField) throws NotFoundException, DatastoreException {
     return repository.getByUniqueField(uniqueField);
   }
-  
-  private List<Object> getObjects(CRUDRepository<?> repository, List<String> uniqueFields) throws NotFoundException, DatastoreException {
-    return getAbstractObjects(repository, uniqueFields).stream()
-            .map(o -> (Object) o ).toList();
-  }
 
   private List<AbstractObject> getAbstractObjects(CRUDRepository<?> repository, List<String> uniqueFields) throws NotFoundException, DatastoreException {
     List<AbstractObject> objects = new ArrayList<>(0);

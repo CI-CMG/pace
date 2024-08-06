@@ -85,9 +85,6 @@ class PackagerProcessorTest {
   
   private final PersonRepository personRepository = mock(PersonRepository.class);
   private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
-  private final ProjectRepository projectRepository = mock(ProjectRepository.class);
-  private final PlatformRepository platformRepository = mock(PlatformRepository.class);
-  private final InstrumentRepository instrumentRepository = mock(InstrumentRepository.class);
   private final SensorRepository sensorRepository = mock(SensorRepository.class);
   private final DetectionTypeRepository detectionTypeRepository = mock(DetectionTypeRepository.class);
   
