@@ -269,7 +269,7 @@ class PackageInstructionFactoryTest {
     
     Exception exception = assertThrows(PackagingException.class, () -> PackageInstructionFactory.getPackageInstructions(packingJob, metadataPath, peoplePath, organizationsPath, projectsPath, TARGET_PATH, LogManager.getLogger("test")));
     assertEquals(String.format(
-        "Failed to compute packaging destinations for %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
+        "Failed to compute packaging destinations for path: %s", SOURCE_PATH.resolve("source-files").toAbsolutePath()
     ), exception.getMessage());
   }
   

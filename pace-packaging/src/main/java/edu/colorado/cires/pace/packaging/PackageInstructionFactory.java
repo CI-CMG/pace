@@ -142,7 +142,7 @@ class PackageInstructionFactory {
           });
     } catch (IOException e) {
       throw new PackagingException(String.format(
-          "Failed to compute packaging destinations for %s", path
+          "Failed to compute packaging destinations for path: %s", path
       ), e);
     }
   }

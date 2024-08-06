@@ -399,7 +399,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         "Failed to read file or directory: %s", p.getSourcePath().toAbsolutePath()
     ), exception.detail());
     assertEquals(String.format(
-        "Failed to compute packaging destinations for %s", p.getSourcePath().toAbsolutePath()
+        "Failed to compute packaging destinations for path: %s", p.getSourcePath().toAbsolutePath()
     ), exception.message());
   }
   
