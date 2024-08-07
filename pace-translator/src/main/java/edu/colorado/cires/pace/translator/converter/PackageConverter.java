@@ -337,7 +337,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .vessel(stringFromMap(properties, mobileMarineLocationTranslator.getVessel()))
         .seaArea(stringFromMap(properties, mobileMarineLocationTranslator.getSeaArea()))
         .fileList(pathListFromString(stringFromMap(properties, mobileMarineLocationTranslator.getSingleStringFiles())))
-        // TODO handle file lists here (split by ;)
         .build();
   }
 

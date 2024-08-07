@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.data.object.dataset.base.metadata.location;
 
 import jakarta.validation.constraints.NotBlank;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Builder;
@@ -18,9 +19,8 @@ public class MobileMarineLocation implements MarineLocation {
   private final String vessel;
   @NotBlank
   private final String locationDerivationDescription;
-
-  private final List<Path> fileList;
-  // TODO: Add file list (List<Path>)
+  @Builder.Default
+  private final List<Path> fileList = Collections.emptyList();
 
   @Override
   public MobileMarineLocation setSeaArea(String seaArea) {

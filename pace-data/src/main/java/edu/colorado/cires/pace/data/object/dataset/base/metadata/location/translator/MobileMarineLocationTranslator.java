@@ -13,6 +13,5 @@ public class MobileMarineLocationTranslator implements LocationDetailTranslator 
   private final String vessel;
   private final String locationDerivationDescription;
   private final String singleStringFiles;
-  // TODO: Add file list mapping (String, value is semi-colon delimited): file-1.txt;file-2.txt;file-3.txt
 
 }

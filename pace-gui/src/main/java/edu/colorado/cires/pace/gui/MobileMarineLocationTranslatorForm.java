@@ -5,6 +5,8 @@ import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MobileMarineLocationTranslator;
 import java.awt.GridBagLayout;
+import java.nio.file.Path;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
@@ -13,6 +15,7 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
   private final JComboBox<String> seaAreaField = new JComboBox<>();
   private final JComboBox<String> vesselField = new JComboBox<>();
   private final JComboBox<String> locationDerivationDescriptionField = new JComboBox<>();
+  private final JComboBox<String> singleStringFiles = new JComboBox<>();
 
   public MobileMarineLocationTranslatorForm(String[] headerOptions, MobileMarineLocationTranslator initialTranslator) {
     super(headerOptions);
@@ -29,17 +32,21 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
     add(vesselField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     add(new JLabel("Location Derivation Description"), configureLayout((c) -> { c.gridx = 0; c.gridy  = 4; c.weightx = 1; }));
     add(locationDerivationDescriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
+    add(new JLabel("File(s)"), configureLayout((c) -> { c.gridx = 0; c.gridy  = 6; c.weightx = 1; }));
+    add(singleStringFiles, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
   }
   
   private void initializeFields(String[] headerOptions, MobileMarineLocationTranslator initialTranslator) {
     updateComboBoxModel(seaAreaField, headerOptions);
     updateComboBoxModel(vesselField, headerOptions);
     updateComboBoxModel(locationDerivationDescriptionField, headerOptions);
+    updateComboBoxModel(singleStringFiles, headerOptions);
     
     if (initialTranslator != null) {
       seaAreaField.setSelectedItem(initialTranslator.getSeaArea());
       vesselField.setSelectedItem(initialTranslator.getVessel());
       locationDerivationDescriptionField.setSelectedItem(initialTranslator.getLocationDerivationDescription());
+      singleStringFiles.setSelectedItem(initialTranslator.getVessel());
     }
   }
 
@@ -49,6 +56,7 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
         .seaArea((String) seaAreaField.getSelectedItem())
         .vessel((String) vesselField.getSelectedItem())
         .locationDerivationDescription((String) locationDerivationDescriptionField.getSelectedItem())
+        .singleStringFiles((String) vesselField.getSelectedItem())
         .build();
   }
 
@@ -57,5 +65,6 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
     updateComboBoxModel(seaAreaField, options);
     updateComboBoxModel(vesselField, options);
     updateComboBoxModel(locationDerivationDescriptionField, options);
+    updateComboBoxModel(singleStringFiles, options);
   }
 }
