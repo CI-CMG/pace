@@ -61,6 +61,7 @@ import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -508,7 +509,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
       RuntimeException runtimeException) {
     String rawValue = stringFromMap(properties, property);
     if (StringUtils.isBlank(rawValue)) {
-      return null;
+      return Collections.emptyList();
     }
     return Arrays.stream(rawValue.split(";"))
         .map(v -> {

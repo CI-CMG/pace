@@ -255,7 +255,7 @@ final class ConversionUtils {
 
   public static List<Path> pathListFromString(String string) {
     if (string == null) {
-      return null;
+      return Collections.emptyList();
     }
     
     return Arrays.stream(string.split(";"))
