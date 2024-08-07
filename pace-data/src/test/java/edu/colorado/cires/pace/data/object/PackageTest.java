@@ -36,7 +36,7 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setProjects() {
     List<String> projects = List.of("1", "2");
     P p = createPackage();
-    assertNull(p.getProjects());
+    assertEquals(0, p.getProjects().size());
     p = (P) p.setProjects(projects);
     assertEquals(projects, p.getProjects());
   }
@@ -54,7 +54,7 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setScientists() {
     List<String> scientists = List.of("1", "2");
     P p = createPackage();
-    assertNull(p.getScientists());
+    assertEquals(0, p.getScientists().size());
     p = (P) p.setScientists(scientists);
     assertEquals(scientists, p.getScientists());
   }
@@ -72,7 +72,7 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setSponsors() {
     List<String> sponsors = List.of("1", "2");
     P p = createPackage();
-    assertNull(p.getSponsors());
+    assertEquals(0, p.getSponsors().size());
     p = (P) p.setSponsors(sponsors);
     assertEquals(sponsors, p.getSponsors());
   }
@@ -81,7 +81,7 @@ abstract class PackageTest<P extends Package> extends ObjectWithUniqueFieldTest<
   void setFunders() {
     List<String> funders = List.of("1", "2");
     P p = createPackage();
-    assertNull(p.getFunders());
+    assertEquals(0, p.getFunders().size());
     p = (P) p.setFunders(funders);
     assertEquals(funders, p.getFunders());
   }

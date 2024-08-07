@@ -32,7 +32,7 @@ public abstract class AudioDataTest<P extends AudioDataPackage> extends DataQual
             .build()
     );
     P p = createObject();
-    assertNull(p.getSensors());
+    assertEquals(0, p.getSensors().size());
     p = (P) p.updateSensors(sensors);
     List<PackageSensor<String>> actualSensors = p.getSensors();
     assertEquals(sensors.size(), actualSensors.size());
