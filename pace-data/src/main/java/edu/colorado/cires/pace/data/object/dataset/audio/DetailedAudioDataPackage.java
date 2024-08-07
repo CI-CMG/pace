@@ -9,7 +9,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -26,10 +28,10 @@ public abstract class DetailedAudioDataPackage extends DetailedPackage implement
   private final LocalDateTime audioEndTime;
   private final String comments;
   @NotEmpty
-  @NotNull
-  private final List<@NotNull @Valid PackageSensor<AbstractObject>> sensors;
-  @NotEmpty @NotNull
-  private final List<@Valid @NotNull Channel<AbstractObject>> channels;
+  @NotNull @Builder.Default
+  private final List<@NotNull @Valid PackageSensor<AbstractObject>> sensors = Collections.emptyList();
+  @NotEmpty @NotNull @Builder.Default
+  private final List<@Valid @NotNull Channel<AbstractObject>> channels = Collections.emptyList();
   private final Float hydrophoneSensitivity;
   private final String frequencyRange;
   private final Float gain;
@@ -37,6 +39,7 @@ public abstract class DetailedAudioDataPackage extends DetailedPackage implement
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
-  private final List<DataQualityEntry> qualityEntries;
+  @Builder.Default
+  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
 
 }

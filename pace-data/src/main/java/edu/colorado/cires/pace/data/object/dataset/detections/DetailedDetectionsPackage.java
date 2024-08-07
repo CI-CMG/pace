@@ -4,8 +4,10 @@ import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -24,7 +26,8 @@ public class DetailedDetectionsPackage extends DetailedPackage implements BaseDe
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
-  private final List<DataQualityEntry> qualityEntries;
+  @Builder.Default
+  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
   private final String softwareNames;
   private final String softwareVersions;
   private final String softwareProtocolCitation;

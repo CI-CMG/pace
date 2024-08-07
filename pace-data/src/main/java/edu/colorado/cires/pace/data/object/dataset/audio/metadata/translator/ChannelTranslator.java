@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator;
 
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +15,11 @@ public class ChannelTranslator {
   private final PackageSensorTranslator sensor;
   private final TimeTranslator startTime;
   private final TimeTranslator endTime;
-  private final List<SampleRateTranslator> sampleRates;
-  private final List<DutyCycleTranslator> dutyCycles;
-  private final List<GainTranslator> gains;
+  @Builder.Default
+  private final List<SampleRateTranslator> sampleRates = Collections.emptyList();
+  @Builder.Default
+  private final List<DutyCycleTranslator> dutyCycles = Collections.emptyList();
+  @Builder.Default
+  private final List<GainTranslator> gains = Collections.emptyList();
 
 }

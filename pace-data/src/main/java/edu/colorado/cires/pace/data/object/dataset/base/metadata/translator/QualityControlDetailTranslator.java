@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.data.object.dataset.base.metadata.translator;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class QualityControlDetailTranslator {
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
-  private final List<DataQualityEntryTranslator> qualityEntryTranslators;
+  @Builder.Default
+  private final List<DataQualityEntryTranslator> qualityEntryTranslators = Collections.emptyList();
 
 }

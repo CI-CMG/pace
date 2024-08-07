@@ -12,7 +12,9 @@ import edu.colorado.cires.pace.data.object.dataset.soundClips.DetailedSoundClips
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.DetailedSoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.DetailedSoundPropagationModelsPackage;
 
+import java.util.Collections;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -31,10 +33,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public abstract class DetailedPackage extends BasePackage<Object> {
   private final Object datasetPackager;
-  private final List<Object> scientists;
-  private final List<Object> projects;
-  private final List<Object> sponsors;
-  private final List<Object> funders;
+  @Builder.Default
+  private final List<Object> scientists = Collections.emptyList();
+  @Builder.Default
+  private final List<Object> projects = Collections.emptyList();
+  @Builder.Default
+  private final List<Object> sponsors = Collections.emptyList();
+  @Builder.Default
+  private final List<Object> funders = Collections.emptyList();
   private final String platform;
   private final Object instrument;
 

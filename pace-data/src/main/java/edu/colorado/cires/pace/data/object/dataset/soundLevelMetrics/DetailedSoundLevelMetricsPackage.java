@@ -4,8 +4,10 @@ import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -22,7 +24,8 @@ public class DetailedSoundLevelMetricsPackage extends DetailedPackage implements
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
-  private final List<DataQualityEntry> qualityEntries;
+  @Builder.Default
+  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
   private final Integer analysisTimeZone;
   private final Integer analysisEffort;
   private final Float sampleRate;

@@ -5,6 +5,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,11 @@ public class Channel<T> implements TimeRange {
   private final PackageSensor<T> sensor;
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
-  private final List<SampleRate> sampleRates;
-  private final List<DutyCycle> dutyCycles;
-  private final List<Gain> gains;
-  
+  @Builder.Default
+  private final List<SampleRate> sampleRates = Collections.emptyList();
+  @Builder.Default
+  private final List<DutyCycle> dutyCycles = Collections.emptyList();
+  @Builder.Default
+  private final List<Gain> gains = Collections.emptyList();
+
 }

@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTransl
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.QualityControlDetailTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -29,9 +30,10 @@ public abstract class AudioDataPackageTranslator extends PackageTranslator {
   private final TimeTranslator audioStartTime;
   private final TimeTranslator audioEndTime;
   private final String comments;
-  private final List<PackageSensorTranslator> sensors;
   @Builder.Default
-  private final List<ChannelTranslator> channelTranslators = new ArrayList<>(0);
+  private final List<PackageSensorTranslator> sensors = Collections.emptyList();
+  @Builder.Default
+  private final List<ChannelTranslator> channelTranslators = Collections.emptyList();
   
   
 

@@ -19,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,14 +44,14 @@ public class Package extends BasePackage<String> {
   private final boolean visible = true;
   @NotBlank
   private final String datasetPackager;
-  @NotEmpty @NotNull
-  private final List<@NotBlank String> scientists;
-  @NotNull
-  private final List<@NotBlank String> projects;
-  @NotNull @NotEmpty
-  private final List<@NotBlank String> sponsors;
-  @NotNull @NotEmpty
-  private final List<@NotBlank String> funders;
+  @NotEmpty @NotNull @Builder.Default
+  private final List<@NotBlank String> scientists = Collections.emptyList();
+  @NotNull @Builder.Default
+  private final List<@NotBlank String> projects = Collections.emptyList();
+  @NotNull @NotEmpty @Builder.Default
+  private final List<@NotBlank String> sponsors = Collections.emptyList();
+  @NotNull @NotEmpty @Builder.Default
+  private final List<@NotBlank String> funders = Collections.emptyList();
   @NotBlank
   private final String platform;
   @NotBlank
