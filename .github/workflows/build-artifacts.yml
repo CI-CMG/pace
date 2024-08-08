@@ -352,8 +352,8 @@ jobs:
           path: jars
       - id: appver
         run: |
-          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_OUTPUT
-          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_ENV
+          echo "appver=$(date +%y.%m.%d%H)" >> $GITHUB_OUTPUT
+          echo "appver=$(date +%y.%m.%d%H)" >> $GITHUB_ENV
         shell: bash
       - name: Package jar as msi
         run: >
@@ -406,8 +406,8 @@ jobs:
           path: icons
       - id: appver
         run: |
-          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_OUTPUT
-          echo "appver=$(date +%y.%m.%d%H%S)" >> $GITHUB_ENV
+          echo "appver=$(date +%y.%m.%d%H)" >> $GITHUB_OUTPUT
+          echo "appver=$(date +%y.%m.%d%H)" >> $GITHUB_ENV
         shell: bash
       - name: Package jar as msi
         run: >
