@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.packaging;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
@@ -66,7 +67,8 @@ final class FileUtils {
   
   public static Path writeMetadata(PassivePackerPackage aPackage, Path targetDirectory) throws IOException {
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
-        .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
+        .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
+        .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
     ObjectNode metadata = (ObjectNode) objectMapper
         .readTree(
             objectMapper.writeValueAsString(aPackage)

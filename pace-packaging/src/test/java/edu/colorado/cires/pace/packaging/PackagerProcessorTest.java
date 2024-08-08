@@ -202,6 +202,7 @@ class PackagerProcessorTest {
     );
     String expectedMetadata = SerializationUtils.createObjectMapper()
         .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
+        .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
         .writerWithDefaultPrettyPrinter()
         .writeValueAsString(expectedMetadataPackage);
     String expectedPeople = objectMapper.writeValueAsString(PEOPLE);
@@ -359,6 +360,16 @@ class PackagerProcessorTest {
             .name("dataset-packager")
             .build())
         .sensors(Map.of(
+            PassivePackerSensorType.DEPTH, List.of(
+                PassivePackerDepthSensor.builder()
+                    .type("Depth Sensor")
+                    .name("depth-sensor")
+                    .number("2")
+                    .positionX("4.0")
+                    .positionY("5.0")
+                    .positionZ("6.0")
+                    .build()
+            ),
             PassivePackerSensorType.AUDIO, List.of(
                 PassivePackerAudioSensor.builder()
                     .name("audio-sensor")
@@ -375,16 +386,6 @@ class PackagerProcessorTest {
                     .positionX("7.0")
                     .positionY("8.0")
                     .positionZ("9.0")
-                    .build()
-            ),
-            PassivePackerSensorType.DEPTH, List.of(
-                PassivePackerDepthSensor.builder()
-                    .type("Depth Sensor")
-                    .name("depth-sensor")
-                    .number("2")
-                    .positionX("4.0")
-                    .positionY("5.0")
-                    .positionZ("6.0")
                     .build()
             )
         )).title("deployment-title")
