@@ -28,7 +28,6 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 public class PackageProcessor {
   
   private final ObjectMapper objectMapper;
-  private final PackageInflator packageInflator;
   private final Validator validator;
   private final List<Person> people;
   private final List<Organization> organizations;
@@ -36,17 +35,18 @@ public class PackageProcessor {
   private final ProgressIndicator[] progressIndicators;
   private final List<Package> packages;
   private final Path outputDir;
+  private final PassivePackerFactory passivePackerFactory;
 
-  public PackageProcessor(ObjectMapper objectMapper, PackageInflator packageInflator, List<Person> people, List<Organization> organizations, List<Project> projects,
-      List<Package> packages, Path outputDir,
+  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
+      List<Package> packages, Path outputDir, PassivePackerFactory passivePackerFactory,
       ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
-    this.packageInflator = packageInflator;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
     this.projects = Collections.unmodifiableList(projects);
     this.packages = packages;
     this.outputDir = outputDir;
+    this.passivePackerFactory = passivePackerFactory;
     this.progressIndicators = progressIndicators;
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
@@ -77,7 +77,7 @@ public class PackageProcessor {
       processPackage(aPackage, packageOutputDir, logger);
       logger.removeAppender(writerAppender);
       
-      processedPackages.add((Package) aPackage.setVisible(false));
+      processedPackages.add(aPackage.setVisible(false));
     }
     
     return processedPackages;
@@ -109,7 +109,7 @@ public class PackageProcessor {
 
     Stream<PackageInstruction> instructionStream = PackageInstructionFactory.getPackageInstructions(
         packingJob,
-        FileUtils.writeMetadata(packageInflator.process(packingJob), outputDirectory),
+        FileUtils.writeMetadata(passivePackerFactory.createPackage(packingJob), outputDirectory),
         FileUtils.writeObjectsBlob(people, objectMapper, outputDirectory, "people.json"),
         FileUtils.writeObjectsBlob(organizations, objectMapper, outputDirectory, "organizations.json"),
         FileUtils.writeObjectsBlob(projects, objectMapper, outputDirectory, "projects.json"),

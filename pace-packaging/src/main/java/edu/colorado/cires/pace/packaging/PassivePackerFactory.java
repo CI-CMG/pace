@@ -138,29 +138,38 @@ public class PassivePackerFactory {
     
     if (aPackage instanceof AudioDataPackage audioDataPackage) {
       deployment = deployment.toBuilder()
-          .audioStart(serializeDateTime(audioDataPackage.getAudioStartTime()))
-          .audioEnd(serializeDateTime(audioDataPackage.getAudioEndTime()))
+          .audioStart(getAudioDateTime(audioDataPackage.getAudioStartTime()))
+          .audioEnd(getAudioDateTime(audioDataPackage.getAudioEndTime()))
           .deploymentTime(serializeDateTime(audioDataPackage.getDeploymentTime()))
           .recoveryTime(serializeDateTime(audioDataPackage.getRecoveryTime()))
           .build();
     } else if (aPackage instanceof SoundLevelMetricsPackage soundLevelMetricsPackage) {
       deployment = deployment.toBuilder()
-          .audioStart(serializeDateTime(soundLevelMetricsPackage.getAudioStartTime()))
-          .audioEnd(serializeDateTime(soundLevelMetricsPackage.getAudioEndTime()))
+          .audioStart(getAudioDateTime(soundLevelMetricsPackage.getAudioStartTime()))
+          .audioEnd(getAudioDateTime(soundLevelMetricsPackage.getAudioEndTime()))
           .build();
     } else if (aPackage instanceof SoundPropagationModelsPackage soundPropagationModelsPackage) {
       deployment = deployment.toBuilder()
-          .audioStart(serializeDateTime(soundPropagationModelsPackage.getAudioStartTime()))
-          .audioEnd(serializeDateTime(soundPropagationModelsPackage.getAudioEndTime()))
+          .audioStart(getAudioDateTime(soundPropagationModelsPackage.getAudioStartTime()))
+          .audioEnd(getAudioDateTime(soundPropagationModelsPackage.getAudioEndTime()))
           .build();
     } else if (aPackage instanceof SoundClipsPackage soundClipsPackage) {
       deployment = deployment.toBuilder()
-          .audioStart(serializeDateTime(soundClipsPackage.getAudioStartTime()))
-          .audioEnd(serializeDateTime(soundClipsPackage.getAudioEndTime()))
+          .audioStart(getAudioDateTime(soundClipsPackage.getAudioStartTime()))
+          .audioEnd(getAudioDateTime(soundClipsPackage.getAudioEndTime()))
           .build();
     }
 
     return deployment;
+  }
+
+  private String getAudioDateTime(LocalDateTime audioStartTime) {
+    String serializedDate = serializeDateTime(audioStartTime);
+    if (serializedDate == null) {
+      return "";
+    }
+    
+    return serializedDate;
   }
 
   private PassivePackerLocation getLocation(LocationDetail locationDetail) {
@@ -379,10 +388,11 @@ public class PassivePackerFactory {
       calDate2 = aPackage.getPostDeploymentCalibrationDate();
     }
 
+    Path calibrationDocumentsPath = aPackage.getCalibrationDocumentsPath();
     PassivePackerCalibrationInfo calibrationInfo = PassivePackerCalibrationInfo.builder()
         .calDate(calDate == null ? null : String.valueOf(calDate))
         .calState(calState)
-        .calDocsPath(aPackage.getCalibrationDocumentsPath().toString())
+        .calDocsPath(calibrationDocumentsPath == null ? "" : calibrationDocumentsPath.toString())
         .comment(aPackage.getCalibrationDescription())
         .build();
     
@@ -450,7 +460,12 @@ public class PassivePackerFactory {
   }
 
   private Map<PassivePackerSensorType, List<PassivePackerSensor>> getSensors(AudioDataPackage audioDataPackage) {
-    List<PackageSensor<String>> sensors = audioDataPackage.getSensors();
+    List<PackageSensor<String>> sensors = new ArrayList<>(audioDataPackage.getSensors());
+    sensors.addAll(
+        audioDataPackage.getChannels().stream()
+            .map(Channel::getSensor)
+            .toList()
+    );
     return IntStreams.range(sensors.size()).boxed()
         .map(i -> {
           try {

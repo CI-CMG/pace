@@ -432,6 +432,11 @@ class PassivePackerFactoryTest {
                 .endTime(LocalDateTime.of(2012, 1, 1, 13, 0, 0))
                 .sensor(PackageSensor.<String>builder()
                     .sensor("sensor name 1")
+                    .position(Position.builder()
+                        .x(1f)
+                        .y(2f)
+                        .z(3f)
+                        .build())
                     .build())
                 .sampleRates(List.of(
                     SampleRate.builder()
@@ -459,6 +464,11 @@ class PassivePackerFactoryTest {
                 .endTime(LocalDateTime.of(2012, 1, 1, 13, 0, 0))
                 .sensor(PackageSensor.<String>builder()
                     .sensor("sensor name 3")
+                    .position(Position.builder()
+                        .x(7f)
+                        .y(8f)
+                        .z(9f)
+                        .build())
                     .build())
                 .sampleRates(List.of(
                     SampleRate.builder()

@@ -1,11 +1,12 @@
 package edu.colorado.cires.pace.packaging;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
-import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
+import edu.colorado.cires.passivePacker.data.PassivePackerPackage;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -63,7 +64,7 @@ final class FileUtils {
     return DigestUtils.sha256Hex(inputStream);
   }
   
-  public static Path writeMetadata(DetailedPackage aPackage, Path targetDirectory) throws IOException {
+  public static Path writeMetadata(PassivePackerPackage aPackage, Path targetDirectory) throws IOException {
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
         .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE);
     ObjectNode metadata = (ObjectNode) objectMapper
@@ -79,10 +80,21 @@ final class FileUtils {
     metadata.remove("NAVIGATION_PATH");
     metadata.remove("SOURCE_PATH");
     
+    ObjectNode deployment = (ObjectNode) metadata.get("DEPLOYMENT");
+    if (deployment != null) {
+      ObjectNode location = (ObjectNode) deployment.get("LOCATION");
+      if (location != null) {
+        JsonNode files = location.get("FILES");
+        if (files != null) {
+          location.remove("FILES");
+        }
+      }
+    }
+    
     mkdir(targetDirectory);
     
     Path targetPath = targetDirectory.resolve(String.format(
-        "%s.json", aPackage.getPackageId()
+        "%s.json", aPackage.getDataCollectionName()
     ));
     
     objectMapper.writerWithDefaultPrettyPrinter()

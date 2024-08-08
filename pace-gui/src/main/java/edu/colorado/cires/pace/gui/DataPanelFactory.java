@@ -127,8 +127,6 @@ public class DataPanelFactory {
         personRepository,
         organizationRepository,
         projectRepository,
-        platformRepository,
-        instrumentRepository,
         sensorRepository,
         detectionTypeRepository
     ) {

@@ -13,7 +13,8 @@ import lombok.extern.jackson.Jacksonized;
 public class PassivePackerCalibrationInfo {
   
   private final String calState;
-  private final String calDocsPath;
+  @Builder.Default
+  private final String calDocsPath = "";
   private final String comment;
   private final String calDate;
   private final String calDate2;

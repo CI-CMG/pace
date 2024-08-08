@@ -183,6 +183,18 @@
                 "description": "audio sensor description",
                 "HYDRO_ID": "hydrophone id",
                 "PRE_ID": "preamp id"
+            },
+            {
+                "HYDRO_ID" : "hydrophone id",
+                "PRE_ID" : "preamp id",
+                "type" : "Audio Sensor",
+                "number" : "4",
+                "id" : "sensor id 1",
+                "name" : "sensor name 1",
+                "pos_x" : "1.0",
+                "pos_y" : "2.0",
+                "pos_z" : "3.0",
+                "description" : "audio sensor description"
             }
         ],
         "DEPTH": [
@@ -209,6 +221,18 @@
                 "description": "other sensor description",
                 "SENSOR_TYPE": "sensor type",
                 "PROPERTIES": "sensor properties"
+            },
+            {
+                "SENSOR_TYPE" : "sensor type",
+                "PROPERTIES" : "sensor properties",
+                "type" : "Other Sensor",
+                "number" : "5",
+                "id" : "sensor id 3",
+                "name" : "sensor name 3",
+                "pos_x" : "7.0",
+                "pos_y" : "8.0",
+                "pos_z" : "9.0",
+                "description" : "other sensor description"
             }
         ]
     }

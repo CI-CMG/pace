@@ -28,8 +28,8 @@ import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
-import edu.colorado.cires.pace.packaging.PackageInflator;
 import edu.colorado.cires.pace.packaging.PackagingException;
+import edu.colorado.cires.pace.packaging.PassivePackerFactory;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
@@ -288,11 +288,6 @@ public class PackageCommand {
         List<Organization> organizations = organizationRepository.findAll().toList();
         List<Project> projects = projectRepository.findAll().toList();
 
-        PackageInflator packageInflator = new PackageInflator(
-            personRepository, organizationRepository,
-            sensorRepository, detectionTypeRepository
-        );
-        
         Path outputPath = outputDirectory.toPath();
         
         ProgressIndicator[] progressIndicators = new ProgressIndicator[]{
@@ -312,8 +307,12 @@ public class PackageCommand {
             }
         );
 
+        PassivePackerFactory passivePackerFactory = new PassivePackerFactory(
+            personRepository, organizationRepository, sensorRepository, detectionTypeRepository
+        );
+
         PackageProcessor packageProcessor = new PackageProcessor(
-            objectMapper, packageInflator, people, organizations, projects, packages, outputPath, progressIndicators
+            objectMapper, people, organizations, projects, packages, outputPath, passivePackerFactory, progressIndicators
         );
 
         List<Package> processedPackages = packageProcessor.process().stream()

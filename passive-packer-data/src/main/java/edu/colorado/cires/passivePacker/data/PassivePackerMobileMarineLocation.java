@@ -1,5 +1,6 @@
 package edu.colorado.cires.passivePacker.data;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -13,7 +14,8 @@ public class PassivePackerMobileMarineLocation extends PassivePackerLocation {
   
   private final String seaArea;
   private final String deployShip;
-  private final String files;
+  @Builder.Default
+  private final String files = "";
   private final String positionDetails;
 
 }

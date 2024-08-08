@@ -30,6 +30,7 @@ public final class SerializationUtils {
         .setSerializationInclusion(Include.NON_NULL)
         .registerModule(new JavaTimeModule())
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+        .configure(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS, false)
         .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
         .setDefaultPrettyPrinter(prettyPrinter);
   }
