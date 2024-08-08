@@ -188,7 +188,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(initialTranslator.getOtherPath());
     headerOptions.add(initialTranslator.getDocumentsPath());
     headerOptions.add(initialTranslator.getCalibrationDocumentsPath());
-    headerOptions.add(initialTranslator.getNavigationPath());
     headerOptions.add(initialTranslator.getSourcePath());
     headerOptions.add(initialTranslator.getDataCollectionName());
     headerOptions.add(initialTranslator.getProcessingLevel());
@@ -561,7 +560,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .otherPath(filePathsTranslatorForm.getOtherPathValue())
         .documentsPath(filePathsTranslatorForm.getDocumentsPathValue())
         .calibrationDocumentsPath(calibrationTranslatorForm.getCalibrationDocumentsPathValue())
-        .navigationPath(filePathsTranslatorForm.getNavigationPathValue())
         .sourcePath(filePathsTranslatorForm.getSourcePathValue())
         .scientists(contactsTranslatorForm.getScientistsValue())
         .sponsors(contactsTranslatorForm.getSponsorsValue())

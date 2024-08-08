@@ -23,7 +23,6 @@ class CPODPackageTranslatorTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -78,7 +77,6 @@ class CPODPackageTranslatorTest {
     assertEquals(packageTranslator.getOtherPath(), cpodPackageTranslator.getOtherPath());
     assertEquals(packageTranslator.getDocumentsPath(), cpodPackageTranslator.getDocumentsPath());
     assertEquals(packageTranslator.getCalibrationDocumentsPath(), cpodPackageTranslator.getCalibrationDocumentsPath());
-    assertEquals(packageTranslator.getNavigationPath(), cpodPackageTranslator.getNavigationPath());
     assertEquals(packageTranslator.getSourcePath(), cpodPackageTranslator.getSourcePath());
     assertEquals(packageTranslator.getSiteOrCruiseName(), cpodPackageTranslator.getSiteOrCruiseName());
     assertEquals(packageTranslator.getDeploymentId(), cpodPackageTranslator.getDeploymentId());

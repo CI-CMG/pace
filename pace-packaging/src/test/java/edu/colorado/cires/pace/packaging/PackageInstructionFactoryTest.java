@@ -1,12 +1,17 @@
 package edu.colorado.cires.pace.packaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,10 +20,12 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,15 +76,7 @@ class PackageInstructionFactoryTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
-    Package packingJob = AudioPackage.builder()
-        .temperaturePath(tp)
-        .biologicalPath(bp)
-        .otherPath(op)
-        .documentsPath(dp)
-        .calibrationDocumentsPath(cdp)
-        .navigationPath(np)
-        .sourcePath(sp)
-        .build();
+
     writeFiles(bp);
     writeFiles(cdp);
     writeFiles(dp);
@@ -85,6 +84,30 @@ class PackageInstructionFactoryTest {
     writeFiles(op);
     writeFiles(tp);
     writeFiles(sp);
+    
+    Package packingJob = AudioPackage.builder()
+        .temperaturePath(tp)
+        .biologicalPath(bp)
+        .otherPath(op)
+        .documentsPath(dp)
+        .calibrationDocumentsPath(cdp)
+        .sourcePath(sp)
+        .locationDetail(MobileMarineLocation.builder()
+            .fileList(
+                np == null ? Collections.emptyList() : 
+                    Files.walk(np)
+                        .filter(p -> p.toFile().isFile())
+                        .filter(p -> {
+                          try {
+                            return edu.colorado.cires.pace.packaging.FileUtils.filterHidden(p);
+                          } catch (IOException e) {
+                            throw new RuntimeException(e);
+                          }
+                        })
+                        .toList()
+            )
+            .build())
+        .build();
     
     Path metadataPath = TARGET_PATH.resolve("metadata.json");
     Path peoplePath = TARGET_PATH.resolve("people.json");
@@ -99,7 +122,42 @@ class PackageInstructionFactoryTest {
     checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
     checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
     checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
-    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+
+    LocationDetail locationDetail = packingJob.getLocationDetail();
+    assertInstanceOf(MobileMarineLocation.class, locationDetail);
+    MobileMarineLocation mobileMarineLocation = (MobileMarineLocation) locationDetail;
+    List<Path> navPaths = mobileMarineLocation.getFileList();
+    if (!navPaths.isEmpty()) {
+      List<PackageInstruction> navInstructions = packageInstructions.stream()
+          .filter(packageInstruction -> packageInstruction.target().toString().contains("nav_files"))
+          .toList();
+      
+      assertEquals(20, navInstructions.size());
+      
+      navInstructions.stream()
+          .filter(p -> p.source().toString().contains("subdir"))
+          .toList().forEach(
+              packageInstruction -> {
+                String fileName = FilenameUtils.getName(packageInstruction.source().toString());
+                String extension = FilenameUtils.getExtension(fileName);
+                String baseName = FilenameUtils.getBaseName(fileName);
+                assertEquals(
+                    baseExpectedOutputPath.resolve("nav_files").resolve(
+                        String.format("%s (1).%s", baseName, extension)
+                    ).toString(),
+                    packageInstruction.target().toString()
+                );
+              }
+          );
+      navInstructions.stream()
+          .filter(p -> !p.source().toString().contains("subdir"))
+          .forEach(
+              packageInstruction -> assertEquals(
+                  baseExpectedOutputPath.resolve("nav_files").resolve(packageInstruction.source().getFileName()).toString(),
+                  packageInstruction.target().toString()
+              )
+          );
+    }
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
@@ -145,8 +203,13 @@ class PackageInstructionFactoryTest {
         .otherPath(op)
         .documentsPath(dp)
         .calibrationDocumentsPath(cdp)
-        .navigationPath(np)
         .sourcePath(sp)
+        .locationDetail(StationaryTerrestrialLocation.builder()
+            .surfaceElevation(1f)
+            .instrumentElevation(2f)
+            .longitude(3d)
+            .latitude(4d)
+            .build())
         .build();
     writeFiles(bp);
     writeFiles(cdp);
@@ -169,7 +232,7 @@ class PackageInstructionFactoryTest {
     checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
     checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
     checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
-    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+    assertFalse(baseExpectedOutputPath.resolve("nav_files").toFile().exists());
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
@@ -215,7 +278,6 @@ class PackageInstructionFactoryTest {
         .otherPath(op)
         .documentsPath(dp)
         .calibrationDocumentsPath(cdp)
-        .navigationPath(np)
         .sourcePath(sp)
         .build();
     writeFiles(bp);
@@ -239,7 +301,7 @@ class PackageInstructionFactoryTest {
     checkTargetPaths(packageInstructions, packingJob::getBiologicalPath, baseExpectedOutputPath.resolve("biological"));
     checkTargetPaths(packageInstructions, packingJob::getCalibrationDocumentsPath, baseExpectedOutputPath.resolve("calibration"));
     checkTargetPaths(packageInstructions, packingJob::getDocumentsPath, baseExpectedOutputPath.resolve("docs"));
-    checkTargetPaths(packageInstructions, packingJob::getNavigationPath, baseExpectedOutputPath.resolve("nav_files"));
+    assertFalse(baseExpectedOutputPath.resolve("nav_files").toFile().exists());
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("data_files"));

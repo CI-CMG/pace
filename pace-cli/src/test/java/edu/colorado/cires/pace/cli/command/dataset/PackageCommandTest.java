@@ -74,7 +74,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         "otherPath",
         "documentsPath",
         "calibrationDocumentsPath",
-        "navigationPath",
         "sourcePath",
         "siteOrCruiseName",
         "deploymentId",
@@ -113,7 +112,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -166,7 +164,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         object.getOtherPath().toString(),
         object.getDocumentsPath().toString(),
         object.getCalibrationDocumentsPath().toString(),
-        object.getNavigationPath().toString(),
         object.getSourcePath().toString(),
         object.getSiteOrCruiseName(),
         object.getDeploymentId(),
@@ -234,7 +231,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     assertEquals(expected.getOtherPath(), actual.getOtherPath());
     assertEquals(expected.getDocumentsPath(), actual.getDocumentsPath());
     assertEquals(expected.getCalibrationDocumentsPath(), actual.getCalibrationDocumentsPath());
-    assertEquals(expected.getNavigationPath(), actual.getNavigationPath());
     assertEquals(expected.getSourcePath(), actual.getSourcePath());
     assertEquals(expected.getPackageId(), actual.getPackageId());
 
@@ -323,7 +319,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     createDirectoryAndWriteFile(p.getOtherPath());
     createDirectoryAndWriteFile(p.getDocumentsPath());
     createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
-    createDirectoryAndWriteFile(p.getNavigationPath());
     createDirectoryAndWriteFile(p.getSourcePath());
     
     File outputDirectory = testPath.resolve("output").toFile();
@@ -335,7 +330,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       "target/test-dir/output/test/bag-info.txt",
       "target/test-dir/output/test/process.log",
       "target/test-dir/output/test/tagmanifest-sha256.txt",
-      "target/test-dir/output/test/data/nav_files/navigationPath.txt",
       "target/test-dir/output/test/data/calibration/calibrationDocumentsPath.txt",
       "target/test-dir/output/test/data/test.json",
       "target/test-dir/output/test/data/other/otherPath.txt",
@@ -388,7 +382,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     createDirectoryAndWriteFile(p.getOtherPath());
     createDirectoryAndWriteFile(p.getDocumentsPath());
     createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
-    createDirectoryAndWriteFile(p.getNavigationPath());
 
     File outputDirectory = testPath.resolve("output").toFile();
     clearOut();

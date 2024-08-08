@@ -79,7 +79,6 @@ public class ValidPackageIdentifiersValidatorTest {
         .sourcePath(Paths.get("sourcePath"))
         .temperaturePath(Paths.get("temperaturePath"))
         .otherPath(Paths.get("otherPath"))
-        .navigationPath(Paths.get("navigationPath"))
         .documentsPath(Paths.get("documentsPath"))
         .calibrationDocumentsPath(Paths.get("calibrationDocumentsPath"))
         .biologicalPath(Paths.get("biologicalPath"))

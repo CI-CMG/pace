@@ -514,7 +514,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
@@ -650,7 +649,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
@@ -708,7 +706,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
@@ -776,7 +773,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
@@ -835,7 +831,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))
@@ -892,6 +887,10 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
             .seaArea("sea-area")
             .vessel("vessel")
             .locationDerivationDescription("location description")
+            .fileList(List.of(
+                Paths.get("test-1.txt"),
+                Paths.get("test-2.txt")
+            ))
             .build())
         .build();
   }
@@ -902,7 +901,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))

@@ -3,12 +3,21 @@ package edu.colorado.cires.pace.packaging;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
 
 class PackageInstructionFactory {
@@ -37,49 +46,84 @@ class PackageInstructionFactory {
     Path dataDirectory = outputDirectory.resolve("data");
     
     logger.info("Scanning temperature files from {}", packingJob.getTemperaturePath());
-    Stream<PackageInstruction> temperatureFiles = processPath(
+    Stream<PackageInstruction> temperatureFiles = processDirectory(
         packingJob::getTemperaturePath,
         dataDirectory.resolve("temperature"),
         logger
     );
 
     logger.info("Scanning biological files from {}", packingJob.getBiologicalPath());
-    Stream<PackageInstruction> biologicalFiles = processPath(
+    Stream<PackageInstruction> biologicalFiles = processDirectory(
         packingJob::getBiologicalPath,
         dataDirectory.resolve("biological"),
         logger
     );
     
     logger.info("Scanning other files from {}", packingJob.getOtherPath());
-    Stream<PackageInstruction> otherFiles = processPath(
+    Stream<PackageInstruction> otherFiles = processDirectory(
         packingJob::getOtherPath,
         dataDirectory.resolve("other"),
         logger
     );
     
     logger.info("Scanning documentation files from {}", packingJob.getDocumentsPath());
-    Stream<PackageInstruction> docsFiles = processPath(
+    Stream<PackageInstruction> docsFiles = processDirectory(
         packingJob::getDocumentsPath, 
         dataDirectory.resolve("docs"),
         logger
     );
     
     logger.info("Scanning calibration documentation from {} , files", packingJob.getCalibrationDocumentsPath());
-    Stream<PackageInstruction> calibrationDocsFiles = processPath(
+    Stream<PackageInstruction> calibrationDocsFiles = processDirectory(
         packingJob::getCalibrationDocumentsPath,
         dataDirectory.resolve("calibration"),
         logger
     );
-    
-    logger.info("Scanning navigation files from {}", packingJob.getNavigationPath());
-    Stream<PackageInstruction> navigationFiles = processPath(
-        packingJob::getNavigationPath, 
-        dataDirectory.resolve("nav_files"),
-        logger
-    );
+
+    LocationDetail locationDetail = packingJob.getLocationDetail();
+    Stream<PackageInstruction> navigationFiles;
+    if (locationDetail instanceof MobileMarineLocation mobileMarineLocation) {
+      List<Path> paths = mobileMarineLocation.getFileList();
+      logger.info(
+          "Scanning navigation files from {}",
+          paths.stream()
+              .map(Path::toString)
+              .collect(Collectors.joining(","))
+      );
+
+      Map<Path, Path> fileNameConversions = new HashMap<>(0); // account for duplicate file names from multiple directories
+      paths.stream()
+          .sorted((Comparator.comparingInt(Path::getNameCount)))
+        .collect(Collectors.groupingBy(
+            Path::getFileName
+        )).forEach((key, value) -> {
+            for (int i = 0; i < value.size(); i++) {
+              Path sourcePath = value.get(i);
+              String fileNameSuffix = i == 0 ? "" : String.format(" (%s)", i);
+              String fileName = sourcePath.getFileName().toString();
+              String fileExtension = FilenameUtils.getExtension(fileName);
+              String baseFileName = FilenameUtils.getBaseName(fileName);
+              fileNameConversions.put(
+                  sourcePath,
+                  sourcePath.getParent().resolve(String.format(
+                      "%s%s.%s", baseFileName, fileNameSuffix, fileExtension
+                  ))
+              );
+            }
+        });
+      
+      navigationFiles = processPaths(
+          paths.stream(),
+          dataDirectory.resolve("nav_files"),
+          logger,
+          p -> fileNameConversions.get(p).getFileName()
+      );
+    } else {
+      navigationFiles = Stream.empty();
+    }
     
     logger.info("Scanning source files from {}", packingJob.getSourcePath());
-    Stream<PackageInstruction> sourceFiles = processPath(
+    Stream<PackageInstruction> sourceFiles = processDirectory(
         packingJob::getSourcePath, 
         (packingJob instanceof AudioPackage || packingJob instanceof CPODPackage) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files"),
         logger
@@ -104,15 +148,24 @@ class PackageInstructionFactory {
     ).flatMap(stream -> stream);
   }
   
-  private static Stream<PackageInstruction> processPath(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
+  private static Stream<PackageInstruction> processDirectory(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
     Path path = pathGetter.get();
     if (path == null) {
       return Stream.empty();
     }
 
     try {
-      return Files.walk(path)
-          .filter(p -> p.toFile().isFile())
+      return processPaths(Files.walk(path), outputDirectory, logger, path::relativize);
+    } catch (IOException e) {
+      throw new PackagingException(String.format(
+          "Failed to compute packaging destinations for %s", path
+      ), e);
+    }
+  }
+  
+  private static Stream<PackageInstruction> processPaths(Stream<Path> paths, Path outputDirectory, Logger logger, Function<Path, Path> getPathTailSegment) {
+    return paths
+      .filter(p -> p.toFile().isFile())
           .filter(p -> {
             try {
               boolean regularFile = FileUtils.filterHidden(p);
@@ -126,8 +179,7 @@ class PackageInstructionFactory {
           })
           .map(p -> new PackageInstruction(
                   p,
-                  outputDirectory
-                      .resolve(path.relativize(p))
+                  outputDirectory.resolve(getPathTailSegment.apply(p))
               )
           ).filter(packageInstruction -> {
             try {
@@ -140,11 +192,6 @@ class PackageInstructionFactory {
               throw new RuntimeException(e);
             }
           });
-    } catch (IOException e) {
-      throw new PackagingException(String.format(
-          "Failed to compute packaging destinations for %s", path
-      ), e);
-    }
   }
 
 }

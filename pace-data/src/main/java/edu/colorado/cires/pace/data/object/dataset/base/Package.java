@@ -105,7 +105,6 @@ public class Package extends BasePackage<String> {
         .otherPath(getOtherPath())
         .documentsPath(getDocumentsPath())
         .calibrationDocumentsPath(getCalibrationDocumentsPath())
-        .navigationPath(getNavigationPath())
         .sourcePath(getSourcePath())
         .dataCollectionName(getDataCollectionName())
         .siteOrCruiseName(getSiteOrCruiseName())

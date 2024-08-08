@@ -1,7 +1,9 @@
 package edu.colorado.cires.pace.packaging;
 
+import static edu.colorado.cires.pace.packaging.FileUtils.filterHidden;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -17,10 +19,11 @@ import edu.colorado.cires.pace.data.object.dataset.audio.DetailedAudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.DetailedPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
@@ -29,18 +32,14 @@ import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
 import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
-import edu.colorado.cires.pace.repository.InstrumentRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
-import edu.colorado.cires.pace.repository.PlatformRepository;
-import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import edu.colorado.cires.passivePacker.data.AbstractObjectWithName;
@@ -61,6 +60,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,7 +110,7 @@ class PackagerProcessorTest {
   }
   
   @Test
-  void testInvalidPackingJobNoSourcePath() {
+  void testInvalidPackingJobNoSourcePath() throws IOException {
     Package packingJob = createPackingJob(
         null, null, null, null, null, null, null
     );
@@ -158,6 +158,14 @@ class PackagerProcessorTest {
     Path dp = documentsPath == null ? null : Path.of(documentsPath).toAbsolutePath();
     Path cdp = calibrationDocumentsPath == null ? null : Path.of(calibrationDocumentsPath).toAbsolutePath();
     Path bp = biologicalPath == null ? null : Path.of(biologicalPath).toAbsolutePath();
+
+    writeFiles(bp);
+    writeFiles(cdp);
+    writeFiles(dp);
+    writeFiles(np);
+    writeFiles(op);
+    writeFiles(tp);
+    writeFiles(sp);
     
     Package packingJob = createPackingJob(
         sp,
@@ -168,14 +176,6 @@ class PackagerProcessorTest {
         cdp,
         bp
     );
-    
-    writeFiles(bp);
-    writeFiles(cdp);
-    writeFiles(dp);
-    writeFiles(np);
-    writeFiles(op);
-    writeFiles(tp);
-    writeFiles(sp);
     
     packingJob = objectMapper.readValue(
         objectMapper.writeValueAsString(packingJob), Package.class
@@ -196,7 +196,6 @@ class PackagerProcessorTest {
         .otherPath(null)
         .documentsPath(null)
         .calibrationDocumentsPath(null)
-        .navigationPath(null)
         .sourcePath(null)
         .build();
     String expectedMetadata = SerializationUtils.createObjectMapper()
@@ -242,7 +241,16 @@ class PackagerProcessorTest {
     checkTargetPaths(packingJob.getBiologicalPath(), baseExpectedOutputPath.resolve("biological"));
     checkTargetPaths(packingJob.getCalibrationDocumentsPath(), baseExpectedOutputPath.resolve("calibration"));
     checkTargetPaths(packingJob.getDocumentsPath(), baseExpectedOutputPath.resolve("docs"));
-    checkTargetPaths(packingJob.getNavigationPath(), baseExpectedOutputPath.resolve("nav_files"));
+
+    LocationDetail locationDetail = packingJob.getLocationDetail();
+    assertInstanceOf(MobileMarineLocation.class, locationDetail);
+    MobileMarineLocation mobileMarineLocation = (MobileMarineLocation) locationDetail;
+    Path expectedOutputNavPath = baseExpectedOutputPath.resolve("nav_files");
+    for (Path path : mobileMarineLocation.getFileList()) {
+      Path expectedPath = getExpectedNavPath(path, expectedOutputNavPath);
+      assertTrue(expectedPath.toFile().exists());
+    }
+    
     checkTargetPaths(packingJob.getOtherPath(), baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packingJob.getTemperaturePath(), baseExpectedOutputPath.resolve("temperature"));
     checkTargetPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
@@ -266,7 +274,22 @@ class PackagerProcessorTest {
     String actualProjects = FileUtils.readFileToString(baseExpectedOutputPath.resolve("projects.json").toFile(), StandardCharsets.UTF_8);
     assertEquals(expectedProjects, actualProjects);
   }
-  
+
+  private static Path getExpectedNavPath(Path path, Path expectedOutputNavPath) {
+    Path expectedPath;
+    String fileName = FilenameUtils.getName(path.toString());
+    if (path.toString().contains("subdir")) {
+      String fileExtension = FilenameUtils.getExtension(fileName);
+      String baseName = FilenameUtils.getBaseName(fileName);
+      expectedPath = expectedOutputNavPath.resolve(String.format(
+          "%s (1).%s", baseName, fileExtension
+      ));
+    } else {
+      expectedPath = expectedOutputNavPath.resolve(fileName);
+    }
+    return expectedPath;
+  }
+
   private DetailedPackage createDetailedPackingJob(
       Path sourcePath,
       Path temperaturePath,
@@ -275,14 +298,13 @@ class PackagerProcessorTest {
       Path documentsPath,
       Path calibrationDocumentsPath,
       Path biologicalPath
-  ) throws NotFoundException, DatastoreException {
+  ) throws NotFoundException, DatastoreException, IOException {
     DetailedAudioPackage detailedPackage = DetailedAudioPackage.builder()
         .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)
-        .navigationPath(navigationPath)
         .documentsPath(documentsPath)
         .calibrationDocumentsPath(calibrationDocumentsPath)
         .biologicalPath(biologicalPath)
@@ -418,20 +440,23 @@ class PackagerProcessorTest {
                         .build()
                 ))
                 .build()
-        )).locationDetail(StationaryMarineLocation.builder()
+        )).locationDetail(MobileMarineLocation.builder()
             .seaArea("seaArea")
-            .deploymentLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-10f)
-                .seaFloorDepth(-100f)
-                .longitude(10d)
-                .latitude(10d)
-                .build())
-            .recoveryLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-20f)
-                .seaFloorDepth(-110f)
-                .longitude(15d)
-                .latitude(15d)
-                .build())
+            .vessel("vessel")
+            .locationDerivationDescription("the description of the location")
+            .fileList(
+                navigationPath == null ? Collections.emptyList() :
+                    Files.walk(navigationPath)
+                        .filter(p -> p.toFile().isFile())
+                        .filter(p -> {
+                          try {
+                            return filterHidden(p);
+                          } catch (IOException e) {
+                            throw new RuntimeException(e);
+                          }
+                        })
+                        .collect(Collectors.toList())
+            )
             .build())
         .build();
 
@@ -484,14 +509,13 @@ class PackagerProcessorTest {
       Path documentsPath,
       Path calibrationDocumentsPath,
       Path biologicalPath
-  ) {
+  ) throws IOException {
     return AudioPackage.builder()
         .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
         .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)
-        .navigationPath(navigationPath)
         .documentsPath(documentsPath)
         .calibrationDocumentsPath(calibrationDocumentsPath)
         .biologicalPath(biologicalPath)
@@ -599,20 +623,23 @@ class PackagerProcessorTest {
                         .build()
                 ))
                 .build()
-        )).locationDetail(StationaryMarineLocation.builder()
+        )).locationDetail(MobileMarineLocation.builder()
             .seaArea("seaArea")
-            .deploymentLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-10f)
-                .seaFloorDepth(-100f)
-                .longitude(10d)
-                .latitude(10d)
-                .build())
-            .recoveryLocation(MarineInstrumentLocation.builder()
-                .instrumentDepth(-20f)
-                .seaFloorDepth(-110f)
-                .longitude(15d)
-                .latitude(15d)
-                .build())
+            .vessel("vessel")
+            .locationDerivationDescription("the description of the location")
+            .fileList(
+                navigationPath == null ? Collections.emptyList() :
+                    Files.walk(navigationPath)
+                        .filter(p -> p.toFile().isFile())
+                        .filter(p -> {
+                          try {
+                            return filterHidden(p);
+                          } catch (IOException e) {
+                            throw new RuntimeException(e);
+                          }
+                        })
+                        .collect(Collectors.toList())
+            )
             .build())
         .build();
   }

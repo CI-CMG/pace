@@ -23,7 +23,6 @@ class DetectionsPackageTranslatorTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -78,7 +77,6 @@ class DetectionsPackageTranslatorTest {
     assertEquals(packageTranslator.getOtherPath(), detectionsPackageTranslator.getOtherPath());
     assertEquals(packageTranslator.getDocumentsPath(), detectionsPackageTranslator.getDocumentsPath());
     assertEquals(packageTranslator.getCalibrationDocumentsPath(), detectionsPackageTranslator.getCalibrationDocumentsPath());
-    assertEquals(packageTranslator.getNavigationPath(), detectionsPackageTranslator.getNavigationPath());
     assertEquals(packageTranslator.getSourcePath(), detectionsPackageTranslator.getSourcePath());
     assertEquals(packageTranslator.getSiteOrCruiseName(), detectionsPackageTranslator.getSiteOrCruiseName());
     assertEquals(packageTranslator.getDeploymentId(), detectionsPackageTranslator.getDeploymentId());

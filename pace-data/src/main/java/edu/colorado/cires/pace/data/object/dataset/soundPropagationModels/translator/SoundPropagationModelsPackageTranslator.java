@@ -31,7 +31,6 @@ public class SoundPropagationModelsPackageTranslator extends SoftwareDependentPa
         .otherPath(packageTranslator.getOtherPath())
         .documentsPath(packageTranslator.getDocumentsPath())
         .calibrationDocumentsPath(packageTranslator.getCalibrationDocumentsPath())
-        .navigationPath(packageTranslator.getNavigationPath())
         .sourcePath(packageTranslator.getSourcePath())
         .siteOrCruiseName(packageTranslator.getSiteOrCruiseName())
         .deploymentId(packageTranslator.getDeploymentId())

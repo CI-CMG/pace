@@ -15,7 +15,6 @@ public class FilePathsTranslatorForm extends JPanel {
   private final JComboBox<String> biologicalPathField = new JComboBox<>();
   private final JComboBox<String> otherPathField = new JComboBox<>();
   private final JComboBox<String> documentsPathField = new JComboBox<>();
-  private final JComboBox<String> navigationPathField = new JComboBox<>();
   private final JComboBox<String> sourcePathField = new JComboBox<>();
 
   public FilePathsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
@@ -34,8 +33,6 @@ public class FilePathsTranslatorForm extends JPanel {
     add(otherPathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("Documents Path"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(documentsPathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-    add(new JLabel("Navigation Path"), configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-    add(navigationPathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
     add(new JLabel("Source Path"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
     add(sourcePathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weightx = 1; }));
 
@@ -47,7 +44,6 @@ public class FilePathsTranslatorForm extends JPanel {
     updateComboBoxModel(biologicalPathField, headerOptions);
     updateComboBoxModel(otherPathField, headerOptions);
     updateComboBoxModel(documentsPathField, headerOptions);
-    updateComboBoxModel(navigationPathField, headerOptions);
     updateComboBoxModel(sourcePathField, headerOptions);
     
     if (initialTranslator != null) {
@@ -55,7 +51,6 @@ public class FilePathsTranslatorForm extends JPanel {
       biologicalPathField.setSelectedItem(initialTranslator.getBiologicalPath());
       otherPathField.setSelectedItem(initialTranslator.getOtherPath());
       documentsPathField.setSelectedItem(initialTranslator.getDocumentsPath());
-      navigationPathField.setSelectedItem(initialTranslator.getNavigationPath());
       sourcePathField.setSelectedItem(initialTranslator.getSourcePath());
     }
   }
@@ -76,10 +71,6 @@ public class FilePathsTranslatorForm extends JPanel {
     return (String) documentsPathField.getSelectedItem();
   }
 
-  public String getNavigationPathValue() {
-    return (String) navigationPathField.getSelectedItem();
-  }
-
   public String getSourcePathValue() {
     return (String) sourcePathField.getSelectedItem();
   }
@@ -89,7 +80,6 @@ public class FilePathsTranslatorForm extends JPanel {
     updateComboBoxModel(biologicalPathField, options);
     updateComboBoxModel(otherPathField, options);
     updateComboBoxModel(documentsPathField, options);
-    updateComboBoxModel(navigationPathField, options);
     updateComboBoxModel(sourcePathField, options);
   }
 }

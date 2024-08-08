@@ -24,7 +24,6 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
         .otherPath(String.format("other-path-%s", suffix))
         .documentsPath(String.format("documents-path-%s", suffix))
         .calibrationDocumentsPath(String.format("calibration-documents-path-%s", suffix))
-        .navigationPath(String.format("navigation-path-%s", suffix))
         .sourcePath(String.format("source-path-%s", suffix))
         .siteOrCruiseName(String.format("site-or-cruise-name-%s", suffix))
         .deploymentId(String.format("deployment-id-%s", suffix))
@@ -121,7 +120,6 @@ public class DetectionsPackageTranslatorTest extends TranslatorRepositoryTest {
     assertEquals(expectedPackageTranslator.getOtherPath(), actualPackageTranslator.getOtherPath());
     assertEquals(expectedPackageTranslator.getDocumentsPath(), actualPackageTranslator.getDocumentsPath());
     assertEquals(expectedPackageTranslator.getCalibrationDocumentsPath(), actualPackageTranslator.getCalibrationDocumentsPath());
-    assertEquals(expectedPackageTranslator.getNavigationPath(), actualPackageTranslator.getNavigationPath());
     assertEquals(expectedPackageTranslator.getSourcePath(), actualPackageTranslator.getSourcePath());
     assertEquals(expectedPackageTranslator.getSiteOrCruiseName(), actualPackageTranslator.getSiteOrCruiseName());
     assertEquals(expectedPackageTranslator.getDeploymentId(), actualPackageTranslator.getDeploymentId());

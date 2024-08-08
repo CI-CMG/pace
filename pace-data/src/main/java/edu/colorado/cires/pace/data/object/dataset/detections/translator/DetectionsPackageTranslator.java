@@ -30,7 +30,6 @@ public class DetectionsPackageTranslator extends SoundAnalysisPackageTranslator 
         .otherPath(packageTranslator.getOtherPath())
         .documentsPath(packageTranslator.getDocumentsPath())
         .calibrationDocumentsPath(packageTranslator.getCalibrationDocumentsPath())
-        .navigationPath(packageTranslator.getNavigationPath())
         .sourcePath(packageTranslator.getSourcePath())
         .siteOrCruiseName(packageTranslator.getSiteOrCruiseName())
         .deploymentId(packageTranslator.getDeploymentId())

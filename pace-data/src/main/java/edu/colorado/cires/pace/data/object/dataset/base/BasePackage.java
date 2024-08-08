@@ -36,7 +36,6 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   private final Path otherPath;
   private final Path documentsPath;
   private final Path calibrationDocumentsPath;
-  private final Path navigationPath; // TODO: Remove this
   @NotNull
   private final Path sourcePath;
 

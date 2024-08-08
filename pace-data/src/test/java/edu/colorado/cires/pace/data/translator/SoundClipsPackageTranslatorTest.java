@@ -23,7 +23,6 @@ class SoundClipsPackageTranslatorTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -78,7 +77,6 @@ class SoundClipsPackageTranslatorTest {
     assertEquals(packageTranslator.getOtherPath(), soundClipsPackageTranslator.getOtherPath());
     assertEquals(packageTranslator.getDocumentsPath(), soundClipsPackageTranslator.getDocumentsPath());
     assertEquals(packageTranslator.getCalibrationDocumentsPath(), soundClipsPackageTranslator.getCalibrationDocumentsPath());
-    assertEquals(packageTranslator.getNavigationPath(), soundClipsPackageTranslator.getNavigationPath());
     assertEquals(packageTranslator.getSourcePath(), soundClipsPackageTranslator.getSourcePath());
     assertEquals(packageTranslator.getSiteOrCruiseName(), soundClipsPackageTranslator.getSiteOrCruiseName());
     assertEquals(packageTranslator.getDeploymentId(), soundClipsPackageTranslator.getDeploymentId());

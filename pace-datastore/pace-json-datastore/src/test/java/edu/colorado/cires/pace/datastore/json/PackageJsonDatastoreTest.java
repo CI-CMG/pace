@@ -65,7 +65,6 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         .sourcePath(Paths.get("source-path"))
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
-        .navigationPath(Paths.get("navigation-path"))
         .documentsPath(Paths.get("documents-path"))
         .calibrationDocumentsPath(Paths.get("calibration-documents-path"))
         .biologicalPath(Paths.get("biological-path"))

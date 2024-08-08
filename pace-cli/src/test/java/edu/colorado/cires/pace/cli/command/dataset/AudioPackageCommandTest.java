@@ -508,7 +508,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .otherPath(testPath.resolve("otherPath").toAbsolutePath())
         .documentsPath(testPath.resolve("documentsPath").toAbsolutePath())
         .calibrationDocumentsPath(testPath.resolve("calibrationDocumentsPath").toAbsolutePath())
-        .navigationPath(testPath.resolve("navigationPath").toAbsolutePath())
         .sourcePath(testPath.resolve("sourcePath").toAbsolutePath())
         .siteOrCruiseName(uniqueField)
         .deploymentId(uniqueField)

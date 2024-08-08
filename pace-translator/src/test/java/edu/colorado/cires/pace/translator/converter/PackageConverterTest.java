@@ -78,7 +78,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -284,7 +283,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -494,7 +492,6 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getOtherPath().toString()), 4));
     map.put(audioPackageTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getDocumentsPath().toString()), 5));
     map.put(audioPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(audioPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(audioPackage.getNavigationPath().toString()), 7));
     map.put(audioPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(audioPackage.getSourcePath().toString()), 8));
     map.put(audioPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(audioPackage.getSiteOrCruiseName()), 9));
     map.put(audioPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentId()), 10));
@@ -678,7 +675,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -870,7 +866,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1180,7 +1175,6 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getOtherPath().toString()), 4));
     map.put(cpodPackageTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDocumentsPath().toString()), 5));
     map.put(cpodPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(cpodPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getNavigationPath().toString()), 7));
     map.put(cpodPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSourcePath().toString()), 8));
     map.put(cpodPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getSiteOrCruiseName()), 9));
     map.put(cpodPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentId()), 10));
@@ -1351,7 +1345,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1431,7 +1424,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1532,7 +1524,6 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getOtherPath().toString()), 4));
     map.put(detectionsPackageTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDocumentsPath().toString()), 5));
     map.put(detectionsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(detectionsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getNavigationPath().toString()), 7));
     map.put(detectionsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSourcePath().toString()), 8));
     map.put(detectionsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getSiteOrCruiseName()), 9));
     map.put(detectionsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getDeploymentId()), 10));
@@ -1616,7 +1607,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1681,7 +1671,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1759,7 +1748,6 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getOtherPath().toString()), 4));
     map.put(soundClipsPackageTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDocumentsPath().toString()), 5));
     map.put(soundClipsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(soundClipsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getNavigationPath().toString()), 7));
     map.put(soundClipsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSourcePath().toString()), 8));
     map.put(soundClipsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getSiteOrCruiseName()), 9));
     map.put(soundClipsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDeploymentId()), 10));
@@ -1828,7 +1816,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -1920,7 +1907,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -2039,7 +2025,6 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getOtherPath().toString()), 4));
     map.put(soundLevelMetricsPackageTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDocumentsPath().toString()), 5));
     map.put(soundLevelMetricsPackageTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(soundLevelMetricsPackageTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getNavigationPath().toString()), 7));
     map.put(soundLevelMetricsPackageTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSourcePath().toString()), 8));
     map.put(soundLevelMetricsPackageTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getSiteOrCruiseName()), 9));
     map.put(soundLevelMetricsPackageTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getDeploymentId()), 10));
@@ -2133,7 +2118,6 @@ class PackageConverterTest {
         .otherPath(Paths.get("other"))
         .documentsPath(Paths.get("documents"))
         .calibrationDocumentsPath(Paths.get("calibrationDocuments"))
-        .navigationPath(Paths.get("navigation"))
         .sourcePath(Paths.get("source"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -2197,7 +2181,6 @@ class PackageConverterTest {
         .otherPath("otherPath")
         .documentsPath("documentsPath")
         .calibrationDocumentsPath("calibrationDocumentsPath")
-        .navigationPath("navigationPath")
         .sourcePath("sourcePath")
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
@@ -2274,7 +2257,6 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getOtherPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getOtherPath().toString()), 4));
     map.put(soundPropagationModelsTranslator.getDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDocumentsPath().toString()), 5));
     map.put(soundPropagationModelsTranslator.getCalibrationDocumentsPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getCalibrationDocumentsPath().toString()), 6));
-    map.put(soundPropagationModelsTranslator.getNavigationPath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getNavigationPath().toString()), 7));
     map.put(soundPropagationModelsTranslator.getSourcePath(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSourcePath().toString()), 8));
     map.put(soundPropagationModelsTranslator.getSiteOrCruiseName(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getSiteOrCruiseName()), 9));
     map.put(soundPropagationModelsTranslator.getDeploymentId(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getDeploymentId()), 10));

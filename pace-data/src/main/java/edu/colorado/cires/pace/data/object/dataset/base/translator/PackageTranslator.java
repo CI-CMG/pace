@@ -22,7 +22,6 @@ public class PackageTranslator extends Translator {
   private final String otherPath;
   private final String documentsPath;
   private final String calibrationDocumentsPath;
-  private final String navigationPath;
   private final String sourcePath;
   private final String siteOrCruiseName;
   private final String deploymentId;
