@@ -53,7 +53,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class PassivePackerFactoryTest {
@@ -121,7 +120,7 @@ class PassivePackerFactoryTest {
         .build());
   }
   
-  @Test @Disabled
+  @Test
   void testMobileMarineAudio() throws IOException, NotFoundException, DatastoreException {
     assertEquals(
         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
@@ -193,7 +192,7 @@ class PassivePackerFactoryTest {
     );
   }
   
-  @Test @Disabled
+  @Test
   void testSoundLevelMetrics() throws NotFoundException, DatastoreException, IOException {
     assertEquals(
         objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(
@@ -559,6 +558,10 @@ class PassivePackerFactoryTest {
         .seaArea("Baltic Sea")
         .vessel("R/V Fulmar")
         .locationDerivationDescription("location derivation description")
+        .fileList(List.of(
+            Paths.get("/Users/paytoncain/Desktop/Project 15_Site 15_15/data/other/test-8127.txt"),
+            Paths.get("/Users/paytoncain/Desktop/Project 15_Site 15_15/data/other/test-9239.txt")
+        ))
         .build();
   }
 

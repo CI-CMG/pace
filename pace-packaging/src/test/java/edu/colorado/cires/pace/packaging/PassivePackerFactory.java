@@ -59,6 +59,7 @@ import edu.colorado.cires.passivePacker.data.PassivePackerSensor;
 import edu.colorado.cires.passivePacker.data.PassivePackerSensorType;
 import edu.colorado.cires.passivePacker.data.PassivePackerStationaryMarineLocation;
 import edu.colorado.cires.passivePacker.data.PassivePackerStationaryTerrestrialLocation;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -68,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.IntStreams;
 
 public class PassivePackerFactory {
@@ -187,6 +189,9 @@ public class PassivePackerFactory {
           .seaArea(mobileMarineLocation.getSeaArea())
           .deployShip(mobileMarineLocation.getVessel())
           .positionDetails(mobileMarineLocation.getLocationDerivationDescription())
+          .files(mobileMarineLocation.getFileList().stream()
+              .map(Path::toString)
+              .collect(Collectors.joining(",")))
           .build();
     }
     
@@ -529,19 +534,21 @@ public class PassivePackerFactory {
 
   private List<PassivePackerQualityEntry> getQualityEntries(List<DataQualityEntry> qualityEntries) {
     return qualityEntries.stream()
-        .map(e -> (PassivePackerQualityEntry) PassivePackerQualityEntry.builder()
-            .start(serializeDateTime(e.getStartTime()))
-            .end(serializeDateTime(e.getEndTime()))
-            .quality(e.getQualityLevel().getName())
-            .lowFreq(String.valueOf(e.getMinFrequency()))
-            .highFreq(String.valueOf(e.getMaxFrequency()))
-            .comments(e.getComments())
-            .channels(
-                e.getChannelNumbers().stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(","))
-            )
-            .build())
+        .map(e -> {
+          String channelNumbers = e.getChannelNumbers().stream()
+              .map(String::valueOf)
+              .collect(Collectors.joining(","));
+          return (PassivePackerQualityEntry) PassivePackerQualityEntry.builder()
+              .start(serializeDateTime(e.getStartTime()))
+              .end(serializeDateTime(e.getEndTime()))
+              .quality(e.getQualityLevel().getName())
+              .lowFreq(String.valueOf(e.getMinFrequency()))
+              .highFreq(String.valueOf(e.getMaxFrequency()))
+              .comments(e.getComments())
+              .channels(
+                  StringUtils.isBlank(channelNumbers) ? "1" : channelNumbers
+              ).build();
+        })
         .toList();
   }
 
