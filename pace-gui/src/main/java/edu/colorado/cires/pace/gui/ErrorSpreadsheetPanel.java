@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -36,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -101,7 +103,33 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
       table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
     table.setGridColor(Color.RED);
-    
+
+    table.addMouseMotionListener(new MouseAdapter() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        Point p = e.getPoint();
+        int col = table.columnAtPoint(p);
+        int row = table.rowAtPoint(p);
+        boolean errorHover = false;
+        for (ObjectWithRowError exception : exceptions) {
+          java.lang.Throwable t = exception.throwable();
+          if (t instanceof FieldException fieldException) {
+            if (fieldException.getColumn() == col-1) {
+              errorHover = true;
+              table.setRowSelectionAllowed(true);
+              table.setColumnSelectionAllowed(true);
+              table.setColumnSelectionInterval(col, col);
+              table.setRowSelectionInterval(row, row);
+            }
+          }
+        }
+        if (!errorHover) {
+          table.setRowSelectionAllowed(false);
+          table.setColumnSelectionAllowed(false);
+        }
+      }
+    });
+
     table.addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
@@ -109,7 +137,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         Point point = e.getPoint();
         int row = table.rowAtPoint(point);
         int col = table.columnAtPoint(point);
-        if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+        if (e.getClickCount() == 1 && table.getSelectedRow() != -1) {
           Set<String> messages = exceptions.stream().filter(o -> {
             java.lang.Throwable t = o.throwable();
                 if (t instanceof FieldException fieldException) {
@@ -237,6 +265,8 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                   imageIcon.setDescription("Spreadsheet validation error");
                   values.add(0, imageIcon);
                 } else {
+                  //TODO create a useful error message
+                  JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, t, "Error", JOptionPane.ERROR_MESSAGE);
                   values.add(0, null);
                 }
                 return values;
