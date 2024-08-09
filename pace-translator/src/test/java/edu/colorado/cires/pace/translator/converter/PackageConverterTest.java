@@ -47,6 +47,7 @@ import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.translator.
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.translator.SoundPropagationModelsPackageTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryMarineLocationTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
+import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
@@ -1595,13 +1596,129 @@ class PackageConverterTest {
     assertEquals(objectMapper.writeValueAsString(detectionsPackage), objectMapper.writeValueAsString(result));
     assertEquals(0, runtimeException.getSuppressed().length);
   }
+  
+  @Test
+  void testInvalidProcessingLevel() throws TranslationException {
+    RuntimeException runtimeException = new RuntimeException();
+    Package aPackage = converter.convert(
+        AudioPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+    
+    assertNull(aPackage.getProcessingLevel());
+
+    FieldException fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    aPackage = converter.convert(
+        CPODPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+
+    assertNull(aPackage.getProcessingLevel());
+
+    fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    aPackage = converter.convert(
+        DetectionsPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+
+    assertNull(aPackage.getProcessingLevel());
+
+    fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    aPackage = converter.convert(
+        SoundClipsPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+
+    assertNull(aPackage.getProcessingLevel());
+
+    fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    aPackage = converter.convert(
+        SoundLevelMetricsPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+
+    assertNull(aPackage.getProcessingLevel());
+
+    fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+
+    runtimeException = new RuntimeException();
+    aPackage = converter.convert(
+        SoundPropagationModelsPackageTranslator.builder()
+            .processingLevel("processingLevel")
+            .build(),
+        Map.of("processingLevel", new ValueWithColumnNumber(Optional.of("TEST"), 1)),
+        2,
+        runtimeException
+    );
+
+    assertNull(aPackage.getProcessingLevel());
+
+    fieldException = (FieldException) runtimeException.getSuppressed()[0];
+    assertEquals(1, fieldException.getColumn());
+    assertEquals(2, fieldException.getRow());
+    assertEquals("processingLevel", fieldException.getProperty());
+    assertEquals("Processing Level", fieldException.getTargetProperty());
+    assertEquals("Unsupported processing level - TEST", fieldException.getMessage());
+  }
 
   @Test
   void convertSoundClipsPackage() throws TranslationException, JsonProcessingException {
     SoundClipsPackage soundClipsPackage = SoundClipsPackage.builder()
         .uuid(UUID.randomUUID())
         .dataCollectionName("dataCollectionName")
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature"))
         .biologicalPath(Paths.get("biological"))
         .otherPath(Paths.get("other"))
@@ -1741,7 +1858,6 @@ class PackageConverterTest {
 
     Map<String, ValueWithColumnNumber> map = new HashMap<>(0);
     map.put(soundClipsPackageTranslator.getPackageUUID(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getUuid().toString()), 1));
-    map.put(soundClipsPackageTranslator.getProcessingLevel(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getProcessingLevel().toString()), 1));
     map.put(soundClipsPackageTranslator.getDataCollectionName(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getDataCollectionName()), 1));
     map.put(soundClipsPackageTranslator.getTemperaturePath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getTemperaturePath().toString()), 2));
     map.put(soundClipsPackageTranslator.getBiologicalPath(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getBiologicalPath().toString()), 3));
