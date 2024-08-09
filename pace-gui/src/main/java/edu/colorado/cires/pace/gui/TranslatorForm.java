@@ -31,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.lang3.ArrayUtils;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 
@@ -93,7 +94,7 @@ public class TranslatorForm extends ObjectWithNameForm<Translator> {
       }
       
       baseTranslatorForm.setHeaderOptions(newHeaderOptions);
-      headerOptions = newHeaderOptions;
+      headerOptions = ArrayUtils.addAll(new String[]{""}, newHeaderOptions);
     }
   }
   
