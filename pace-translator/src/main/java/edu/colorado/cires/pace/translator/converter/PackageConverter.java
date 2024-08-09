@@ -12,7 +12,7 @@ import static edu.colorado.cires.pace.translator.converter.ConversionUtils.strin
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringFromProperty;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.stringListFromMap;
 import static edu.colorado.cires.pace.translator.converter.ConversionUtils.uuidFromMap;
-import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathListFromString;
+import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathListFromMap;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
@@ -137,11 +137,11 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, cpodPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, cpodPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, cpodPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
-        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
-        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
-        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
-        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalyst()))
+        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisObjectives()))
+        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisMethod()))
+        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAssessmentDescription()))
+        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator == null ? Collections.emptyList() : qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
         .deploymentTime(localDateTimeFromMap(properties, "Deployment Time", cpodPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, "Recovery Time", cpodPackageTranslator.getRecoveryTime(), row, runtimeException))
         .audioStartTime(localDateTimeFromMap(properties, "Audio Start Time", cpodPackageTranslator.getAudioStartTime(), row, runtimeException))
@@ -213,11 +213,11 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, audioPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, audioPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, audioPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
-        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
-        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
-        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
-        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalyst()))
+        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisObjectives()))
+        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisMethod()))
+        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAssessmentDescription()))
+        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator == null ? Collections.emptyList() : qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
         .deploymentTime(localDateTimeFromMap(properties, "Deployment Time", audioPackageTranslator.getDeploymentTime(), row, runtimeException))
         .recoveryTime(localDateTimeFromMap(properties, "Recovery Time", audioPackageTranslator.getRecoveryTime(), row, runtimeException))
         .audioStartTime(localDateTimeFromMap(properties, "Audio Start Time", audioPackageTranslator.getAudioStartTime(), row, runtimeException))
@@ -265,11 +265,11 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .deploymentDescription(stringFromMap(properties, detectionsPackageTranslator.getDeploymentDescription()))
         .alternateSiteName(stringFromMap(properties, detectionsPackageTranslator.getAlternateSiteName()))
         .alternateDeploymentName(stringFromMap(properties, detectionsPackageTranslator.getAlternateDeploymentName()))
-        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
-        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
-        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
-        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
-        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalyst()))
+        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisObjectives()))
+        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisMethod()))
+        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAssessmentDescription()))
+        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator == null ? Collections.emptyList() : qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
         .softwareNames(stringFromMap(properties, detectionsPackageTranslator.getSoftwareNames()))
         .softwareVersions(stringFromMap(properties, detectionsPackageTranslator.getSoftwareVersions()))
         .softwareProtocolCitation(stringFromMap(properties, detectionsPackageTranslator.getSoftwareProtocolCitation()))
@@ -287,12 +287,15 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
 
   private static LocationDetail locationDetailFromMap(LocationDetailTranslator locationDetailTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
+    if (locationDetailTranslator == null) {
+      return null;
+    }
     if (locationDetailTranslator instanceof StationaryTerrestrialLocationTranslator stationaryTerrestrialLocationTranslator) {
       return stationaryTerrestrialLocationFromMap(stationaryTerrestrialLocationTranslator, properties, row, runtimeException);
     } else if (locationDetailTranslator instanceof MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator) {
       return multiPointStationaryMarineLocationFromMap(multipointStationaryMarineLocationTranslator, properties, row, runtimeException);
     } else if (locationDetailTranslator instanceof MobileMarineLocationTranslator mobileMarineLocationTranslator) {
-      return mobileMarineLocationFromMap(mobileMarineLocationTranslator, properties);
+      return mobileMarineLocationFromMap(mobileMarineLocationTranslator, properties, row, runtimeException);
     } else if (locationDetailTranslator instanceof StationaryMarineLocationTranslator stationaryMarineLocationTranslator) {
       return stationaryMarineLocationFromMap(stationaryMarineLocationTranslator, properties, row, runtimeException);
     } else {
@@ -329,12 +332,12 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .build();
   }
 
-  private static MobileMarineLocation mobileMarineLocationFromMap(MobileMarineLocationTranslator mobileMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties) {
+  private static MobileMarineLocation mobileMarineLocationFromMap(MobileMarineLocationTranslator mobileMarineLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return MobileMarineLocation.builder()
         .locationDerivationDescription(stringFromMap(properties, mobileMarineLocationTranslator.getLocationDerivationDescription()))
         .vessel(stringFromMap(properties, mobileMarineLocationTranslator.getVessel()))
         .seaArea(stringFromMap(properties, mobileMarineLocationTranslator.getSeaArea()))
-        .fileList(pathListFromString(stringFromMap(properties, mobileMarineLocationTranslator.getSingleStringFiles())))
+        .fileList(pathListFromMap(properties, "File List", mobileMarineLocationTranslator.getSingleStringFiles(), row, runtimeException))
         .build();
   }
 
@@ -424,11 +427,11 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .alternateDeploymentName(stringFromMap(properties, soundLevelMetricsPackageTranslator.getAlternateDeploymentName()))
         .audioStartTime(localDateTimeFromMap(properties, "Audio Start Time", soundLevelMetricsPackageTranslator.getAudioStartTimeTranslator(), row, runtimeException))
         .audioEndTime(localDateTimeFromMap(properties, "Audio End Time", soundLevelMetricsPackageTranslator.getAudioEndTimeTranslator(), row, runtimeException))
-        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalyst()))
-        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisObjectives()))
-        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator.getQualityAnalysisMethod()))
-        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator.getQualityAssessmentDescription()))
-        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
+        .qualityAnalyst(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalyst()))
+        .qualityAnalysisObjectives(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisObjectives()))
+        .qualityAnalysisMethod(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAnalysisMethod()))
+        .qualityAssessmentDescription(stringFromMap(properties, qualityControlDetailTranslator == null ? null : qualityControlDetailTranslator.getQualityAssessmentDescription()))
+        .qualityEntries(dataQualityEntriesFromMap(qualityControlDetailTranslator == null ? Collections.emptyList() : qualityControlDetailTranslator.getQualityEntryTranslators(), properties, row, runtimeException))
         .analysisTimeZone(integerFromMap(properties, "Analysis Time Zone", soundLevelMetricsPackageTranslator.getAnalysisTimeZone(), row, runtimeException))
         .analysisEffort(integerFromMap(properties, "Analysis Effort", soundLevelMetricsPackageTranslator.getAnalysisEffort(), row, runtimeException))
         .sampleRate(floatFromMap(properties, "Sample Rate", soundLevelMetricsPackageTranslator.getSampleRate(), row, runtimeException))

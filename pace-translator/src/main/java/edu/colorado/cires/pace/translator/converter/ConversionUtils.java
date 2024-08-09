@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import jdk.jshell.EvalException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +73,10 @@ final class ConversionUtils {
   }
   
   private static LocalDate parseLocalDate(Map<String, ValueWithColumnNumber> properties, String targetProperty, DateTranslator dateTranslator, int row, RuntimeException runtimeException) {
+    if (dateTranslator == null) {
+      return null;
+    }
+    
     ValueWithColumnNumber timeZone = propertyFromMap(properties, dateTranslator.getTimeZone());
     ValueWithColumnNumber date = propertyFromMap(properties, dateTranslator.getDate());
     
@@ -218,7 +223,10 @@ final class ConversionUtils {
   }
   
   public static @NotNull ValueWithColumnNumber propertyFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
-    ValueWithColumnNumber valueWithColumnNumber = properties.get(propertyName);
+    ValueWithColumnNumber valueWithColumnNumber = null;
+    if (propertyName != null) {
+      valueWithColumnNumber = properties.get(propertyName); 
+    }
     
     if (valueWithColumnNumber == null) {
       return new ValueWithColumnNumber(
@@ -253,13 +261,27 @@ final class ConversionUtils {
         .orElse(null);
   }
 
-  public static List<Path> pathListFromString(String string) {
+  public static List<Path> pathListFromMap(Map<String, ValueWithColumnNumber> properties, String targetProperty, String propertyName, int row, RuntimeException runtimeException) {
+    if (propertyName == null) {
+      return Collections.emptyList();
+    }
+    ValueWithColumnNumber valueWithColumnNumber = properties.get(propertyName);
+    if (valueWithColumnNumber == null) {
+      return Collections.emptyList();
+    }
+    String string = stringFromProperty(valueWithColumnNumber);
     if (string == null) {
       return Collections.emptyList();
     }
     
     return Arrays.stream(string.split(";"))
-            .map(Paths::get)
+            .map(value -> pathFromMap(
+                Map.of(propertyName, new ValueWithColumnNumber(Optional.of(value), valueWithColumnNumber.column())),
+                targetProperty,
+                propertyName,
+                row,
+                runtimeException
+            ))
             .toList();
   }
 
