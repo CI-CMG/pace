@@ -6,6 +6,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.CalibrationDeta
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
-public abstract class BasePackage<T> implements AbstractObject, TimeRange, CalibrationDetail {
+public abstract class BasePackage implements AbstractObject, TimeRange, CalibrationDetail {
 
   private final UUID uuid;
   @NotNull
@@ -42,8 +43,6 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   private final String dataCollectionName;
   private final String siteOrCruiseName;
   private final String deploymentId;
-  @NotNull
-  protected abstract List<@NotNull @Valid T> getProjects();
   
   @NotNull
   private final LocalDate publicReleaseDate;
@@ -64,23 +63,20 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;
 
-  @NotNull
-  @Valid
-  protected abstract T getDatasetPackager();
-  @NotNull
-  @NotEmpty
-  protected abstract List<@NotNull @Valid T> getScientists();
-  @NotNull @NotEmpty
-  protected abstract List<@NotNull @Valid T> getSponsors();
-  @NotNull @NotEmpty
-  protected abstract List<@NotNull @Valid T> getFunders();
-  @NotNull @Valid
-  protected abstract T getPlatform();
-  @NotNull @Valid
-  protected abstract T getInstrument();
-  
-  @JsonIgnore
-  protected abstract List<String> getProjectNames();
+  @NotBlank
+  private final String datasetPackager;
+  @Builder.Default @NotNull @NotEmpty
+  private final List<@NotBlank String> scientists = Collections.emptyList();
+  @Builder.Default @NotNull @NotEmpty
+  private final List<@NotBlank String> sponsors = Collections.emptyList();
+  @Builder.Default @NotNull @NotEmpty
+  private final List<@NotBlank String> funders = Collections.emptyList();
+  @NotBlank
+  private final String platform;
+  @NotBlank
+  private final String instrument;
+  @Builder.Default @NotNull @NotEmpty
+  private final List<@NotBlank String> projects = Collections.emptyList();
 
   @Override
   public String getUniqueField() {
@@ -95,7 +91,7 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
     
     String packageId = null;
 
-    List<String> projects = getProjects() == null ? Collections.emptyList() : getProjectNames();
+    List<String> projects = getProjects();
     if (!projects.isEmpty()) {
       packageId = projects.get(0);
     }
@@ -123,6 +119,13 @@ public abstract class BasePackage<T> implements AbstractObject, TimeRange, Calib
     }
     
     return packageId;
+  }
+
+  public abstract static class BasePackageBuilder<C extends BasePackage, B> {
+    public B baseFields(BasePackage p) {
+      $fillValuesFromInstanceIntoBuilder(p, this);
+      return self();
+    }
   }
 
 }

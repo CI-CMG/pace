@@ -35,11 +35,11 @@ public class InstrumentRepository extends PackageDependencyRepository<Instrument
 
   @Override
   protected Package applyObjectToDependentObjects(Instrument original, Instrument updated, Package dependency) {
-    return dependency.setInstrument(
+    return dependency.toBuilder().instrument(
         replaceString(
             dependency.getInstrument(), original.getName(), updated.getName()
         )
-    );
+    ).build();
   }
 
   @Override

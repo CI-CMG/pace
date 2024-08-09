@@ -2,7 +2,6 @@ package edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -38,48 +37,8 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   private final String softwareProcessingDescription;
 
   @Override
-  public SoundLevelMetricsPackage setLocationDetail(LocationDetail locationDetail) {
-    return toBuilder().locationDetail(locationDetail).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
-  }
-
-  @Override
   public SoundLevelMetricsPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setScientists(List<String> scientists) {
-    return toBuilder().scientists(scientists).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setDatasetPackager(String datasetPackager) {
-    return toBuilder().datasetPackager(datasetPackager).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setSponsors(List<String> sponsors) {
-    return toBuilder().sponsors(sponsors).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setFunders(List<String> funders) {
-    return toBuilder().funders(funders).build();
-  }
-
-  @Override
-  public SoundLevelMetricsPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
   }
 
   @Override

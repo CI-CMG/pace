@@ -17,10 +17,10 @@ public class PlatformRepository extends PackageDependencyRepository<Platform> {
 
   @Override
   protected Package applyObjectToDependentObjects(Platform original, Platform updated, Package dependency) {
-    return dependency.setPlatform(
+    return dependency.toBuilder().platform(
         replaceString(
             dependency.getPlatform(), original.getName(), updated.getName()
         )
-    );
+    ).build();
   }
 }

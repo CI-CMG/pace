@@ -17,10 +17,10 @@ public class ProjectRepository extends PackageDependencyRepository<Project> {
 
   @Override
   protected Package applyObjectToDependentObjects(Project original, Project updated, Package dependency) {
-    return dependency.setProjects(
+    return dependency.toBuilder().projects(
         replaceStringInList(
             dependency.getProjects(), original.getName(), updated.getName()
         )
-    );
+    ).build();
   }
 }

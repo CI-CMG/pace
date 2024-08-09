@@ -1,8 +1,6 @@
 package edu.colorado.cires.pace.data.object.dataset.audio;
 
-import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import java.util.List;
 import java.util.UUID;
@@ -18,31 +16,6 @@ import lombok.extern.jackson.Jacksonized;
 public class CPODPackage extends AudioDataPackage {
 
   @Override
-  public CPODPackage setLocationDetail(LocationDetail locationDetail) {
-    return toBuilder().locationDetail(locationDetail).build();
-  }
-
-  @Override
-  public CPODPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
-  }
-
-  @Override
-  public CPODPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
-  }
-
-  @Override
-  public CPODPackage setScientists(List<String> scientists) {
-    return toBuilder().scientists(scientists).build();
-  }
-
-  @Override
-  public CPODPackage setDatasetPackager(String datasetPackager) {
-    return toBuilder().datasetPackager(datasetPackager).build();
-  }
-
-  @Override
   public CPODPackage updateChannels(List<Channel<String>> channels) {
     return toBuilder().channels(channels).build();
   }
@@ -55,21 +28,6 @@ public class CPODPackage extends AudioDataPackage {
   @Override
   public CPODPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();
-  }
-
-  @Override
-  public CPODPackage setSponsors(List<String> sponsors) {
-    return toBuilder().sponsors(sponsors).build();
-  }
-
-  @Override
-  public CPODPackage setFunders(List<String> funders) {
-    return toBuilder().funders(funders).build();
-  }
-
-  @Override
-  public CPODPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
   }
 
   @Override

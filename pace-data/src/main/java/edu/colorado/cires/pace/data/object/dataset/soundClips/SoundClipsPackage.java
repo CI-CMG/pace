@@ -1,9 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.soundClips;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,45 +21,6 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
 
-  @Override
-  public SoundClipsPackage setLocationDetail(LocationDetail locationDetail) {
-    return toBuilder().locationDetail(locationDetail).build();
-  }
-
-  @Override
-  public SoundClipsPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
-  }
-
-  @Override
-  public SoundClipsPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
-  }
-
-  @Override
-  public SoundClipsPackage setScientists(List<String> scientists) {
-    return toBuilder().scientists(scientists).build();
-  }
-
-  @Override
-  public SoundClipsPackage setDatasetPackager(String datasetPackager) {
-    return toBuilder().datasetPackager(datasetPackager).build();
-  }
-
-  @Override
-  public SoundClipsPackage setSponsors(List<String> sponsors) {
-    return toBuilder().sponsors(sponsors).build();
-  }
-
-  @Override
-  public SoundClipsPackage setFunders(List<String> funders) {
-    return toBuilder().funders(funders).build();
-  }
-
-  @Override
-  public SoundClipsPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
-  }
 
   @Override
   public SoundClipsPackage setUuid(UUID uuid) {

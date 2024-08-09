@@ -1,9 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.detections;
 
-import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Collections;
 import java.util.List;
@@ -40,48 +38,8 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   private final Float maxFrequency;
 
   @Override
-  public DetectionsPackage setLocationDetail(LocationDetail locationDetail) {
-    return toBuilder().locationDetail(locationDetail).build();
-  }
-
-  @Override
-  public DetectionsPackage setProjects(List<String> projects) {
-    return toBuilder().projects(projects).build();
-  }
-
-  @Override
-  public DetectionsPackage setPlatform(String platform) {
-    return toBuilder().platform(platform).build();
-  }
-
-  @Override
   public DetectionsPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();
-  }
-
-  @Override
-  public DetectionsPackage setScientists(List<String> scientists) {
-    return toBuilder().scientists(scientists).build();
-  }
-
-  @Override
-  public DetectionsPackage setDatasetPackager(String datasetPackager) {
-    return toBuilder().datasetPackager(datasetPackager).build();
-  }
-
-  @Override
-  public DetectionsPackage setSponsors(List<String> sponsors) {
-    return toBuilder().sponsors(sponsors).build();
-  }
-
-  @Override
-  public DetectionsPackage setFunders(List<String> funders) {
-    return toBuilder().funders(funders).build();
-  }
-
-  @Override
-  public DetectionsPackage setInstrument(String instrument) {
-    return toBuilder().instrument(instrument).build();
   }
 
   @Override

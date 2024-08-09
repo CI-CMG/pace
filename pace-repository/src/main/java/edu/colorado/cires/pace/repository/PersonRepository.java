@@ -37,8 +37,10 @@ public class PersonRepository extends PackageDependencyRepository<Person> {
     String datasetPacker = replaceString(dependency.getDatasetPackager(), originalName, newName);
     
     
-    Package updatedPackage = dependency.setScientists(scientists)
-        .setDatasetPackager(datasetPacker);
+    Package updatedPackage = dependency.toBuilder()
+        .scientists(scientists)
+        .datasetPackager(datasetPacker)
+        .build();
     
     if (updatedPackage instanceof DataQuality<?> dataQuality) {
       DataQuality<String> quality = (DataQuality<String>) dataQuality; 

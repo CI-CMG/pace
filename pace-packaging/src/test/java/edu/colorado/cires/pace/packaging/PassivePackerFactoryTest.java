@@ -277,7 +277,8 @@ class PassivePackerFactoryTest {
   }
 
   private Package createDetectionsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
-    return createBasePackage(locationDetail).toInheritingType(DetectionsPackage.builder()).toBuilder()
+    return DetectionsPackage.builder()
+        .baseFields(createBasePackage(locationDetail))
         .processingLevel(ProcessingLevel.Product)
         .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
         .postDeploymentCalibrationDate(null)
@@ -321,7 +322,8 @@ class PassivePackerFactoryTest {
   }
 
   private Package createSoundPropagationModelsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
-    return createBasePackage(locationDetail).toInheritingType(SoundPropagationModelsPackage.builder()).toBuilder()
+    return SoundPropagationModelsPackage.builder()
+        .baseFields(createBasePackage(locationDetail))
         .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
         .postDeploymentCalibrationDate(null)
         .softwareNames("software names")
@@ -339,7 +341,8 @@ class PassivePackerFactoryTest {
   }
 
   private Package createSoundClipsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
-    return createBasePackage(locationDetail).toInheritingType(SoundClipsPackage.builder()).toBuilder()
+    return SoundClipsPackage.builder()
+        .baseFields(createBasePackage(locationDetail))
         .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
         .postDeploymentCalibrationDate(null)
         .softwareNames("software names")
@@ -354,7 +357,8 @@ class PassivePackerFactoryTest {
   }
 
   private Package createSoundLevelMetricsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
-    return createBasePackage(locationDetail).toInheritingType(SoundLevelMetricsPackage.builder()).toBuilder()
+    return SoundLevelMetricsPackage.builder()
+        .baseFields(createBasePackage(locationDetail))
         .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
         .postDeploymentCalibrationDate(null)
         .softwareNames("software names")
@@ -425,7 +429,8 @@ class PassivePackerFactoryTest {
   }
   
   private <P extends AudioDataPackage, B extends AudioDataPackage.AudioDataPackageBuilder<P, ?>> P createAudioDataPackage(LocationDetail locationDetail, B audioDataPackageBuilder) {
-    return (P) createBasePackage(locationDetail).toInheritingType(audioDataPackageBuilder).toBuilder()
+    return audioDataPackageBuilder
+        .baseFields(createBasePackage(locationDetail))
         .channels(List.of(
             Channel.<String>builder()
                 .startTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
