@@ -44,10 +44,10 @@ public class GainForm extends JPanel {
     }));
     endTimeForm.setBorder(createEtchedBorder("End Time"));
     add(endTimeForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 3; c.weightx = 1;
+      c.gridx = 1; c.gridy = 2; c.weightx = 1;
     }));
     add(getRemoveButton(), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
   }
   
