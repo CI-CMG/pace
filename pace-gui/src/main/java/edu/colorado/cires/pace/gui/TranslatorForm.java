@@ -94,7 +94,7 @@ public class TranslatorForm extends ObjectWithNameForm<Translator> {
       }
       
       baseTranslatorForm.setHeaderOptions(newHeaderOptions);
-      headerOptions = ArrayUtils.addAll(new String[]{""}, newHeaderOptions);
+      headerOptions = ArrayUtils.addAll(new String[]{null,}, newHeaderOptions);
     }
   }
   
