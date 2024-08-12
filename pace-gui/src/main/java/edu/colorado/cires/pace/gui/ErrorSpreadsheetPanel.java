@@ -265,8 +265,6 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                   imageIcon.setDescription("Spreadsheet validation error");
                   values.add(0, imageIcon);
                 } else {
-                  //TODO create a useful error message
-                  JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, t, "Error", JOptionPane.ERROR_MESSAGE);
                   values.add(0, null);
                 }
                 return values;

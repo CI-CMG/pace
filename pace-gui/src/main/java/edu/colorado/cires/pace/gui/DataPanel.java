@@ -36,9 +36,10 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
   private final String name;
   
   private JTextField uniqueFieldSearchField;
-  private JCheckBox visibilitySearchField;
+  private JButton seePackagedSearchField;
   
   private final Map<String, TableColumn> hiddenColumns = new HashMap<>(0);
+  private Boolean packaged = false;
   
   private JTable table;
   
@@ -113,10 +114,8 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
         }
       }
     });
-    visibilitySearchField = new JCheckBox("Visible", true);
     toolBar.add(uniqueFieldSearchField);
-    //TODO move visibility to bottom of page
-    toolBar.add(visibilitySearchField);
+    toolBar.add(createPackagedButton());
     toolBar.addSeparator();
     toolBar.add(createSearchButton());
     toolBar.addSeparator();
@@ -133,13 +132,37 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     
     button.addActionListener(e -> {
       uniqueFieldSearchField.setText("");
-      visibilitySearchField.setSelected(true);
+      packagedToggle(true);
       searchData();
     });
     
     return button;
   }
-  
+
+  private void packagedToggle(Boolean reset) {
+    if(reset){
+      packaged = false;
+      seePackagedSearchField.setText("Hide Packaged");
+    }
+    else if(packaged){
+      packaged = false;
+      seePackagedSearchField.setText("Hide Packaged");
+    }
+    else{
+      packaged = true;
+      seePackagedSearchField.setText("See Packaged");
+    }
+    searchData();
+  }
+
+  private JButton createPackagedButton() {
+    seePackagedSearchField = new JButton("See Packaged");
+
+    seePackagedSearchField.addActionListener(e -> packagedToggle(false));
+
+    return seePackagedSearchField;
+  }
+
   private JButton createSearchButton() {
     JButton button = new JButton("Search");
     
@@ -161,7 +184,7 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     
     return getSearchParameters(
         searchTextTerms,
-        Collections.singletonList(visibilitySearchField.isSelected())
+        Collections.singletonList(!packaged)
     );
   }
   
