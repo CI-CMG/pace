@@ -115,6 +115,7 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     });
     visibilitySearchField = new JCheckBox("Visible", true);
     toolBar.add(uniqueFieldSearchField);
+    //TODO move visibility to bottom of page
     toolBar.add(visibilitySearchField);
     toolBar.addSeparator();
     toolBar.add(createSearchButton());

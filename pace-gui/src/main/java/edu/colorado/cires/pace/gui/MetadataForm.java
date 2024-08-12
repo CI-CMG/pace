@@ -4,6 +4,14 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
+import edu.colorado.cires.pace.data.object.dataset.audio.translator.AudioPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.translator.CPODPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.detections.translator.DetectionsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundClips.translator.SoundClipsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.translator.SoundLevelMetricsPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.translator.SoundPropagationModelsPackageTranslator;
+import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
@@ -15,6 +23,7 @@ import java.util.UUID;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -88,8 +97,11 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
           object.getUuid(),
           object
       );
-    } else {
+    } else if (object instanceof AudioPackageTranslator || object instanceof CPODPackageTranslator || object instanceof DetectionsPackageTranslator || object instanceof SoundClipsPackageTranslator
+        || object instanceof SoundLevelMetricsPackageTranslator || object instanceof SoundPropagationModelsPackageTranslator) {
       repository.create(object);
+    } else {
+      throw new BadArgumentException("Please choose a package type");
     }
   }
 
