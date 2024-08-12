@@ -100,8 +100,10 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
     } else if (object instanceof AudioPackageTranslator || object instanceof CPODPackageTranslator || object instanceof DetectionsPackageTranslator || object instanceof SoundClipsPackageTranslator
         || object instanceof SoundLevelMetricsPackageTranslator || object instanceof SoundPropagationModelsPackageTranslator) {
       repository.create(object);
-    } else {
+    } else if (object instanceof PackageTranslator) {
       throw new BadArgumentException("Please choose a package type");
+    } else {
+      repository.create(object);
     }
   }
 
