@@ -334,20 +334,19 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private JToolBar createPackageToolbar() {
     JToolBar toolBar = new JToolBar();
     ButtonGroup group = new ButtonGroup();
-//    JRadioButton viewModeButton = createModeSelectCheckbox("View", this::setViewMode);
-//    viewModeButton.setSelected(true);
-//    setViewMode(true);
-    JRadioButton packageModeButton = createModeSelectCheckbox("Package", this::setPackageMode);
+    //JRadioButton viewModeButton = createModeSelectCheckbox("View", this::setViewMode);
+    //viewModeButton.setSelected(true);
+    setViewMode(true);
+    JRadioButton packageModeButton = createModeSelectCheckbox("Create Package", this::setPackageMode);
     packageModeButton.setSelected(true);
-    setPackageMode(true);
     JRadioButton editVisibilityModeButton = createModeSelectCheckbox("Edit Visibility", this::setEditVisibilityModel);
     setEditVisibilityModel(false);
-    JRadioButton deleteModeButton = createModeSelectCheckbox("Delete", this::setDeleteModel);
-//    group.add(viewModeButton);
+    JRadioButton deleteModeButton = createModeSelectCheckbox("Delete Translation", this::setDeleteModel);
+    //group.add(viewModeButton);
     group.add(packageModeButton);
     group.add(editVisibilityModeButton);
     group.add(deleteModeButton);
-//    toolBar.add(viewModeButton);
+    //toolBar.add(viewModeButton);
     toolBar.add(packageModeButton);
     toolBar.add(editVisibilityModeButton);
     toolBar.add(deleteModeButton);
@@ -363,6 +362,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   }
   
   private void setPackageMode(Boolean enabled) {
+    actionButton.setVisible(true);
+    selectAllButton.setVisible(true);
+    deselectAllButton.setVisible(true);
     if (enabled) {
       Arrays.stream(actionButton.getActionListeners()).forEach(
           actionButton::removeActionListener
@@ -370,7 +372,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       
       actionButton.addActionListener(e -> packageSelectedRows());
       actionButton.setText("Package");
-      
+
       getTableColumnModel().addColumn(
           getHiddenColumnByHeaderValue("Select for Packaging")
       );
