@@ -334,19 +334,20 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private JToolBar createPackageToolbar() {
     JToolBar toolBar = new JToolBar();
     ButtonGroup group = new ButtonGroup();
-    JRadioButton viewModeButton = createModeSelectCheckbox("View", this::setViewMode);
-    viewModeButton.setSelected(true);
-    setViewMode(true);
+//    JRadioButton viewModeButton = createModeSelectCheckbox("View", this::setViewMode);
+//    viewModeButton.setSelected(true);
+//    setViewMode(true);
     JRadioButton packageModeButton = createModeSelectCheckbox("Package", this::setPackageMode);
-    setPackageMode(false);
+    packageModeButton.setSelected(true);
+    setPackageMode(true);
     JRadioButton editVisibilityModeButton = createModeSelectCheckbox("Edit Visibility", this::setEditVisibilityModel);
     setEditVisibilityModel(false);
     JRadioButton deleteModeButton = createModeSelectCheckbox("Delete", this::setDeleteModel);
-    group.add(viewModeButton);
+//    group.add(viewModeButton);
     group.add(packageModeButton);
     group.add(editVisibilityModeButton);
     group.add(deleteModeButton);
-    toolBar.add(viewModeButton);
+//    toolBar.add(viewModeButton);
     toolBar.add(packageModeButton);
     toolBar.add(editVisibilityModeButton);
     toolBar.add(deleteModeButton);
