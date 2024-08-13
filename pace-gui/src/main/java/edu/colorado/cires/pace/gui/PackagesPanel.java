@@ -371,7 +371,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       );
       
       actionButton.addActionListener(e -> packageSelectedRows());
-      actionButton.setText("Package");
+      actionButton.setText("Package Data");
 
       getTableColumnModel().addColumn(
           getHiddenColumnByHeaderValue("Select for Packaging")
