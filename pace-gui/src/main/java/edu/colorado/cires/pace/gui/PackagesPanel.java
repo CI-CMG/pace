@@ -22,6 +22,7 @@ import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -46,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -324,6 +326,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.add(searchToolBar, configureFormLayout(0, 0));
     panel.add(packageToolbar, configureFormLayout(0, 1));
+    JToggleButton seeHidden = (JToggleButton) searchToolBar.getComponentAtIndex(1);
+    seeHidden.setText("See Packaged");
     return panel;
   }
 

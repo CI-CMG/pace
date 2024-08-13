@@ -6,8 +6,10 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.search.SearchParameters;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -36,10 +38,10 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
   private final String name;
   
   private JTextField uniqueFieldSearchField;
-  private JButton seePackagedSearchField;
+  private JToggleButton seeHiddenSearchField;
   
   private final Map<String, TableColumn> hiddenColumns = new HashMap<>(0);
-  private Boolean packaged = false;
+  private Boolean hidden = false;
   
   private JTable table;
   
@@ -115,7 +117,7 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
       }
     });
     toolBar.add(uniqueFieldSearchField);
-    toolBar.add(createPackagedButton());
+    toolBar.add(createHiddenButton());
     toolBar.addSeparator();
     toolBar.add(createSearchButton());
     toolBar.addSeparator();
@@ -132,35 +134,30 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     
     button.addActionListener(e -> {
       uniqueFieldSearchField.setText("");
-      packagedToggle(true);
+      hiddenToggle(true, null);
       searchData();
     });
     
     return button;
   }
 
-  private void packagedToggle(Boolean reset) {
+  private void hiddenToggle(Boolean reset, ItemEvent e) {
     if(reset){
-      packaged = false;
-      seePackagedSearchField.setText("Hide Packaged");
+      hidden = false;
+      seeHiddenSearchField.setSelected(false);
+      return;
     }
-    else if(packaged){
-      packaged = false;
-      seePackagedSearchField.setText("Hide Packaged");
-    }
-    else{
-      packaged = true;
-      seePackagedSearchField.setText("See Packaged");
-    }
+    else
+      hidden = e.getStateChange() == ItemEvent.SELECTED;
     searchData();
   }
 
-  private JButton createPackagedButton() {
-    seePackagedSearchField = new JButton("See Packaged");
+  private JToggleButton createHiddenButton() {
+    seeHiddenSearchField = new JToggleButton("See Hidden");
 
-    seePackagedSearchField.addActionListener(e -> packagedToggle(false));
+    seeHiddenSearchField.addItemListener(e -> hiddenToggle(false, e));
 
-    return seePackagedSearchField;
+    return seeHiddenSearchField;
   }
 
   private JButton createSearchButton() {
@@ -184,7 +181,7 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     
     return getSearchParameters(
         searchTextTerms,
-        Collections.singletonList(!packaged)
+        Collections.singletonList(!hidden)
     );
   }
   
