@@ -130,7 +130,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     panel.add(translateButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
     
     translateButton.addActionListener((e) -> translateSpreadsheet(successAction, repository, clazz));
-    
+
     return panel;
   }
   
@@ -247,7 +247,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
       JDialog errorDialog = new JDialog();
       errorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
       errorDialog.setLocationRelativeTo(this);
-      ErrorSpreadsheetPanel<O> errorSpreadsheetPanel = new ErrorSpreadsheetPanel<>(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName()));
+      ErrorSpreadsheetPanel<O> errorSpreadsheetPanel = new ErrorSpreadsheetPanel<>(new File(selectedFile), exceptions, !clazz.getSimpleName().equals(Package.class.getSimpleName()), repository, successAction);
       errorSpreadsheetPanel.init();
       Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
       errorDialog.setSize(size);

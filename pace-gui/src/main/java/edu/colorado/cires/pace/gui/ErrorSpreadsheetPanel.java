@@ -5,6 +5,7 @@ import static edu.colorado.cires.pace.gui.UIUtils.getImageIcon;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
+import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.translator.FieldException;
@@ -27,9 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -37,7 +37,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -52,11 +51,15 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
   private final boolean autoResizeColumns;
   private final File file;
   private final List<ObjectWithRowError<O>> exceptions;
+  private final CRUDRepository<O> repository;
+  private final Runnable refreshTable;
 
-  public ErrorSpreadsheetPanel(File file, List<ObjectWithRowError<O>> exceptions, boolean autoResizeColumns) {
+  public ErrorSpreadsheetPanel(File file, List<ObjectWithRowError<O>> exceptions, boolean autoResizeColumns, CRUDRepository<O> repository, Runnable refreshTable) {
     this.file = file;
     this.exceptions = exceptions;
     this.autoResizeColumns = autoResizeColumns;
+    this.repository = repository;
+    this.refreshTable = refreshTable;
   }
   
   public void init() {
@@ -138,35 +141,54 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         int row = table.rowAtPoint(point);
         int col = table.columnAtPoint(point);
         if (e.getClickCount() == 1 && table.getSelectedRow() != -1) {
-          Set<String> messages = exceptions.stream().filter(o -> {
-            java.lang.Throwable t = o.throwable();
-                if (t instanceof FieldException fieldException) {
-                  return fieldException.getColumn() == (col - 1) && fieldException.getRow() == (row + 2);
-                } else if (t instanceof ConstraintViolationException || t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
-                  return (row + 2) == o.row() && col == 0;
-                } else {
-                  return false;
-                }
-              }).map(ObjectWithRowError::throwable).map((t) -> {
-                if (t instanceof ConstraintViolationException constraintViolationException) {
-                  return constraintViolationException.getConstraintViolations().stream()
-                      .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
-                      .collect(Collectors.joining("\n"));
-                } else if (t instanceof FieldException fieldException) {
-                  return String.format(
-                    "Failed to resolve %s from %s: %s",
-                    fieldException.getTargetProperty(),
-                    fieldException.getProperty(),
-                    fieldException.getMessage()  
-                  );
-                }
+          Optional<ObjectWithRowError<O>> error = exceptions.stream().filter(o -> {
+            Throwable t = o.throwable();
+            if (t instanceof FieldException fieldException) {
+              return fieldException.getColumn() == (col - 1) && fieldException.getRow() == (row + 2);
+            } else if (t instanceof ConstraintViolationException || t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
+              return (row + 2) == o.row() && col == 0;
+            } else {
+              return false;
+            }
+          }).findFirst();
 
-                return t.getMessage();
-              })
-              .collect(Collectors.toSet());
+          if (error.isPresent()) {
+            ObjectWithRowError<O> objectWithRowError = error.get();
+            Throwable t = objectWithRowError.throwable();
+            String message;
+            if (t instanceof ConstraintViolationException constraintViolationException) {
+              message = constraintViolationException.getConstraintViolations().stream()
+                  .map(constraintViolation -> String.format("%s - %s", constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage()))
+                  .collect(Collectors.joining("\n"));
+            } else if (t instanceof FieldException fieldException) {
+              message = String.format(
+                  "Failed to resolve %s from %s: %s",
+                  fieldException.getTargetProperty(),
+                  fieldException.getProperty(),
+                  fieldException.getMessage()
+              );
+            } else {
+              message = t.getMessage();
+            }
 
-          if (!messages.isEmpty()) {
-            JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, messages.iterator().next(), "Error", JOptionPane.ERROR_MESSAGE);
+            if (t instanceof ConflictException) {
+              int result = JOptionPane.showConfirmDialog(ErrorSpreadsheetPanel.this, message+". Would you like to overwrite?", "Overwrite object?", JOptionPane.YES_NO_OPTION);
+              if (result == JOptionPane.YES_OPTION) {
+                O object = objectWithRowError.object();
+                try {
+                  O existing = repository.getByUniqueField(object.getUniqueField());
+                  object = (O) object.setUuid(existing.getUuid());
+                  repository.update(object.getUuid(), object);
+                  refreshTable.run();
+                } catch (RuntimeException ex) {
+                  throw ex;
+                } catch (ConflictException | NotFoundException | DatastoreException | BadArgumentException ex) {
+                  ;
+                }
+              }
+            } else {
+              JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            }
           }
         }
       }
