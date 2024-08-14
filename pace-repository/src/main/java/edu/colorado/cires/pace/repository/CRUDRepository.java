@@ -108,7 +108,6 @@ public abstract class CRUDRepository<O extends AbstractObject> {
         .filter(searchParameters::matches);
   }
 
-  //TODO give user option of replacing if already exists
   public O update(UUID uuid, O object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     validate(object);
     UUID objectUUID = object.getUuid();

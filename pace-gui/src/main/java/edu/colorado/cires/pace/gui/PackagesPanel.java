@@ -336,7 +336,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     ButtonGroup group = new ButtonGroup();
     //JRadioButton viewModeButton = createModeSelectCheckbox("View", this::setViewMode);
     //viewModeButton.setSelected(true);
-    setViewMode(true);
+    //setViewMode(true);
     JRadioButton packageModeButton = createModeSelectCheckbox("Create Package", this::setPackageMode);
     packageModeButton.setSelected(true);
     JRadioButton editVisibilityModeButton = createModeSelectCheckbox("Edit Visibility", this::setEditVisibilityModel);
