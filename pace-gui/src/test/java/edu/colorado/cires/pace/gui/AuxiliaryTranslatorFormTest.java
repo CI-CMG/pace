@@ -5,8 +5,10 @@ import static org.junit.Assert.assertNotNull;
 
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
 import java.util.Arrays;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +53,7 @@ public abstract class AuxiliaryTranslatorFormTest<T, F extends AuxiliaryTranslat
     selectComboBoxOption((JComponent) form, name, optionToSelect);
   }
   
-  private void selectComboBoxOption(JComponent component, String name, String optionToSelect) {
+  protected void selectComboBoxOption(JComponent component, String name, String optionToSelect) {
     JComboBox<?> comboBox = Arrays.stream(component.getComponents())
         .filter(c -> StringUtils.isNotBlank(c.getName()))
         .filter(c -> c.getName().equals(name))
@@ -61,19 +63,85 @@ public abstract class AuxiliaryTranslatorFormTest<T, F extends AuxiliaryTranslat
     comboBox.setSelectedItem(optionToSelect);
   }
   
-  protected void selectTimeOptions(String name, String time, String timeZone) {
-    TimeTranslatorForm timeTranslatorForm = Arrays.stream(form.getComponents())
+  protected void selectTimeOptions(JComponent component, String name, String time, String timeZone) {
+    TimeTranslatorForm timeTranslatorForm = Arrays.stream(component.getComponents())
         .filter(c -> StringUtils.isNotBlank(c.getName()))
         .filter(c -> c.getName().equals(name))
         .filter(c -> c instanceof TimeTranslatorForm)
         .map(c -> (TimeTranslatorForm) c)
         .findFirst().orElseThrow();
-    
+        ;
     selectComboBoxOption(timeTranslatorForm, "time", time);
     selectComboBoxOption(timeTranslatorForm, "timeZone", timeZone);
-    
-    
-  } 
+  }
+
+  protected void selectDateOptions(String name, String date, String timeZone) {
+    selectDateOptions((JComponent) form, name, date, timeZone);
+  }
+
+  protected void selectDateOptions(JComponent component, String name, String date, String timeZone) {
+    DateTranslatorForm dateTranslatorForm = Arrays.stream(component.getComponents())
+        .filter(c -> StringUtils.isNotBlank(c.getName()))
+        .filter(c -> c.getName().equals(name))
+        .filter(c -> c instanceof DateTranslatorForm)
+        .map(c -> (DateTranslatorForm) c)
+        .findFirst().orElseThrow();
+    ;
+    selectComboBoxOption(dateTranslatorForm, "date", date);
+    selectComboBoxOption(dateTranslatorForm, "timeZone", timeZone);
+  }
+  
+  protected void selectTimeOptions(String name, String time, String timeZone) {
+    selectTimeOptions((JComponent) form, name, time, timeZone);
+  }
+  
+  protected void selectSensorOptions(String name, String sensorName, String sensorX, String sensorY, String sensorZ) {
+    PackageSensorTranslatorForm sensorTranslatorForm = Arrays.stream(form.getComponents())
+        .filter(c -> StringUtils.isNotBlank(c.getName()))
+        .filter(c -> c.getName().equals(name))
+        .filter(c -> c instanceof PackageSensorTranslatorForm)
+        .map(c -> (PackageSensorTranslatorForm) c)
+        .findFirst().orElseThrow();
+    selectSensorOptions(sensorTranslatorForm, sensorName, sensorX, sensorY, sensorZ);
+  }
+  
+  protected void selectSensorOptions(JPanel sensorTranslatorForm, String sensorName, String sensorX, String sensorY, String sensorZ) {
+    Arrays.stream(sensorTranslatorForm.getComponents())
+        .filter(c -> c instanceof JComboBox<?>)
+        .map(c -> (JComboBox<?>) c)
+        .findFirst().orElseThrow()
+        .setSelectedItem(sensorName);
+
+    PositionTranslatorForm positionTranslatorForm = Arrays.stream(sensorTranslatorForm.getComponents())
+        .filter(c -> c instanceof PositionTranslatorForm)
+        .map(c -> (PositionTranslatorForm) c)
+        .findFirst().orElseThrow();
+    selectComboBoxOption(positionTranslatorForm, "x", sensorX);
+    selectComboBoxOption(positionTranslatorForm, "y", sensorY);
+    selectComboBoxOption(positionTranslatorForm, "z", sensorZ);
+  }
+  
+  protected JPanel getPanel(String panelName) {
+    return Arrays.stream(form.getComponents())
+        .filter(c -> StringUtils.isNotBlank(c.getName()))
+        .filter(c -> c.getName().equals(panelName))
+        .filter(c -> c instanceof JPanel)
+        .map(c -> (JPanel) c)
+        .findFirst().orElseThrow();
+  }
+  
+  protected void clickButton(JComponent component, String buttonText) {
+    Arrays.stream(component.getComponents())
+        .filter(c -> c instanceof JButton)
+        .map(c -> (JButton) c)
+        .filter(b -> b.getText().equals(buttonText))
+        .findFirst().orElseThrow()
+        .doClick();
+  }
+  
+  protected T getTranslator() {
+    return form.toTranslator();
+  }
 
 
 }

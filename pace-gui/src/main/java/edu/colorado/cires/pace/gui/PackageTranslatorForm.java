@@ -553,6 +553,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
 
   @Override
   protected PackageTranslator toTranslator(UUID uuid, String name) {
+    PackageTranslator packageInfoTranslator = packageInfoForm.toTranslator();
+    PackageTranslator calibrationTranslator = calibrationTranslatorForm.toTranslator();
     PackageTranslator packageTranslator = PackageTranslator.builder()
         .uuid(uuid)
         .name(name)
@@ -560,31 +562,31 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .biologicalPath(filePathsTranslatorForm.getBiologicalPathValue())
         .otherPath(filePathsTranslatorForm.getOtherPathValue())
         .documentsPath(filePathsTranslatorForm.getDocumentsPathValue())
-        .calibrationDocumentsPath(calibrationTranslatorForm.getCalibrationDocumentsPathValue())
         .sourcePath(filePathsTranslatorForm.getSourcePathValue())
         .scientists(contactsTranslatorForm.getScientistsValue())
         .sponsors(contactsTranslatorForm.getSponsorsValue())
         .funders(contactsTranslatorForm.getFundersValue())
         .datasetPackager(contactsTranslatorForm.getDatasetPackagerValue())
-        .calibrationDescription(calibrationTranslatorForm.getCalibrationDescriptionValue())
-        .preDeploymentCalibrationDate(calibrationTranslatorForm.getPreDeploymentCalibrationDateTranslator())
-        .postDeploymentCalibrationDate(calibrationTranslatorForm.getPostDeploymentCalibrationDateTranslator())
-        .processingLevel(packageInfoForm.getProcessingLevelValue())
-        .packageUUID(packageInfoForm.getUuidValue())
-        .dataCollectionName(packageInfoForm.getDataCollectionNameValue())
-        .siteOrCruiseName(packageInfoForm.getSiteOrCruiseNameValue())
-        .deploymentId(packageInfoForm.getDeploymentIdValue())
-        .projects(packageInfoForm.getProjectsValue())
-        .platform(packageInfoForm.getPlatformValue())
-        .instrument(packageInfoForm.getInstrumentValue())
-        .deploymentTitle(packageInfoForm.getDeploymentTitleValue())
-        .deploymentPurpose(packageInfoForm.getDeploymentPurposeValue())
-        .deploymentDescription(packageInfoForm.getDeploymentDescriptionValue())
-        .alternateSiteName(packageInfoForm.getAlternateSiteNameValue())
-        .alternateDeploymentName(packageInfoForm.getAlternateDeploymentNameValue())
-        .startTime(packageInfoForm.getStartTimeTranslator())
-        .endTime(packageInfoForm.getEndTimeTranslator())
-        .publicReleaseDate(packageInfoForm.getPublicReleaseDateTranslator())
+        .calibrationDocumentsPath(calibrationTranslator.getCalibrationDocumentsPath())
+        .calibrationDescription(calibrationTranslator.getCalibrationDescription())
+        .preDeploymentCalibrationDate(calibrationTranslator.getPreDeploymentCalibrationDate())
+        .postDeploymentCalibrationDate(calibrationTranslator.getPostDeploymentCalibrationDate())
+        .processingLevel(packageInfoTranslator.getProcessingLevel())
+        .packageUUID(packageInfoTranslator.getPackageUUID())
+        .dataCollectionName(packageInfoTranslator.getDataCollectionName())
+        .siteOrCruiseName(packageInfoTranslator.getSiteOrCruiseName())
+        .deploymentId(packageInfoTranslator.getDeploymentId())
+        .projects(packageInfoTranslator.getProjects())
+        .platform(packageInfoTranslator.getPlatform())
+        .instrument(packageInfoTranslator.getInstrument())
+        .deploymentTitle(packageInfoTranslator.getDeploymentTitle())
+        .deploymentPurpose(packageInfoTranslator.getDeploymentPurpose())
+        .deploymentDescription(packageInfoTranslator.getDeploymentDescription())
+        .alternateSiteName(packageInfoTranslator.getAlternateSiteName())
+        .alternateDeploymentName(packageInfoTranslator.getAlternateDeploymentName())
+        .startTime(packageInfoTranslator.getStartTime())
+        .endTime(packageInfoTranslator.getEndTime())
+        .publicReleaseDate(packageInfoTranslator.getPublicReleaseDate())
         .locationDetailTranslator(locationDetailForm.toTranslator())
         .build();
     
@@ -624,36 +626,38 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   
   private AudioPackageTranslator toAudioTranslator(PackageTranslator packageTranslator) {
     AudioDataForm<?> audioDataForm = (AudioDataForm<?>) packageDetailForm.getComponent();
+    AudioDataPackageTranslator audioDataPackageTranslator = audioDataForm.toTranslator();
     return AudioPackageTranslator.toBuilder(packageTranslator)
         .qualityControlDetailTranslator(((QualityControlForm) qualityControlForm.getComponent()).toTranslator())
-        .instrumentId(audioDataForm.getInstrumentIdValue())
-        .hydrophoneSensitivity(audioDataForm.getHydrophoneSensitivityValue())
-        .frequencyRange(audioDataForm.getFrequencyRangeValue())
-        .gain(audioDataForm.getGainValue())
-        .comments(audioDataForm.getCommentsValue())
-        .sensors(audioDataForm.getSensorsValue())
-        .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
-        .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
-        .audioStartTime(audioDataForm.getAudioStartTimeTranslator())
-        .audioEndTime(audioDataForm.getAudioEndTimeTranslator())
+        .instrumentId(audioDataPackageTranslator.getInstrumentId())
+        .hydrophoneSensitivity(audioDataPackageTranslator.getHydrophoneSensitivity())
+        .frequencyRange(audioDataPackageTranslator.getFrequencyRange())
+        .gain(audioDataPackageTranslator.getGain())
+        .comments(audioDataPackageTranslator.getComments())
+        .sensors(audioDataPackageTranslator.getSensors())
+        .deploymentTime(audioDataPackageTranslator.getDeploymentTime())
+        .recoveryTime(audioDataPackageTranslator.getRecoveryTime())
+        .audioStartTime(audioDataPackageTranslator.getAudioStartTime())
+        .audioEndTime(audioDataPackageTranslator.getAudioEndTime())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }
   
   private CPODPackageTranslator toCPODPackageTranslator(PackageTranslator packageTranslator) {
     AudioDataForm<?> audioDataForm = (AudioDataForm<?>) packageDetailForm.getComponent();
+    AudioDataPackageTranslator audioDataPackageTranslator = audioDataForm.toTranslator();
     return CPODPackageTranslator.toBuilder(packageTranslator)
         .qualityControlDetailTranslator(((QualityControlForm) qualityControlForm.getComponent()).toTranslator())
-        .instrumentId(audioDataForm.getInstrumentIdValue())
-        .hydrophoneSensitivity(audioDataForm.getHydrophoneSensitivityValue())
-        .frequencyRange(audioDataForm.getFrequencyRangeValue())
-        .gain(audioDataForm.getGainValue())
-        .comments(audioDataForm.getCommentsValue())
-        .sensors(audioDataForm.getSensorsValue())
-        .deploymentTime(audioDataForm.getDeploymentTimeTranslator())
-        .recoveryTime(audioDataForm.getRecoveryTimeTranslator())
-        .audioStartTime(audioDataForm.getAudioStartTimeTranslator())
-        .audioEndTime(audioDataForm.getAudioEndTimeTranslator())
+        .instrumentId(audioDataPackageTranslator.getInstrumentId())
+        .hydrophoneSensitivity(audioDataPackageTranslator.getHydrophoneSensitivity())
+        .frequencyRange(audioDataPackageTranslator.getFrequencyRange())
+        .gain(audioDataPackageTranslator.getGain())
+        .comments(audioDataPackageTranslator.getComments())
+        .sensors(audioDataPackageTranslator.getSensors())
+        .deploymentTime(audioDataPackageTranslator.getDeploymentTime())
+        .recoveryTime(audioDataPackageTranslator.getRecoveryTime())
+        .audioStartTime(audioDataPackageTranslator.getAudioStartTime())
+        .audioEndTime(audioDataPackageTranslator.getAudioEndTime())
         .channelTranslators(((ChannelsForm) channelsForm.getComponent()).toTranslator())
         .build();
   }
@@ -663,6 +667,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     QualityControlForm qualityForm = (QualityControlForm) qualityControlForm.getComponent();
     SoundAnalysisForm<?> analysisForm = (SoundAnalysisForm<?>) soundAnalysisForm.getComponent();
     SoftwareForm<?> softwareDetailForm = (SoftwareForm<?>) softwareForm.getComponent();
+    SoftwareDependentPackageTranslator softwareDependentPackageTranslator = softwareDetailForm.toTranslator();
     return DetectionsPackageTranslator.toBuilder(packageTranslator)
         .qualityControlDetailTranslator(((QualityControlForm) qualityControlForm.getComponent()).toTranslator())
         .soundSource(detectionsForm.getSoundSourceValue())
@@ -672,23 +677,24 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .sampleRate(analysisForm.getSampleRateValue())
         .minFrequency(analysisForm.getMinFrequencyValue())
         .maxFrequency(analysisForm.getMaxFrequencyValue())
-        .softwareNames(softwareDetailForm.getSoftwareNamesValue())
-        .softwareVersions(softwareDetailForm.getSoftwareVersionsValue())
-        .softwareProtocolCitation(softwareDetailForm.getSoftwareProtocolCitationValue())
-        .softwareDescription(softwareDetailForm.getSoftwareDescriptionValue())
-        .softwareProcessingDescription(softwareDetailForm.getSoftwareProcessingDescriptionValue())
+        .softwareNames(softwareDependentPackageTranslator.getSoftwareNames())
+        .softwareVersions(softwareDependentPackageTranslator.getSoftwareVersions())
+        .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
+        .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
+        .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
         .build();
   }
   
   private SoundClipsPackageTranslator toSoundClipsTranslator(PackageTranslator packageTranslator) {
     SoundClipsForm soundClipsForm = (SoundClipsForm) packageDetailForm.getComponent(); 
     SoftwareForm<?> softwareDetailForm = (SoftwareForm<?>) softwareForm.getComponent();
+    SoftwareDependentPackageTranslator softwareDependentPackageTranslator = softwareDetailForm.toTranslator();
     return SoundClipsPackageTranslator.toBuilder(packageTranslator)
-        .softwareNames(softwareDetailForm.getSoftwareNamesValue())
-        .softwareVersions(softwareDetailForm.getSoftwareVersionsValue())
-        .softwareProtocolCitation(softwareDetailForm.getSoftwareProtocolCitationValue())
-        .softwareDescription(softwareDetailForm.getSoftwareDescriptionValue())
-        .softwareProcessingDescription(softwareDetailForm.getSoftwareProcessingDescriptionValue())
+        .softwareNames(softwareDependentPackageTranslator.getSoftwareNames())
+        .softwareVersions(softwareDependentPackageTranslator.getSoftwareVersions())
+        .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
+        .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
+        .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
         .audioStartTime(soundClipsForm.getAudioStartTimeTranslator())
         .audioEndTime(soundClipsForm.getAudioEndTimeTranslator())
         .build();
@@ -699,6 +705,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     QualityControlForm qualityForm = (QualityControlForm) qualityControlForm.getComponent();
     SoundAnalysisForm<?> analysisForm = (SoundAnalysisForm<?>) soundAnalysisForm.getComponent();
     SoftwareForm<?> softwareDetailForm = (SoftwareForm<?>) softwareForm.getComponent();
+    SoftwareDependentPackageTranslator softwareDependentPackageTranslator = softwareDetailForm.toTranslator();
     return SoundLevelMetricsPackageTranslator.toBuilder(packageTranslator)
         .audioStartTimeTranslator(soundLevelMetricsForm.getAudioStartTimeTranslator())
         .audioEndTimeTranslator(soundLevelMetricsForm.getAudioEndTimeTranslator())
@@ -708,26 +715,28 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .sampleRate(analysisForm.getSampleRateValue())
         .minFrequency(analysisForm.getMinFrequencyValue())
         .maxFrequency(analysisForm.getMaxFrequencyValue())
-        .softwareNames(softwareDetailForm.getSoftwareNamesValue())
-        .softwareVersions(softwareDetailForm.getSoftwareVersionsValue())
-        .softwareProtocolCitation(softwareDetailForm.getSoftwareProtocolCitationValue())
-        .softwareDescription(softwareDetailForm.getSoftwareDescriptionValue())
-        .softwareProcessingDescription(softwareDetailForm.getSoftwareProcessingDescriptionValue())
+        .softwareNames(softwareDependentPackageTranslator.getSoftwareNames())
+        .softwareVersions(softwareDependentPackageTranslator.getSoftwareVersions())
+        .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
+        .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
+        .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
         .build();
   }
   
   private SoundPropagationModelsPackageTranslator toSoundPropagationModelsTranslator(PackageTranslator packageTranslator) {
     SoundPropagationModelsForm soundPropagationModelsForm = (SoundPropagationModelsForm) packageDetailForm.getComponent();
     SoftwareForm<?> softwareDetailForm = (SoftwareForm<?>) softwareForm.getComponent();
+    SoftwareDependentPackageTranslator softwareDependentPackageTranslator = softwareDetailForm.toTranslator();
+    SoundPropagationModelsPackageTranslator soundPropagationModelsPackageTranslator = soundPropagationModelsForm.toTranslator();
     return SoundPropagationModelsPackageTranslator.toBuilder(packageTranslator)
-        .modeledFrequency(soundPropagationModelsForm.getModeledFrequencyValue())
-        .audioStartTimeTranslator(soundPropagationModelsForm.getAudioStartTimeTranslator())
-        .audioEndTimeTranslator(soundPropagationModelsForm.getAudioEndTimeTranslator())
-        .softwareNames(softwareDetailForm.getSoftwareNamesValue())
-        .softwareVersions(softwareDetailForm.getSoftwareVersionsValue())
-        .softwareProtocolCitation(softwareDetailForm.getSoftwareProtocolCitationValue())
-        .softwareDescription(softwareDetailForm.getSoftwareDescriptionValue())
-        .softwareProcessingDescription(softwareDetailForm.getSoftwareProcessingDescriptionValue())
+        .modeledFrequency(soundPropagationModelsPackageTranslator.getModeledFrequency())
+        .audioStartTimeTranslator(soundPropagationModelsPackageTranslator.getAudioStartTimeTranslator())
+        .audioEndTimeTranslator(soundPropagationModelsPackageTranslator.getAudioEndTimeTranslator())
+        .softwareNames(softwareDependentPackageTranslator.getSoftwareNames())
+        .softwareVersions(softwareDependentPackageTranslator.getSoftwareVersions())
+        .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
+        .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
+        .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
         .build();
   }
 

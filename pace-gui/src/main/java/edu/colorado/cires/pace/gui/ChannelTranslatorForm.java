@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class ChannelTranslatorForm extends JPanel {
+public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<ChannelTranslator> {
   
   private final TimeTranslatorForm startTimeForm;
   private final TimeTranslatorForm endTimeForm;
@@ -56,6 +56,7 @@ public class ChannelTranslatorForm extends JPanel {
       c.gridx = 0; c.gridy = 2; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     JPanel sampleRatesPanel = new JPanel(new GridBagLayout());
+    sampleRatesPanel.setName("sampleRates");
     sampleRatesPanel.add(sampleRateTranslatorsPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -68,6 +69,7 @@ public class ChannelTranslatorForm extends JPanel {
     }));
     
     JPanel dutyCyclesPanel = new JPanel(new GridBagLayout());
+    dutyCyclesPanel.setName("dutyCycles");
     dutyCyclesPanel.add(dutyCycleTranslatorsPanel, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -79,6 +81,7 @@ public class ChannelTranslatorForm extends JPanel {
       c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     JPanel gainsPanel = new JPanel(new GridBagLayout());
+    gainsPanel.setName("gains");
     gainsPanel.add(gainTranslatorsPanel, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));

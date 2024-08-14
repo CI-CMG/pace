@@ -5,16 +5,14 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class PackageInfoForm extends JPanel {
+public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<PackageTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> siteOrCruiseNameField = new JComboBox<>();
@@ -159,6 +157,28 @@ public class PackageInfoForm extends JPanel {
     }
   }
 
+  @Override
+  public PackageTranslator toTranslator() {
+    return PackageTranslator.builder()
+        .packageUUID((String) uuidField.getSelectedItem())
+        .siteOrCruiseName((String) siteOrCruiseNameField.getSelectedItem())
+        .deploymentId((String) deploymentIdField.getSelectedItem())
+        .projects((String) projectsField.getSelectedItem())
+        .platform((String) platformField.getSelectedItem())
+        .instrument((String) instrumentField.getSelectedItem())
+        .deploymentTitle((String) deploymentTitleField.getSelectedItem())
+        .deploymentPurpose((String) deploymentPurposeField.getSelectedItem())
+        .deploymentDescription((String) deploymentDescriptionField.getSelectedItem())
+        .alternateSiteName((String) alternateSiteNameField.getSelectedItem())
+        .alternateDeploymentName((String) alternateDeploymentNameField.getSelectedItem())
+        .startTime(startTimeForm.toTranslator())
+        .endTime(endTimeForm.toTranslator())
+        .publicReleaseDate(publicReleaseDateForm.toTranslator())
+        .dataCollectionName((String) dataCollectionNameField.getSelectedItem())
+        .processingLevel((String) processingLevelField.getSelectedItem())
+        .build();
+  }
+
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(uuidField, options);
     updateComboBoxModel(dataCollectionNameField, options);
@@ -176,69 +196,5 @@ public class PackageInfoForm extends JPanel {
     startTimeForm.updateHeaderOptions(options);
     endTimeForm.updateHeaderOptions(options);
     publicReleaseDateForm.updateHeaderOptions(options);
-  }
-
-  public String getUuidValue() {
-    return (String) uuidField.getSelectedItem();
-  }
-
-  public String getSiteOrCruiseNameValue() {
-    return (String) siteOrCruiseNameField.getSelectedItem();
-  }
-
-  public String getDeploymentIdValue() {
-    return (String) deploymentIdField.getSelectedItem();
-  }
-
-  public String getProjectsValue() {
-    return (String) projectsField.getSelectedItem();
-  }
-
-  public String getPlatformValue() {
-    return (String) platformField.getSelectedItem();
-  }
-
-  public String getInstrumentValue() {
-    return (String) instrumentField.getSelectedItem();
-  }
-
-  public String getDeploymentTitleValue() {
-    return (String) deploymentTitleField.getSelectedItem();
-  }
-
-  public String getDeploymentPurposeValue() {
-    return (String) deploymentPurposeField.getSelectedItem();
-  }
-
-  public String getDeploymentDescriptionValue() {
-    return (String) deploymentDescriptionField.getSelectedItem();
-  }
-
-  public String getAlternateSiteNameValue() {
-    return (String) alternateSiteNameField.getSelectedItem();
-  }
-
-  public String getAlternateDeploymentNameValue() {
-    return (String) alternateDeploymentNameField.getSelectedItem();
-  }
-
-  public TimeTranslator getStartTimeTranslator() {
-    return startTimeForm.toTranslator();
-  }
-
-  public TimeTranslator getEndTimeTranslator() {
-    return endTimeForm.toTranslator();
-  }
-
-  public DateTranslator getPublicReleaseDateTranslator() {
-    return publicReleaseDateForm.toTranslator();
-  }
-
-  public String getDataCollectionNameValue() {
-    return (String) dataCollectionNameField.getSelectedItem();
-  }
-
-  public String getProcessingLevelValue() {
-    return (String) processingLevelField.getSelectedItem();
   }
 }

@@ -6,17 +6,16 @@ import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.translator.AudioDataPackageTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.PackageSensorTranslator;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
+import edu.colorado.cires.pace.data.object.dataset.audio.translator.AudioPackageTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel {
+public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel implements AuxiliaryTranslatorForm<AudioDataPackageTranslator> {
   
   private final JComboBox<String> instrumentIdField = new JComboBox<>();
   private final JComboBox<String> hydrophoneSensitivityField = new JComboBox<>();
@@ -102,6 +101,7 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     }));
     
     JPanel sensorsPanel = new JPanel(new GridBagLayout());
+    sensorsPanel.setName("sensors");
     sensorsPanel.add(sensorTranslatorsPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -156,6 +156,27 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     revalidate();
   }
 
+  @Override
+  public AudioDataPackageTranslator toTranslator() {
+    return AudioPackageTranslator.builder()
+        .instrumentId((String) instrumentIdField.getSelectedItem())
+        .hydrophoneSensitivity((String) hydrophoneSensitivityField.getSelectedItem())
+        .frequencyRange((String) frequencyRangeField.getSelectedItem())
+        .gain((String) gainField.getSelectedItem())
+        .comments((String) commentsField.getSelectedItem())
+        .sensors(Arrays.stream(sensorTranslatorsPanel.getComponents())
+            .filter(p -> p instanceof CollapsiblePanel<?>)
+            .map(p -> (CollapsiblePanel<?>) p)
+            .map(p -> (PackageSensorTranslatorForm) p.getContentPanel())
+            .map(PackageSensorTranslatorForm::toTranslator)
+            .toList())
+        .deploymentTime(deploymentTimeForm.toTranslator())
+        .recoveryTime(recoveryTimeForm.toTranslator())
+        .audioStartTime(audioStartTimeForm.toTranslator())
+        .audioEndTime(audioEndTimeForm.toTranslator())
+        .build();
+  }
+
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(instrumentIdField, headerOptions);
     updateComboBoxModel(hydrophoneSensitivityField, headerOptions);
@@ -176,50 +197,5 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     recoveryTimeForm.updateHeaderOptions(headerOptions);
     audioStartTimeForm.updateHeaderOptions(headerOptions);
     audioEndTimeForm.updateHeaderOptions(headerOptions);
-  }
-
-  public String getInstrumentIdValue() {
-    return (String) instrumentIdField.getSelectedItem();
-  }
-
-  public String getHydrophoneSensitivityValue() {
-    return (String) hydrophoneSensitivityField.getSelectedItem();
-  }
-
-  public String getFrequencyRangeValue() {
-    return (String) frequencyRangeField.getSelectedItem();
-  }
-
-  public String getGainValue() {
-    return (String) gainField.getSelectedItem();
-  }
-
-  public String getCommentsValue() {
-    return (String) commentsField.getSelectedItem();
-  }
-
-  public List<PackageSensorTranslator> getSensorsValue() {
-    return Arrays.stream(sensorTranslatorsPanel.getComponents())
-        .filter(p -> p instanceof CollapsiblePanel<?>)
-        .map(p -> (CollapsiblePanel<?>) p)
-        .map(p -> (PackageSensorTranslatorForm) p.getContentPanel())
-        .map(PackageSensorTranslatorForm::toTranslator)
-        .toList();
-  }
-
-  public TimeTranslator getDeploymentTimeTranslator() {
-    return deploymentTimeForm.toTranslator();
-  }
-
-  public TimeTranslator getRecoveryTimeTranslator() {
-    return recoveryTimeForm.toTranslator();
-  }
-
-  public TimeTranslator getAudioStartTimeTranslator() {
-    return audioStartTimeForm.toTranslator();
-  }
-
-  public TimeTranslator getAudioEndTimeTranslator() {
-    return audioEndTimeForm.toTranslator();
   }
 }

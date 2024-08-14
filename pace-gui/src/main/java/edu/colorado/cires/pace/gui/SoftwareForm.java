@@ -4,12 +4,13 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.SoftwareDependentPackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.soundClips.translator.SoundClipsPackageTranslator;
 import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends JPanel {
+public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends JPanel implements AuxiliaryTranslatorForm<SoftwareDependentPackageTranslator> {
 
   private final JComboBox<String> softwareNamesField = new JComboBox<>();
   private final JComboBox<String> softwareVersionsField = new JComboBox<>();
@@ -18,6 +19,11 @@ public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends 
   private final JComboBox<String> softwareProcessingDescriptionField = new JComboBox<>();
 
   public SoftwareForm(String[] headerOptions, T initialTranslator) {
+    softwareNamesField.setName("softwareNames");
+    softwareVersionsField.setName("softwareVersions");
+    softwareProtocolCitationField.setName("softwareProtocolCitation");
+    softwareDescriptionField.setName("softwareDescription");
+    softwareProcessingDescriptionField.setName("softwareProcessingDescription");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -75,32 +81,23 @@ public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends 
       softwareProcessingDescriptionField.setSelectedItem(initialTranslator.getSoftwareProcessingDescription());
     }
   }
-  
+
+  @Override
+  public SoftwareDependentPackageTranslator toTranslator() {
+    return SoundClipsPackageTranslator.builder()
+        .softwareNames((String) softwareNamesField.getSelectedItem())
+        .softwareVersions((String) softwareVersionsField.getSelectedItem())
+        .softwareProtocolCitation((String) softwareProtocolCitationField.getSelectedItem())
+        .softwareDescription((String) softwareDescriptionField.getSelectedItem())
+        .softwareProcessingDescription((String) softwareProcessingDescriptionField.getSelectedItem())
+        .build();
+  }
+
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(softwareNamesField, headerOptions);
     updateComboBoxModel(softwareVersionsField, headerOptions);
     updateComboBoxModel(softwareProtocolCitationField, headerOptions);
     updateComboBoxModel(softwareDescriptionField, headerOptions);
     updateComboBoxModel(softwareProcessingDescriptionField, headerOptions);
-  }
-
-  public String getSoftwareNamesValue() {
-    return (String) softwareNamesField.getSelectedItem();
-  }
-
-  public String getSoftwareVersionsValue() {
-    return (String) softwareVersionsField.getSelectedItem();
-  }
-
-  public String getSoftwareProtocolCitationValue() {
-    return (String) softwareProtocolCitationField.getSelectedItem();
-  }
-
-  public String getSoftwareDescriptionValue() {
-    return (String) softwareDescriptionField.getSelectedItem();
-  }
-
-  public String getSoftwareProcessingDescriptionValue() {
-    return (String) softwareProcessingDescriptionField.getSelectedItem();
   }
 }
