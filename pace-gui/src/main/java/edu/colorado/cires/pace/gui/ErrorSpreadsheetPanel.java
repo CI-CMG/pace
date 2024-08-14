@@ -185,6 +185,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                 } catch (ConflictException | NotFoundException | DatastoreException | BadArgumentException ex) {
                   ;
                 }
+                table.setValueAt(getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()), objectWithRowError.row()-2,0);
               }
             } else {
               JOptionPane.showMessageDialog(ErrorSpreadsheetPanel.this, message, "Error", JOptionPane.ERROR_MESSAGE);
