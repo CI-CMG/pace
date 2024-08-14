@@ -1,12 +1,12 @@
 package edu.colorado.cires.pace.gui;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 import edu.colorado.cires.pace.data.object.fileType.FileType;
 import java.util.UUID;
 import javax.swing.JPanel;
 
-class FileTypeFormTest extends MetadataFormTest<FileType, FileTypeForm> {
+public class FileTypeFormTest extends MetadataFormTest<FileType, FileTypeForm> {
 
   @Override
   protected FileTypeForm createMetadataForm(FileType initialObject) {

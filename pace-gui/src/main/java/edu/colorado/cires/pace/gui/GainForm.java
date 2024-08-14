@@ -13,7 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GainForm extends JPanel {
+public class GainForm extends JPanel implements AuxiliaryTranslatorForm<GainTranslator> {
   
   private final JComboBox<String> gainField = new JComboBox<>();
   private final TimeTranslatorForm startTimeForm;
@@ -25,6 +25,9 @@ public class GainForm extends JPanel {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
+    gainField.setName("gain");
+    startTimeForm.setName("startTime");
+    endTimeForm.setName("endTime");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

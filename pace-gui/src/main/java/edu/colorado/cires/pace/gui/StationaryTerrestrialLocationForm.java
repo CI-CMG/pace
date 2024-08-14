@@ -18,6 +18,11 @@ public class StationaryTerrestrialLocationForm extends BaseLocationDetailTransla
 
   public StationaryTerrestrialLocationForm(String[] headerOptions, StationaryTerrestrialLocationTranslator initialTranslator) {
     super(headerOptions);
+    setName("stationaryTerrestrialForm");
+    latitudeField.setName("latitude");
+    longitudeField.setName("longitude");
+    surfaceElevationField.setName("surfaceElevation");
+    instrumentElevationField.setName("instrumentElevation");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

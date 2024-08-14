@@ -116,9 +116,9 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             new QualityControlForm(getHeaderOptions(), audioDataPackageTranslator.getQualityControlDetailTranslator())
         );
         
-        tabbedPane.add("Package Detail", packageDetailForm);
         tabbedPane.add("Quality", qualityControlForm);
         tabbedPane.add("Channels", channelsForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
       } else if (initialTranslator instanceof DetectionsPackageTranslator detectionsPackageTranslator) {
         soundAnalysisForm = new ScrollPane(
             new SoundAnalysisForm<>(getHeaderOptions(), detectionsPackageTranslator)
@@ -133,10 +133,10 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
             new DetectionsForm(getHeaderOptions(), detectionsPackageTranslator)
         );
 
-        tabbedPane.add("Package Detail", packageDetailForm);
         tabbedPane.add("Quality", qualityControlForm);
         tabbedPane.add("Software", softwareForm);
         tabbedPane.add("Sound Analysis", soundAnalysisForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
       } else if (initialTranslator instanceof SoundLevelMetricsPackageTranslator soundLevelMetricsPackageTranslator) {
         soundAnalysisForm = new ScrollPane(
             new SoundAnalysisForm<>(getHeaderOptions(), soundLevelMetricsPackageTranslator)
@@ -150,10 +150,10 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         packageDetailForm = new ScrollPane(
             new SoundLevelMetricsForm(getHeaderOptions(), soundLevelMetricsPackageTranslator)
         );
-        tabbedPane.add("Package Detail", packageDetailForm);
         tabbedPane.add("Quality", qualityControlForm);
         tabbedPane.add("Software", softwareForm);
         tabbedPane.add("Sound Analysis", soundAnalysisForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
       } else if (initialTranslator instanceof SoundPropagationModelsPackageTranslator soundPropagationModelsPackageTranslator) {
         softwareForm = new ScrollPane(
             new SoftwareForm<>(getHeaderOptions(), soundPropagationModelsPackageTranslator)
@@ -161,8 +161,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         packageDetailForm = new ScrollPane(
             new SoundPropagationModelsForm(getHeaderOptions(), soundPropagationModelsPackageTranslator)
         );
-        tabbedPane.add("Package Detail", packageDetailForm);
         tabbedPane.add("Software", softwareForm);
+        tabbedPane.add("Package Detail", packageDetailForm);
       } else if (initialTranslator instanceof SoundClipsPackageTranslator soundClipsPackageTranslator) {
         softwareForm = new ScrollPane(
             new SoftwareForm<>(getHeaderOptions(), soundClipsPackageTranslator)
@@ -425,6 +425,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     JComboBox<String> comboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
        "Audio","CPOD","Detections","Sound Propagation Models","Sound Clips","Sound Level Metrics"
     }));
+    comboBox.setName("packageType");
     comboBox.setSelectedItem(null);
 
     comboBox.addItemListener(e -> {

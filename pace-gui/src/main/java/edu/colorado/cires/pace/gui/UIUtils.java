@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
@@ -44,7 +45,11 @@ final class UIUtils {
   public static void updateComboBoxModel(JComboBox<String> comboBox, String[] options) {
     String currentSelectedItem = (String) comboBox.getSelectedItem();
     comboBox.setModel(new DefaultComboBoxModel<>(options));
-    comboBox.setSelectedItem(currentSelectedItem);
+    if (Arrays.asList(options).contains(currentSelectedItem)) {
+      comboBox.setSelectedItem(currentSelectedItem); 
+    } else {
+      comboBox.setSelectedItem(null);
+    }
   }
   
   private static TitledBorder createTitledBorder(String title) {

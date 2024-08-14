@@ -13,7 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DutyCycleForm extends JPanel {
+public class DutyCycleForm extends JPanel implements AuxiliaryTranslatorForm<DutyCycleTranslator> {
   
   private final JComboBox<String> durationField = new JComboBox<>();
   private final JComboBox<String> intervalField = new JComboBox<>();
@@ -26,6 +26,10 @@ public class DutyCycleForm extends JPanel {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
+    durationField.setName("duration");
+    intervalField.setName("interval");
+    startTimeForm.setName("startTime");
+    endTimeForm.setName("endTime");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

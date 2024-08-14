@@ -17,8 +17,7 @@ public class Application extends JFrame {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
-  public Application() {
-  }
+  public Application() {}
 
   public static void main(String[] args) {
     new Application().createGUI();
@@ -44,18 +43,17 @@ public class Application extends JFrame {
     try {
       
       Dimension size = UIUtils.getPercentageOfWindowDimension(.75, .65);
-      JFrame mainFrame = new JFrame();
-      mainFrame.setIconImage(UIUtils.getImageIcon("pace.png", this.getClass()).getImage());
+      setIconImage(UIUtils.getImageIcon("pace.png", this.getClass()).getImage());
       ApplicationTabs applicationTabs = new ApplicationTabs(objectMapper);
       applicationTabs.init();
-      mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      mainFrame.setContentPane(applicationTabs);
-      mainFrame.setTitle("PACE");
-      mainFrame.setSize(size);
-      mainFrame.setPreferredSize(size);
-      mainFrame.setLocationRelativeTo(null);
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      setContentPane(applicationTabs);
+      setTitle("PACE");
+      setSize(size);
+      setPreferredSize(size);
+      setLocationRelativeTo(null);
       
-      mainFrame.setVisible(true);
+      setVisible(true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

@@ -1,12 +1,12 @@
 package edu.colorado.cires.pace.gui;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import java.util.UUID;
 import javax.swing.JPanel;
 
-class PersonFormTest extends ContactFormTest<Person, PersonForm> {
+public class PersonFormTest extends ContactFormTest<Person, PersonForm> {
 
   @Override
   protected PersonForm createMetadataForm(Person initialObject) {

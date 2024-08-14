@@ -32,6 +32,7 @@ public class LocationDetailForm extends JPanel {
 
   public LocationDetailForm(String[] headerOptions, LocationDetailTranslator initialTranslator) {
     this.locationTypeComboBox = getLocationTypeField(headerOptions, initialTranslator);
+    locationTypeComboBox.setName("locationType");
     addFields(headerOptions, initialTranslator);
   }
   

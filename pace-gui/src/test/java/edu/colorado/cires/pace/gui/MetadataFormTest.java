@@ -1,6 +1,9 @@
 package edu.colorado.cires.pace.gui;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -20,8 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends MetadataForm<O>> {
@@ -33,8 +36,8 @@ abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends Metad
   
   private final CRUDRepository<O> repository = mock(CRUDRepository.class);
 
-  @BeforeEach
-  void setUp() {
+  @Before
+  public void setUp() {
     Boolean headless = ApplicationPropertyResolver.getPropertyValue("java.awt.headless", Boolean::parseBoolean);
     assertNotNull(headless);
     assertTrue(headless, "Test must run in headless mode");
@@ -42,7 +45,7 @@ abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends Metad
   }
 
   @Test
-  void testCreate() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+  public void testCreate() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     F metadataForm = createMetadataForm(null);
     JPanel contentPanel = getContentPanel(metadataForm);
     O object = createObject();
@@ -56,7 +59,7 @@ abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends Metad
   }
   
   @Test
-  void testUpdate() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+  public void testUpdate() throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
     O object = createObject();
     F metadataForm = createMetadataForm(object);
 
@@ -71,7 +74,7 @@ abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends Metad
   }
   
   @Test
-  void testDelete() throws BadArgumentException, NotFoundException, DatastoreException {
+  public void testDelete() throws BadArgumentException, NotFoundException, DatastoreException {
     O object = createObject();
     F metadataForm = createMetadataForm(object);
 

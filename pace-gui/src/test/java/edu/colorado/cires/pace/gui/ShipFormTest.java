@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.ship.Ship;
 import java.util.UUID;
 
-class ShipFormTest extends ObjectWithNameFormTest<Ship, ShipForm> {
+public class ShipFormTest extends ObjectWithNameFormTest<Ship, ShipForm> {
 
   @Override
   protected ShipForm createMetadataForm(Ship initialObject) {

@@ -26,6 +26,11 @@ public class QualityControlForm extends JPanel {
 
   public QualityControlForm(String[] headerOptions, QualityControlDetailTranslator initialTranslator) {
     this.addEntryButton = getAddEntryButton(headerOptions);
+    qualityAnalystField.setName("qualityAnalyst");
+    qualityAnalysisObjectivesField.setName("qualityAnalysisObjectives");
+    qualityAnalysisMethodField.setName("qualityAnalysisMethod");
+    qualityAssessmentDescriptionField.setName("qualityAnalysisDescription");
+    qualityEntryTranslatorsPanel.setName("entries");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

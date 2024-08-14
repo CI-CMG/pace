@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.platform.Platform;
 import java.util.UUID;
 
-class PlatformFormTest extends ObjectWithNameFormTest<Platform, PlatformForm> {
+public class PlatformFormTest extends ObjectWithNameFormTest<Platform, PlatformForm> {
 
   @Override
   protected PlatformForm createMetadataForm(Platform initialObject) {

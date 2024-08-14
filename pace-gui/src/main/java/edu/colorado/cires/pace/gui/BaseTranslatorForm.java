@@ -1,8 +1,11 @@
 package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.base.Translator;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.swing.JPanel;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
   
@@ -17,8 +20,10 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
   }
   
   public void setHeaderOptions(String[] headerOptions) {
-    this.headerOptions = headerOptions;
-    updateHeaderOptions(headerOptions);
+    this.headerOptions = Arrays.stream(headerOptions)
+        .filter(StringUtils::isNotBlank)
+        .collect(Collectors.toSet()).toArray(String[]::new);
+    updateHeaderOptions(this.headerOptions);
   }
 
   protected abstract void addUniqueFields();

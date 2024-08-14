@@ -23,6 +23,8 @@ public class PackageSensorTranslatorForm extends JPanel {
   public PackageSensorTranslatorForm(String[] headerOptions, PackageSensorTranslator initialTranslator) {
     this.positionTranslatorForm = new PositionTranslatorForm(initialTranslator == null ? null : initialTranslator.getPosition(), headerOptions);
     this.removeAction = null;
+    nameField.setName("name");
+    positionTranslatorForm.setName("positionTranslator");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

@@ -3,7 +3,7 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import java.util.UUID;
 
-class OrganizationFormTest extends ContactFormTest<Organization, OrganizationForm> {
+public class OrganizationFormTest extends ContactFormTest<Organization, OrganizationForm> {
 
   @Override
   protected OrganizationForm createMetadataForm(Organization initialObject) {

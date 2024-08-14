@@ -26,6 +26,7 @@ public class CollapsiblePanel<P extends JPanel> extends JPanel {
     this.upIcon = getImageIcon("keyboard_arrow_up_24dp_FILL0_wght400_GRAD0_opsz24.png", this.getClass());
     this.downIcon = getImageIcon("keyboard_arrow_down_24dp_FILL0_wght400_GRAD0_opsz24.png", this.getClass());
 
+    setName(buttonTitle);
     addFields();
   }
 

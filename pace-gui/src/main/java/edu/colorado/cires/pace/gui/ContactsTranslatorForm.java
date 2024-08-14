@@ -17,6 +17,10 @@ public class ContactsTranslatorForm extends JPanel {
   private final JComboBox<String> datasetPackagerField = new JComboBox<>();
 
   public ContactsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
+    scientistsField.setName("scientists");
+    sponsorsField.setName("sponsors");
+    fundersField.setName("funders");
+    datasetPackagerField.setName("datasetPackager");
     addComponents();
     initializeFields(headerOptions, initialTranslator);
   }

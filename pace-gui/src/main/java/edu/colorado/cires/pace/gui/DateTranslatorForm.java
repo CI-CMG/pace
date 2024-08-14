@@ -15,6 +15,8 @@ public class DateTranslatorForm extends JPanel {
   private final JComboBox<String> timeZoneField = new JComboBox<>();
 
   public DateTranslatorForm(String[] headerOptions, DateTranslator initialTranslator) {
+    dateField.setName("date");
+    timeZoneField.setName("timeZone");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

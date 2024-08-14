@@ -1,12 +1,12 @@
 package edu.colorado.cires.pace.gui;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
 import java.util.UUID;
 import javax.swing.JPanel;
 
-class DetectionTypeFormTest extends MetadataFormTest<DetectionType, DetectionTypeForm> {
+public class DetectionTypeFormTest extends MetadataFormTest<DetectionType, DetectionTypeForm> {
 
   @Override
   protected DetectionTypeForm createMetadataForm(DetectionType initialObject) {

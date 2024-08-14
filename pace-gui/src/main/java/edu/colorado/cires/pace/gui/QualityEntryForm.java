@@ -21,7 +21,7 @@ public class QualityEntryForm extends JPanel {
   private final JComboBox<String> maxFrequencyField = new JComboBox<>();
   private final JComboBox<String> qualityLevelField = new JComboBox<>();
   private final JComboBox<String> commentsField = new JComboBox<>();
-  private final JComboBox<String> channelNumbers = new JComboBox<>();
+  private final JComboBox<String> channelNumbersField = new JComboBox<>();
   
   private final Consumer<QualityEntryForm> removeAction;
 
@@ -29,7 +29,13 @@ public class QualityEntryForm extends JPanel {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
-    
+    startTimeForm.setName("startTime");
+    endTimeForm.setName("endTime");
+    minFrequencyField.setName("minFrequency");
+    maxFrequencyField.setName("maxFrequency");
+    qualityLevelField.setName("qualityLevel");
+    commentsField.setName("comments");
+    channelNumbersField.setName("channelNumbers");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -58,7 +64,7 @@ public class QualityEntryForm extends JPanel {
       c.gridx = 1; c.gridy = 6; c.weightx = 1;
     }));
     add(new JLabel("Channel Number(s)"), configureLayout(c -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-    add(channelNumbers, configureLayout(c -> {
+    add(channelNumbersField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 8; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(getRemoveButton(), configureLayout(c -> { 
@@ -77,14 +83,14 @@ public class QualityEntryForm extends JPanel {
     updateComboBoxModel(maxFrequencyField, headerOptions);
     updateComboBoxModel(qualityLevelField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
-    updateComboBoxModel(channelNumbers, headerOptions);
+    updateComboBoxModel(channelNumbersField, headerOptions);
     
     if (initialTranslator != null) {
       minFrequencyField.setSelectedItem(initialTranslator.getMinFrequency());
       maxFrequencyField.setSelectedItem(initialTranslator.getMaxFrequency());
       qualityLevelField.setSelectedItem(initialTranslator.getQualityLevel());
       commentsField.setSelectedItem(initialTranslator.getComments());
-      channelNumbers.setSelectedItem(initialTranslator.getChannelNumbers());
+      channelNumbersField.setSelectedItem(initialTranslator.getChannelNumbers());
     }
   }
   
@@ -93,7 +99,7 @@ public class QualityEntryForm extends JPanel {
     updateComboBoxModel(maxFrequencyField, headerOptions);
     updateComboBoxModel(qualityLevelField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
-    updateComboBoxModel(channelNumbers, headerOptions);
+    updateComboBoxModel(channelNumbersField, headerOptions);
     
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
@@ -107,7 +113,7 @@ public class QualityEntryForm extends JPanel {
         .maxFrequency((String) maxFrequencyField.getSelectedItem())
         .qualityLevel((String) qualityLevelField.getSelectedItem())
         .comments((String) commentsField.getSelectedItem())
-        .channelNumbers((String) channelNumbers.getSelectedItem())
+        .channelNumbers((String) channelNumbersField.getSelectedItem())
         .build();
   }
 }

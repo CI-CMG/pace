@@ -37,6 +37,16 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     this.recoveryTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getRecoveryTime());
     this.audioStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioStartTime());
     this.audioEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioEndTime());
+    instrumentIdField.setName("instrumentId");
+    hydrophoneSensitivityField.setName("hydrophoneSensitivity");
+    frequencyRangeField.setName("frequencyRange");
+    gainField.setName("gain");
+    commentsField.setName("comments");
+    deploymentTimeForm.setName("deploymentTime");
+    recoveryTimeForm.setName("recoveryTime");
+    audioStartTimeForm.setName("audioStartTime");
+    audioEndTimeForm.setName("audioEndTime");
+    setName("audioDataForm");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -113,7 +123,7 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     updateComboBoxModel(frequencyRangeField, headerOptions);
     updateComboBoxModel(gainField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
-    
+    addSensorButton.addActionListener(l -> addSensor(headerOptions, null));
     if (initialTranslator != null) {
       instrumentIdField.setSelectedItem(initialTranslator.getInstrumentId());
       hydrophoneSensitivityField.setSelectedItem(initialTranslator.getHydrophoneSensitivity());

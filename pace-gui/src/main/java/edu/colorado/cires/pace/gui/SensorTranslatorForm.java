@@ -64,6 +64,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     uuidField.setName("uuid");
     nameField.setName("name");
     descriptionField.setName("description");
+    sensorIdField.setName("id");
     headerOptions = initialTranslator == null ? headerOptions : getInitialHeaderOptions(initialTranslator);
     setHeaderOptions(headerOptions);
     this.initialTranslator = initialTranslator;
@@ -230,7 +231,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
 
   @Override
   protected SensorTranslator toTranslator(UUID uuid, String name) {
-    if (sensorTypeComboBox.getSelectedItem() == null) {
+    if (initialTranslator == null && sensorTypeComboBox.getSelectedItem() == null) {
       JOptionPane.showMessageDialog(this, "Please select a sensor type", "Error", JOptionPane.ERROR_MESSAGE);
       throw new RuntimeException("Sensor type not selected");
     } else {

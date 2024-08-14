@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class TimeTranslatorForm extends JPanel {
+public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<TimeTranslator> {
   
   private final JComboBox<String> timeZoneField = new JComboBox<>();
   private final JComboBox<String> dateField = new JComboBox<>();
@@ -20,6 +20,9 @@ public class TimeTranslatorForm extends JPanel {
   private final JLabel dateLabel = new JLabel("Date");
 
   public TimeTranslatorForm(String[] headerOptions, TimeTranslator initialTranslator) {
+    timeZoneField.setName("timeZone");
+    dateField.setName("date");
+    timeField.setName("time");
     addFields(initialTranslator);
     initializeFields(headerOptions, initialTranslator);
   }
@@ -43,13 +46,12 @@ public class TimeTranslatorForm extends JPanel {
     JComboBox<String> timeFormatField = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
         "Default", "Date-Time Separated"
     }));
+    timeFormatField.setName("timeFormat");
     if (initialTranslator != null) {
-      if (initialTranslator instanceof DefaultTimeTranslator) {
-        timeFormatField.setSelectedItem("Default");
-      } else if (initialTranslator instanceof DateTimeSeparatedTimeTranslator) {
+      if (initialTranslator instanceof DateTimeSeparatedTimeTranslator) {
         timeFormatField.setSelectedItem("Date-Time Separated");
       } else {
-        timeFormatField.setSelectedItem(null);
+        timeFormatField.setSelectedItem("Default");
       }
     } else {
       timeFormatField.setSelectedItem("Default");
@@ -58,18 +60,14 @@ public class TimeTranslatorForm extends JPanel {
     timeFormatField.addItemListener(e -> {
       String choice = (String) e.getItem();
       
-      if (choice == null) {
-        return;
-      }
-      
-      if (choice.equals("Default")) {
+      if (choice.equals("Date-Time Separated")) {
+        add(dateLabel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+        add(dateField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
+        revalidate();
+      } else {
         dateField.setSelectedItem(null);
         remove(dateField);
         remove(dateLabel);
-        revalidate();
-      } else if (choice.equals("Date-Time Separated")) {
-        add(dateLabel, configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
-        add(dateField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
         revalidate();
       }
     });
@@ -83,13 +81,13 @@ public class TimeTranslatorForm extends JPanel {
     updateComboBoxModel(dateField, headerOptions);
     
     if (initialTranslator != null) {
-      if (initialTranslator instanceof DefaultTimeTranslator defaultTimeTranslator) {
-        timeZoneField.setSelectedItem(defaultTimeTranslator.getTimeZone());
-        timeField.setSelectedItem(defaultTimeTranslator.getTime());
-      } else if (initialTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
+      if (initialTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
         timeZoneField.setSelectedItem(dateTimeSeparatedTimeTranslator.getTimeZone());
         timeField.setSelectedItem(dateTimeSeparatedTimeTranslator.getTime());
         dateField.setSelectedItem(dateTimeSeparatedTimeTranslator.getDate());
+      } else {
+        timeZoneField.setSelectedItem(initialTranslator.getTimeZone());
+        timeField.setSelectedItem(initialTranslator.getTime());
       }
     }
   }
@@ -99,7 +97,7 @@ public class TimeTranslatorForm extends JPanel {
       return DateTimeSeparatedTimeTranslator.builder()
           .timeZone((String) timeZoneField.getSelectedItem())
           .date((String) dateField.getSelectedItem())
-          .time(String.valueOf(timeField.getSelectedItem()))
+          .time((String) timeField.getSelectedItem())
           .build();
     } else {
       return DefaultTimeTranslator.builder()

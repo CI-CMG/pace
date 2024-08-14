@@ -10,7 +10,6 @@ import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTransl
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,12 +31,30 @@ public class PackageInfoForm extends JPanel {
   private final TimeTranslatorForm endTimeForm;
   private final DateTranslatorForm publicReleaseDateForm;
   private final JComboBox<String> dataCollectionNameField = new JComboBox<>();
-  private JComboBox<String> processingLevelField = new JComboBox<>();
+  private final JComboBox<String> processingLevelField = new JComboBox<>();
 
   public PackageInfoForm(String[] headerOptions, PackageTranslator initialTranslator) {
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     this.publicReleaseDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPublicReleaseDate());
+
+    uuidField.setName("uuid");
+    siteOrCruiseNameField.setName("siteOrCruiseName");
+    deploymentIdField.setName("deploymentId");
+    projectsField.setName("projects");
+    platformField.setName("platform");
+    instrumentField.setName("instrument");
+    deploymentTitleField.setName("deploymentTitle");
+    deploymentPurposeField.setName("deploymentPurpose");
+    deploymentDescriptionField.setName("deploymentDescription");
+    alternateSiteNameField.setName("alternateSiteName");
+    alternateDeploymentNameField.setName("alternateDeploymentName");
+    startTimeForm.setName("startTime");
+    endTimeForm.setName("endTime");
+    publicReleaseDateForm.setName("publicReleaseDate");
+    dataCollectionNameField.setName("dataCollectionName");
+    processingLevelField.setName("processingLevel");
+    
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

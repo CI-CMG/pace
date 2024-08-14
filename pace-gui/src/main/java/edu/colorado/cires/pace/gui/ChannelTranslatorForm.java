@@ -37,6 +37,9 @@ public class ChannelTranslatorForm extends JPanel {
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     this.packageSensorTranslatorForm = new PackageSensorTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getSensor());
+    startTimeForm.setName("startTime");
+    endTimeForm.setName("endTime");
+    packageSensorTranslatorForm.setName("packageSensorTranslator");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

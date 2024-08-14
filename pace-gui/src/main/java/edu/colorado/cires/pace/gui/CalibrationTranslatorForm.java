@@ -22,7 +22,10 @@ public class CalibrationTranslatorForm extends JPanel {
   public CalibrationTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
     this.preDeploymentCalibrationDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPreDeploymentCalibrationDate());
     this.postDeploymentCalibrationDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPostDeploymentCalibrationDate());
-    
+    calibrationDocumentsPathField.setName("calibrationDocumentsPath");
+    calibrationDescriptionField.setName("calibrationDescription");
+    preDeploymentCalibrationDateForm.setName("preDeploymentCalibrationDate");
+    postDeploymentCalibrationDateForm.setName("postDeploymentCalibrationDate");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }

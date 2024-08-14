@@ -6,7 +6,6 @@ import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 import edu.colorado.cires.pace.data.object.contact.person.translator.PersonTranslator;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
-import java.awt.Label;
 import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -58,7 +57,7 @@ public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
     formPanel.add(uuidField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     formPanel.add(new JLabel("Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     formPanel.add(nameField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
-    formPanel.add(new Label("Position"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    formPanel.add(new JLabel("Position"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     formPanel.add(positionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     formPanel.add(new JLabel("Organization"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     formPanel.add(organizationField, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));

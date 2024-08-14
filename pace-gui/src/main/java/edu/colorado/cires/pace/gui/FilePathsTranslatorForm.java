@@ -18,6 +18,11 @@ public class FilePathsTranslatorForm extends JPanel {
   private final JComboBox<String> sourcePathField = new JComboBox<>();
 
   public FilePathsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
+    temperaturePathField.setName("temperaturePath");
+    biologicalPathField.setName("biologicalPath");
+    otherPathField.setName("otherPath");
+    documentsPathField.setName("documentsPath");
+    sourcePathField.setName("sourcePath");
     addComponents();
     initializeFields(headerOptions, initialTranslator);
   }
