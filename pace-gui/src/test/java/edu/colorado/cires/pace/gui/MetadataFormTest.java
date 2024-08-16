@@ -15,6 +15,9 @@ import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.swing.JCheckBox;
@@ -23,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -37,7 +41,10 @@ abstract class MetadataFormTest<O extends ObjectWithUniqueField, F extends Metad
   private final CRUDRepository<O> repository = mock(CRUDRepository.class);
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    Path testPath = Paths.get("target").resolve("test-dir").resolve("test-metadata").toAbsolutePath();
+    System.setProperty("pace.metadata-directory", testPath.toString());
+    FileUtils.forceMkdir(testPath.toFile());
     Boolean headless = ApplicationPropertyResolver.getPropertyValue("java.awt.headless", Boolean::parseBoolean);
     assertNotNull(headless);
     assertTrue(headless, "Test must run in headless mode");

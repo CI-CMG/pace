@@ -4,11 +4,15 @@ import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +28,10 @@ public abstract class AuxiliaryTranslatorFormTest<T, F extends AuxiliaryTranslat
   private F form;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    Path testPath = Paths.get("target").resolve("test-dir").resolve("test-metadata").toAbsolutePath();
+    System.setProperty("pace.metadata-directory", testPath.toString());
+    FileUtils.forceMkdir(testPath.toFile());
     Boolean headless = ApplicationPropertyResolver.getPropertyValue("java.awt.headless", Boolean::parseBoolean);
     assertNotNull(headless);
     assertTrue(headless, "Test must run in headless mode");

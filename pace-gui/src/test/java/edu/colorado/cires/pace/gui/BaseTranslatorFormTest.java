@@ -5,10 +5,14 @@ import static org.junit.Assert.assertNotNull;
 
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.utilities.ApplicationPropertyResolver;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +27,10 @@ public abstract class BaseTranslatorFormTest<T extends Translator, F extends Bas
   private BaseTranslatorForm<T> translatorForm;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    Path testPath = Paths.get("target").resolve("test-dir").resolve("test-metadata").toAbsolutePath();
+    System.setProperty("pace.metadata-directory", testPath.toString());
+    FileUtils.forceMkdir(testPath.toFile());
     Boolean headless = ApplicationPropertyResolver.getPropertyValue("java.awt.headless", Boolean::parseBoolean);
     assertNotNull(headless);
     assertTrue(headless, "Test must run in headless mode");
