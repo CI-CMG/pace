@@ -7,6 +7,7 @@ import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler;
 import edu.colorado.cires.pace.cli.error.ExecutionErrorHandler.CLIError;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -35,8 +36,10 @@ public abstract class CLITest {
   
   @BeforeEach
   public void beforeEach() throws IOException {
+    System.setProperty("pace.metadata-directory", testPath.resolve("test-metadata").toAbsolutePath().toString());
     FileUtils.deleteQuietly(testPath.toFile());
     FileUtils.forceMkdir(testPath.toFile());
+    FileUtils.forceMkdir(testPath.resolve("test-metadata").toFile());
     System.setOut(new PrintStream(commandOut));
   }
   

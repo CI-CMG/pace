@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.utilities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -79,17 +80,17 @@ public final class ApplicationPropertyResolver {
   }
 
   private static void initializeDataDirectory() {
-//    try{
-//      Path path = getDataDir();
-//      if (path.toFile().exists()) {
-//        return;
-//      }
-//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "file-types");
-//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "instrument");
-//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "platforms");
-//    } catch (Exception e) {
-//      throw new IllegalStateException("Unable to initialize data directory", e);
-//    }
+    try{
+      Path path = getDataDir();
+      if (path.toFile().exists()) {
+        return;
+      }
+      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "file-types");
+      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "instrument");
+      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "platforms");
+    } catch (Exception e) {
+      throw new IllegalStateException("Unable to initialize data directory", e);
+    }
   }
 
   public static Path getDataDir() {
