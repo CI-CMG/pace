@@ -20,7 +20,7 @@ public final class ApplicationPropertyResolver {
   static {
     try {
       createPropertiesFileAndConfigDir();
-      
+
       try (
           InputStream defaultInputStream = ApplicationPropertyResolver.class.getResourceAsStream("/application.properties");
           InputStream userPropertiesInputStream = new FileInputStream(getPropertiesFilePath().toFile())
@@ -33,6 +33,7 @@ public final class ApplicationPropertyResolver {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    initializeDataDirectory();
   }
 
   public static <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
@@ -77,13 +78,32 @@ public final class ApplicationPropertyResolver {
     }
   }
 
+  private static void initializeDataDirectory() {
+//    try{
+//      Path path = getDataDir();
+//      if (path.toFile().exists()) {
+//        return;
+//      }
+//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "file-types");
+//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "instrument");
+//      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "platforms");
+//    } catch (Exception e) {
+//      throw new IllegalStateException("Unable to initialize data directory", e);
+//    }
+  }
+
   public static Path getDataDir() {
     String dirString = getPropertyValue("pace.metadata-directory", (s) -> s);
+    Path defaultDataDir = APPLICATION_BASE_DIR.resolve("data").toAbsolutePath();
     if (StringUtils.isBlank(dirString)) {
-      return APPLICATION_BASE_DIR.resolve("data").toAbsolutePath();
+      return defaultDataDir;
     }
 
-    return Paths.get(dirString).toAbsolutePath();
+    Path userOptionDir = Paths.get(dirString);
+    if (!userOptionDir.isAbsolute()) {
+      return defaultDataDir;
+    }
+    return userOptionDir;
   }
 
   public static String getVersion() {

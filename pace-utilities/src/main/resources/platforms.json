@@ -1,0 +1,8 @@
+[
+  {"uuid":"e1b0ea3c-759d-471f-96eb-e2e657352da1","visible":true,"name":"Towed array"},
+  {"uuid":"551cd0fd-1ef3-467b-ada4-61fca329894e","visible":true,"name":"Popup"},
+  {"uuid":"edd2263c-57ee-4e6a-9c08-e36c3e77a771","visible":true,"name":"Mooring"},
+  {"uuid":"368a42ac-09bd-499b-b23a-7dcb47e88642","visible":true,"name":"Drifter"},
+  {"uuid":"336f1cd6-e17b-4c23-ae4b-2d152f965463","visible":true,"name":"Glider"},
+  {"uuid":"05cf3c27-0d7d-47e7-82cc-b095d0b46b19","visible":true,"name":"test"}
+]

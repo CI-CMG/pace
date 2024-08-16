@@ -47,6 +47,9 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>application.properties</include>
+          <include>platforms.json</include>
+          <include>file-types.json</include>
+          <include>instruments.json</include>
         </includes>
       </resource>
     </resources>

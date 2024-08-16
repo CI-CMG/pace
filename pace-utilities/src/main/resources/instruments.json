@@ -1,0 +1,11 @@
+[
+  {"uuid":"2b331762-b282-4335-a515-1458befe7eb1","visible":true,"name":"DMON","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"2c2642a5-be22-4105-afc5-7d3325754a86","visible":true,"name":"EAR","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"5c23aa0d-9994-42e8-8ed1-f4b7b55b68ac","visible":true,"name":"AUH","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"05c94691-cda0-45cb-a425-911543eccb27","visible":true,"name":"HARP","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"088fdca8-9441-4e4f-83e0-1c7e9cf65742","visible":true,"name":"C-POD","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"795e315d-de45-4c8e-b3ca-fc233a0ede1b","visible":true,"name":"SoundTrap 300","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"b0ffb71e-d087-44c2-a507-be76bb9bcf6d","visible":true,"name":"SoundTrap 500","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"e6b7621d-2ed9-444b-bd2e-a9b9eb7b5320","visible":true,"name":"test","file_types":["wav","aif","aiff","flac"]},
+  {"uuid":"ff8028ff-9c35-453d-a583-a93225e9fde0","visible":true,"name":"MARU","file_types":["wav","aif","aiff","flac"]}
+]
