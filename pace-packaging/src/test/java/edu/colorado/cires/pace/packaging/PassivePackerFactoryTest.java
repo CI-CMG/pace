@@ -17,7 +17,6 @@ import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
@@ -279,7 +278,6 @@ class PassivePackerFactoryTest {
   private Package createDetectionsPackage(LocationDetail locationDetail, LocalDate preDeploymentCalibrationDate) {
     return DetectionsPackage.builder()
         .baseFields(createBasePackage(locationDetail))
-        .processingLevel(ProcessingLevel.Product)
         .preDeploymentCalibrationDate(preDeploymentCalibrationDate)
         .postDeploymentCalibrationDate(null)
         .soundSource("Blue whale")
@@ -331,7 +329,6 @@ class PassivePackerFactoryTest {
         .softwareProtocolCitation("protocol citation")
         .softwareDescription("software description")
         .softwareProcessingDescription("software processing description")
-        .processingLevel(ProcessingLevel.Product)
         .audioStartTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
         .audioEndTime(LocalDateTime.of(2010, 1, 2, 13, 0, 0))
         .startTime(LocalDateTime.of(2010, 1, 2, 13, 0, 0))
@@ -350,7 +347,6 @@ class PassivePackerFactoryTest {
         .softwareProtocolCitation("protocol citation")
         .softwareDescription("software description")
         .softwareProcessingDescription("software processing description")
-        .processingLevel(ProcessingLevel.Product)
         .audioStartTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
         .audioEndTime(LocalDateTime.of(2010, 1, 1, 13, 30, 0))
         .build();
@@ -366,7 +362,6 @@ class PassivePackerFactoryTest {
         .softwareProtocolCitation("protocol citation")
         .softwareDescription("software description")
         .softwareProcessingDescription("software processing description")
-        .processingLevel(ProcessingLevel.Product)
         .qualityAnalyst("Chuck Anderson")
         .qualityEntries(List.of(
             DataQualityEntry.builder()
@@ -404,7 +399,6 @@ class PassivePackerFactoryTest {
     return Package.builder()
         .startTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
         .endTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
-        .processingLevel(ProcessingLevel.Raw)
         .publicReleaseDate(LocalDate.of(2024, 8, 2))
         .projects(List.of("project"))
         .deploymentId("deployment-id")

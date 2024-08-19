@@ -147,7 +147,6 @@
         ]
     },
     "DATASET_DETAILS": {
-        "TYPE": "Raw",
         "SUB_TYPE": "Audio",
         "SOURCE_PATH": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
         "DATA_COMMENT": "deployment comments"

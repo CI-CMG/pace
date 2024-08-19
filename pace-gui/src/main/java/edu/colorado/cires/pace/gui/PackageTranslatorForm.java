@@ -190,7 +190,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     headerOptions.add(initialTranslator.getCalibrationDocumentsPath());
     headerOptions.add(initialTranslator.getSourcePath());
     headerOptions.add(initialTranslator.getDataCollectionName());
-    headerOptions.add(initialTranslator.getProcessingLevel());
     headerOptions.add(initialTranslator.getSiteOrCruiseName());
     headerOptions.add(initialTranslator.getDeploymentId());
     headerOptions.add(initialTranslator.getDatasetPackager());
@@ -571,7 +570,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .calibrationDescription(calibrationTranslator.getCalibrationDescription())
         .preDeploymentCalibrationDate(calibrationTranslator.getPreDeploymentCalibrationDate())
         .postDeploymentCalibrationDate(calibrationTranslator.getPostDeploymentCalibrationDate())
-        .processingLevel(packageInfoTranslator.getProcessingLevel())
         .packageUUID(packageInfoTranslator.getPackageUUID())
         .dataCollectionName(packageInfoTranslator.getDataCollectionName())
         .siteOrCruiseName(packageInfoTranslator.getSiteOrCruiseName())

@@ -259,7 +259,6 @@ public class PassivePackerFactory {
 
   private PassivePackerDatasetDetails getDatasetDetails(Package aPackage) throws NotFoundException, DatastoreException {
     PassivePackerDatasetDetails datasetDetails = PassivePackerDatasetDetails.builder()
-        .type(aPackage.getProcessingLevel().name())
         .subType(subtypeFromPackage(aPackage))
         .sourcePath(String.valueOf(aPackage.getSourcePath()))
         .build();

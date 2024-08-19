@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
@@ -395,7 +394,6 @@ class PackagerProcessorTest {
         .instrumentType("instrument")
         .instrumentId("instrumentId")
         .datasetDetails(PassivePackerDatasetDetails.builder()
-            .type("Raw")
             .subType("Audio")
             .sourcePath(sourcePath.toString())
             .dataComment("deployment-comments")
@@ -531,7 +529,6 @@ class PackagerProcessorTest {
     return AudioPackage.builder()
         .uuid(UUID.randomUUID())
         .sourcePath(sourcePath)
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(temperaturePath)
         .otherPath(otherPath)
         .documentsPath(documentsPath)

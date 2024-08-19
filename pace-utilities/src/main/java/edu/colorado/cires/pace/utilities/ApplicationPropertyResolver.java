@@ -86,7 +86,7 @@ public final class ApplicationPropertyResolver {
         return;
       }
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "file-types");
-      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "instrument");
+      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "instruments");
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "platforms");
     } catch (Exception e) {
       throw new IllegalStateException("Unable to initialize data directory", e);

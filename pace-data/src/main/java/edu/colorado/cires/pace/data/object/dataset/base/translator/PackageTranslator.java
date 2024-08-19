@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class PackageTranslator extends Translator {
   private final String packageUUID;
-  private final String processingLevel;
   private final String dataCollectionName;
   private final String temperaturePath;
   private final String biologicalPath;

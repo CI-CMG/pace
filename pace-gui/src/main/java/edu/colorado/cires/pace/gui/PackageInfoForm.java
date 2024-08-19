@@ -29,7 +29,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
   private final TimeTranslatorForm endTimeForm;
   private final DateTranslatorForm publicReleaseDateForm;
   private final JComboBox<String> dataCollectionNameField = new JComboBox<>();
-  private final JComboBox<String> processingLevelField = new JComboBox<>();
 
   public PackageInfoForm(String[] headerOptions, PackageTranslator initialTranslator) {
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
@@ -51,8 +50,7 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     endTimeForm.setName("endTime");
     publicReleaseDateForm.setName("publicReleaseDate");
     dataCollectionNameField.setName("dataCollectionName");
-    processingLevelField.setName("processingLevel");
-    
+
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -64,65 +62,61 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     add(uuidField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Processing Level"), configureFormLayout(0, 2));
-    add(processingLevelField, configureLayout((c) -> {
+    add(new JLabel("Data Collection Name"), configureFormLayout(0, 2));
+    add(dataCollectionNameField, configureLayout((c) -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Data Collection Name"), configureFormLayout(0, 4));
-    add(dataCollectionNameField, configureLayout((c) -> {
+    add(new JLabel("Site Or Cruise Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    add(siteOrCruiseNameField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Site Or Cruise Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
-    add(siteOrCruiseNameField, configureLayout((c) -> { 
+    add(new JLabel("Deployment ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
+    add(deploymentIdField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 7; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Deployment ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
-    add(deploymentIdField, configureLayout((c) -> { 
+    add(new JLabel("Projects"), configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
+    add(projectsField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Projects"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
-    add(projectsField, configureLayout((c) -> { 
+    add(new JLabel("Platform"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+    add(platformField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Platform"), configureLayout((c) -> { c.gridx = 0; c.gridy = 12; c.weightx = 1; }));
-    add(platformField, configureLayout((c) -> { 
+    add(new JLabel("Instrument"), configureLayout((c) -> { c.gridx = 0; c.gridy = 12; c.weightx = 1; }));
+    add(instrumentField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 13; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Instrument"), configureLayout((c) -> { c.gridx = 0; c.gridy = 14; c.weightx = 1; }));
-    add(instrumentField, configureLayout((c) -> { 
+    add(new JLabel("Deployment Title"), configureLayout((c) -> { c.gridx = 0; c.gridy = 14; c.weightx = 1; }));
+    add(deploymentTitleField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 15; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Deployment Title"), configureLayout((c) -> { c.gridx = 0; c.gridy = 16; c.weightx = 1; }));
-    add(deploymentTitleField, configureLayout((c) -> { 
+    add(new JLabel("Deployment Purpose"), configureLayout((c) -> { c.gridx = 0; c.gridy = 16; c.weightx = 1; }));
+    add(deploymentPurposeField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 17; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Deployment Purpose"), configureLayout((c) -> { c.gridx = 0; c.gridy = 18; c.weightx = 1; }));
-    add(deploymentPurposeField, configureLayout((c) -> { 
+    add(new JLabel("Deployment Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 18; c.weightx = 1; }));
+    add(deploymentDescriptionField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 19; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Deployment Description"), configureLayout((c) -> { c.gridx = 0; c.gridy = 20; c.weightx = 1; }));
-    add(deploymentDescriptionField, configureLayout((c) -> { 
+    add(new JLabel("Alternate Site Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 20; c.weightx = 1; }));
+    add(alternateSiteNameField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 21; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Alternate Site Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 22; c.weightx = 1; }));
-    add(alternateSiteNameField, configureLayout((c) -> { 
-      c.gridx = 0; c.gridy = 23; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
-    add(new JLabel("Alternate Deployment Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 24; c.weightx = 1; }));
+    add(new JLabel("Alternate Deployment Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 22; c.weightx = 1; }));
     add(alternateDeploymentNameField, configureLayout((c) -> { 
-      c.gridx = 0; c.gridy = 25; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 23; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     
     startTimeForm.setBorder(createEtchedBorder("Start Time"));
-    add(startTimeForm, configureLayout((c) -> { c.gridx = 0; c.gridy = 26; c.weightx = 1; }));
+    add(startTimeForm, configureLayout((c) -> { c.gridx = 0; c.gridy = 24; c.weightx = 1; }));
     endTimeForm.setBorder(createEtchedBorder("End Time"));
-    add(endTimeForm, configureLayout((c) -> { c.gridx = 1; c.gridy = 26; c.weightx = 1; }));
+    add(endTimeForm, configureLayout((c) -> { c.gridx = 1; c.gridy = 24; c.weightx = 1; }));
     publicReleaseDateForm.setBorder(createEtchedBorder("Public Release Date"));
     add(publicReleaseDateForm, configureLayout((c) -> { 
-      c.gridx = 0; c.gridy = 27; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 25; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     
-    add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 28; c.weighty = 1; }));
+    add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 26; c.weighty = 1; }));
   }
   
   private void initializeFields(String[] headerOptions, PackageTranslator initialTranslator) {
@@ -138,8 +132,7 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     updateComboBoxModel(deploymentDescriptionField, headerOptions);
     updateComboBoxModel(alternateSiteNameField, headerOptions);
     updateComboBoxModel(alternateDeploymentNameField, headerOptions);
-    updateComboBoxModel(processingLevelField, headerOptions);
-    
+
     if (initialTranslator != null) {
       uuidField.setSelectedItem(initialTranslator.getPackageUUID());
       dataCollectionNameField.setSelectedItem(initialTranslator.getDataCollectionName());
@@ -153,7 +146,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
       deploymentDescriptionField.setSelectedItem(initialTranslator.getDeploymentDescription());
       alternateSiteNameField.setSelectedItem(initialTranslator.getAlternateSiteName());
       alternateDeploymentNameField.setSelectedItem(initialTranslator.getAlternateDeploymentName());
-      processingLevelField.setSelectedItem(initialTranslator.getProcessingLevel());
     }
   }
 
@@ -175,7 +167,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
         .endTime(endTimeForm.toTranslator())
         .publicReleaseDate(publicReleaseDateForm.toTranslator())
         .dataCollectionName((String) dataCollectionNameField.getSelectedItem())
-        .processingLevel((String) processingLevelField.getSelectedItem())
         .build();
   }
 
@@ -192,7 +183,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     updateComboBoxModel(deploymentDescriptionField, options);
     updateComboBoxModel(alternateSiteNameField, options);
     updateComboBoxModel(alternateDeploymentNameField, options);
-    updateComboBoxModel(processingLevelField, options);
     startTimeForm.updateHeaderOptions(options);
     endTimeForm.updateHeaderOptions(options);
     publicReleaseDateForm.updateHeaderOptions(options);

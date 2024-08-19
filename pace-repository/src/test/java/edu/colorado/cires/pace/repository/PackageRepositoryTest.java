@@ -10,7 +10,6 @@ import edu.colorado.cires.pace.data.object.dataset.audio.AudioDataPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.data.object.detectionType.DetectionType;
@@ -511,7 +510,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   public static AudioDataPackage createAudioPackingJob(int suffix) {
     return AudioPackage.builder()
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))
@@ -646,7 +644,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
     return SoundPropagationModelsPackage.builder()
         .modeledFrequency(1f)
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))
@@ -703,7 +700,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .minFrequency(1f)
         .maxFrequency(2f)
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))
@@ -770,7 +766,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   private Package createSoundClipsDataset(int suffix) {
     return SoundClipsPackage.builder()
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))
@@ -828,7 +823,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .maxFrequency(2f)
         .soundSource("sound-source")
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))
@@ -898,7 +892,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
   private Package createCPODDataset(int suffix) {
     CPODPackage cpodPackage = CPODPackage.builder()
         .sourcePath(Paths.get("source-path"))
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(Paths.get("temperature-path"))
         .otherPath(Paths.get("other-path"))
         .documentsPath(Paths.get("documents-path"))

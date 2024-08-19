@@ -21,7 +21,6 @@ public class DetectionsPackageTranslator extends SoundAnalysisPackageTranslator 
   public static DetectionsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return DetectionsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())
-        .processingLevel(packageTranslator.getProcessingLevel())
         .dataCollectionName(packageTranslator.getDataCollectionName())
         .name(packageTranslator.getName())
         .packageUUID(packageTranslator.getPackageUUID())

@@ -30,8 +30,6 @@ public abstract class BasePackage implements AbstractObject, TimeRange, Calibrat
   @NotNull
   @Builder.Default
   private final boolean visible = true;
-  @NotNull
-  private final ProcessingLevel processingLevel;
   private final Path temperaturePath;
   private final Path biologicalPath;
   private final Path otherPath;
@@ -57,20 +55,18 @@ public abstract class BasePackage implements AbstractObject, TimeRange, Calibrat
   private final LocalDateTime startTime;
   @NotNull
   private final LocalDateTime endTime;
-  @NotNull
   private final LocalDate preDeploymentCalibrationDate;
-  @NotNull
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;
 
   @NotBlank
   private final String datasetPackager;
-  @Builder.Default @NotNull @NotEmpty
-  private final List<@NotBlank String> scientists = Collections.emptyList();
+  @Builder.Default
+  private final List<String> scientists = Collections.emptyList();
   @Builder.Default @NotNull @NotEmpty
   private final List<@NotBlank String> sponsors = Collections.emptyList();
-  @Builder.Default @NotNull @NotEmpty
-  private final List<@NotBlank String> funders = Collections.emptyList();
+  @Builder.Default
+  private final List<String> funders = Collections.emptyList();
   @NotBlank
   private final String platform;
   @NotBlank

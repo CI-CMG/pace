@@ -8,7 +8,6 @@ import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
@@ -75,7 +74,6 @@ public class ValidPackageIdentifiersValidatorTest {
   private AudioPackage createAudio(UUID uuid) {
     return AudioPackage.builder()
         .uuid(uuid)
-        .processingLevel(ProcessingLevel.Raw)
         .sourcePath(Paths.get("sourcePath"))
         .temperaturePath(Paths.get("temperaturePath"))
         .otherPath(Paths.get("otherPath"))

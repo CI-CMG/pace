@@ -17,7 +17,6 @@ import static edu.colorado.cires.pace.translator.converter.ConversionUtils.pathL
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
@@ -106,7 +105,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return CPODPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", cpodPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, cpodPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, cpodPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", cpodPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", cpodPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", cpodPackageTranslator.getOtherPath(), row, runtimeException))
@@ -182,7 +180,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return AudioPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", audioPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, audioPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, audioPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", audioPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", audioPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", audioPackageTranslator.getOtherPath(), row, runtimeException))
@@ -238,7 +235,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return DetectionsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", detectionsPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, detectionsPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, detectionsPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", detectionsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", detectionsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", detectionsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -354,7 +350,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return SoundClipsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundClipsPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, soundClipsPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, soundClipsPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundClipsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundClipsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundClipsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -398,7 +393,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return SoundLevelMetricsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundLevelMetricsPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, soundLevelMetricsPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, soundLevelMetricsPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundLevelMetricsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundLevelMetricsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundLevelMetricsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -451,7 +445,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     return SoundPropagationModelsPackage.builder()
         .uuid(uuidFromMap(properties, "UUID", soundPropagationModelsPackageTranslator.getPackageUUID(), row, runtimeException))
         .dataCollectionName(stringFromMap(properties, soundPropagationModelsPackageTranslator.getDataCollectionName()))
-        .processingLevel(processingLevelFromMap(properties, soundPropagationModelsPackageTranslator.getProcessingLevel(), row, runtimeException))
         .temperaturePath(pathFromMap(properties, "Temperature Path", soundPropagationModelsPackageTranslator.getTemperaturePath(), row, runtimeException))
         .biologicalPath(pathFromMap(properties, "Biological Path", soundPropagationModelsPackageTranslator.getBiologicalPath(), row, runtimeException))
         .otherPath(pathFromMap(properties, "Other Path", soundPropagationModelsPackageTranslator.getOtherPath(), row, runtimeException))
@@ -524,26 +517,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
           }
         }).filter(Objects::nonNull)
         .toList();
-  }
-
-  private static ProcessingLevel processingLevelFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {
-    ValueWithColumnNumber valueWithColumnNumber = propertyFromMap(properties, propertyName);
-    String property = stringFromProperty(valueWithColumnNumber);
-
-    if (property == null) {
-      return null;
-    }
-
-    try {
-      return ProcessingLevel.valueOf(property);
-    } catch (IllegalArgumentException e) {
-      runtimeException.addSuppressed(new FieldException(
-          propertyName, "Processing Level", String.format(
-              "Unsupported processing level - %s", property
-      ), valueWithColumnNumber.column(), row
-      ));
-      return null;
-    }
   }
 
   private static QualityLevel qualityLevelFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName, int row, RuntimeException runtimeException) {

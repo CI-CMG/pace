@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.ProcessingLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.sensor.depth.DepthSensor;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
@@ -502,7 +501,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   public AudioPackage createObject(String uniqueField, boolean withUUID) {
     return AudioPackage.builder()
         .uuid(withUUID ? UUID.randomUUID() : null)
-        .processingLevel(ProcessingLevel.Raw)
         .temperaturePath(testPath.resolve("temperaturePath").toAbsolutePath())
         .biologicalPath(testPath.resolve("biologicalPath").toAbsolutePath())
         .otherPath(testPath.resolve("otherPath").toAbsolutePath())
