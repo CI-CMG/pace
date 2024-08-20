@@ -50,6 +50,8 @@
           <include>platforms.json</include>
           <include>file-types.json</include>
           <include>instruments.json</include>
+          <include>organizations.json</include>
+          <include>people.json</include>
         </includes>
       </resource>
     </resources>
