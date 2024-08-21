@@ -25,7 +25,7 @@ public class AudioDataPackage extends Package implements BaseAudioDataPackage<St
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
   private final String comments;
-  @NotEmpty @NotNull @Builder.Default
+  @Builder.Default
   private final List<@NotNull @Valid PackageSensor<String>> sensors = Collections.emptyList();
   @NotEmpty @NotNull @Builder.Default
   private final List<@Valid @NotNull Channel<String>> channels = Collections.emptyList();

@@ -22,21 +22,22 @@ final class ValidationUtils {
     String endTimePropertyName = value.getEndTimePropertyName();
 
     if (startTime == null || endTime  == null) {
-      context.disableDefaultConstraintViolation();
-      
-      if (startTime == null) {
-        context.buildConstraintViolationWithTemplate("must not be null")
-            .addPropertyNode(startTimePropertyName)
-            .addConstraintViolation();
-      }
-
-      if (endTime == null) {
-        context.buildConstraintViolationWithTemplate("must not be null")
-            .addPropertyNode(endTimePropertyName)
-            .addConstraintViolation();
-      }
-
-      return false;
+      return true;
+//      context.disableDefaultConstraintViolation();
+//
+//      if (startTime == null) {
+//        context.buildConstraintViolationWithTemplate("must not be null")
+//            .addPropertyNode(startTimePropertyName)
+//            .addConstraintViolation();
+//      }
+//
+//      if (endTime == null) {
+//        context.buildConstraintViolationWithTemplate("must not be null")
+//            .addPropertyNode(endTimePropertyName)
+//            .addConstraintViolation();
+//      }
+//
+//      return false;
     } else {
       if (value.isEqualMethod() != null) {
         if (value.isEqualMethod().apply(endTime)) {

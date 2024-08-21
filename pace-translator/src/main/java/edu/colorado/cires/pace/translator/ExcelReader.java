@@ -25,8 +25,13 @@ public class ExcelReader {
                   .toList();
               
               rows.remove(0);
-              
-              return rows.stream().map(row -> rowToPropertyMap(row, headers));
+              return rows.stream().map(row -> {
+                try {
+                  return rowToPropertyMap(row, headers);
+                } catch (TranslationException e) {
+                  throw new RuntimeException(e);
+                }
+              });
             } catch (IOException e) {
               throw new RuntimeException(e);
             }
@@ -35,18 +40,22 @@ public class ExcelReader {
     }
   }
   
-  private static MapWithRowNumber rowToPropertyMap(Row row, List<String> headers) {
-    return new MapWithRowNumber(
-        IntStream.range(0, headers.size()).boxed().collect(Collectors.toMap(
-            headers::get,
-            i -> new ValueWithColumnNumber(
-                Optional.ofNullable(row.getCell(i))
-                    .map(Cell::getRawValue),
-                i
-            )
-        )),
-        row.getRowNum()
-    );
+  private static MapWithRowNumber rowToPropertyMap(Row row, List<String> headers) throws TranslationException {
+    try {
+      return new MapWithRowNumber(
+          IntStream.range(0, headers.size()).boxed().collect(Collectors.toMap(
+              headers::get,
+              i -> new ValueWithColumnNumber(
+                  Optional.ofNullable(row.getCell(i))
+                      .map(Cell::getRawValue),
+                  i
+              )
+          )),
+          row.getRowNum()
+      );
+    } catch (Exception e) {
+      throw new TranslationException("Invalid rows in excel sheet");
+    }
   }
 
 }

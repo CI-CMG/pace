@@ -71,7 +71,7 @@ public abstract class BasePackage implements AbstractObject, TimeRange, Calibrat
   private final String platform;
   @NotBlank
   private final String instrument;
-  @Builder.Default @NotNull @NotEmpty
+  @Builder.Default
   private final List<@NotBlank String> projects = Collections.emptyList();
 
   @Override

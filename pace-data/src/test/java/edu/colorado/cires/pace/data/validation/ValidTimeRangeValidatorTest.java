@@ -19,9 +19,9 @@ class ValidTimeRangeValidatorTest {
       "2024-12-03T10:15:30,2024-12-04T10:15:30,,",
       "2024-12-03T10:15:30,2024-12-03T10:15:30,must not equal endTime,must not equal startTime",
       "2024-12-04T10:15:30,2024-12-03T10:15:30,must be before endTime,must be after startTime",
-      "2024-12-04T10:15:30,,,must not be null",
-      ",2024-12-04T10:15:30,must not be null,",
-      ",,must not be null,must not be null"
+      "2024-12-04T10:15:30,,,",
+      ",2024-12-04T10:15:30,,",
+      ",,,"
   })
   void testValidTimeRange(String startString, String endString, String expectedStartMessage, String expectedEndMessage) {
     TimeRange timeRange = new TimeRange() {
