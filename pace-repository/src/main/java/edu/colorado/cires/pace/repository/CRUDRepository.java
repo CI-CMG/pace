@@ -8,6 +8,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -100,11 +101,11 @@ public abstract class CRUDRepository<O extends AbstractObject> {
   
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing all {} objects", getClassName());
-    return datastore.findAll();
+    return datastore.findAll().sorted(Comparator.comparing(AbstractObject::getUniqueField));
   }
   
   public Stream<O> search(SearchParameters<O> searchParameters) throws DatastoreException {
-    return datastore.findAll()
+    return findAll()
         .filter(searchParameters::matches);
   }
 

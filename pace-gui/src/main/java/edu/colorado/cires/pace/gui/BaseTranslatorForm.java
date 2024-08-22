@@ -2,9 +2,13 @@ package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.swing.JPanel;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
@@ -21,8 +25,9 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
   
   public void setHeaderOptions(String[] headerOptions) {
     this.headerOptions = Arrays.stream(headerOptions)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toSet()).toArray(String[]::new);
+        //.filter(StringUtils::isNotBlank)
+        .collect(Collectors.toSet()).stream().sorted().toArray(String[]::new);
+    this.headerOptions = ArrayUtils.addFirst(this.headerOptions, null);
     updateHeaderOptions(this.headerOptions);
   }
 
