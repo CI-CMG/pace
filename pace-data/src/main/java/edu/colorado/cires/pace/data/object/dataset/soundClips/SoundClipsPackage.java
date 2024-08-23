@@ -1,6 +1,7 @@
 package edu.colorado.cires.pace.data.object.dataset.soundClips;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class SoundClipsPackage extends Package implements BaseSoundClipsPackage {
+public class SoundClipsPackage extends Package implements BaseSoundClipsPackage, TimeRange {
   private final String softwareNames;
   private final String softwareVersions;
   private final String softwareProtocolCitation;
@@ -20,6 +21,8 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage 
   private final String softwareProcessingDescription;
   private final LocalDateTime audioStartTime;
   private final LocalDateTime audioEndTime;
+  private final LocalDateTime startTime;
+  private final LocalDateTime endTime;
 
 
   @Override

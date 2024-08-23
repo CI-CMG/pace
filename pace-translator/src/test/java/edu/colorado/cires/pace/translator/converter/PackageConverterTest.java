@@ -97,8 +97,6 @@ class PackageConverterTest {
         .platform("platform")
         .instrument("instrument")
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
-        .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
@@ -469,53 +467,51 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getFunders())), 16));
     map.put(audioPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(audioPackage.getPlatform()), 17));
     map.put(audioPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrument()), 18));
-    map.put((audioPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getStartTime().toString()), 19));
-    map.put((audioPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getEndTime().toString()), 20));
-    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
-    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPostDeploymentCalibrationDate().toString()), 22));
-    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
-    map.put(audioPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDescription()), 23));
-    map.put(audioPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTitle()), 24));
-    map.put(audioPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentPurpose()), 25));
-    map.put(audioPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentDescription()), 26));
-    map.put(audioPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateSiteName()), 27));
-    map.put(audioPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateDeploymentName()), 28));
+    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPreDeploymentCalibrationDate().toString()), 19));
+    map.put(audioPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 19));
+    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPostDeploymentCalibrationDate().toString()), 20));
+    map.put(audioPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 20));
+    map.put(audioPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getCalibrationDescription()), 21));
+    map.put(audioPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentTitle()), 22));
+    map.put(audioPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentPurpose()), 23));
+    map.put(audioPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getDeploymentDescription()), 24));
+    map.put(audioPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateSiteName()), 25));
+    map.put(audioPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(audioPackage.getAlternateDeploymentName()), 26));
 
     MultipointStationaryMarineLocationTranslator multipointStationaryMarineLocationTranslator = (MultipointStationaryMarineLocationTranslator) audioPackageTranslator.getLocationDetailTranslator();
-    map.put(multipointStationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getSeaArea()), 29));
+    map.put(multipointStationaryMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getSeaArea()), 27));
     MarineInstrumentLocationTranslator marineInstrumentLocationTranslator = multipointStationaryMarineLocationTranslator.getLocationTranslators().get(0);
-    map.put(marineInstrumentLocationTranslator.getLatitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getLatitude().toString()), 30));
-    map.put(marineInstrumentLocationTranslator.getLongitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getLongitude().toString()), 31));
-    map.put(marineInstrumentLocationTranslator.getSeaFloorDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getSeaFloorDepth().toString()), 32));
-    map.put(marineInstrumentLocationTranslator.getInstrumentDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getInstrumentDepth().toString()), 33));
+    map.put(marineInstrumentLocationTranslator.getLatitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getLatitude().toString()), 28));
+    map.put(marineInstrumentLocationTranslator.getLongitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getLongitude().toString()), 29));
+    map.put(marineInstrumentLocationTranslator.getSeaFloorDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getSeaFloorDepth().toString()), 30));
+    map.put(marineInstrumentLocationTranslator.getInstrumentDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(0).getInstrumentDepth().toString()), 31));
 
     marineInstrumentLocationTranslator = multipointStationaryMarineLocationTranslator.getLocationTranslators().get(1);
-    map.put(marineInstrumentLocationTranslator.getLatitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getLatitude().toString()), 34));
-    map.put(marineInstrumentLocationTranslator.getLongitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getLongitude().toString()), 35));
-    map.put(marineInstrumentLocationTranslator.getSeaFloorDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getSeaFloorDepth().toString()), 36));
-    map.put(marineInstrumentLocationTranslator.getInstrumentDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getInstrumentDepth().toString()), 37));
+    map.put(marineInstrumentLocationTranslator.getLatitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getLatitude().toString()), 32));
+    map.put(marineInstrumentLocationTranslator.getLongitude(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getLongitude().toString()), 33));
+    map.put(marineInstrumentLocationTranslator.getSeaFloorDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getSeaFloorDepth().toString()), 34));
+    map.put(marineInstrumentLocationTranslator.getInstrumentDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getInstrumentDepth().toString()), 35));
     
-    map.put(audioPackageTranslator.getInstrumentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrumentId()), 38));
-    map.put(audioPackageTranslator.getHydrophoneSensitivity(), new ValueWithColumnNumber(Optional.of(audioPackage.getHydrophoneSensitivity().toString()), 39));
-    map.put(audioPackageTranslator.getFrequencyRange(), new ValueWithColumnNumber(Optional.of(audioPackage.getFrequencyRange().toString()), 40));
-    map.put(audioPackageTranslator.getGain(), new ValueWithColumnNumber(Optional.of(audioPackage.getGain().toString()), 41));
+    map.put(audioPackageTranslator.getInstrumentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrumentId()), 36));
+    map.put(audioPackageTranslator.getHydrophoneSensitivity(), new ValueWithColumnNumber(Optional.of(audioPackage.getHydrophoneSensitivity().toString()), 37));
+    map.put(audioPackageTranslator.getFrequencyRange(), new ValueWithColumnNumber(Optional.of(audioPackage.getFrequencyRange().toString()), 38));
+    map.put(audioPackageTranslator.getGain(), new ValueWithColumnNumber(Optional.of(audioPackage.getGain().toString()), 39));
     
     QualityControlDetailTranslator qualityControlDetailTranslator = audioPackageTranslator.getQualityControlDetailTranslator();
-    map.put(qualityControlDetailTranslator.getQualityAnalyst(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalyst()), 42));
-    map.put(qualityControlDetailTranslator.getQualityAnalysisObjectives(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalysisObjectives()), 43));
-    map.put(qualityControlDetailTranslator.getQualityAnalysisMethod(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalysisMethod()), 44));
-    map.put(qualityControlDetailTranslator.getQualityAssessmentDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAssessmentDescription()), 45));
+    map.put(qualityControlDetailTranslator.getQualityAnalyst(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalyst()), 40));
+    map.put(qualityControlDetailTranslator.getQualityAnalysisObjectives(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalysisObjectives()), 41));
+    map.put(qualityControlDetailTranslator.getQualityAnalysisMethod(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalysisMethod()), 42));
+    map.put(qualityControlDetailTranslator.getQualityAssessmentDescription(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAssessmentDescription()), 43));
     
     DataQualityEntryTranslator dataQualityEntryTranslator = qualityControlDetailTranslator.getQualityEntryTranslators().get(0);
-    map.put(dataQualityEntryTranslator.getStartTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getStartTime().toString()), 46));
+    map.put(dataQualityEntryTranslator.getStartTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getStartTime().toString()), 44));
     map.put(
-        dataQualityEntryTranslator.getEndTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getEndTime().toString()), 47));
-    map.put(dataQualityEntryTranslator.getMinFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getMinFrequency().toString()), 48));
-    map.put(dataQualityEntryTranslator.getMaxFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getMaxFrequency().toString()), 49));
-    map.put(dataQualityEntryTranslator.getQualityLevel(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getQualityLevel().getName()), 50));
-    map.put(dataQualityEntryTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getComments()), 51));
-    map.put(dataQualityEntryTranslator.getChannelNumbers(), new ValueWithColumnNumber(Optional.of("1"), 51));
+        dataQualityEntryTranslator.getEndTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getEndTime().toString()), 45));
+    map.put(dataQualityEntryTranslator.getMinFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getMinFrequency().toString()), 46));
+    map.put(dataQualityEntryTranslator.getMaxFrequency(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getMaxFrequency().toString()), 47));
+    map.put(dataQualityEntryTranslator.getQualityLevel(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getQualityLevel().getName()), 48));
+    map.put(dataQualityEntryTranslator.getComments(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(0).getComments()), 49));
+    map.put(dataQualityEntryTranslator.getChannelNumbers(), new ValueWithColumnNumber(Optional.of("1"), 49));
 
     dataQualityEntryTranslator = qualityControlDetailTranslator.getQualityEntryTranslators().get(1);
     map.put(dataQualityEntryTranslator.getStartTime().getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityEntries().get(1).getStartTime().toString()), 52));
@@ -651,8 +647,6 @@ class PackageConverterTest {
         .platform("platform")
         .instrument("instrument")
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.parse("2020-01-01T01:01:01"))
-        .endTime(LocalDateTime.parse("2020-01-01T02:01:01"))
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
@@ -1110,23 +1104,21 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getFunders())), 16));
     map.put(cpodPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPlatform()), 17));
     map.put(cpodPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrument()), 18));
-    map.put((cpodPackageTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getStartTime().toString()), 19));
-    map.put((cpodPackageTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getEndTime().toString()), 20));
-    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPreDeploymentCalibrationDate().toString()), 21));
-    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 21));
-    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPostDeploymentCalibrationDate().toString()), 22));
-    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 22));
-    map.put(cpodPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDescription()), 23));
-    map.put(cpodPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentTitle()), 24));
-    map.put(cpodPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentPurpose()), 25));
-    map.put(cpodPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentDescription()), 26));
-    map.put(cpodPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateSiteName()), 27));
-    map.put(cpodPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateDeploymentName()), 28));
+    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPreDeploymentCalibrationDate().toString()), 19));
+    map.put(cpodPackageTranslator.getPreDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 19));
+    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPostDeploymentCalibrationDate().toString()), 20));
+    map.put(cpodPackageTranslator.getPostDeploymentCalibrationDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 20));
+    map.put(cpodPackageTranslator.getCalibrationDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getCalibrationDescription()), 21));
+    map.put(cpodPackageTranslator.getDeploymentTitle(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentTitle()), 22));
+    map.put(cpodPackageTranslator.getDeploymentPurpose(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentPurpose()), 23));
+    map.put(cpodPackageTranslator.getDeploymentDescription(), new ValueWithColumnNumber(Optional.of(cpodPackage.getDeploymentDescription()), 24));
+    map.put(cpodPackageTranslator.getAlternateSiteName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateSiteName()), 25));
+    map.put(cpodPackageTranslator.getAlternateDeploymentName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getAlternateDeploymentName()), 26));
 
     MobileMarineLocationTranslator mobileMarineLocationTranslator = (MobileMarineLocationTranslator) cpodPackageTranslator.getLocationDetailTranslator();
-    map.put(mobileMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getSeaArea()), 29));
-    map.put(mobileMarineLocationTranslator.getVessel(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getVessel()), 29));
-    map.put(mobileMarineLocationTranslator.getLocationDerivationDescription(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getLocationDerivationDescription()), 29));
+    map.put(mobileMarineLocationTranslator.getSeaArea(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getSeaArea()), 27));
+    map.put(mobileMarineLocationTranslator.getVessel(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getVessel()), 27));
+    map.put(mobileMarineLocationTranslator.getLocationDerivationDescription(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getLocationDerivationDescription()), 27));
 
     map.put(cpodPackageTranslator.getInstrumentId(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrumentId()), 38));
     map.put(cpodPackageTranslator.getHydrophoneSensitivity(), new ValueWithColumnNumber(Optional.of(cpodPackage.getHydrophoneSensitivity().toString()), 39));

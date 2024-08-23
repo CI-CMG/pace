@@ -578,8 +578,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .deploymentDescription(packageInfoTranslator.getDeploymentDescription())
         .alternateSiteName(packageInfoTranslator.getAlternateSiteName())
         .alternateDeploymentName(packageInfoTranslator.getAlternateDeploymentName())
-        .startTime(packageInfoTranslator.getStartTime())
-        .endTime(packageInfoTranslator.getEndTime())
         .publicReleaseDate(packageInfoTranslator.getPublicReleaseDate())
         .locationDetailTranslator(locationDetailForm.toTranslator())
         .build();
@@ -676,6 +674,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
         .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
         .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
+        .startTime(softwareDependentPackageTranslator.getStartTime())
+        .endTime(softwareDependentPackageTranslator.getEndTime())
         .build();
   }
   
@@ -691,6 +691,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
         .audioStartTime(soundClipsForm.getAudioStartTimeTranslator())
         .audioEndTime(soundClipsForm.getAudioEndTimeTranslator())
+        .startTime(soundClipsForm.getStartTime())
+        .endTime(soundClipsForm.getEndTime())
         .build();
   }
   
@@ -714,6 +716,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
         .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
         .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
+        .startTime(soundLevelMetricsForm.getStartTime())
+        .endTime(soundLevelMetricsForm.getEndTime())
         .build();
   }
   
@@ -731,6 +735,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
         .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
         .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
+        .startTime(soundPropagationModelsForm.getStartTime())
+        .endTime(soundPropagationModelsForm.getEndTime())
         .build();
   }
 

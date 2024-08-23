@@ -35,6 +35,8 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   private final String softwareProtocolCitation;
   private final String softwareDescription;
   private final String softwareProcessingDescription;
+  private final LocalDateTime startTime;
+  private final LocalDateTime endTime;
 
   @Override
   public SoundLevelMetricsPackage setQualityAnalyst(String qualityAnalyst) {

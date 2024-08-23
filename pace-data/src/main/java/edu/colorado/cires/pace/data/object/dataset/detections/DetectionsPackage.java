@@ -1,8 +1,10 @@
 package edu.colorado.cires.pace.data.object.dataset.detections;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @Jacksonized
-public class DetectionsPackage extends Package implements BaseDetectionsPackage<String> {
+public class DetectionsPackage extends Package implements BaseDetectionsPackage<String>, TimeRange {
   @NotBlank
   private final String soundSource;
   
@@ -36,6 +38,8 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   private final Float sampleRate;
   private final Float minFrequency;
   private final Float maxFrequency;
+  private final LocalDateTime startTime;
+  private final LocalDateTime endTime;
 
   @Override
   public DetectionsPackage setQualityAnalyst(String qualityAnalyst) {

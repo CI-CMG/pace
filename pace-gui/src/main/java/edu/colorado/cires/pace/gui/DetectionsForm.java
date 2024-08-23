@@ -1,8 +1,10 @@
 package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
+import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.detections.translator.DetectionsPackageTranslator;
 import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
@@ -12,8 +14,12 @@ import javax.swing.JPanel;
 public class DetectionsForm extends JPanel {
   
   private final JComboBox<String> soundSource = new JComboBox<>();
+  private final TimeTranslatorForm detectionStartTimeForm;
+  private final TimeTranslatorForm detectionEndTimeForm;
 
   public DetectionsForm(String[] headerOptions, DetectionsPackageTranslator initialTranslator) {
+    this.detectionStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.detectionEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -27,8 +33,12 @@ public class DetectionsForm extends JPanel {
     add(soundSource, configureLayout(c -> {
       c.gridx = 0; c.gridy = 1; c.weightx = 1;
     }));
+    detectionStartTimeForm.setBorder(createEtchedBorder("Analysis Start Time"));
+    add(detectionStartTimeForm, configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    detectionEndTimeForm.setBorder(createEtchedBorder("Analysis End Time"));
+    add(detectionEndTimeForm, configureLayout((c) -> { c.gridx = 1; c.gridy = 2; c.weightx = 1; }));
     add(new JPanel(), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 2; c.weighty = 1;
+      c.gridx = 0; c.gridy = 3; c.weighty = 1;
     }));
   }
   
@@ -42,9 +52,15 @@ public class DetectionsForm extends JPanel {
   
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(soundSource, headerOptions);
+    detectionStartTimeForm.updateHeaderOptions(headerOptions);
+    detectionEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
   public String getSoundSourceValue() {
     return (String) soundSource.getSelectedItem();
   }
+
+  public TimeTranslator getStartTime() { return detectionStartTimeForm.toTranslator(); }
+
+  public TimeTranslator getEndTime() { return detectionEndTimeForm.toTranslator(); }
 }

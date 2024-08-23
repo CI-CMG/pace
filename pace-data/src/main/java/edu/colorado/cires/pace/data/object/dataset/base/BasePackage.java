@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
-public abstract class BasePackage implements AbstractObject, TimeRange, CalibrationDetail {
+public abstract class BasePackage implements AbstractObject, CalibrationDetail {
 
   private final UUID uuid;
   @NotNull
@@ -51,10 +51,6 @@ public abstract class BasePackage implements AbstractObject, TimeRange, Calibrat
   private final String deploymentDescription;
   private final String alternateSiteName;
   private final String alternateDeploymentName;
-  @NotNull
-  private final LocalDateTime startTime;
-  @NotNull
-  private final LocalDateTime endTime;
   private final LocalDate preDeploymentCalibrationDate;
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;

@@ -499,8 +499,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .platform(platform.getName())
         .instrument(instrument.getName())
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.of(2019, 12, 31, 12, 0, 1))
-        .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2019, 12, 31))
         .postDeploymentCalibrationDate(LocalDate.of(2020, 1, 10))
         .calibrationDescription("calibrationDescription")

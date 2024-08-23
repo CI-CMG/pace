@@ -4,6 +4,7 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.createEtchedBorder;
 import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.translator.SoundPropagationModelsPackageTranslator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,8 +17,12 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
   private final JComboBox<String> modeledFrequencyField = new JComboBox<>();
   private final TimeTranslatorForm audioStartTimeForm;
   private final TimeTranslatorForm audioEndTimeForm;
+  private final TimeTranslatorForm modelStartTimeForm;
+  private final TimeTranslatorForm modelEndTimeForm;
 
   public SoundPropagationModelsForm(String[] headerOptions, SoundPropagationModelsPackageTranslator initialTranslator) {
+    this.modelStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
+    this.modelEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     this.audioStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioStartTimeTranslator());
     this.audioEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioEndTimeTranslator());
     modeledFrequencyField.setName("modeledFrequency");
@@ -44,8 +49,16 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
     add(audioEndTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 2; c.weightx = 1;
     }));
+    modelStartTimeForm.setBorder(createEtchedBorder("Model Start Time"));
+    add(modelStartTimeForm, configureLayout(c -> {
+      c.gridx = 0; c.gridy = 3; c.weightx = 1;
+    }));
+    modelEndTimeForm.setBorder(createEtchedBorder("Model End Time"));
+    add(modelEndTimeForm, configureLayout(c -> {
+      c.gridx = 1; c.gridy = 3; c.weightx = 1;
+    }));
     add(new JPanel(), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 3; c.weighty = 1;
+      c.gridx = 0; c.gridy = 4; c.weighty = 1;
     }));
   }
   
@@ -71,5 +84,11 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
     
     audioStartTimeForm.updateHeaderOptions(headerOptions);
     audioEndTimeForm.updateHeaderOptions(headerOptions);
+    modelStartTimeForm.updateHeaderOptions(headerOptions);
+    modelEndTimeForm.updateHeaderOptions(headerOptions);
   }
+
+  public TimeTranslator getStartTime() { return modelStartTimeForm.toTranslator(); }
+
+  public TimeTranslator getEndTime() { return modelEndTimeForm.toTranslator(); }
 }

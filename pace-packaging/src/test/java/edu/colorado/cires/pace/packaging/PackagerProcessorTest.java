@@ -541,8 +541,6 @@ class PackagerProcessorTest {
             "platform"
         ).instrument("instrument")
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
-        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .calibrationDescription("calibration-description")

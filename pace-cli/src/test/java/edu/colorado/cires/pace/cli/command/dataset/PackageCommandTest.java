@@ -85,8 +85,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         "funders",
         "platform",
         "instrument",
-        "startTime",
-        "endTime",
         "preDeploymentCalibrationDate",
         "postDeploymentCalibrationDate",
         "calibrationDescription",
@@ -175,8 +173,6 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         String.join(";", object.getFunders()),
         object.getPlatform(),
         object.getInstrument(),
-        object.getStartTime().toString(),
-        object.getEndTime().toString(),
         object.getPreDeploymentCalibrationDate().toString(),
         object.getPostDeploymentCalibrationDate().toString(),
         object.getCalibrationDescription(),
@@ -271,9 +267,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
 
     assertEquals(expected.getPlatform(), actual.getPlatform());
     assertEquals(expected.getInstrument(), actual.getInstrument());
-    
-    assertEquals(expected.getStartTime(), actual.getStartTime());
-    assertEquals(expected.getEndTime(), actual.getEndTime());
+
     assertEquals(expected.getPreDeploymentCalibrationDate(), actual.getPreDeploymentCalibrationDate());
     assertEquals(expected.getPostDeploymentCalibrationDate(), actual.getPostDeploymentCalibrationDate());
     assertEquals(expected.getCalibrationDescription(), actual.getCalibrationDescription());

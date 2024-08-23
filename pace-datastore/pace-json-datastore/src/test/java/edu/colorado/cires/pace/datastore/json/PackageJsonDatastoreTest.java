@@ -85,8 +85,6 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
         )).platform("platform")
         .instrument("instrument")
         .instrumentId("instrumentId")
-        .startTime(LocalDateTime.now().minusMinutes(1))
-        .endTime(LocalDateTime.now())
         .preDeploymentCalibrationDate(LocalDate.now().minusDays(1))
         .postDeploymentCalibrationDate(LocalDate.now().plusDays(1))
         .calibrationDescription("calibration-description")

@@ -25,14 +25,10 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
   private final JComboBox<String> deploymentDescriptionField = new JComboBox<>();
   private final JComboBox<String> alternateSiteNameField = new JComboBox<>();
   private final JComboBox<String> alternateDeploymentNameField = new JComboBox<>();
-  private final TimeTranslatorForm startTimeForm;
-  private final TimeTranslatorForm endTimeForm;
   private final DateTranslatorForm publicReleaseDateForm;
   private final JComboBox<String> dataCollectionNameField = new JComboBox<>();
 
   public PackageInfoForm(String[] headerOptions, PackageTranslator initialTranslator) {
-    this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
-    this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
     this.publicReleaseDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPublicReleaseDate());
 
     uuidField.setName("uuid");
@@ -46,8 +42,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     deploymentDescriptionField.setName("deploymentDescription");
     alternateSiteNameField.setName("alternateSiteName");
     alternateDeploymentNameField.setName("alternateDeploymentName");
-    startTimeForm.setName("startTime");
-    endTimeForm.setName("endTime");
     publicReleaseDateForm.setName("publicReleaseDate");
     dataCollectionNameField.setName("dataCollectionName");
 
@@ -106,17 +100,13 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     add(alternateDeploymentNameField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 23; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    
-    startTimeForm.setBorder(createEtchedBorder("Start Time"));
-    add(startTimeForm, configureLayout((c) -> { c.gridx = 0; c.gridy = 24; c.weightx = 1; }));
-    endTimeForm.setBorder(createEtchedBorder("End Time"));
-    add(endTimeForm, configureLayout((c) -> { c.gridx = 1; c.gridy = 24; c.weightx = 1; }));
+
     publicReleaseDateForm.setBorder(createEtchedBorder("Public Release Date"));
     add(publicReleaseDateForm, configureLayout((c) -> { 
-      c.gridx = 0; c.gridy = 25; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 26; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     
-    add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 26; c.weighty = 1; }));
+    add(new JPanel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 27; c.weighty = 1; }));
   }
   
   private void initializeFields(String[] headerOptions, PackageTranslator initialTranslator) {
@@ -163,8 +153,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
         .deploymentDescription((String) deploymentDescriptionField.getSelectedItem())
         .alternateSiteName((String) alternateSiteNameField.getSelectedItem())
         .alternateDeploymentName((String) alternateDeploymentNameField.getSelectedItem())
-        .startTime(startTimeForm.toTranslator())
-        .endTime(endTimeForm.toTranslator())
         .publicReleaseDate(publicReleaseDateForm.toTranslator())
         .dataCollectionName((String) dataCollectionNameField.getSelectedItem())
         .build();
@@ -183,8 +171,6 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     updateComboBoxModel(deploymentDescriptionField, options);
     updateComboBoxModel(alternateSiteNameField, options);
     updateComboBoxModel(alternateDeploymentNameField, options);
-    startTimeForm.updateHeaderOptions(options);
-    endTimeForm.updateHeaderOptions(options);
     publicReleaseDateForm.updateHeaderOptions(options);
   }
 }

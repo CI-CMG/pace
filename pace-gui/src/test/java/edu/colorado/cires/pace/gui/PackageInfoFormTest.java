@@ -37,8 +37,6 @@ public class PackageInfoFormTest extends AuxiliaryTranslatorFormTest<PackageTran
     selectComboBoxOption("deploymentDescription", "Deployment Description");
     selectComboBoxOption("alternateSiteName", "Alternate Site Name");
     selectComboBoxOption("alternateDeploymentName", "Alternate Deployment Name");
-    selectTimeOptions("startTime", "Start Time", "Time Zone");
-    selectTimeOptions("endTime", "End Time", "Time Zone");
     selectDateOptions("publicReleaseDate", "Public Release Date", "Time Zone");
   }
 
@@ -55,12 +53,6 @@ public class PackageInfoFormTest extends AuxiliaryTranslatorFormTest<PackageTran
     assertEquals("Deployment Description", translator.getDeploymentDescription());
     assertEquals("Alternate Site Name", translator.getAlternateSiteName());
     assertEquals("Alternate Deployment Name", translator.getAlternateDeploymentName());
-    TimeTranslator timeTranslator = translator.getStartTime();
-    assertEquals("Start Time", timeTranslator.getTime());
-    assertEquals("Time Zone", timeTranslator.getTimeZone());
-    timeTranslator = translator.getEndTime();
-    assertEquals("End Time", timeTranslator.getTime());
-    assertEquals("Time Zone", timeTranslator.getTimeZone());
     DateTranslator dateTranslator = translator.getPublicReleaseDate();
     assertEquals("Public Release Date", dateTranslator.getDate());
     assertEquals("Time Zone", dateTranslator.getTimeZone());
@@ -79,12 +71,6 @@ public class PackageInfoFormTest extends AuxiliaryTranslatorFormTest<PackageTran
     assertNull(translator.getDeploymentDescription());
     assertNull(translator.getAlternateSiteName());
     assertNull(translator.getAlternateDeploymentName());
-    TimeTranslator timeTranslator = translator.getStartTime();
-    assertNull(timeTranslator.getTime());
-    assertNull(timeTranslator.getTimeZone());
-    timeTranslator = translator.getEndTime();
-    assertNull(timeTranslator.getTime());
-    assertNull(timeTranslator.getTimeZone());
     DateTranslator dateTranslator = translator.getPublicReleaseDate();
     assertNull(dateTranslator.getDate());
     assertNull(dateTranslator.getTimeZone());

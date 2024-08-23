@@ -347,6 +347,8 @@ class PassivePackerFactoryTest {
         .softwareProtocolCitation("protocol citation")
         .softwareDescription("software description")
         .softwareProcessingDescription("software processing description")
+        .startTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
+        .endTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
         .audioStartTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
         .audioEndTime(LocalDateTime.of(2010, 1, 1, 13, 30, 0))
         .build();
@@ -397,8 +399,6 @@ class PassivePackerFactoryTest {
 
   private Package createBasePackage(LocationDetail locationDetail) {
     return Package.builder()
-        .startTime(LocalDateTime.of(2010, 1, 1, 13, 0, 0))
-        .endTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
         .publicReleaseDate(LocalDate.of(2024, 8, 2))
         .projects(List.of("project"))
         .deploymentId("deployment-id")
