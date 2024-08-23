@@ -550,7 +550,7 @@ public class PassivePackerFactory {
           return (PassivePackerQualityEntry) PassivePackerQualityEntry.builder()
               .start(serializeDateTime(e.getStartTime()))
               .end(serializeDateTime(e.getEndTime()))
-              .quality(e.getQualityLevel().getName())
+              .quality(e.getQualityLevel() == null ? null : e.getQualityLevel().getName())
               .lowFreq(String.valueOf(e.getMinFrequency()))
               .highFreq(String.valueOf(e.getMaxFrequency()))
               .comments(e.getComments())
