@@ -11,8 +11,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder(toBuilder = true)
 @Jacksonized
 public class ChannelTranslator {
-  
-  private final PackageSensorTranslator sensor;
+
   private final TimeTranslator startTime;
   private final TimeTranslator endTime;
   @Builder.Default

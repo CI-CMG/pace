@@ -377,14 +377,6 @@ class PackagerProcessorTest {
                     .positionX("1.0")
                     .positionY("2.0")
                     .positionZ("3.0")
-                    .build(),
-                PassivePackerAudioSensor.builder()
-                    .name("audioSensor")
-                    .type("Audio Sensor")
-                    .number("3")
-                    .positionX("7.0")
-                    .positionY("8.0")
-                    .positionZ("9.0")
                     .build()
             )
         )).title("deployment-title")
@@ -433,7 +425,6 @@ class PackagerProcessorTest {
             1, PassivePackerChannel.builder()
                     .channelStart("2024-07-29T11:59:00")
                     .channelEnd("2024-07-29T12:00:00")
-                    .sensor("3")
                     .samplingDetails(PassivePackerSamplingDetails.builder()
                         .sampling(List.of(
                             PassivePackerSampleRate.builder()
@@ -608,14 +599,6 @@ class PackagerProcessorTest {
                 .build()
         )).channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audioSensor")
-                    .position(Position.builder()
-                        .x(7f)
-                        .y(8f)
-                        .z(9f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(2))
                 .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
                 .sampleRates(List.of(

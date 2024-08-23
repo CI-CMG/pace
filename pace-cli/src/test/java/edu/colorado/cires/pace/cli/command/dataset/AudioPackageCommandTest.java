@@ -150,10 +150,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         "qualityLevel 1",
         "qualityComments 1",
         // channel 1
-        "channel sensor 1",
-        "channel sensor 1 x",
-        "channel sensor 1 y",
-        "channel sensor 1 z",
         "channel startTime 1",
         "channel endTime 1",
         // channel 1 sample rate 1
@@ -203,10 +199,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
       qualityEntry.getMaxFrequency().toString(),
       qualityEntry.getQualityLevel().getName(),
       qualityEntry.getComments(),
-      channel.getSensor().getSensor(),
-        channel.getSensor().getPosition().getX().toString(),
-        channel.getSensor().getPosition().getY().toString(),
-        channel.getSensor().getPosition().getZ().toString(),
       channel.getStartTime().toString(),
       channel.getEndTime().toString(),
       sampleRate.getStartTime().toString(),
@@ -304,14 +296,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
             .build())
         .channelTranslators(List.of(
             ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                    .name("channel sensor 1")
-                    .position(PositionTranslator.builder()
-                        .x("channel sensor 1 x")
-                        .y("channel sensor 1 y")
-                        .z("channel sensor 1 z")
-                        .build())
-                    .build())
                 .startTime(DefaultTimeTranslator.builder()
                     .timeZone("timeZone")
                     .time("channel startTime 1")
@@ -419,10 +403,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   }
   
   private void assertChannelsEqual(Channel<String> expected, Channel<String> actual) throws JsonProcessingException {
-    assertEquals(
-        objectMapper.writeValueAsString(expected.getSensor()),
-        objectMapper.writeValueAsString(actual.getSensor())
-    );
     assertEquals(expected.getStartTime(), actual.getStartTime());
     assertEquals(expected.getEndTime(), actual.getEndTime());
 
@@ -558,14 +538,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .channels(List.of(Channel.<String>builder()
                 .startTime(LocalDateTime.of(2019, 12, 31, 12, 5, 1))
                 .endTime(LocalDateTime.of(2019, 12, 31, 23, 0, 1))
-                .sensor(PackageSensor.<String>builder()
-                    .sensor(sensor2.getName())
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .build())
                 .sampleRates(List.of(SampleRate.builder()
                         .startTime(LocalDateTime.of(2019, 12, 31, 13, 15, 1))
                         .endTime(LocalDateTime.of(2019, 12, 31, 14, 0, 1))

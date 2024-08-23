@@ -141,14 +141,6 @@ class PackageJsonDatastoreTest extends JsonDatastoreTest<Package> {
                 .build()
         )).channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audio-sensor")
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(

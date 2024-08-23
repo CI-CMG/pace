@@ -42,11 +42,6 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
                     .build())
             .build()))
         .channels(p.getChannels().stream()
-            .map(c -> c.toBuilder()
-                .sensor(c.getSensor().toBuilder()
-                    .sensor(object.getName())
-                    .build())
-                .build())
             .toList())
         .build();
     packages.put(p.getUuid(), p);
@@ -58,11 +53,7 @@ abstract class SensorRepositoryTest extends PackageDependencyRepositoryTest<Sens
     Package p = packages.get(dependentObjectUUID);
     
     if (p instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(updated.getName()) &&
-          audioDataPackage.getChannels().stream()
-              .map(Channel::getSensor)
-              .map(PackageSensor::getSensor)
-              .toList().contains(updated.getName());
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(updated.getName());
     }
     
     return false;

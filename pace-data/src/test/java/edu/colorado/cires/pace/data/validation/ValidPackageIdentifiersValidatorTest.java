@@ -152,14 +152,6 @@ public class ValidPackageIdentifiersValidatorTest {
                 .build()
         )).channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audioSensor")
-                    .position(Position.builder()
-                        .x(7f)
-                        .y(8f)
-                        .z(9f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(2))
                 .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
                 .sampleRates(List.of(

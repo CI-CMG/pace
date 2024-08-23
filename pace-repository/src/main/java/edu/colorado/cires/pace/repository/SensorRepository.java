@@ -17,10 +17,7 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Sensor object) {
     if (dependency instanceof AudioDataPackage audioDataPackage) {
-      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(object.getName()) ||
-          audioDataPackage.getChannels().stream()
-              .map(Channel::getSensor)
-              .anyMatch(s -> s.getSensor().equals(object.getName()));
+      return audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList().contains(object.getName());
     }
     
     return false;
@@ -34,15 +31,14 @@ public class SensorRepository extends PackageDependencyRepository<Sensor> {
             .sensor(replaceString(s.getSensor(), original.getName(), updated.getName()))
             .build())
         .toList();
-    List<Channel<String>> channels = audioDataPackage.getChannels().stream()
-        .map(c -> c.toBuilder()
-            .sensor(c.getSensor().toBuilder()
-                .sensor(replaceString(c.getSensor().getSensor(), original.getName(), updated.getName()))
-                .build())
-            .build())
-        .toList();
+//    List<Channel<String>> channels = audioDataPackage.getChannels().stream()
+//        .map(c -> c.toBuilder()
+//            .sensor(c.getSensor().toBuilder()
+//                .sensor(replaceString(c.getSensor().getSensor(), original.getName(), updated.getName()))
+//                .build())
+//            .build())
+//        .toList();
 
-    return (Package) audioDataPackage.updateChannels(channels)
-        .updateSensors(sensors);
+    return (Package) audioDataPackage.updateSensors(sensors);
   }
 }

@@ -151,14 +151,6 @@ class PackageConverterTest {
         ))
         .channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audioSensor")
-                    .position(Position.builder()
-                        .x(4f)
-                        .y(5f)
-                        .z(6f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.parse("2020-01-01T01:45:01"))
                 .endTime(LocalDateTime.parse("2020-01-01T03:01:01"))
                 .sampleRates(List.of(
@@ -203,14 +195,6 @@ class PackageConverterTest {
                 ))
                 .build(),
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("depthSensor")
-                    .position(Position.builder()
-                        .x(4f)
-                        .y(5f)
-                        .z(6f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.parse("2020-01-02T01:45:01"))
                 .endTime(LocalDateTime.parse("2020-01-02T03:01:01"))
                 .sampleRates(List.of(
@@ -375,14 +359,6 @@ class PackageConverterTest {
         ))
         .channelTranslators(List.of(
             ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                    .name("channel-sensor-1")
-                    .position(PositionTranslator.builder()
-                        .x("channel-sensor-1 X")
-                        .y("channel-sensor-1 Y")
-                        .z("channel-sensor-1 Z")
-                        .build())
-                    .build())
                 .startTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-startTime-1").build())
                 .endTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-endTime-1").build())
                 .sampleRates(List.of(
@@ -427,14 +403,6 @@ class PackageConverterTest {
                 ))
                 .build(),
             ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                    .name("channel-sensor-2")
-                    .position(PositionTranslator.builder()
-                        .x("channel-sensor-2 X")
-                        .y("channel-sensor-2 Y")
-                        .z("channel-sensor-2 Z")
-                        .build())
-                    .build())
                 .startTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-startTime-2").build())
                 .endTime(DefaultTimeTranslator.builder().timeZone("timeZone").time("channel-endTime-2").build())
                 .sampleRates(List.of(
@@ -572,10 +540,6 @@ class PackageConverterTest {
     }
     
     ChannelTranslator channelTranslator = audioPackageTranslator.getChannelTranslators().get(0);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getSensor()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getX().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getY().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getSensor().getPosition().getZ().toString()), 62));
     map.put((channelTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getStartTime().toString()), 63));
     map.put((channelTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getEndTime().toString()), 64));
     
@@ -614,10 +578,6 @@ class PackageConverterTest {
     map.put(gainTranslator.getGain(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(0).getGains().get(1).getGain().toString()), 86));
 
     channelTranslator = audioPackageTranslator.getChannelTranslators().get(1);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getSensor()), 87));
-    map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getX().toString()), 87));
-    map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getY().toString()), 87));
-    map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getSensor().getPosition().getZ().toString()), 87));
     map.put((channelTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getStartTime().toString()), 88));
     map.put((channelTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(audioPackage.getChannels().get(1).getEndTime().toString()), 89));
 
@@ -743,14 +703,6 @@ class PackageConverterTest {
         ))
         .channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audioSensor")
-                    .position(Position.builder()
-                        .x(4f)
-                        .y(5f)
-                        .z(6f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.parse("2020-01-01T01:45:01"))
                 .endTime(LocalDateTime.parse("2020-01-01T03:01:01"))
                 .sampleRates(List.of(
@@ -795,14 +747,6 @@ class PackageConverterTest {
                 ))
                 .build(),
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("depthSensor")
-                    .position(Position.builder()
-                        .x(4f)
-                        .y(5f)
-                        .z(6f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.parse("2020-01-02T01:45:01"))
                 .endTime(LocalDateTime.parse("2020-01-02T03:01:01"))
                 .sampleRates(List.of(
@@ -971,14 +915,6 @@ class PackageConverterTest {
         ))
         .channelTranslators(List.of(
             ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                    .name("channel-sensor-1")
-                    .position(PositionTranslator.builder()
-                        .x("channel-sensor-1 X")
-                        .y("channel-sensor-1 Y")
-                        .z("channel-sensor-1 Z")
-                        .build())
-                    .build())
                 .startTime(DefaultTimeTranslator.builder()
                     .time("channel-startTime-1")
                     .timeZone("timeZone")
@@ -1065,14 +1001,7 @@ class PackageConverterTest {
                 ))
                 .build(),
             ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                    .name("channel-sensor-2")
-                    .position(PositionTranslator.builder()
-                        .x("channel-sensor-2 X")
-                        .y("channel-sensor-2 Y")
-                        .z("channel-sensor-2 Z")
-                        .build())
-                    .build())
+
                 .startTime(DefaultTimeTranslator.builder()
                     .time("channel-startTime-2")                
                     .timeZone("timeZone")
@@ -1239,10 +1168,6 @@ class PackageConverterTest {
     }
 
     ChannelTranslator channelTranslator = cpodPackageTranslator.getChannelTranslators().get(0);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getSensor()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getX().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getY().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getSensor().getPosition().getZ().toString()), 62));
     map.put((channelTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getStartTime().toString()), 63));
     map.put((channelTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getEndTime().toString()), 64));
 
@@ -1281,10 +1206,6 @@ class PackageConverterTest {
     map.put(gainTranslator.getGain(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(0).getGains().get(1).getGain().toString()), 86));
 
     channelTranslator = cpodPackageTranslator.getChannelTranslators().get(1);
-    map.put(channelTranslator.getSensor().getName(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getSensor()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getX(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getX().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getY(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getY().toString()), 62));
-    map.put(channelTranslator.getSensor().getPosition().getZ(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getSensor().getPosition().getZ().toString()), 62));
     map.put((channelTranslator.getStartTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getStartTime().toString()), 88));
     map.put((channelTranslator.getEndTime()).getTime(), new ValueWithColumnNumber(Optional.of(cpodPackage.getChannels().get(1).getEndTime().toString()), 89));
 

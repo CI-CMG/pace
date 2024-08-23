@@ -460,11 +460,6 @@ public class PassivePackerFactory {
 
   private Map<PassivePackerSensorType, List<PassivePackerSensor>> getSensors(AudioDataPackage audioDataPackage) {
     List<PackageSensor<String>> sensors = new ArrayList<>(audioDataPackage.getSensors());
-    sensors.addAll(
-        audioDataPackage.getChannels().stream()
-            .map(Channel::getSensor)
-            .toList()
-    );
     return IntStreams.range(sensors.size()).boxed()
         .map(i -> {
           try {
@@ -574,16 +569,9 @@ public class PassivePackerFactory {
             i -> i + 1,
             i -> {
               Channel<String> channel = channels.get(i);
-              String channelSensor = channel.getSensor().getSensor();
-              String sensorNumber = sensors.values().stream()
-                  .flatMap(List::stream)
-                  .filter(s -> s.getName().equals(channelSensor))
-                  .map(PassivePackerSensor::getNumber)
-                  .findFirst().orElse(null);
               return PassivePackerChannel.builder()
                   .channelStart(serializeDateTime(channel.getStartTime()))
                   .channelEnd(serializeDateTime(channel.getEndTime()))
-                  .sensor(sensorNumber)
                   .samplingDetails(getSamplingDetails(channel))
                   .build();
             }

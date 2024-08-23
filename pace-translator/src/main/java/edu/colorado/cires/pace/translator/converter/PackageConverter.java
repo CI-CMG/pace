@@ -546,7 +546,6 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
   private static Channel<String> channelFromMap(ChannelTranslator channelTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     return Channel.<String>builder()
-        .sensor(packageSensorFromMap(properties, channelTranslator.getSensor(), row, runtimeException))
         .startTime(localDateTimeFromMap(properties, "Start Time", channelTranslator.getStartTime(), row, runtimeException))
         .endTime(localDateTimeFromMap(properties, "End Time", channelTranslator.getEndTime(), row, runtimeException))
         .sampleRates(sampleRatesFromMap(channelTranslator.getSampleRates(), properties, row, runtimeException))

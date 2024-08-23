@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.ChannelTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.DutyCycleTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.GainTranslator;
-import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.PackageSensorTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.PositionTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.SampleRateTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
@@ -24,7 +23,7 @@ public class ChannelTranslatorFormTest extends AuxiliaryTranslatorFormTest<Chann
   @Override
   protected String[] getHeaderOptions() {
     return new String[] {
-        "Start Time", "End Time", "Sensor Name", "Sensor Position (X)", "Sensor Position (Y)", "Sensor Position (Z)",
+        "Start Time", "End Time",
         "Sample Rate Start Time", "Sample Rate End Time", "Sample Rate Sample Rate", "Sample Rate Sample Bits",
         "Duty Cycle Start Time", "Duty Cycle End Time", "Duty Cycle Duration", "Duty Cycle Interval",
         "Gain Start Time", "Gain End Time", "Gain Gain",
@@ -67,7 +66,6 @@ public class ChannelTranslatorFormTest extends AuxiliaryTranslatorFormTest<Chann
   protected void populateInitialForm(ChannelTranslatorForm form) {
     selectTimeOptions("startTime", "Start Time", "Time Zone");
     selectTimeOptions("endTime", "End Time", "Time Zone");
-    selectSensorOptions("packageSensorTranslator", "Sensor Name", "Sensor Position (X)", "Sensor Position (Y)", "Sensor Position (Z)");
     JPanel sampleRates = getPanel("sampleRates");
     clickButton(sampleRates, "Add Sample Rate");
     selectSampleRateOptions(0, sampleRates, "Sample Rate Start Time", "Sample Rate End Time", "Sample Rate Sample Rate", "Sample Rate Sample Bits", "Time Zone");
@@ -156,12 +154,6 @@ public class ChannelTranslatorFormTest extends AuxiliaryTranslatorFormTest<Chann
     timeTranslator = translator.getEndTime();
     assertEquals("End Time", timeTranslator.getTime());
     assertEquals("Time Zone", timeTranslator.getTimeZone());
-    PackageSensorTranslator sensorTranslator = translator.getSensor();
-    assertEquals("Sensor Name", sensorTranslator.getName());
-    PositionTranslator positionTranslator = sensorTranslator.getPosition();
-    assertEquals("Sensor Position (X)", positionTranslator.getX());
-    assertEquals("Sensor Position (Y)", positionTranslator.getY());
-    assertEquals("Sensor Position (Z)", positionTranslator.getZ());
     assertEquals(1, translator.getSampleRates().size());
     SampleRateTranslator sampleRateTranslator = translator.getSampleRates().get(0);
     assertEquals("Sample Rate Sample Rate", sampleRateTranslator.getSampleRate());
@@ -201,12 +193,6 @@ public class ChannelTranslatorFormTest extends AuxiliaryTranslatorFormTest<Chann
     timeTranslator = translator.getEndTime();
     assertNull(timeTranslator.getTime());
     assertNull(timeTranslator.getTimeZone());
-    PackageSensorTranslator sensorTranslator = translator.getSensor();
-    assertNull(sensorTranslator.getName());
-    PositionTranslator positionTranslator = sensorTranslator.getPosition();
-    assertNull(positionTranslator.getX());
-    assertNull(positionTranslator.getY());
-    assertNull(positionTranslator.getZ());
     assertEquals(1, translator.getSampleRates().size());
     SampleRateTranslator sampleRateTranslator = translator.getSampleRates().get(0);
     assertNull(sampleRateTranslator.getSampleRate());
@@ -245,12 +231,6 @@ public class ChannelTranslatorFormTest extends AuxiliaryTranslatorFormTest<Chann
     timeTranslator = translator.getEndTime();
     assertNull(timeTranslator.getTime());
     assertNull(timeTranslator.getTimeZone());
-    PackageSensorTranslator sensorTranslator = translator.getSensor();
-    assertNull(sensorTranslator.getName());
-    PositionTranslator positionTranslator = sensorTranslator.getPosition();
-    assertNull(positionTranslator.getX());
-    assertNull(positionTranslator.getY());
-    assertNull(positionTranslator.getZ());
     assertEquals(0, translator.getSampleRates().size());
     assertEquals(0, translator.getDutyCycles().size());
     assertEquals(0, translator.getGains().size());

@@ -109,14 +109,6 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
                 .build()))
             .build())
         .channelTranslators(Collections.singletonList(ChannelTranslator.builder()
-                .sensor(PackageSensorTranslator.builder()
-                .name(String.format("channel-sensor-%s", suffix))
-                .position(PositionTranslator.builder()
-                    .x(String.format("channel-sensor-%s x", suffix))
-                    .y(String.format("channel-sensor-%s y", suffix))
-                    .z(String.format("channel-sensor-%s z", suffix))
-                    .build())
-                .build())
                 .startTime(DefaultTimeTranslator.builder()
                     .time(String.format("channel-start-time-%s", suffix))
                     .build())
@@ -232,7 +224,6 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
     
     ChannelTranslator expectedChannelTranslator = expectedAudioTranslator.getChannelTranslators().get(0);
     ChannelTranslator actualChannelTranslator = actualAudioTranslator.getChannelTranslators().get(0);
-    assertEquals(expectedChannelTranslator.getSensor(), actualChannelTranslator.getSensor());
     assertEquals((expectedChannelTranslator.getStartTime()).getTime(), (actualChannelTranslator.getStartTime()).getTime());
     assertEquals((expectedChannelTranslator.getEndTime()).getTime(), (actualChannelTranslator.getEndTime()).getTime());
     

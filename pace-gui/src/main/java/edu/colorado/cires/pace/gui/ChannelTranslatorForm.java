@@ -18,7 +18,6 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   
   private final TimeTranslatorForm startTimeForm;
   private final TimeTranslatorForm endTimeForm;
-  private final PackageSensorTranslatorForm packageSensorTranslatorForm;
   private final JPanel sampleRateTranslatorsPanel = new JPanel(new GridBagLayout());
   private final JPanel dutyCycleTranslatorsPanel = new JPanel(new GridBagLayout());
   private final JPanel gainTranslatorsPanel = new JPanel(new GridBagLayout());
@@ -36,10 +35,8 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
-    this.packageSensorTranslatorForm = new PackageSensorTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getSensor());
     startTimeForm.setName("startTime");
     endTimeForm.setName("endTime");
-    packageSensorTranslatorForm.setName("packageSensorTranslator");
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
@@ -51,10 +48,6 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     add(startTimeForm, configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     endTimeForm.setBorder(createEtchedBorder("End Time"));
     add(endTimeForm, configureLayout(c -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
-    packageSensorTranslatorForm.setBorder(createEtchedBorder("Sensor"));
-    add(packageSensorTranslatorForm, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 2; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
     JPanel sampleRatesPanel = new JPanel(new GridBagLayout());
     sampleRatesPanel.setName("sampleRates");
     sampleRatesPanel.add(sampleRateTranslatorsPanel, configureLayout(c -> {
@@ -65,7 +58,7 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     }));
     sampleRatesPanel.setBorder(createEtchedBorder("Sample Rates"));
     add(sampleRatesPanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 2; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     
     JPanel dutyCyclesPanel = new JPanel(new GridBagLayout());
@@ -78,7 +71,7 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     }));
     dutyCyclesPanel.setBorder(createEtchedBorder("Duty Cycles"));
     add(dutyCyclesPanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     JPanel gainsPanel = new JPanel(new GridBagLayout());
     gainsPanel.setName("gains");
@@ -90,10 +83,10 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     }));
     gainsPanel.setBorder(createEtchedBorder("Gains"));
     add(gainsPanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
     add(getRemoveButton("Remove Channel"), configureLayout(c -> {
-      c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+      c.gridx = 0; c.gridy = 8; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
   }
   
@@ -184,7 +177,6 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   }
   
   public void updateHeaderOptions(String[] headerOptions) {
-    packageSensorTranslatorForm.updateHeaderOptions(headerOptions);
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
     Arrays.stream(sampleRateTranslatorsPanel.getComponents())
@@ -217,7 +209,6 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   
   public ChannelTranslator toTranslator() {
     return ChannelTranslator.builder()
-        .sensor(packageSensorTranslatorForm.toTranslator())
         .startTime(startTimeForm.toTranslator())
         .endTime(endTimeForm.toTranslator())
         .sampleRates(Arrays.stream(sampleRateTranslatorsPanel.getComponents())

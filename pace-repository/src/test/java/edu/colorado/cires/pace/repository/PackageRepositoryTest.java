@@ -360,17 +360,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
             .toList()
     );
     
-    insertObjectsIntoMap(
-        sensors,
-        (List<Sensor>) audioDataPackage.getChannels().stream()
-            .map(Channel::getSensor)
-            .map(packageSensor -> DepthSensor.builder()
-                .uuid(UUID.randomUUID())
-                .name(packageSensor.getSensor())
-                .build())
-            .toList()
-    );
-    
     insertObjectIntoMap(
         people,
         Person.builder()
@@ -590,14 +579,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .build()
         )).channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audio-sensor")
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(
@@ -972,14 +953,6 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
                 .build()
         )).channels(List.of(
             Channel.<String>builder()
-                .sensor(PackageSensor.<String>builder()
-                    .sensor("audio-sensor")
-                    .position(Position.builder()
-                        .x(1f)
-                        .y(2f)
-                        .z(3f)
-                        .build())
-                    .build())
                 .startTime(LocalDateTime.now().minusMinutes(2))
                 .endTime(LocalDateTime.now().minusMinutes(1))
                 .sampleRates(List.of(

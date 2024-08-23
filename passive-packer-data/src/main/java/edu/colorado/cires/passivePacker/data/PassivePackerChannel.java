@@ -14,7 +14,6 @@ public class PassivePackerChannel {
   
   private final String channelStart;
   private final String channelEnd;
-  private final String sensor;
   private final PassivePackerSamplingDetails samplingDetails;
 
 }

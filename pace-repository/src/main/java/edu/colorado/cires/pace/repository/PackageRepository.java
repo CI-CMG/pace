@@ -95,10 +95,10 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
       checkDependency(detectionsPackage.getSoundSource(), detectionTypeDatastore, "soundSource", constraintViolations);
     } else if (object instanceof AudioDataPackage audioDataPackage) {
       checkDependencies(audioDataPackage.getSensors().stream().map(PackageSensor::getSensor).toList(), sensorDatastore, "sensors", constraintViolations);
-      List<Channel<String>> channels = audioDataPackage.getChannels();
-      for (int i = 0; i < channels.size(); i++) {
-        checkDependency(channels.get(i).getSensor().getSensor(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
-      }
+//      List<Channel<String>> channels = audioDataPackage.getChannels();
+//      for (int i = 0; i < channels.size(); i++) {
+//        checkDependency(channels.get(i).getSensor().getSensor(), sensorDatastore, String.format("channels[%s].sensor", i), constraintViolations);
+//      }
     }
     
     if (object instanceof DataQuality<?> dataQuality) {

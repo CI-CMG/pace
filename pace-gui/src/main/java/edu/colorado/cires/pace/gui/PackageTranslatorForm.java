@@ -297,10 +297,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
   }
 
   private void addChannelFields(ChannelTranslator channelTranslator, List<String> headerOptions) {
-    headerOptions.add(channelTranslator.getSensor().getName());
-    headerOptions.add(channelTranslator.getSensor().getPosition().getX());
-    headerOptions.add(channelTranslator.getSensor().getPosition().getY());
-    headerOptions.add(channelTranslator.getSensor().getPosition().getZ());
     addTimeTranslatorFields(channelTranslator.getStartTime(), headerOptions);
     addTimeTranslatorFields(channelTranslator.getEndTime(), headerOptions);
     channelTranslator.getSampleRates().forEach(
