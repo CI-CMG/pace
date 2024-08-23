@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.LocationDetailTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
@@ -2222,5 +2224,57 @@ class PackageConverterTest {
     
     Exception exception = assertThrows(TranslationException.class, () -> converter.convert(packageTranslator, Collections.emptyMap(), 1, new RuntimeException()));
     assertEquals("Translation not supported for PackageTranslator", exception.getMessage());
+  }
+  
+  @Test
+  void testUnspecifiedLocationDetail() throws TranslationException {
+
+    Package aPackage = converter.convert(
+        AudioPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
+
+    aPackage = converter.convert(
+        CPODPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
+
+    aPackage = converter.convert(
+        DetectionsPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
+
+    aPackage = converter.convert(
+        SoundClipsPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
+
+    aPackage = converter.convert(
+        SoundLevelMetricsPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
+
+    aPackage = converter.convert(
+        SoundPropagationModelsPackageTranslator.builder().locationDetailTranslator(null).build(),
+        Collections.emptyMap(),
+        0,
+        new RuntimeException()
+    );
+    assertNull(aPackage.getLocationDetail());
   }
 }
