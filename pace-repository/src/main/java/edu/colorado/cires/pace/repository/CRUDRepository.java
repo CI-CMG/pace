@@ -101,7 +101,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
   
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing all {} objects", getClassName());
-    return datastore.findAll().sorted(Comparator.comparing(AbstractObject::getUniqueField));
+    return datastore.findAll();
   }
   
   public Stream<O> search(SearchParameters<O> searchParameters) throws DatastoreException {

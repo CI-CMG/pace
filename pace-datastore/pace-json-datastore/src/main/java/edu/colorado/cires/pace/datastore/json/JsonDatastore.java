@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -121,7 +122,7 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
   @Override
   public Stream<O> findAll() throws DatastoreException {
     lazyInitialize();
-    return objectsMap.values().stream();
+    return objectsMap.values().stream().sorted(Comparator.comparing(AbstractObject::getUniqueField));
   }
 
   private void readStorageFiles() throws IOException {
