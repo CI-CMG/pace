@@ -45,5 +45,14 @@ class TestResolvePackageId {
         "%s_%s", aPackage.getSiteOrCruiseName(), aPackage.getDeploymentId()
     ), aPackage.getPackageId());
   }
+  
+  @Test
+  void testResolvePackageIdDataCollectionNameSpecified() {
+    Package aPackage = AudioPackage.builder()
+        .dataCollectionName("dataCollectionName")
+        .build();
+
+    assertEquals("dataCollectionName", aPackage.getPackageId());
+  }
 
 }
