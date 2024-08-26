@@ -43,13 +43,6 @@ class ValidMarineInstrumentLocationValidatorTest {
           .findFirst().orElseThrow();
       assertEquals(expectedInstrumentDepthMessage, violation.getMessage());
     }
-    
-    if (expectedSeaFloorDepthMessage != null) {
-      ConstraintViolation<MarineInstrumentLocation> violation = violations.stream()
-          .filter(v -> v.getPropertyPath().toString().equals("seaFloorDepth"))
-          .findFirst().orElseThrow();
-      assertEquals(expectedSeaFloorDepthMessage, violation.getMessage());
-    }
   }
 
 }

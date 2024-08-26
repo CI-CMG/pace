@@ -29,24 +29,16 @@ public @interface ValidMarineInstrumentLocation {
       Float seaFloorDepth = value.getSeaFloorDepth();
       Float instrumentDepth = value.getInstrumentDepth();
       
-      if (seaFloorDepth == null || instrumentDepth == null) {
+      if (instrumentDepth == null) {
         context.disableDefaultConstraintViolation();
         
-        if (seaFloorDepth == null) {
-          context.buildConstraintViolationWithTemplate("must not be null")
-              .addPropertyNode("seaFloorDepth")
-              .addConstraintViolation();
-        }
-        
-        if (instrumentDepth == null) {
-          context.buildConstraintViolationWithTemplate("must not be null")
-              .addPropertyNode("instrumentDepth")
-              .addConstraintViolation();
-        }
+        context.buildConstraintViolationWithTemplate("must not be null")
+          .addPropertyNode("instrumentDepth")
+          .addConstraintViolation();
         
         return false;
       } else {
-        if (seaFloorDepth > instrumentDepth) {
+        if (seaFloorDepth != null && seaFloorDepth > instrumentDepth) {
           context.disableDefaultConstraintViolation();
           
           context.buildConstraintViolationWithTemplate("must be less than or equal to instrumentDepth")
