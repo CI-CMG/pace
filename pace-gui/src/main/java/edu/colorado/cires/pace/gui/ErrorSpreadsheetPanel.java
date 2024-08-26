@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
@@ -114,6 +115,21 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         int col = table.columnAtPoint(p);
         int row = table.rowAtPoint(p);
         boolean errorHover = false;
+
+        String desc = (table.getValueAt(row,col) instanceof ImageIcon icon) ? icon.getDescription() : null;
+        if (col == 0 && Objects.equals(desc, "Package validation error")) {
+          for (int i = 0; i < table.getRowCount(); i++) {
+            if (i != row) {
+              ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+              imageIcon.setDescription("Package validation error");
+              table.setValueAt(imageIcon, i, 0);
+            }
+          }
+          ImageIcon imageIcon = getImageIcon("close_hover.png", this.getClass());
+          imageIcon.setDescription("Package validation error");
+          table.setValueAt(imageIcon, row, 0);
+        }
+
         for (ObjectWithRowError exception : exceptions) {
           java.lang.Throwable t = exception.throwable();
           if (t instanceof FieldException fieldException) {

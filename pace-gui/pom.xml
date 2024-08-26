@@ -108,6 +108,7 @@
           <include>log4j2.xml</include>
           <include>check_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
           <include>close_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
+          <include>close_hover.png</include>
           <include>exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png</include>
           <include>keyboard_arrow_up_24dp_FILL0_wght400_GRAD0_opsz24.png</include>
           <include>keyboard_arrow_down_24dp_FILL0_wght400_GRAD0_opsz24.png</include>
