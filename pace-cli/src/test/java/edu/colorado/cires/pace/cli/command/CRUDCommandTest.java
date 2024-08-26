@@ -60,7 +60,7 @@ public abstract class CRUDCommandTest<T extends AbstractObject> extends CLITest 
     CLIError exception = getCLIException();
     assertNull(exception.detail());
     assertEquals(String.format(
-        "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(created)
+        "%s already exists", getUniqueField(created)
     ), exception.message());
   }
   
@@ -376,7 +376,7 @@ public abstract class CRUDCommandTest<T extends AbstractObject> extends CLITest 
     CLIError cliError = getCLIException();
     assertNull(cliError.detail());
     assertEquals(String.format(
-        "%s with %s = %s already exists", getClazz().getSimpleName(), getUniqueFieldName(), getUniqueField(object1)
+        "%s already exists", getUniqueField(object1)
     ), cliError.message());
   }
   

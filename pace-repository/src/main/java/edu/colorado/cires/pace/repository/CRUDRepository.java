@@ -46,9 +46,9 @@ public abstract class CRUDRepository<O extends AbstractObject> {
     }
     String uniqueField = object.getUniqueField();
     if (datastore.findByUniqueField(uniqueField).isPresent()) {
-      LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), uniqueField);
+      LOGGER.error("{} already exists", uniqueField);
       throw new ConflictException(String.format(
-          "%s with %s = %s already exists", getClassName(), getUniqueFieldName(), uniqueField
+          "%s already exists", uniqueField
       ));
     }
     
@@ -118,9 +118,9 @@ public abstract class CRUDRepository<O extends AbstractObject> {
     String newUniqueField = object.getUniqueField();
     String existingUniqueField = existingObject.getUniqueField();
     if (!newUniqueField.equals(existingUniqueField) && datastore.findByUniqueField(newUniqueField).isPresent()) {
-      LOGGER.error("{} with {} = {} already exists", getClassName(), getUniqueFieldName(), newUniqueField);
+      LOGGER.error("{} already exists", newUniqueField);
       throw new ConflictException(String.format(
-          "%s with %s = %s already exists", getClassName(), getUniqueFieldName(), newUniqueField
+          "%s already exists", newUniqueField
       ));
     }
 

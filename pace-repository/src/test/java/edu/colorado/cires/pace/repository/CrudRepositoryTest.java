@@ -148,7 +148,7 @@ abstract class CrudRepositoryTest<O extends AbstractObject> {
     O two = createNewObject(1);
     Exception exception = assertThrows(ConflictException.class, () -> repository.create(two));
     assertEquals(String.format(
-        "%s with %s = %s already exists", repository.getClassName(), repository.getUniqueFieldName(), two.getUniqueField() 
+        "%s already exists", two.getUniqueField()
     ), exception.getMessage());
   }
   
@@ -341,7 +341,7 @@ abstract class CrudRepositoryTest<O extends AbstractObject> {
     O finalUpdated = updated;
     Exception exception = assertThrows(ConflictException.class, () -> repository.update(finalUpdated.getUuid(), finalUpdated));
     assertEquals(String.format(
-        "%s with %s = %s already exists", repository.getClassName(), repository.getUniqueFieldName(), updated.getUniqueField()
+        "%s already exists", updated.getUniqueField()
     ), exception.getMessage());
   }
   
