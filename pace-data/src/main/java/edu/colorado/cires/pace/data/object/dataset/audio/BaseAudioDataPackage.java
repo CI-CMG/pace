@@ -23,10 +23,4 @@ public interface BaseAudioDataPackage<T> extends DataQuality<T>, AudioTimeRange 
   List<PackageSensor<T>> getSensors();
 
   List<Channel<T>> getChannels();
-
-  Float getHydrophoneSensitivity();
-
-  String getFrequencyRange();
-
-  Float getGain();
 }

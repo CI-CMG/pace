@@ -127,9 +127,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   protected void addPackageTypeSpecificFields(List<String> basePackageFields) {
     basePackageFields.addAll(List.of(
        "instrumentId",
-        "hydrophoneSensitivity",
-        "frequencyRange",
-        "gain",
         "deploymentTime",
         "recoveryTime",
         "comments",
@@ -179,9 +176,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
     
     fields.addAll(List.of(
       object.getInstrumentId(),
-      object.getHydrophoneSensitivity().toString(),
-      object.getFrequencyRange().toString(),
-      object.getGain().toString(),
       object.getDeploymentTime().toString(),
       object.getRecoveryTime().toString(),
       object.getComments(),
@@ -254,9 +248,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   protected AudioPackageTranslator createPackageTranslator(PackageTranslator packageTranslator) {
     return AudioPackageTranslator.toBuilder(packageTranslator)
         .instrumentId("instrumentId")
-        .hydrophoneSensitivity("hydrophoneSensitivity")
-        .frequencyRange("frequencyRange")
-        .gain("gain")
         .deploymentTime(DefaultTimeTranslator.builder()
             .time("deploymentTime")
             .timeZone("timeZone")
@@ -367,8 +358,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
   @Override
   protected void assertTypeSpecificPackagesEqual(AudioPackage expected, AudioPackage actual) throws JsonProcessingException {
     assertEquals(expected.getInstrumentId(), actual.getInstrumentId());
-    assertEquals(expected.getHydrophoneSensitivity(), actual.getHydrophoneSensitivity());
-    assertEquals(expected.getGain(), actual.getGain());
     assertEquals(expected.getDeploymentTime(), actual.getDeploymentTime());
     assertEquals(expected.getRecoveryTime(), actual.getRecoveryTime());
     assertEquals(expected.getComments(), actual.getComments());
@@ -502,9 +491,6 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .preDeploymentCalibrationDate(LocalDate.of(2019, 12, 31))
         .postDeploymentCalibrationDate(LocalDate.of(2020, 1, 10))
         .calibrationDescription("calibrationDescription")
-        .hydrophoneSensitivity(10f)
-        .frequencyRange("0-1")
-        .gain(100f)
         .deploymentTitle("deploymentTitle")
         .deploymentDescription("deploymentDescription")
         .deploymentPurpose("deploymentPurpose")

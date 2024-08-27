@@ -21,7 +21,7 @@ public class AudioDataFormTest extends AuxiliaryTranslatorFormTest<AudioDataPack
   @Override
   protected String[] getHeaderOptions() {
     return new String[] {
-        "Instrument ID", "Hydrophone Sensitivity", "Frequency Range", "Gain", "Comments", "Deployment Time", "Recovery Time",
+        "Instrument ID", "Comments", "Deployment Time", "Recovery Time",
         "Audio Start Time", "Audio End Time", "Time Zone",
         "Sensor 1 Name", "Sensor 1 X", "Sensor 1 Y", "Sensor 1 Z",
         "Sensor 2 Name", "Sensor 2 X", "Sensor 2 Y", "Sensor 2 Z"
@@ -31,9 +31,6 @@ public class AudioDataFormTest extends AuxiliaryTranslatorFormTest<AudioDataPack
   @Override
   protected void populateInitialForm(AudioDataForm<AudioDataPackageTranslator> form) {
     selectComboBoxOption("instrumentId", "Instrument ID");
-    selectComboBoxOption("hydrophoneSensitivity", "Hydrophone Sensitivity");
-    selectComboBoxOption("frequencyRange", "Frequency Range");
-    selectComboBoxOption("gain", "Gain");
     selectComboBoxOption("comments", "Comments");
     selectTimeOptions("deploymentTime", "Deployment Time", "Time Zone");
     selectTimeOptions("recoveryTime", "Recovery Time", "Time Zone");
@@ -81,9 +78,6 @@ public class AudioDataFormTest extends AuxiliaryTranslatorFormTest<AudioDataPack
   @Override
   protected void assertTranslatorEqualsHeaderOptions(AudioDataPackageTranslator translator) {
     assertEquals("Instrument ID", translator.getInstrumentId());
-    assertEquals("Hydrophone Sensitivity", translator.getHydrophoneSensitivity());
-    assertEquals("Frequency Range", translator.getFrequencyRange());
-    assertEquals("Gain", translator.getGain());
     assertEquals("Comments", translator.getComments());
     TimeTranslator timeTranslator = translator.getDeploymentTime();
     assertEquals("Deployment Time", timeTranslator.getTime());
@@ -116,9 +110,6 @@ public class AudioDataFormTest extends AuxiliaryTranslatorFormTest<AudioDataPack
   @Override
   protected void assertTranslatorEqualsNewHeaderOptions(AudioDataPackageTranslator translator) {
     assertEquals("Instrument ID", translator.getInstrumentId());
-    assertNull(translator.getHydrophoneSensitivity());
-    assertNull(translator.getFrequencyRange());
-    assertNull(translator.getGain());
     assertNull(translator.getComments());
     TimeTranslator timeTranslator = translator.getDeploymentTime();
     assertNull(timeTranslator.getTime());
@@ -162,9 +153,6 @@ public class AudioDataFormTest extends AuxiliaryTranslatorFormTest<AudioDataPack
     AudioDataPackageTranslator translator = getTranslator();
 
     assertEquals("Instrument ID", translator.getInstrumentId());
-    assertNull(translator.getHydrophoneSensitivity());
-    assertNull(translator.getFrequencyRange());
-    assertNull(translator.getGain());
     assertNull(translator.getComments());
     TimeTranslator timeTranslator = translator.getDeploymentTime();
     assertNull(timeTranslator.getTime());

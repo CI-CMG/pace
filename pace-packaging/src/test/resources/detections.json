@@ -83,10 +83,7 @@
     "CALIBRATION_INFO": {
         "CAL_STATE": "Not calibrated / not applicable",
         "CAL_DOCS_PATH" : "/Users/paytoncain/Desktop/Project 10_Site 10_10",
-        "COMMENT" : "calibration description",
-        "SENSITIVITY": "",
-        "FREQUENCY": "",
-        "GAIN": ""
+        "COMMENT" : "calibration description"
     },
     "SCIENTISTS": [
         {

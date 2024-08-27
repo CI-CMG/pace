@@ -129,9 +129,6 @@
     "CALIBRATION_INFO": {
         "CAL_STATE": "Calibrated Post-Deployment",
         "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
-        "SENSITIVITY": "9.0",
-        "FREQUENCY": "10",
-        "GAIN": "11.0",
         "COMMENT": "calibration description",
         "CAL_DATE": "2010-01-01"
     },

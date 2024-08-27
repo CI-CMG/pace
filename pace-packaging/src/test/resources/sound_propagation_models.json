@@ -55,9 +55,6 @@
     "CALIBRATION_INFO": {
         "CAL_STATE": "Calibration applied before processing",
         "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
-        "SENSITIVITY": "",
-        "FREQUENCY": "",
-        "GAIN": "",
         "COMMENT": "calibration description"
     },
     "SCIENTISTS": [

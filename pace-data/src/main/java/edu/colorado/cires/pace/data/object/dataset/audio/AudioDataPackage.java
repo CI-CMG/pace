@@ -29,9 +29,6 @@ public class AudioDataPackage extends Package implements BaseAudioDataPackage<St
   private final List<@NotNull @Valid PackageSensor<String>> sensors = Collections.emptyList();
   @NotEmpty @NotNull @Builder.Default
   private final List<@Valid @NotNull Channel<String>> channels = Collections.emptyList();
-  private final Float hydrophoneSensitivity;
-  private final String frequencyRange;
-  private final Float gain;
   private final String qualityAnalyst;
   private final String qualityAnalysisObjectives;
   private final String qualityAnalysisMethod;

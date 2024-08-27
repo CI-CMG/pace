@@ -102,9 +102,6 @@ class PackageConverterTest {
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .hydrophoneSensitivity(1f)
-        .frequencyRange("1-2")
-        .gain(3f)
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
@@ -313,9 +310,6 @@ class PackageConverterTest {
             ))
             .build())
         .instrumentId("instrumentId")
-        .hydrophoneSensitivity("hydrophoneSensitivity")
-        .frequencyRange("frequencyRange")
-        .gain("gain")
         .qualityControlDetailTranslator(QualityControlDetailTranslator.builder()
             .qualityAnalyst("qualityAnalyst")
             .qualityAnalysisObjectives("qualityAnalysisObjectives")
@@ -495,9 +489,6 @@ class PackageConverterTest {
     map.put(marineInstrumentLocationTranslator.getInstrumentDepth(), new ValueWithColumnNumber(Optional.of(((MultiPointStationaryMarineLocation) audioPackage.getLocationDetail()).getLocations().get(1).getInstrumentDepth().toString()), 35));
     
     map.put(audioPackageTranslator.getInstrumentId(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrumentId()), 36));
-    map.put(audioPackageTranslator.getHydrophoneSensitivity(), new ValueWithColumnNumber(Optional.of(audioPackage.getHydrophoneSensitivity().toString()), 37));
-    map.put(audioPackageTranslator.getFrequencyRange(), new ValueWithColumnNumber(Optional.of(audioPackage.getFrequencyRange().toString()), 38));
-    map.put(audioPackageTranslator.getGain(), new ValueWithColumnNumber(Optional.of(audioPackage.getGain().toString()), 39));
     
     QualityControlDetailTranslator qualityControlDetailTranslator = audioPackageTranslator.getQualityControlDetailTranslator();
     map.put(qualityControlDetailTranslator.getQualityAnalyst(), new ValueWithColumnNumber(Optional.of(audioPackage.getQualityAnalyst()), 40));
@@ -652,9 +643,6 @@ class PackageConverterTest {
         .preDeploymentCalibrationDate(LocalDate.parse("2019-12-12"))
         .postDeploymentCalibrationDate(LocalDate.parse("2020-01-02"))
         .calibrationDescription("calibrationDescription")
-        .hydrophoneSensitivity(1f)
-        .frequencyRange("1-2")
-        .gain(3f)
         .deploymentTitle("deploymentTitle")
         .deploymentPurpose("deploymentPurpose")
         .deploymentDescription("deploymentDescription")
@@ -843,9 +831,6 @@ class PackageConverterTest {
             .locationDerivationDescription("locationDerivationDescription")
             .build())
         .instrumentId("instrumentId")
-        .hydrophoneSensitivity("hydrophoneSensitivity")
-        .frequencyRange("frequencyRange")
-        .gain("gain")
         .qualityControlDetailTranslator(QualityControlDetailTranslator.builder()
             .qualityAnalyst("qualityAnalyst")
             .qualityAnalysisObjectives("qualityAnalysisObjectives")
@@ -1123,9 +1108,6 @@ class PackageConverterTest {
     map.put(mobileMarineLocationTranslator.getLocationDerivationDescription(), new ValueWithColumnNumber(Optional.of(((MobileMarineLocation) cpodPackage.getLocationDetail()).getLocationDerivationDescription()), 27));
 
     map.put(cpodPackageTranslator.getInstrumentId(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrumentId()), 38));
-    map.put(cpodPackageTranslator.getHydrophoneSensitivity(), new ValueWithColumnNumber(Optional.of(cpodPackage.getHydrophoneSensitivity().toString()), 39));
-    map.put(cpodPackageTranslator.getFrequencyRange(), new ValueWithColumnNumber(Optional.of(cpodPackage.getFrequencyRange().toString()), 40));
-    map.put(cpodPackageTranslator.getGain(), new ValueWithColumnNumber(Optional.of(cpodPackage.getGain().toString()), 41));
 
     QualityControlDetailTranslator qualityControlDetailTranslator = cpodPackageTranslator.getQualityControlDetailTranslator();
     map.put(qualityControlDetailTranslator.getQualityAnalyst(), new ValueWithColumnNumber(Optional.of(cpodPackage.getQualityAnalyst()), 42));

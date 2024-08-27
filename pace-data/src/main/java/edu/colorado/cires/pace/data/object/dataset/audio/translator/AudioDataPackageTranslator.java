@@ -19,9 +19,6 @@ import lombok.experimental.SuperBuilder;
 public abstract class AudioDataPackageTranslator extends PackageTranslator {
 
   private final String instrumentId;
-  private final String hydrophoneSensitivity;
-  private final String frequencyRange;
-  private final String gain;
 
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
 

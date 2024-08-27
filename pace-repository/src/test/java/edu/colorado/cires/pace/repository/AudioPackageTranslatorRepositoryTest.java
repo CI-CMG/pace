@@ -72,9 +72,6 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
             .build())
 
         .instrumentId(String.format("instrumentId-%s", suffix))
-        .hydrophoneSensitivity(String.format("hydrophoneSensitivity-%s", suffix))
-        .frequencyRange(String.format("frequencyRange-%s", suffix))
-        .gain(String.format("gain-%s", suffix))
         .deploymentTime(DefaultTimeTranslator.builder()
             .time(String.format("deploymentTime-%s", suffix))
             .build())
@@ -198,9 +195,6 @@ public class AudioPackageTranslatorRepositoryTest extends TranslatorRepositoryTe
     AudioPackageTranslator expectedAudioTranslator = (AudioPackageTranslator) expectedPackageTranslator;
     AudioPackageTranslator actualAudioTranslator = (AudioPackageTranslator) actualPackageTranslator;
     assertEquals(expectedAudioTranslator.getInstrumentId(), actualAudioTranslator.getInstrumentId());
-    assertEquals(expectedAudioTranslator.getHydrophoneSensitivity(), actualAudioTranslator.getHydrophoneSensitivity());
-    assertEquals(expectedAudioTranslator.getFrequencyRange(), actualAudioTranslator.getFrequencyRange());
-    assertEquals(expectedAudioTranslator.getGain(), actualAudioTranslator.getGain());
     assertEquals((expectedAudioTranslator.getDeploymentTime()).getTime(), (actualAudioTranslator.getDeploymentTime()).getTime());
     assertEquals((expectedAudioTranslator.getRecoveryTime()).getTime(), (actualAudioTranslator.getRecoveryTime()).getTime());
     assertEquals(expectedAudioTranslator.getComments(), actualAudioTranslator.getComments());

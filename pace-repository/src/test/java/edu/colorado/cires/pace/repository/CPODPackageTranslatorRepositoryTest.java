@@ -72,9 +72,6 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
             .build())
 
         .instrumentId(String.format("instrumentId-%s", suffix))
-        .hydrophoneSensitivity(String.format("hydrophoneSensitivity-%s", suffix))
-        .frequencyRange(String.format("frequencyRange-%s", suffix))
-        .gain(String.format("gain-%s", suffix))
         .deploymentTime(DefaultTimeTranslator.builder()
             .time(String.format("deploymentTime-%s", suffix))
             .build())
@@ -198,9 +195,6 @@ public class CPODPackageTranslatorRepositoryTest extends TranslatorRepositoryTes
     CPODPackageTranslator expectedCPODTranslator = (CPODPackageTranslator) expectedPackageTranslator;
     CPODPackageTranslator actualCPODTranslator = (CPODPackageTranslator) actualPackageTranslator;
     assertEquals(expectedCPODTranslator.getInstrumentId(), actualCPODTranslator.getInstrumentId());
-    assertEquals(expectedCPODTranslator.getHydrophoneSensitivity(), actualCPODTranslator.getHydrophoneSensitivity());
-    assertEquals(expectedCPODTranslator.getFrequencyRange(), actualCPODTranslator.getFrequencyRange());
-    assertEquals(expectedCPODTranslator.getGain(), actualCPODTranslator.getGain());
     assertEquals((expectedCPODTranslator.getDeploymentTime()).getTime(), (actualCPODTranslator.getDeploymentTime()).getTime());
     assertEquals((expectedCPODTranslator.getRecoveryTime()).getTime(), (actualCPODTranslator.getRecoveryTime()).getTime());
     assertEquals(expectedCPODTranslator.getComments(), actualCPODTranslator.getComments());

@@ -395,11 +395,8 @@ public class PassivePackerFactory {
         .comment(aPackage.getCalibrationDescription())
         .build();
     
-    if (aPackage instanceof AudioDataPackage audioDataPackage) {
+    if (aPackage instanceof AudioDataPackage) {
       calibrationInfo = calibrationInfo.toBuilder()
-          .sensitivity(String.valueOf(audioDataPackage.getHydrophoneSensitivity()))
-          .frequency(String.valueOf(audioDataPackage.getFrequencyRange()))
-          .gain(String.valueOf(audioDataPackage.getGain()))
           .calDate2(calDate2 == null ? null : String.valueOf(calDate2))
           .build();
     } else if (aPackage instanceof SoundClipsPackage || aPackage instanceof SoundLevelMetricsPackage 

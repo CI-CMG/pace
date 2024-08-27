@@ -276,9 +276,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
 
   private void addAudioDataPackageFields(AudioDataPackageTranslator audioDataPackageTranslator, List<String> headerOptions) {
     headerOptions.add(audioDataPackageTranslator.getInstrumentId());
-    headerOptions.add(audioDataPackageTranslator.getHydrophoneSensitivity());
-    headerOptions.add(audioDataPackageTranslator.getFrequencyRange());
-    headerOptions.add(audioDataPackageTranslator.getGain());
     headerOptions.add(audioDataPackageTranslator.getComments());
     for (PackageSensorTranslator sensor : audioDataPackageTranslator.getSensors()) {
       headerOptions.add(sensor.getName());
@@ -622,9 +619,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     return AudioPackageTranslator.toBuilder(packageTranslator)
         .qualityControlDetailTranslator(((QualityControlForm) qualityControlForm.getComponent()).toTranslator())
         .instrumentId(audioDataPackageTranslator.getInstrumentId())
-        .hydrophoneSensitivity(audioDataPackageTranslator.getHydrophoneSensitivity())
-        .frequencyRange(audioDataPackageTranslator.getFrequencyRange())
-        .gain(audioDataPackageTranslator.getGain())
         .comments(audioDataPackageTranslator.getComments())
         .sensors(audioDataPackageTranslator.getSensors())
         .deploymentTime(audioDataPackageTranslator.getDeploymentTime())
@@ -641,9 +635,6 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     return CPODPackageTranslator.toBuilder(packageTranslator)
         .qualityControlDetailTranslator(((QualityControlForm) qualityControlForm.getComponent()).toTranslator())
         .instrumentId(audioDataPackageTranslator.getInstrumentId())
-        .hydrophoneSensitivity(audioDataPackageTranslator.getHydrophoneSensitivity())
-        .frequencyRange(audioDataPackageTranslator.getFrequencyRange())
-        .gain(audioDataPackageTranslator.getGain())
         .comments(audioDataPackageTranslator.getComments())
         .sensors(audioDataPackageTranslator.getSensors())
         .deploymentTime(audioDataPackageTranslator.getDeploymentTime())

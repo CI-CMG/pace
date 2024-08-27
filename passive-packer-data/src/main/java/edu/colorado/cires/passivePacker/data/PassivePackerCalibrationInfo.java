@@ -18,11 +18,5 @@ public class PassivePackerCalibrationInfo {
   private final String comment;
   private final String calDate;
   private final String calDate2;
-  @Builder.Default
-  private final String sensitivity = "";
-  @Builder.Default
-  private final String frequency = "";
-  @Builder.Default
-  private final String gain = "";
 
 }

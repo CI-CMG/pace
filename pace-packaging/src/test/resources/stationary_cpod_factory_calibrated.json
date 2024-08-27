@@ -129,9 +129,6 @@
     "CALIBRATION_INFO": {
         "CAL_STATE": "Factory Calibrated",
         "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
-        "SENSITIVITY": "9.0",
-        "FREQUENCY": "10",
-        "GAIN": "11.0",
         "COMMENT": "calibration description"
     },
     "SCIENTISTS": [

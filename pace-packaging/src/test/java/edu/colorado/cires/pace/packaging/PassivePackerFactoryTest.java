@@ -502,9 +502,6 @@ class PassivePackerFactoryTest {
         .recoveryTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
         .audioStartTime(LocalDateTime.of(2011, 1, 1, 13, 0, 0))
         .audioEndTime(LocalDateTime.of(2012, 1, 1, 13, 0, 0))
-        .hydrophoneSensitivity(9f)
-        .frequencyRange("10")
-        .gain(11f)
         .sensors(List.of(
             PackageSensor.<String>builder()
                 .sensor("sensor name 1")
