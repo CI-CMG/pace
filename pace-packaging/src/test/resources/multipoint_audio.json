@@ -146,12 +146,12 @@
     },
     "DATASET_DETAILS": {
         "SUB_TYPE": "Audio",
-        "SOURCE_PATH": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
+        "SOURCE_PATH": "/Users/user/Desktop/Project 12_Site 12_12",
         "DATA_COMMENT": "deployment comments"
     },
     "CALIBRATION_INFO": {
         "CAL_STATE": "Calibrated Pre-Deployment",
-        "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
+        "CAL_DOCS_PATH": "/Users/user/Desktop/Project 10_Site 10_10",
         "COMMENT": "calibration description",
         "CAL_DATE": "2010-01-01"
     },
