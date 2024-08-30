@@ -368,6 +368,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
       headerOptions.add(mobileMarineLocationTranslator.getSeaArea());
       headerOptions.add(mobileMarineLocationTranslator.getVessel());
       headerOptions.add(mobileMarineLocationTranslator.getLocationDerivationDescription());
+      headerOptions.add(mobileMarineLocationTranslator.getSingleStringFiles());
     } else if (locationDetailTranslator instanceof StationaryTerrestrialLocationTranslator stationaryTerrestrialLocationTranslator) {
       headerOptions.add(stationaryTerrestrialLocationTranslator.getLatitude());
       headerOptions.add(stationaryTerrestrialLocationTranslator.getLongitude());

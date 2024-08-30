@@ -6,6 +6,7 @@ import static edu.colorado.cires.pace.gui.UIUtils.updateComboBoxModel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.MobileMarineLocationTranslator;
 import java.awt.GridBagLayout;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -46,7 +47,7 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
       seaAreaField.setSelectedItem(initialTranslator.getSeaArea());
       vesselField.setSelectedItem(initialTranslator.getVessel());
       locationDerivationDescriptionField.setSelectedItem(initialTranslator.getLocationDerivationDescription());
-      singleStringFiles.setSelectedItem(initialTranslator.getVessel());
+      singleStringFiles.setSelectedItem(initialTranslator.getSingleStringFiles());
     }
   }
 
@@ -56,7 +57,7 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
         .seaArea((String) seaAreaField.getSelectedItem())
         .vessel((String) vesselField.getSelectedItem())
         .locationDerivationDescription((String) locationDerivationDescriptionField.getSelectedItem())
-        .singleStringFiles((String) vesselField.getSelectedItem())
+        .singleStringFiles((String) singleStringFiles.getSelectedItem())
         .build();
   }
 
