@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.gui;
 
 import static edu.colorado.cires.pace.gui.UIUtils.getImageIcon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
@@ -30,6 +31,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -84,7 +88,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         exceptions.forEach(o -> {
           java.lang.Throwable t = o.throwable();
           if (t instanceof FieldException fieldException) {
-            if (fieldException.getColumn() == (column - 1) && fieldException.getRow() == (row + 2)) {
+            if (fieldException.getColumn() == (column - 2) && fieldException.getRow() == (row + 2)) {
               jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED));
             }
           } else {
@@ -133,7 +137,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         for (ObjectWithRowError exception : exceptions) {
           java.lang.Throwable t = exception.throwable();
           if (t instanceof FieldException fieldException) {
-            if (fieldException.getColumn() == col-1) {
+            if (fieldException.getColumn() == col-2) {
               errorHover = true;
               table.setRowSelectionAllowed(true);
               table.setColumnSelectionAllowed(true);
@@ -160,7 +164,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           Optional<ObjectWithRowError<O>> error = exceptions.stream().filter(o -> {
             Throwable t = o.throwable();
             if (t instanceof FieldException fieldException) {
-              return fieldException.getColumn() == (col - 1) && fieldException.getRow() == (row + 2);
+              return fieldException.getColumn() == (col - 2) && fieldException.getRow() == (finalRow + 2);
             } else if (t instanceof ConstraintViolationException || t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
               return (row + 2) == o.row() && col == 0;
             } else {
@@ -232,6 +236,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           Row row = rows.get(0);
           List<String> headerNames = new ArrayList<>(0);
           headerNames.add(0, "Status");
+          headerNames.add(1, "Row");
           for (int i = 0; i < row.getCellCount(); i++) {
             headerNames.add(row.getCell(i).getText());
           }
@@ -246,18 +251,24 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
             if (t == null) {
               ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
               imageIcon.setDescription("Package saved");
-              rowValues.add(0, imageIcon);
             } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException
+                rowValues.add(0, imageIcon);
+                rowValues.add(1, i+1);
                 || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
               ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
               imageIcon.setDescription("Package validation error");
               rowValues.add(0, imageIcon);
+              rowValues.add(1, i+1);
             } else if (t instanceof FieldException) {
               ImageIcon imageIcon = getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
               imageIcon.setDescription("Spreadsheet validation error");
               rowValues.add(0, imageIcon);
+              rowValues.add(1, i+1);
             } else {
-              rowValues.add(0, null);
+              ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+              imageIcon.setDescription("Packaged");
+              rowValues.add(0, imageIcon);
+              rowValues.add(1, i+1);
             }
             for (int j = 0; j < currentRow.getCellCount(); j++) {
               rowValues.add(currentRow.getCell(j).getText());
@@ -283,13 +294,17 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           
           List<String> headers = new ArrayList<>(parser.getHeaderNames());
           headers.add(0, "Status");
-          List<List<Object>> data = parser.stream()
+          headers.add(1, "Row");
+          AtomicInteger row = new AtomicInteger(1);
+          List<List<Object>> data = new ArrayList<>(parser.stream()
               .filter(record -> !record.stream().allMatch(StringUtils::isBlank))
               .map(record -> {
-                List<Object> values  = new ArrayList<>(record.toList());
+                List<Object> values = new ArrayList<>(record.toList());
                 Throwable t = exceptions.stream()
                     .filter(oObjectWithRowError -> record.getRecordNumber() == oObjectWithRowError.row() - 1)
                     .findFirst().map(ObjectWithRowError::throwable).orElse(null);
+                row.set((int) (record.getRecordNumber() + 1));
+                AtomicBoolean hopOver = new AtomicBoolean(false);
                 if (t == null) {
                   ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
                   imageIcon.setDescription("Package saved");
@@ -299,12 +314,17 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                   ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
                   imageIcon.setDescription("Package validation error");
                   values.add(0, imageIcon);
+                  values.add(1, row.get());
                 } else if (t instanceof FieldException) {
                   ImageIcon imageIcon = getImageIcon("exclamation_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
                   imageIcon.setDescription("Spreadsheet validation error");
                   values.add(0, imageIcon);
+                  values.add(1, row.get());
                 } else {
-                  values.add(0, null);
+                  ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+                  imageIcon.setDescription("Packaged");
+                  values.add(0, imageIcon);
+                  values.add(1, row.get());
                 }
                 return values;
               }).toList();
