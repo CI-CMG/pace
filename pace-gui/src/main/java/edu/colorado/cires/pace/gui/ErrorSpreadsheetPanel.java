@@ -121,17 +121,29 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         boolean errorHover = false;
 
         String desc = (table.getValueAt(row,col) instanceof ImageIcon icon) ? icon.getDescription() : null;
-        if (col == 0 && Objects.equals(desc, "Package validation error")) {
+        if (col == 0 && (Objects.equals(desc, "Package validation error") || Objects.equals(desc, "Collision error"))) {
           for (int i = 0; i < table.getRowCount(); i++) {
-            if (i != row) {
+            String descInside = (table.getValueAt(i,0) instanceof ImageIcon icon) ? icon.getDescription() : null;
+            if (i != row && Objects.equals(descInside, "Package validation error")) {
               ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
               imageIcon.setDescription("Package validation error");
               table.setValueAt(imageIcon, i, 0);
             }
+            if (i != row && Objects.equals(descInside, "Collision error")) {
+              ImageIcon imageIcon = getImageIcon("regular_qm.png", this.getClass());
+              imageIcon.setDescription("Collision error");
+              table.setValueAt(imageIcon, i, 0);
+            }
           }
-          ImageIcon imageIcon = getImageIcon("close_hover.png", this.getClass());
-          imageIcon.setDescription("Package validation error");
-          table.setValueAt(imageIcon, row, 0);
+          if (Objects.equals(desc, "Package validation error")) {
+            ImageIcon imageIcon = getImageIcon("close_hover.png", this.getClass());
+            imageIcon.setDescription("Package validation error");
+            table.setValueAt(imageIcon, row, 0);
+          } else if (Objects.equals(desc, "Collision error")) {
+            ImageIcon imageIcon = getImageIcon("hover_qm.png", this.getClass());
+            imageIcon.setDescription("Collision error");
+            table.setValueAt(imageIcon, row, 0);
+          }
         }
 
         for (ObjectWithRowError exception : exceptions) {
@@ -158,15 +170,23 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
       public void mousePressed(MouseEvent e) {
         JTable table = (JTable) e.getSource();
         Point point = e.getPoint();
-        int row = table.rowAtPoint(point);
+        int tableRow = table.rowAtPoint(point);
         int col = table.columnAtPoint(point);
+        int row = 0;
+        if (table.getValueAt(tableRow,1) instanceof AtomicInteger atom) {
+          row = atom.get();
+        } else {
+          row = (int) table.getValueAt(tableRow, 1) - 2;
+        }
+
         if (e.getClickCount() == 1 && table.getSelectedRow() != -1) {
+          int finalRow = row;
           Optional<ObjectWithRowError<O>> error = exceptions.stream().filter(o -> {
             Throwable t = o.throwable();
             if (t instanceof FieldException fieldException) {
               return fieldException.getColumn() == (col - 2) && fieldException.getRow() == (finalRow + 2);
             } else if (t instanceof ConstraintViolationException || t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException || t instanceof BadArgumentException) {
-              return (row + 2) == o.row() && col == 0;
+              return (finalRow + 2) == o.row() && col == 0;
             } else {
               return false;
             }
@@ -243,17 +263,27 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           
           List<List<Object>> data = new ArrayList<>(0);
           for (int i = 1; i < rows.size(); i++) {
+            boolean hopOver = false;
             Row currentRow = rows.get(i);
             List<Object> rowValues = new ArrayList<>(0);
             Throwable t = exceptions.stream()
                 .filter(oObjectWithRowError -> currentRow.getRowNum() == oObjectWithRowError.row())
                 .findFirst().map(ObjectWithRowError::throwable).orElse(null);
             if (t == null) {
-              ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
-              imageIcon.setDescription("Package saved");
-            } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException
+              hopOver = true;
+//              ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+//              imageIcon.setDescription("Package saved");
+//              rowValues.add(0, imageIcon);
+            } else if (t instanceof ConflictException conflictException){
+              if (!conflictException.checkIdentical()){
+                ImageIcon imageIcon = getImageIcon("regular_qm.png", this.getClass());
+                imageIcon.setDescription("Collision error");
                 rowValues.add(0, imageIcon);
                 rowValues.add(1, i+1);
+              } else {
+                hopOver = true;
+              }
+            } else if (t instanceof NotFoundException|| t instanceof DatastoreException
                 || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
               ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
               imageIcon.setDescription("Package validation error");
@@ -270,10 +300,12 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
               rowValues.add(0, imageIcon);
               rowValues.add(1, i+1);
             }
-            for (int j = 0; j < currentRow.getCellCount(); j++) {
-              rowValues.add(currentRow.getCell(j).getText());
-            }
+            if (!hopOver) {
+              for (int j = 0; j < currentRow.getCellCount(); j++) {
+                rowValues.add(currentRow.getCell(j).getText());
+              }
             data.add(rowValues);
+            }
           }
           
           yield new TableData(
@@ -306,10 +338,24 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                 row.set((int) (record.getRecordNumber() + 1));
                 AtomicBoolean hopOver = new AtomicBoolean(false);
                 if (t == null) {
-                  ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
-                  imageIcon.setDescription("Package saved");
-                  values.add(0, imageIcon);
-                } else if (t instanceof NotFoundException || t instanceof ConflictException || t instanceof DatastoreException 
+                  hopOver.set(true);
+//                  ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
+//                  imageIcon.setDescription("Package saved");
+//                  values.add(0, imageIcon);
+                } else if (t instanceof ConflictException conflictException) {
+                  try {
+                    if (!conflictException.checkIdentical()) {
+                      ImageIcon imageIcon = getImageIcon("regular_qm.png", this.getClass());
+                      imageIcon.setDescription("Collision error");
+                      values.add(0, imageIcon);
+                      values.add(1, row.get());
+                    } else {
+                      hopOver.set(true);
+                    }
+                  } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                  }
+                } else if (t instanceof NotFoundException || t instanceof DatastoreException
                     || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
                   ImageIcon imageIcon = getImageIcon("close_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
                   imageIcon.setDescription("Package validation error");
@@ -326,9 +372,13 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                   values.add(0, imageIcon);
                   values.add(1, row.get());
                 }
-                return values;
-              }).toList();
-          
+                if (!hopOver.get()) {
+                  return values;
+                }
+                return null;
+              }).toList());
+
+          data.removeAll(Collections.singleton(null));
           yield new TableData(headers, data);
         } catch (IOException e) {
           throw new RuntimeException(e);

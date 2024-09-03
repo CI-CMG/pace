@@ -8,7 +8,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.util.Comparator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -49,7 +48,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
       LOGGER.error("{} already exists", uniqueField);
       throw new ConflictException(String.format(
           "%s already exists", uniqueField
-      ));
+      ), datastore.findByUniqueField(uniqueField).orElse(null), object);
     }
     
     if (object.getUuid() != null) {
@@ -57,7 +56,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
         LOGGER.error("{} with uuid {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
             "%s with uuid %s already exists", getClassName(), object.getUuid()
-        ));
+        ), datastore.findByUniqueField(uniqueField).orElse(null), object);
       }
     }
     
@@ -121,7 +120,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
       LOGGER.error("{} already exists", newUniqueField);
       throw new ConflictException(String.format(
           "%s already exists", newUniqueField
-      ));
+      ), datastore.findByUUID(uuid).orElse(null), object);
     }
 
     if (!object.getUuid().equals(uuid)) {
@@ -129,7 +128,7 @@ public abstract class CRUDRepository<O extends AbstractObject> {
         LOGGER.error("{} with uuid = {} already exists", getClassName(), object.getUuid());
         throw new ConflictException(String.format(
             "%s with uuid = %s already exists", getClassName(), object.getUuid()
-        ));
+        ), datastore.findByUUID(uuid).orElse(null), object);
       }
     }
     
