@@ -92,6 +92,8 @@ jobs:
           INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
+      - name: Print date
+        run: date
       - name: Package jar as pkg
         run: >
           jpackage
