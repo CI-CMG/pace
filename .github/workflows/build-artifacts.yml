@@ -92,6 +92,10 @@ jobs:
           INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
+      - name: Install Homebrew
+        run: 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+      - name: Install OpenSSL
+        run: brew install openssl
       - name: OpenSSL version
         run: openssl version
       - name: OpenSSL version try 2
