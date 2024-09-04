@@ -18,7 +18,6 @@
     <module>pace-cli</module>
     <module>pace-gui</module>
     <module>passive-packer-data</module>
-    <module>pace-templates</module>
   </modules>
 
   <properties>
