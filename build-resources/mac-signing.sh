@@ -1,7 +1,7 @@
 jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar BOOT-INF/lib
 ls
 
-for filename in /BOOT-INF/lib/*.jar; do
+for filename in BOOT-INF/lib/*.jar; do
   echo "$filename"
   #if [ -f "$filename" ]; then
   fileList=$(jar -tf "$filename" | grep .dylib)
