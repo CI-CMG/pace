@@ -94,7 +94,7 @@ jobs:
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
 
       - name: Specialized signing
-        run: bash mac-signing.sh
+        run: bash ./mac-signing.sh
 
       - name: Package jar as pkg
         run: >
