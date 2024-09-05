@@ -1,4 +1,4 @@
-ls
+ls jars
 jar -xf ../pace-cli/target/pace-cli-0.1.1-SNAPSHOT.jar BOOT-INF/lib/*
 
 for filename in /BOOT-INF/lib/*; do
