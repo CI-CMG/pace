@@ -93,9 +93,6 @@ jobs:
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
 
-      - name: Specialized signing
-        run: bash ./mac-signing.sh
-
       - name: Package jar as pkg
         run: >
           jpackage
@@ -127,6 +124,10 @@ jobs:
           APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
           APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+
+      - name: Specialized signing
+        run: bash ./mac-signing.sh
+
       - name: Notarize artifact
         run: >
           xcrun notarytool submit *.pkg
