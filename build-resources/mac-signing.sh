@@ -1,4 +1,5 @@
 jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar BOOT-INF/lib/*
+ls
 
 for filename in /BOOT-INF/lib/*; do
   echo "$filename"
