@@ -1,5 +1,4 @@
-ls jars
-jar -xf ./pace-cli-0.1.1-SNAPSHOT.jar BOOT-INF/lib/*
+jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar BOOT-INF/lib/*
 
 for filename in /BOOT-INF/lib/*; do
   if [ -f "$filename" ]; then
