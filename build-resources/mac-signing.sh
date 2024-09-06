@@ -3,6 +3,7 @@ jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar org/sqlite/native/Mac/aarch64/libsqli
 jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib
 
 echo Signing dylib files
+echo $2
 /usr/bin/codesign -s $2 -vvvv --timestamp --options runtime --prefix 'edu.colorado.cires.pace.cli.' --keychain $1 --force org/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib
 /usr/bin/codesign -s $2 -vvvv --timestamp --options runtime --prefix 'edu.colorado.cires.pace.cli.' --keychain $1 --force org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib
 
