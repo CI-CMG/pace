@@ -1,3 +1,7 @@
+set -ex
+
+security find-certificate -a sign-keychain
+
 echo Extracting dylib files
 jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar org/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib
 jar -xf ./jars/pace-cli-0.1.1-SNAPSHOT.jar org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib
