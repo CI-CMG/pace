@@ -10,6 +10,7 @@ base64 -d -i install_sign.p12.txt -o install_sign.p12
 
 # Create temp keychain
 security create-keychain -p "$MY_KEYCHAIN_PASSWORD" "$MY_KEYCHAIN"
+security list-keychains -d user -s "$MY_KEYCHAIN"
 
 # Remove relock timeout
 security set-keychain-settings "$MY_KEYCHAIN"
