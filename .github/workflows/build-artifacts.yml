@@ -126,7 +126,13 @@ jobs:
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
 
       - name: Specialized signing
-        run: bash ./mac-signing.sh
+        run: bash ./mac-signing.sh $MY_KEYCHAIN $MAC_SIGNING_KEY_USER_NAME $APPLE_NOTARIZATION_ID $APPLE_NOTARIZATION_TEAM_ID $APPLE_NOTARIZATION_PASSWORD
+        env:
+          MY_KEYCHAIN: sign-keychain
+          MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
+          APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
+          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
 
       - name: Notarize artifact
         run: >
