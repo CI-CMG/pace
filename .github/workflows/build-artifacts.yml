@@ -94,7 +94,7 @@ jobs:
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
 
       - name: Specialized signing
-        run: bash ./mac-signing.sh $MY_KEYCHAIN $MAC_SIGNING_KEY_USER_NAME
+        run: bash ./mac-signing.sh "$MY_KEYCHAIN" "$MAC_SIGNING_KEY_USER_NAME"
         env:
           MY_KEYCHAIN: sign-keychain
           MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
