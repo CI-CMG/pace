@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 
 public class PackageRepository extends CRUDRepository<Package> implements DownstreamDependencyRepository<Package> {
   
@@ -103,7 +104,9 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     
     if (object instanceof DataQuality<?> dataQuality) {
       String analyst = (String) dataQuality.getQualityAnalyst();
-      checkDependency(analyst, personDatastore, "qualityAnalyst", constraintViolations);
+      if (StringUtils.isNotBlank(analyst)) {
+        checkDependency(analyst, personDatastore, "qualityAnalyst", constraintViolations);
+      }
     }
     
     if (!constraintViolations.isEmpty()) {
