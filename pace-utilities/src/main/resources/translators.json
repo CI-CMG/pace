@@ -7,6 +7,5 @@
   {"type":"organization","uuid":"dd803a5d-6afa-419c-a433-ead91f7cda6d","visible":true,"name":"Organization-NCEI-Template","organization_name":"Name","street":"Street","city":"City","state":"State","zip":"Zip","country":"Country","email":"Email","phone":"Phone"},
   {"type":"instrument","uuid":"3313890a-7686-4871-8122-fc3bc6704cfa","visible":true,"name":"Instrument-NCEI-Template","instrument_name":"Name","file_types":"File Types"},
   {"type":"detection type","uuid":"e17c8658-ca58-40b1-bb18-d381233cc42c","visible":true,"name":"Detection-Type-NCEI-Template","source":"Source","science_name":"Science Name"},
-  {"type":"file type","uuid":"96f656c8-a44b-47c0-b1dd-7d49cf3fcc74","visible":true,"name":"File-Type-NCEI-Template","type":"Type","comment":"Comment"},
   {"type":"audio sensor","uuid":"4bbc7e65-397a-4f34-a9a0-6203b60d0a59","visible":true,"name":"Sensor-NCEI-Template","sensor_name":"Name","description":"Description","id":"ID"}
 ]

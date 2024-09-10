@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -80,21 +81,45 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
             .toArray(Object[][]::new),
         tableData.headers().toArray()
     );
+
     JTable table = new JTable(tableModel) {
       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
         JComponent jc = (JComponent)c;
+        ArrayList<Point> possibleMatches = new ArrayList<Point>();
+        ArrayList<Integer> possibleRows = new ArrayList<Integer>();
+        ArrayList<Integer> nonFieldExceptions = new ArrayList<Integer>();
 
         exceptions.forEach(o -> {
           java.lang.Throwable t = o.throwable();
           if (t instanceof FieldException fieldException) {
-            if (fieldException.getColumn() == (column - 2) && fieldException.getRow() == (row + 2)) {
-              jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED));
+            possibleMatches.add(new Point(fieldException.getColumn(), fieldException.getRow()));
+            if (!possibleRows.contains(fieldException.getRow())) {
+              possibleRows.add(fieldException.getRow());
             }
-          } else {
-            c.setBackground(getBackground());
+          } else if (t instanceof NotFoundException|| t instanceof DatastoreException
+              || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
+            if (!nonFieldExceptions.contains(o.row())) {
+              nonFieldExceptions.add(o.row());
+              possibleRows.add(o.row());
+            }
           }
         });
+
+        Collections.sort(possibleRows);
+        int errorRow = 0;
+        try{
+          errorRow = possibleRows.get(row);
+        } catch (IndexOutOfBoundsException e) {
+          c.setBackground(getBackground());
+          return c;
+        }
+
+        if (possibleMatches.contains(new Point(column-2, errorRow)) && !nonFieldExceptions.contains(errorRow)) {
+          jc.setBorder(new MatteBorder(1, 1, 1, 1, Color.RED));
+        } else {
+          c.setBackground(getBackground());
+        }
 
         return c;
       }
