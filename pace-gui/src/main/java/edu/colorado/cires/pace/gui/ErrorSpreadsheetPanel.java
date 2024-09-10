@@ -82,29 +82,30 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         tableData.headers().toArray()
     );
 
+    ArrayList<Point> possibleMatches = new ArrayList<Point>();
+    ArrayList<Integer> possibleRows = new ArrayList<Integer>();
+    ArrayList<Integer> nonFieldExceptions = new ArrayList<Integer>();
+
+    exceptions.forEach(o -> {
+      java.lang.Throwable t = o.throwable();
+      if (t instanceof FieldException fieldException) {
+        possibleMatches.add(new Point(fieldException.getColumn(), fieldException.getRow()));
+        if (!possibleRows.contains(fieldException.getRow())) {
+          possibleRows.add(fieldException.getRow());
+        }
+      } else if (t instanceof NotFoundException|| t instanceof DatastoreException
+          || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
+        if (!nonFieldExceptions.contains(o.row())) {
+          nonFieldExceptions.add(o.row());
+          possibleRows.add(o.row());
+        }
+      }
+    });
+
     JTable table = new JTable(tableModel) {
       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
         JComponent jc = (JComponent)c;
-        ArrayList<Point> possibleMatches = new ArrayList<Point>();
-        ArrayList<Integer> possibleRows = new ArrayList<Integer>();
-        ArrayList<Integer> nonFieldExceptions = new ArrayList<Integer>();
-
-        exceptions.forEach(o -> {
-          java.lang.Throwable t = o.throwable();
-          if (t instanceof FieldException fieldException) {
-            possibleMatches.add(new Point(fieldException.getColumn(), fieldException.getRow()));
-            if (!possibleRows.contains(fieldException.getRow())) {
-              possibleRows.add(fieldException.getRow());
-            }
-          } else if (t instanceof NotFoundException|| t instanceof DatastoreException
-              || t instanceof BadArgumentException || t instanceof ConstraintViolationException) {
-            if (!nonFieldExceptions.contains(o.row())) {
-              nonFieldExceptions.add(o.row());
-              possibleRows.add(o.row());
-            }
-          }
-        });
 
         Collections.sort(possibleRows);
         int errorRow = 0;
