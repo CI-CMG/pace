@@ -25,7 +25,7 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
   
   public void setHeaderOptions(String[] headerOptions) {
     this.headerOptions = Arrays.stream(headerOptions)
-        //.filter(StringUtils::isNotBlank)
+        .filter(StringUtils::isNotEmpty)
         .collect(Collectors.toSet()).stream().sorted().toArray(String[]::new);
     this.headerOptions = ArrayUtils.addFirst(this.headerOptions, null);
     updateHeaderOptions(this.headerOptions);
