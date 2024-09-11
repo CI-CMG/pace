@@ -65,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 public class PackageConverter extends Converter<PackageTranslator, Package> {
 
@@ -291,12 +292,22 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
     }
   }
 
+  private static Float makeNegative(Float depth){
+    if (depth == null){
+      return null;
+    }
+    if (depth > 0){
+      return -depth;
+    }
+    return depth;
+  }
+
   private static MarineInstrumentLocation marineInstrumentLocationFromMap(MarineInstrumentLocationTranslator marineInstrumentLocationTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return MarineInstrumentLocation.builder()
         .latitude(latitudeFromMap(properties, marineInstrumentLocationTranslator.getLatitude(), row, runtimeException))
         .longitude(longitudeFromMap(properties, marineInstrumentLocationTranslator.getLongitude(), row, runtimeException))
-        .instrumentDepth(floatFromMap(properties, "Instrument Depth", marineInstrumentLocationTranslator.getInstrumentDepth(), row, runtimeException))
-        .seaFloorDepth(floatFromMap(properties, "Sea Floor Depth", marineInstrumentLocationTranslator.getSeaFloorDepth(), row, runtimeException))
+        .instrumentDepth(makeNegative(floatFromMap(properties, "Instrument Depth", marineInstrumentLocationTranslator.getInstrumentDepth(), row, runtimeException)))
+        .seaFloorDepth(makeNegative(floatFromMap(properties, "Sea Floor Depth", marineInstrumentLocationTranslator.getSeaFloorDepth(), row, runtimeException)))
         .build();
   }
 
