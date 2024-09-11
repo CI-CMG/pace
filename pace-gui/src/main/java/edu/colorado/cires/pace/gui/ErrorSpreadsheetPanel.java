@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -71,7 +72,42 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
   public void init() {
     TableData tableData = readSpreadsheet(file, exceptions);
     setLayout(new BorderLayout());
-    add(new JScrollPane(createTable(tableData, exceptions)), BorderLayout.CENTER);
+    JTable table = createTable(tableData, exceptions);
+    add(new JScrollPane(table), BorderLayout.CENTER);
+    JPanel overwritePanel = new JPanel(new BorderLayout());
+    JButton overwriteButton = new JButton("Overwrite All Conflicts");
+
+    overwriteButton.addActionListener((e) -> {
+      exceptions.stream().forEach(o -> {
+        java.lang.Throwable t = o.throwable();
+        try {
+          if (t instanceof ConflictException conflictException && !conflictException.checkIdentical()) {
+            O object = o.object();
+            try {
+              O existing = repository.getByUniqueField(object.getUniqueField());
+              object = (O) object.setUuid(existing.getUuid());
+              repository.update(object.getUuid(), object);
+              refreshTable.run();
+            } catch (RuntimeException ex) {
+              throw ex;
+            } catch (ConflictException | NotFoundException | DatastoreException | BadArgumentException ex) {
+              ;
+            }
+          }
+        } catch (JsonProcessingException ex) {
+          throw new RuntimeException(ex);
+        }
+      });
+      for (int i = 0; i < table.getRowCount(); i++) {
+        if (table.getValueAt(i, 0).toString().equals("Collision error")) {
+          System.out.println("changing icon");
+          table.setValueAt(getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass()), i,0);
+        }
+      }
+    });
+
+    overwritePanel.add(overwriteButton, BorderLayout.WEST);
+    add(overwritePanel, BorderLayout.SOUTH);
   }
   
   private JTable createTable(TableData tableData, List<ObjectWithRowError<O>> exceptions) {
@@ -286,7 +322,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
           for (int i = 0; i < row.getCellCount(); i++) {
             headerNames.add(row.getCell(i).getText());
           }
-          
+
           List<List<Object>> data = new ArrayList<>(0);
           for (int i = 1; i < rows.size(); i++) {
             boolean hopOver = false;
@@ -346,10 +382,8 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
         CSVFormat format = CSVFormat.DEFAULT.builder()
             .setHeader()
             .build();
-        
         try (InputStream inputStream = new FileInputStream(file); Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8) ) {
           CSVParser parser = format.parse(reader);
-          
           List<String> headers = new ArrayList<>(parser.getHeaderNames());
           headers.add(0, "Status");
           headers.add(1, "Row");
@@ -362,7 +396,7 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
                     .filter(oObjectWithRowError -> record.getRecordNumber() == oObjectWithRowError.row() - 1)
                     .findFirst().map(ObjectWithRowError::throwable).orElse(null);
                 row.set((int) (record.getRecordNumber() + 1));
-                AtomicBoolean hopOver = new AtomicBoolean(false);
+                AtomicBoolean hopOver = new AtomicBoolean(true);
                 if (t == null) {
                   hopOver.set(true);
 //                  ImageIcon imageIcon = getImageIcon("check_20dp_FILL0_wght400_GRAD0_opsz20.png", this.getClass());
