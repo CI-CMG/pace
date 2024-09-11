@@ -94,7 +94,7 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
       }
       s.forEach(o -> tableModel.addRow(objectConversion.apply(o)));
       dialog.dispose();
-    }, this::searchData, object != null);
+    }, this::searchData, object != null, false);
     formPanel.init();
 
     dialog.add(formPanel);

@@ -72,7 +72,7 @@ public class TranslatorPanel extends DataPanel<Translator> {
       }
       s.forEach(o -> tableModel.addRow(objectConversion.apply(o)));
       dialog.dispose();
-    }, this::searchData, object != null);
+    }, this::searchData, object != null, true);
     formPanel.init();
 
     dialog.setTitle(object == null ? "New Translator" : String.format(

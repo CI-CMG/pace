@@ -107,6 +107,19 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
     }
   }
 
+  protected void saveCopy(CRUDRepository<O> repository) throws BadArgumentException, ConflictException, NotFoundException, DatastoreException {
+    UUID uuidValue = null;
+    O object = objectFromFormFields(uuidValue, uniqueField.getText()+" copy", visible.isSelected());
+    if (object instanceof AudioPackageTranslator || object instanceof CPODPackageTranslator || object instanceof DetectionsPackageTranslator || object instanceof SoundClipsPackageTranslator
+        || object instanceof SoundLevelMetricsPackageTranslator || object instanceof SoundPropagationModelsPackageTranslator) {
+      repository.create(object);
+    } else if (object instanceof PackageTranslator) {
+      throw new BadArgumentException("Please choose a package type");
+    } else {
+      repository.create(object);
+    }
+  }
+
   @Override
   protected void delete(CRUDRepository<O> repository) throws NotFoundException, DatastoreException, BadArgumentException {
     repository.delete(UUID.fromString(uuid.getText()));

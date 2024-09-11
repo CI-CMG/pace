@@ -16,4 +16,6 @@ public abstract class ObjectWithName extends ObjectWithUniqueField {
   public String getUniqueField() {
     return name;
   }
+
+  public String getName() {return name;}
 }

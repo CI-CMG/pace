@@ -16,4 +16,5 @@ public abstract class Form<O extends ObjectWithUniqueField> extends JPanel {
   
   protected abstract void delete(CRUDRepository<O> repository) throws NotFoundException, DatastoreException, BadArgumentException;
 
+  protected abstract void saveCopy(CRUDRepository<O> repository) throws BadArgumentException, ConflictException, NotFoundException, DatastoreException;
 }
