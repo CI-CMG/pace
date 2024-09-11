@@ -30,7 +30,7 @@ public class ContactsTranslatorForm extends JPanel {
 
     add(new JLabel("Scientists"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     add(scientistsField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    add(new JLabel("Sponsors"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    add(new JLabel("Sources"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(sponsorsField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     add(new JLabel("Funders"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     add(fundersField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
