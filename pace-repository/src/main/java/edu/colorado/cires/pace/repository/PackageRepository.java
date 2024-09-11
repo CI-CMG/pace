@@ -79,7 +79,9 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     checkDependency(object.getPlatform(), platformDatastore, "platform", constraintViolations);
     checkDependencies(object.getProjects(), projectDatastore, "projects", constraintViolations);
     checkDependencies(object.getScientists(), personDatastore, "scientists", constraintViolations);
-    checkDependency(object.getDatasetPackager(), personDatastore, "datasetPackager", constraintViolations);
+    if (!(object.getDatasetPackager() == null)) {
+      checkDependency(object.getDatasetPackager(), personDatastore, "datasetPackager", constraintViolations);
+    }
     checkDependencies(object.getFunders(), organizationDatastore, "funders", constraintViolations);
     checkDependencies(object.getSponsors(), organizationDatastore, "sponsors", constraintViolations);
 

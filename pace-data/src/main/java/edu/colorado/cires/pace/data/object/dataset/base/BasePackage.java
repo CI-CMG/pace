@@ -55,7 +55,6 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
   private final LocalDate postDeploymentCalibrationDate;
   private final String calibrationDescription;
 
-  @NotBlank
   private final String datasetPackager;
   @Builder.Default
   private final List<String> scientists = Collections.emptyList();
