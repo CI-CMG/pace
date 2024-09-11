@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.translator.converter;
 
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateOnlyTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
@@ -152,6 +153,8 @@ final class ConversionUtils {
       return transformedPropertyFromMap(properties, targetProperty, defaultTimeTranslator.getTime(), row, runtimeException, (s) -> parseLocalDateTime(s, dateTimeFormatter), "Invalid date time format");
     } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
       return localDateTimeFromMap(properties, targetProperty, dateTimeSeparatedTimeTranslator, row, runtimeException);
+    } else if (timeTranslator instanceof DateOnlyTimeTranslator dateOnlyTimeTranslator) {
+      return localDateTimeFromMap(properties, targetProperty, dateOnlyTimeTranslator, row, runtimeException);
     }
     return null;
   }

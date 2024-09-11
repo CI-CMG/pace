@@ -7,7 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = DefaultTimeTranslator.class, name = "default"),
-    @JsonSubTypes.Type(value = DateTimeSeparatedTimeTranslator.class, name = "date time separated")
+    @JsonSubTypes.Type(value = DateTimeSeparatedTimeTranslator.class, name = "date time separated"),
+    @JsonSubTypes.Type(value = DateOnlyTimeTranslator.class, name = "date only")
 })
 public interface TimeTranslator {
   @NotBlank

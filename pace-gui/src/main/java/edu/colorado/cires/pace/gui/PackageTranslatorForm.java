@@ -7,6 +7,7 @@ import edu.colorado.cires.pace.data.object.dataset.audio.translator.AudioPackage
 import edu.colorado.cires.pace.data.object.dataset.audio.translator.CPODPackageTranslator;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.translator.ChannelTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntryTranslator;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateOnlyTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
@@ -403,6 +404,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
     } else if (timeTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
       headerOptions.add(dateTimeSeparatedTimeTranslator.getTime());
       headerOptions.add(dateTimeSeparatedTimeTranslator.getDate());
+    } else if (timeTranslator instanceof DateOnlyTimeTranslator dateOnlyTimeTranslator) {
+      headerOptions.add(dateOnlyTimeTranslator.getDate());
     }
   }
 
