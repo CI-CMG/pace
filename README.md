@@ -50,8 +50,8 @@
 4. Restart command prompt
 5. Verify installation: `pace-cli --version`
 ### Example usage
-Please refer to our [jupyter notebook](docs/CLI%20Example%20Usage.ipynb) for examples of how to use PACE's CLI.
-If you cannot open the jupyter notebook, you can view the non-interactive version [here](docs/CLI%20Example%20Usage.html).
+Please refer to our [jupyter notebook](docs/CLI_Example_Usage.ipynb) for examples of how to use PACE's CLI.
+If you cannot open the jupyter notebook, you can view the non-interactive version [here](docs/CLI_Example_Usage.html).
 
 ## Developer Notes
 ### System Requirements
