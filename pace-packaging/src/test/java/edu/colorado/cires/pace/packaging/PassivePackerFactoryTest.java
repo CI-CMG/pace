@@ -409,10 +409,10 @@ class PassivePackerFactoryTest {
         .deploymentDescription("deployment abstract")
         .deploymentPurpose("deployment purpose")
         .locationDetail(locationDetail)
-        .sourcePath(Path.of("/Users/paytoncain/Desktop/Project 12_Site 12_12"))
+        .sourcePath(Path.of("/Users/user/Desktop/Project 12_Site 12_12"))
         .preDeploymentCalibrationDate(LocalDate.of(2010, 1, 1))
         .calibrationDescription("calibration description")
-        .calibrationDocumentsPath(Paths.get("/Users/paytoncain/Desktop/Project 10_Site 10_10"))
+        .calibrationDocumentsPath(Paths.get("/Users/user/Desktop/Project 10_Site 10_10"))
         .scientists(List.of("Chuck Anderson"))
         .sponsors(List.of("NOAA AFSC"))
         .funders(List.of("BOEM"))
@@ -549,8 +549,8 @@ class PassivePackerFactoryTest {
         .vessel("R/V Fulmar")
         .locationDerivationDescription("location derivation description")
         .fileList(List.of(
-            Paths.get("/Users/paytoncain/Desktop/Project 15_Site 15_15/data/other/test-8127.txt"),
-            Paths.get("/Users/paytoncain/Desktop/Project 15_Site 15_15/data/other/test-9239.txt")
+            Paths.get("/Users/user/Desktop/Project 15_Site 15_15/data/other/test-8127.txt"),
+            Paths.get("/Users/user/Desktop/Project 15_Site 15_15/data/other/test-9239.txt")
         ))
         .build();
   }

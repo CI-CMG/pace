@@ -36,8 +36,8 @@
     },
     "DATASET_DETAILS": {
         "SUB_TYPE": "Sound Clips",
-        "SOURCE_PATH": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
-        "DATA_FILES": "/Users/paytoncain/Desktop/Project 12_Site 12_12",
+        "SOURCE_PATH": "/Users/user/Desktop/Project 12_Site 12_12",
+        "DATA_FILES": "/Users/user/Desktop/Project 12_Site 12_12",
         "ANALYSIS_TIME_ZONE": "",
         "ANALYSIS_EFFORT": "",
         "MIN_ANALYSIS_FREQUENCY": "",
@@ -53,7 +53,7 @@
     },
     "CALIBRATION_INFO": {
         "CAL_STATE": "Calibration applied before processing",
-        "CAL_DOCS_PATH": "/Users/paytoncain/Desktop/Project 10_Site 10_10",
+        "CAL_DOCS_PATH": "/Users/user/Desktop/Project 10_Site 10_10",
         "COMMENT": "calibration description"
     },
     "SCIENTISTS": [
