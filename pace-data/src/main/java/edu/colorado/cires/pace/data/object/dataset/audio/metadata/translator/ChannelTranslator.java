@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * ChannelTranslator holds header names for fields of channels
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

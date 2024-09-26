@@ -10,6 +10,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * PackageTranslator extends Translator and adds fields relevant to packages
+ * as well as providing setters for uuid and visibility
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -44,11 +48,23 @@ public class PackageTranslator extends Translator {
   private final String alternateDeploymentName;
   private final LocationDetailTranslator locationDetailTranslator;
 
+  /**
+   * Returns new object with provided uuid set
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return AbstractObject with provided uuid set
+   */
   @Override
   public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
+  /**
+   * Returns new object with provided visibility set
+   *
+   * @param visible field for assigning visibility to new object
+   * @return AbstractObject with provided visibility set
+   */
   @Override
   public PackageTranslator setVisible(boolean visible) {
     return toBuilder().visible(visible).build();

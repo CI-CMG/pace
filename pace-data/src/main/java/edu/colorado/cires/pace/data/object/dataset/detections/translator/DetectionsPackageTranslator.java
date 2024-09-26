@@ -8,6 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DetectionsPackageTranslator extends SoundAnalysisPackageTranslator and adds in
+ * a builder as well as holding onto soundSource and qualityControlDetailTranslator.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
@@ -17,7 +21,13 @@ public class DetectionsPackageTranslator extends SoundAnalysisPackageTranslator 
   private final String soundSource;
   
   private final QualityControlDetailTranslator qualityControlDetailTranslator;
-  
+
+  /**
+   * Builds and returns a DetectionsPackageTranslator
+   *
+   * @param packageTranslator information to use for filling out translator
+   * @return DetectionsPackageTranslator as described by input
+   */
   public static DetectionsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return DetectionsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())

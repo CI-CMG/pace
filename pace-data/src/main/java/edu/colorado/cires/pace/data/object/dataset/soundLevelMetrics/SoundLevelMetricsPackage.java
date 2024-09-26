@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundLevelMetricsPackage extends Package and holds onto the relevant data of a
+ * SoundLevelMetrics package
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -38,16 +42,35 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
 
+  /**
+   * Returns a new package with the quality analyst set to the provided value
+   *
+   * @param qualityAnalyst to set in new object
+   * @return SoundLevelMetricsPackage with quality analyst set to provided value
+   */
   @Override
   public SoundLevelMetricsPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();
   }
 
+  /**
+   * Returns a new package with the uuid set to the provided value
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return SoundLevelMetricsPackage with uuid set to provided value
+   */
   @Override
   public SoundLevelMetricsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
+  /**
+   * Returns a new package with the visibility set to the provided value
+   *
+   * @param visible boolean which indicates whether to make the object visible
+   *                or invisible
+   * @return SoundLevelMetricsPackage with visibility set to provided value
+   */
   @Override
   public SoundLevelMetricsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();

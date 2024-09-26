@@ -9,6 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * MultiPointStationaryMarineLocation implements MarineLocation and adds in
+ * seaArea and locations fields
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized
@@ -18,6 +22,12 @@ public class MultiPointStationaryMarineLocation implements MarineLocation {
   @NotNull @NotEmpty @Builder.Default
   private final List<@Valid MarineInstrumentLocation> locations = Collections.emptyList();
 
+  /**
+   * Returns a new object with the provided seaArea set
+   *
+   * @param seaArea relevant sea area to apply to new object
+   * @return MultiPointStationaryMarineLocation with provided seaArea set
+   */
   @Override
   public MultiPointStationaryMarineLocation setSeaArea(String seaArea) {
     return toBuilder()

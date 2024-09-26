@@ -11,6 +11,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundPropagationModelsPackage extends Package and holds on to fields relevant to
+ * sound propagation models
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -28,11 +32,24 @@ public class SoundPropagationModelsPackage extends Package implements BaseSoundP
   private final LocalDateTime startTime;
   private final LocalDateTime endTime;
 
+  /**
+   * Returns package with provided uuid applied
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return SoundPropagationModelsPackage with applied uuid
+   */
   @Override
   public SoundPropagationModelsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
+  /**
+   * Returns package with provided visibility applied
+   *
+   * @param visible boolean which indicates whether to make the object visible
+   *                or invisible
+   * @return SoundPropagationModelsPackage with applied visibility
+   */
   @Override
   public SoundPropagationModelsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();

@@ -10,6 +10,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DataQualityEntry implements TimeRange and FrequencyRance,
+ * providing the necessary time and frequency variables to hold on to
+ * in addition to quality level, comments, and channel numbers
+ */
 @Data
 @Builder
 @Jacksonized

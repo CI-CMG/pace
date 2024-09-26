@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SampleRateTranslator holds header names for fields of a sample rate
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

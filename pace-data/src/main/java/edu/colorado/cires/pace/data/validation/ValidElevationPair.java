@@ -12,6 +12,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * ValidElevationPair outlines the structure for the validation of an elevation pair
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidElevationPairValidator.class)
@@ -23,9 +26,19 @@ public @interface ValidElevationPair {
   Class<?>[] groups() default {};
   
   Class<? extends Payload>[] payload() default {};
-  
+
+  /**
+   * ValidElevationPairValidator checks the validity of an elevation pair
+   */
   class ValidElevationPairValidator implements ConstraintValidator<ValidElevationPair, ElevationPair> {
 
+    /**
+     * Indicates whether an elevation pair contains valid values
+     *
+     * @param value the elevation pair to validate
+     * @param context of the elevation pair to write errors to if invalid
+     * @return boolean indicating the validity of the elevation pair
+     */
     @Override
     public boolean isValid(ElevationPair value, ConstraintValidatorContext context) {
       Float instrumentElevation = value.getInstrumentElevation();

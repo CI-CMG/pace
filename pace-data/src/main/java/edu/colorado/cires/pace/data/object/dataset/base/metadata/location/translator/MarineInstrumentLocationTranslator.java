@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * MarineInstrumentLocationTranslator holds the necessary headers for translators of this type
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

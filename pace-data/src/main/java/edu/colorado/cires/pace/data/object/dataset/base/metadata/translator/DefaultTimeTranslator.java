@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DefaultTimeTranslator just holds onto a time and time zone header
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

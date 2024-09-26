@@ -3,8 +3,15 @@ package edu.colorado.cires.pace.data.validation;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.function.Function;
 
+/**
+ * Provides functions for ensuring the validity of objects in PACE
+ */
 final class ValidationUtils {
-  
+
+  /**
+   * Provides the expected functionality of time range objects
+   * @param <O> Type of time format
+   */
   interface AbstractTimeRange<O> {
     String getStartTimePropertyName();
     O getStartTime();
@@ -15,6 +22,14 @@ final class ValidationUtils {
     Function<O, Boolean> isAfterMethod();
   }
 
+  /**
+   * Ensures the validity of time range objects
+   *
+   * @param value time range for evaluation
+   * @param context in which the value exists
+   * @return boolean evaluation of the time range validity
+   * @param <O> Type of time range
+   */
   public static <O> boolean validateAbstractTimeRange(AbstractTimeRange<O> value, ConstraintValidatorContext context) {
     O startTime = value.getStartTime();
     String startTimePropertyName = value.getStartTimePropertyName();

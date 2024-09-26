@@ -8,6 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundClipsPackageTranslator extends SoftwareDependentPackageTranslator, holds onto audio
+ * start and end time, and creates a builder for the translator
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
@@ -16,7 +20,13 @@ public class SoundClipsPackageTranslator extends SoftwareDependentPackageTransla
   
   private final TimeTranslator audioStartTime;
   private final TimeTranslator audioEndTime;
-  
+
+  /**
+   * Builds and returns a package translator builder
+   *
+   * @param packageTranslator relevant translation data
+   * @return SoundClipsPackageTranslatorBuilder containing packageTranslator data
+   */
   public static SoundClipsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundClipsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())

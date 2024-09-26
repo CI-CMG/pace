@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * CPOD, as an extension of AudioDataPackageTranslator,
+ * has a builder which initializes the object
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)

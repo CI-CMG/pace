@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PersonTranslator holds onto the header fields for each person field
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -26,11 +29,24 @@ public class PersonTranslator extends Translator {
   private final String phone;
   private final String orcid;
 
+  /**
+   * Creates an object which is identical besides the newly set uuid
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return new abstract object with the provided uuid
+   */
   @Override
   public AbstractObject setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
+  /**
+   * Creates an object which is identical besides the newly set visibility
+   *
+   * @param visible boolean which indicates whether to make the object visible
+   *                or invisible
+   * @return PersonTranslator object which has visibility dictated
+   */
   @Override
   public PersonTranslator setVisible(boolean visible) {
     return toBuilder().visible(visible).build();

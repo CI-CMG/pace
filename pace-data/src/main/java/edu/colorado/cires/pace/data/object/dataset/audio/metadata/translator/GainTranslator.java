@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * GainTranslator holds header names for fields of gain within a channel
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

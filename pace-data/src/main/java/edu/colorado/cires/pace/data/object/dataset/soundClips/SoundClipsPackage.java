@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundClipsPackage extends Package and holds onto software, start and end time,
+ * and audio start and end time values
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -25,11 +29,24 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage,
   private final LocalDateTime endTime;
 
 
+  /**
+   * Returns package with uuid set to provided
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return SoundClipsPackage with the uuid set as provided
+   */
   @Override
   public SoundClipsPackage setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
 
+  /**
+   * Returns package with visibility set to provided
+   *
+   * @param visible boolean which indicates whether to make the object visible
+   *                or invisible
+   * @return SoundClipsPackage with the visibility set as provided
+   */
   @Override
   public SoundClipsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();

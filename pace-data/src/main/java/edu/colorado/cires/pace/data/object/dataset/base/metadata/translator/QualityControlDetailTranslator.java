@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * QualityControlDetailTranslator holds onto all relevant quality
+ * headers for translation
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

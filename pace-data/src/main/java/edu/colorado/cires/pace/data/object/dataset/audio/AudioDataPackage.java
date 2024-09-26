@@ -15,6 +15,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * AudioDataPackage holds all the data for an audio type package
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
@@ -36,16 +39,34 @@ public class AudioDataPackage extends Package implements BaseAudioDataPackage<St
   @Builder.Default
   private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
 
+  /**
+   * Returns a new AudioDataPackage with the provided channels
+   *
+   * @param channels the updated list of channels that applies to the package
+   * @return the package with the updated list of channels
+   */
   @Override
   public AudioDataPackage updateChannels(List<Channel<String>> channels) {
     return toBuilder().channels(channels).build();
   }
 
+  /**
+   * Returns a new AudioDataPackage with the provided list of sensors
+   *
+   * @param packageSensors the updated list of sensors that applies to the package
+   * @return the package with the updated list of sensors
+   */
   @Override
   public AudioDataPackage updateSensors(List<PackageSensor<String>> packageSensors) {
     return toBuilder().sensors(packageSensors).build();
   }
 
+  /**
+   * Returns a new AudioDataPackage with the provided quality analyst
+   *
+   * @param qualityAnalyst the quality analyst to apply to the returned package
+   * @return the package with the provided quality analyst
+   */
   @Override
   public AudioDataPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();

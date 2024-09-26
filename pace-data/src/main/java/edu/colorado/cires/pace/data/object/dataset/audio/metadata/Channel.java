@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Channel holds the values which make up a channel including startTime,
+ * endTime, sampleRates, dutyCycles, and gains
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

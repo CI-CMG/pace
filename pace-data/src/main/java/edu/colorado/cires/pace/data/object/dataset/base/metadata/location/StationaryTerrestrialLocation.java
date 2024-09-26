@@ -4,6 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * StationaryTerrestrialLocation implements LocationDetail, LatLonPair, and ElevationPair,
+ * providing latitude, longitude, surface elevation, and instrument elevation variables
+ * to assign
+ */
 @Data
 @Builder
 @Jacksonized

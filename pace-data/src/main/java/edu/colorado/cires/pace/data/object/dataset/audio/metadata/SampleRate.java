@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DutyCycle holds the values which make up a duty cycle including startTime,
+ * endTime, sampleRate, and sampleBits
+ */
 @Data
 @Builder
 @Jacksonized

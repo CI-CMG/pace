@@ -12,6 +12,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * ValidFrequencyRange outlines the structure for the validation of a frequency
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidFrequencyRangeValidator.class)
@@ -23,9 +26,19 @@ public @interface ValidFrequencyRange {
   Class<?>[] groups() default {};
   
   Class<? extends Payload>[] payload() default {};
-  
+
+  /**
+   * ValidFrequencyRangeValidator checks the validity of a frequency
+   */
   class ValidFrequencyRangeValidator implements ConstraintValidator<ValidFrequencyRange, FrequencyRange> {
 
+    /**
+     * Indicates whether a frequency contains valid value
+     *
+     * @param value the frequency to validate
+     * @param context of the frequency to write errors to if invalid
+     * @return boolean indicating the validity of the frequency
+     */
     @Override
     public boolean isValid(FrequencyRange value, ConstraintValidatorContext context) {
       Float minFrequency = value.getMinFrequency();

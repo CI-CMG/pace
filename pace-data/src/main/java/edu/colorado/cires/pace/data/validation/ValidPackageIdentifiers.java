@@ -13,6 +13,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * ValidPackageIdentifiers outlines the structure for the validation of package identification
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidPackageIdentifiersValidator.class)
@@ -22,9 +25,19 @@ public @interface ValidPackageIdentifiers {
   String message() default "at least dataCollectionName, site, or deploymentId required";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
-  
+
+  /**
+   * ValidPackageIdentifiersValidator checks the validity of identification
+   */
   class ValidPackageIdentifiersValidator implements ConstraintValidator<ValidPackageIdentifiers, Package> {
 
+    /**
+     * Indicates whether a package contains valid identification
+     *
+     * @param aPackage the package to validate the identification of
+     * @param context of the package to write errors to if invalid
+     * @return boolean indicating the validity of the package's identification
+     */
     @Override
     public boolean isValid(Package aPackage, ConstraintValidatorContext context) {
       String dataCollectionName = aPackage.getDataCollectionName();

@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DataQualityEntryTranslator holds onto the necessary headers for times,
+ * frequencies, quality level, comments, and channel numbers for translation
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

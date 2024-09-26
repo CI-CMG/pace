@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Position holds an x, y, and z value
+ */
 @Data
 @EqualsAndHashCode
 @Builder(toBuilder = true)

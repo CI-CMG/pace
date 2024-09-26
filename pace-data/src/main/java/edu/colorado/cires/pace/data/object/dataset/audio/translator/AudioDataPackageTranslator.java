@@ -13,6 +13,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * AudioDataPackageTranslator holds all the headers for fields of a package translator
+ * in addition to fields that only apply to audio data packages
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)

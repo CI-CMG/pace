@@ -6,12 +6,20 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DepthSensorTranslator extends SensorTranslator and provides specific builder
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
 @Jacksonized
 public class DepthSensorTranslator extends SensorTranslator {
 
+  /**
+   * Returns builder for depth sensor translator
+   * @param sensorTranslator data to apply to translator
+   * @return DepthSensorTranslatorBuilder with relevant data
+   */
   public static DepthSensorTranslatorBuilder<?, ?> toBuilder(SensorTranslator sensorTranslator) {
     return DepthSensorTranslator.builder()
         .uuid(sensorTranslator.getUuid())

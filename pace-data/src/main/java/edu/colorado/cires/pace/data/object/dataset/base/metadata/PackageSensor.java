@@ -8,6 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Provides sensor and position fields
+ * @param <T> object type
+ */
 @Data
 @EqualsAndHashCode
 @Builder(toBuilder = true)

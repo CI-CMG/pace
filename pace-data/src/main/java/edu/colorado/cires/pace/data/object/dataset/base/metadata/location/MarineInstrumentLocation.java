@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * MarineInstrumentLocation holds onto both a lat/lon pair and
+ * a depth pair while using the implemented LatlonPair functions
+ */
 @ValidMarineInstrumentLocation
 @Builder(toBuilder = true)
 @Jacksonized

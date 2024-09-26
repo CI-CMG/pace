@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * AudioPackageTranslator contains all the same fields as AudioDataPackageTranslator
+ * in addition to having a builder
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)

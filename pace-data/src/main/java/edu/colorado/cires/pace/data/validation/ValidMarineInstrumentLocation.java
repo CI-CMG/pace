@@ -12,6 +12,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * ValidMarineInstrumentLocation outlines the structure for the validation
+ * of a marine instrument location
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidMarineInstrumentLocationValidator.class)
@@ -21,9 +25,19 @@ public @interface ValidMarineInstrumentLocation {
   String message() default "invalid marine instrument location";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
-  
+
+  /**
+   * ValidMarineInstrumentLocationValidator checks the validity of a marine instrument location
+   */
   class ValidMarineInstrumentLocationValidator implements ConstraintValidator<ValidMarineInstrumentLocation, MarineInstrumentLocation> {
 
+    /**
+     * Indicates whether a location contains a valid value
+     *
+     * @param value the location to validate
+     * @param context of the location to write errors to if invalid
+     * @return boolean indicating the validity of the location
+     */
     @Override
     public boolean isValid(MarineInstrumentLocation value, ConstraintValidatorContext context) {
       Float seaFloorDepth = value.getSeaFloorDepth();

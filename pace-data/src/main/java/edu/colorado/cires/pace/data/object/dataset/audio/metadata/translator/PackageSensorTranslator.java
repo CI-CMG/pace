@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PackageSensorTranslator holds header names for fields of a sensor
+ */
 @Data
 @EqualsAndHashCode
 @Builder(toBuilder = true)

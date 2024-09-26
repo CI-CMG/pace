@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * DutyCycleTranslator holds header names for fields of a duty cycle within a channel
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized

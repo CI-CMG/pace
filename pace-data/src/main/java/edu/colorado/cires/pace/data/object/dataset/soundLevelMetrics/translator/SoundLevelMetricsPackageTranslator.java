@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundLevelMetricsPackageTranslator extends SoundAnalysisPackageTranslator and contains
+ * audioStartTimeTranslator, audioEndTimeTranslator, and qualityControlDetailTranslator
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
@@ -20,6 +24,12 @@ public class SoundLevelMetricsPackageTranslator extends SoundAnalysisPackageTran
   private final TimeTranslator audioStartTimeTranslator;
   private final TimeTranslator audioEndTimeTranslator;
 
+  /**
+   * Returns builder for package translator
+   *
+   * @param packageTranslator relevant translator data
+   * @return SoundLevelMetricsPackageTranslatorBuilder with packageTranslator's data
+   */
   public static SoundLevelMetricsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundLevelMetricsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())

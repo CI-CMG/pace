@@ -8,6 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * SoundPropagationModelsPackageTranslator extends SoftwareDependentPackageTranslator, holds
+ * modeled frequency, audio start time translator, and audio end time translator
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
@@ -18,7 +22,13 @@ public class SoundPropagationModelsPackageTranslator extends SoftwareDependentPa
   
   private final TimeTranslator audioStartTimeTranslator;
   private final TimeTranslator audioEndTimeTranslator;
-  
+
+  /**
+   * Returns a translator builder with the provided data
+   *
+   * @param packageTranslator translator data to be applied
+   * @return SoundPropagationModelsPackageTranslatorBuilder with provided data applied
+   */
   public static SoundPropagationModelsPackageTranslatorBuilder<?, ?> toBuilder(PackageTranslator packageTranslator) {
     return SoundPropagationModelsPackageTranslator.builder()
         .uuid(packageTranslator.getUuid())

@@ -21,6 +21,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * BasePackage provides the relevant fields for packages as well as getters
+ * for unique field and package ID
+ */
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
@@ -69,11 +73,21 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
   @Builder.Default
   private final List<@NotBlank String> projects = Collections.emptyList();
 
+  /**
+   * Returns unique field
+   * @return String unique field
+   */
   @Override
   public String getUniqueField() {
     return getPackageId();
   }
 
+  /**
+   * Returns the package ID, prioritizing first the dataCollectionName if
+   * it exists, then generating a package ID otherwise based on project name,
+   * site/cruise name, and deploymentID
+   * @return String package ID
+   */
   @JsonIgnore
   public String getPackageId() {
     if (StringUtils.isNotBlank(dataCollectionName)) {
@@ -112,6 +126,9 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
     return packageId;
   }
 
+  /**
+   * Creates a BasePackage using a builder
+   */
   public abstract static class BasePackageBuilder<C extends BasePackage, B> {
     public B baseFields(BasePackage p) {
       $fillValuesFromInstanceIntoBuilder(p, this);

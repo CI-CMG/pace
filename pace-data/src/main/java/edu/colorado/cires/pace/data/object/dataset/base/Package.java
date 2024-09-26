@@ -17,6 +17,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Package provides the JSON format for packages
+ */
 @JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "type")
 @JsonSubTypes({
     @Type(value = AudioPackage.class, name = "audio"),
@@ -32,10 +35,23 @@ import lombok.experimental.SuperBuilder;
 @ValidPackageIdentifiers
 public class Package extends BasePackage {
 
+  /**
+   * Returns a new package with the provided uuid set
+   *
+   * @param uuid field for assigning uuid to new object
+   * @return Package with provided uuid set
+   */
   public Package setUuid(UUID uuid) {
     return toBuilder().uuid(uuid).build();
   }
-  
+
+  /**
+   * Returns a new package with the provided visibility set
+   *
+   * @param visible boolean which indicates whether to make the object visible
+   *                or invisible
+   * @return Package with provided visibility set
+   */
   public Package setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
   }

@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * MobileMarineLocationTranslator holds the necessary headers for translators of this type
+ * as an implementation of the LocationDetailTranslator type
+ */
 @Data
 @Builder(toBuilder = true)
 @Jacksonized
