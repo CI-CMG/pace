@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * FileTypeSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class FileTypeSQLiteDatastore extends SQLiteDatastore<FileType> {
 
+  /**
+   * Initializes a file type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public FileTypeSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "FILE_TYPES", FileType.class);
   }

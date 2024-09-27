@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * ShipSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class ShipSQLiteDatastore extends SQLiteDatastore<Ship> {
 
+  /**
+   * Initializes a ship type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public ShipSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "SHIPS", Ship.class);
   }

@@ -16,6 +16,10 @@ import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * SQLiteDatastore holds an SQLite file which functions as a database
+ * @param <O>
+ */
 public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implements Datastore<O> {
   
   private final Logger LOGGER;
@@ -31,6 +35,13 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
     this.tableName = tableName;
   }
 
+  /**
+   * Currently unimplemented
+   *
+   * @param object to save
+   * @return not applicable
+   * @throws DatastoreException indicating failed save due to no implementation
+   */
   @Override
   public O save(O object) throws DatastoreException {
     try {
@@ -40,6 +51,12 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
     }
   }
 
+  /**
+   * Currently unimplemented
+   *
+   * @param object to delete
+   * @throws DatastoreException indicating failed deletion due to no implementation
+   */
   @Override
   public void delete(O object) throws DatastoreException {
     try {
@@ -49,6 +66,13 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
     }
   }
 
+  /**
+   * Currently unimplemented
+   *
+   * @param uuid to find by
+   * @return matching object
+   * @throws DatastoreException indicating failed search due to no implementation
+   */
   @Override
   public Optional<O> findByUUID(UUID uuid) throws DatastoreException {
     try {
@@ -58,6 +82,13 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
     }
   }
 
+  /**
+   * Currently unimplemented
+   *
+   * @param uniqueField to find by
+   * @return matching object
+   * @throws DatastoreException indicating failed search due to no implementation
+   */
   @Override
   public Optional<O> findByUniqueField(String uniqueField) throws DatastoreException {
     try {
@@ -67,6 +98,12 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
     }
   }
 
+  /**
+   * Currently unimplemented
+   *
+   * @return stream of all objects in datastore
+   * @throws DatastoreException indicating failed search due to no implementation
+   */
   @Override
   public Stream<O> findAll() throws DatastoreException {
     LOGGER.debug("Listing {} contents from {}", tableName, sqliteFile);
@@ -83,11 +120,19 @@ public abstract class SQLiteDatastore<O extends ObjectWithUniqueField> implement
   
   protected abstract Stream<O> resultSetToStream(ResultSet resultSet) throws SQLException;
 
+  /**
+   * Returns null to indicate lack of unique field name
+   * @return null
+   */
   @Override
   public String getUniqueFieldName() {
     return null;
   }
 
+  /**
+   * Returns simple class name
+   * @return String class simplified name
+   */
   @Override
   public String getClassName() {
     return clazz.getSimpleName();

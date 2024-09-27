@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * PlatformSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class PlatformSQLiteDatastore extends SQLiteDatastore<Platform> {
 
+  /**
+   * Initializes a platform type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public PlatformSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "PLATFORMS", Platform.class);
   }

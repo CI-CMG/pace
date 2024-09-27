@@ -9,8 +9,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+/**
+ * OrganizationsSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class OrganizationsSQLiteDatastore extends SQLiteDatastore<Organization> {
 
+  /**
+   * Initializes an organizations type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public OrganizationsSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "ORGANIZATIONS", Organization.class);
   }

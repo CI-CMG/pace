@@ -18,6 +18,10 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * JSON datastores hold all json objects in pace
+ * @param <O>
+ */
 abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
   
   private final Logger LOGGER;
@@ -53,6 +57,14 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
     initialized = true;
   }
 
+  /**
+   * Save writes the provided object to the datastore, updating the object
+   * if it already exists within the datastore
+   *
+   * @param object to be written to datastore
+   * @return O object which was provided
+   * @throws DatastoreException in case where save fails
+   */
   @Override
   public O save(O object) throws DatastoreException {
     lazyInitialize();
@@ -78,6 +90,12 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
     }
   }
 
+  /**
+   * Delete removes the provided object from the datastore
+   *
+   * @param object to be deleted from datastore
+   * @throws DatastoreException in case where deletion fails
+   */
   @Override
   public void delete(O object) throws DatastoreException {
     lazyInitialize();
@@ -93,16 +111,35 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
     }
   }
 
+  /**
+   * Deletes file from storage by finding file name based on object
+   *
+   * @param object to delete from storage
+   * @throws IOException in case of input or output error
+   */
   private void deleteStorageFile(O object) throws IOException {
     Files.delete(storageDirectory.resolve(fileNameFromObject(object)));
   }
 
+  /**
+   * Finds the file name of object based on uuid
+   *
+   * @param object to find the file name of
+   * @return String file name
+   */
   private String fileNameFromObject(O object) {
     return String.format(
         "%s.json", object.getUuid()
     );
   }
 
+  /**
+   * Given uuid, findByUUID returns the relevant object
+   *
+   * @param uuid of object
+   * @return object which uuid corresponds to
+   * @throws DatastoreException in case of search error
+   */
   @Override
   public Optional<O> findByUUID(UUID uuid) throws DatastoreException {
     lazyInitialize();
@@ -111,6 +148,13 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
         .findFirst();
   }
 
+  /**
+   * Given a unique field, findByUniqueField returns the relevant object
+   *
+   * @param uniqueField of object
+   * @return object which unique field corresponds to
+   * @throws DatastoreException in case of search error
+   */
   @Override
   public Optional<O> findByUniqueField(String uniqueField) throws DatastoreException {
     lazyInitialize();
@@ -119,6 +163,12 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
     );
   }
 
+  /**
+   * Returns a stream of all objects in the datastore
+   *
+   * @return Stream of objects in the datastore
+   * @throws DatastoreException in case of search error
+   */
   @Override
   public Stream<O> findAll() throws DatastoreException {
     lazyInitialize();
@@ -150,11 +200,19 @@ abstract class JsonDatastore<O extends AbstractObject> implements Datastore<O> {
     );
   }
 
+  /**
+   * Returns simplified class name
+   * @return String of class simple name
+   */
   @Override
   public String getClassName() {
     return clazz.getSimpleName();
   }
 
+  /**
+   * Returns a getter function for unique fields
+   * @return Function of O and String to find unique field
+   */
   public Function<O, String> getUniqueFieldGetter() {
     return uniqueFieldGetter;
   }

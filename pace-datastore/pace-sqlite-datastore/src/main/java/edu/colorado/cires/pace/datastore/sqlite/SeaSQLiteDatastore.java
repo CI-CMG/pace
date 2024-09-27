@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * SeaSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class SeaSQLiteDatastore extends SQLiteDatastore<Sea> {
 
+  /**
+   * Initializes a sea type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public SeaSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "SEAS", Sea.class);
   }

@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * DetectionTypeSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class DetectionTypeSQLiteDatastore extends SQLiteDatastore<DetectionType> {
 
+  /**
+   * Initializes a detection type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public DetectionTypeSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "DETECTION_TYPES", DetectionType.class);
   }

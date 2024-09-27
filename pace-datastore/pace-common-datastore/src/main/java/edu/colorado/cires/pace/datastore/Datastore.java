@@ -5,6 +5,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+/**
+ * Datastores contain all objects in PACE and provide the ability to save, delete,
+ * and search within them
+ *
+ * @param <O> Type of datastore
+ */
 public interface Datastore<O extends AbstractObject> {
 
   O save(O object) throws DatastoreException;

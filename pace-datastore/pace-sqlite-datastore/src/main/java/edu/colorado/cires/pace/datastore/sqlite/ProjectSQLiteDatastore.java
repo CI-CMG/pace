@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * ProjectSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class ProjectSQLiteDatastore extends SQLiteDatastore<Project> {
 
+  /**
+   * Initializes a project type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public ProjectSQLiteDatastore(Path sqliteFile) {
     super(sqliteFile, "PROJECTS", Project.class);
   }

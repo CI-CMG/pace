@@ -12,10 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * InstrumentSQLiteDatastore extends SQLiteDatastore and provides an initializer
+ */
 public class InstrumentSQLiteDatastore extends SQLiteDatastore<Instrument> {
   
   private final Datastore<FileType> fileTypeDatastore;
 
+  /**
+   * Initializes an instrument type sqlite datastore
+   * @param sqliteFile path to datastore
+   */
   public InstrumentSQLiteDatastore(Path sqliteFile, Datastore<FileType> fileTypeDatastore) {
     super(sqliteFile, "INSTRUMENTS", Instrument.class);
     this.fileTypeDatastore = fileTypeDatastore;
