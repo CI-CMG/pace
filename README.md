@@ -13,6 +13,7 @@
     - [System Requirements](#system-requirements)
     - [Installing Dependencies](#installing-dependencies)
     - [Additional Maven profiles](#additional-maven-profiles)
+  - [PACE Templates](#pace-templates)
 
 ## Releases
 - Latest Release: [0.1.0](https://github.com/CI-CMG/pace/releases/tag/v0.1.0)
@@ -64,5 +65,8 @@ If you cannot open the jupyter notebook, you can view the non-interactive versio
   - `mvn clean install -Pdep-check`
 - coverage: Asserts project-wide line and branch coverage is at least 90% using [jacoco-maven-plugin](https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin)
   - `mvn clean install -Pcoverage`
+ 
+## PACE Templates
+For a further understanding of PACE's internal JSON schema or for a look at possible alternate PACE work cycles, go to the following [link](https://github.com/CI-CMG/pace-templates) which provides PACE templates.
 
 **Note:** Maven profiles can be combined within one command (`mvn clean install -Pdep-check -Pcoverage`)
