@@ -364,7 +364,11 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
             }
             if (!hopOver) {
               for (int j = 0; j < currentRow.getCellCount(); j++) {
-                rowValues.add(currentRow.getCell(j).getText());
+                if (currentRow.getCell(j) != null) {
+                  rowValues.add(currentRow.getCell(j).getText());
+                } else {
+                  rowValues.add("");
+                }
               }
             data.add(rowValues);
             }
