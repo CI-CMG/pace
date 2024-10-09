@@ -3,6 +3,8 @@
 - [PACE - Passive Acoustic Collection Engine](#pace---passive-acoustic-collection-engine)
   - [Releases](#releases)
   - [Supported Platforms](#supported-platforms)
+  - [GUI](#gui)
+    - [GUI Installation](#gui-installation)
   - [CLI](#cli)
     - [Installation](#installation)
       - [MacOS](#macos)
@@ -13,6 +15,7 @@
     - [System Requirements](#system-requirements)
     - [Installing Dependencies](#installing-dependencies)
     - [Additional Maven profiles](#additional-maven-profiles)
+  - [PACE Templates](#pace-templates)
 
 ## Releases
 - Latest Release: [0.1.0](https://github.com/CI-CMG/pace/releases/tag/v0.1.0)
@@ -27,6 +30,18 @@
 | Linux (ARM)  | ❌  | ❌  |
 | MacOS (ARM)  | ✅  | ✅  |
 | MacOS (ARM)  | ✅  | ✅  |
+
+## GUI
+### GUI Installation
+1. Go to this [link](https://github.com/CI-CMG/pace/releases)
+2. Look under the most recent release version which is not trunk-latest (currently v0.1.0)
+3. Find the files which start with "pace-gui"
+4. Click the relevant version to download:\
+   a. Older Mac (Intel CPU): "pace-gui-macOS-X64"\
+   b. Newer Mac (M1, M2, or M3 CPU): "pace-gui-macOS-ARM64"\
+   c. Windows: "pace-gui-Windows-X64-0.1.0.msi"\
+   d. Debian-Based Linux: "pace-gui-Linux-X64-(version number).deb"\
+   e. RedHat-Based Linux: "pace-gui-Linux-X64-(version number).rpm"
 
 ## CLI
 ### Installation
@@ -66,3 +81,6 @@ If you cannot open the jupyter notebook, you can view the non-interactive versio
   - `mvn clean install -Pcoverage`
 
 **Note:** Maven profiles can be combined within one command (`mvn clean install -Pdep-check -Pcoverage`)
+ 
+## PACE Templates
+For a further understanding of PACE's internal JSON schema or for a look at possible alternate PACE work cycles, go to the following [link](https://github.com/CI-CMG/pace-templates) which provides PACE templates.
