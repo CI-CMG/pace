@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * PersonTranslatorForm extends BaseTranslatorForm and creates structure
+ * relevant to person translator forms
+ */
 public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
@@ -28,6 +32,11 @@ public class PersonTranslatorForm extends BaseTranslatorForm<PersonTranslator> {
   private final JComboBox<String> phoneField = new JComboBox<>();
   private final JComboBox<String> orcidField = new JComboBox<>();
 
+  /**
+   * Creates a person translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public PersonTranslatorForm(PersonTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("personTranslatorForm");

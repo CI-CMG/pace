@@ -12,6 +12,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * MarineInstrumentLocationForm extends JPanel and holds the fields relevant to marine
+ * instrument locations
+ */
 public class MarineInstrumentLocationForm extends JPanel {
   
   private final JComboBox<String> latitudeField = new JComboBox<>();
@@ -21,12 +25,23 @@ public class MarineInstrumentLocationForm extends JPanel {
   
   private final Consumer<MarineInstrumentLocationForm> removeAction;
 
+  /**
+   * Initializes a marine instrument location form with no remove action
+   * @param headerOptions selectable headers for building translator
+   * @param initialTranslator base translator to build upon
+   */
   public MarineInstrumentLocationForm(String[] headerOptions, MarineInstrumentLocationTranslator initialTranslator) {
     this.removeAction = null;
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
-  
+
+  /**
+   * Initializes a marine instrument location form with a remove action
+   * @param headerOptions selectable headers for building translator
+   * @param initialTranslator base translator to build upon
+   * @param removeAction removes the current form
+   */
   public MarineInstrumentLocationForm(String[] headerOptions, MarineInstrumentLocationTranslator initialTranslator, Consumer<MarineInstrumentLocationForm> removeAction) {
     this.removeAction = removeAction;
     addFields();
@@ -73,7 +88,11 @@ public class MarineInstrumentLocationForm extends JPanel {
       instrumentDepthField.setSelectedItem(initialTranslator.getInstrumentDepth());
     }
   }
-  
+
+  /**
+   * Returns a translator based on the information supplied in the form
+   * @return MarineInstrumentLocationTranslator holding form info
+   */
   public MarineInstrumentLocationTranslator toTranslator() {
     return MarineInstrumentLocationTranslator.builder()
         .longitude((String) longitudeField.getSelectedItem())
@@ -83,6 +102,10 @@ public class MarineInstrumentLocationForm extends JPanel {
         .build();
   }
 
+  /**
+   * Changes the selectable headers to be the provided options
+   * @param options headers to select from now
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(latitudeField, options);
     updateComboBoxModel(longitudeField, options);

@@ -29,6 +29,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * DataPanel extends JPanel
+ * @param <O> type of object
+ */
 public abstract class DataPanel<O extends AbstractObject> extends JPanel {
   
   protected final DefaultTableModel tableModel;
@@ -49,6 +53,13 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     return new MouseAdapter() {};
   }
 
+  /**
+   * Declares a data panel
+   * @param name name of data panel
+   * @param repository relevant repository to data panel
+   * @param headers mapped headers
+   * @param objectConversion function to convert objects
+   */
   public DataPanel(
       String name,
       CRUDRepository<O> repository,
@@ -61,7 +72,10 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
     this.repository = repository;
     this.tableModel = createTableModel(headers);
   }
-  
+
+  /**
+   * Initializes a DataPanel object
+   */
   public void init() {
     setName(name);
     setLayout(new BorderLayout());
@@ -97,6 +111,10 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
         "Search by %s", getHumanReadableUniqueFieldName()
     ));
     uniqueFieldSearchField.addFocusListener(new FocusListener() {
+      /**
+       * Indicates the search by unique field
+       * @param e the event to be processed
+       */
       @Override
       public void focusGained(FocusEvent e) {
         if (uniqueFieldSearchField.getText().contains(String.format(
@@ -106,6 +124,11 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
           uniqueFieldSearchField.setForeground(Color.black);
         }
       }
+
+      /**
+       * Removes indication of search by unique field
+       * @param e the event to be processed
+       */
       @Override
       public void focusLost(FocusEvent e) {
         if (uniqueFieldSearchField.getText().isEmpty()) {
@@ -251,10 +274,21 @@ public abstract class DataPanel<O extends AbstractObject> extends JPanel {
 
   protected static class TableModel extends DefaultTableModel {
 
+    /**
+     * Initializes a table model
+     * @param data within table
+     * @param columnNames column groups of data
+     */
     public TableModel(Object[][] data, Object[] columnNames) {
       super(data, columnNames);
     }
 
+    /**
+     * Finds whether provided cell is editable
+     * @param row             the row whose value is to be queried
+     * @param column          the column whose value is to be queried
+     * @return boolean false
+     */
     @Override
     public boolean isCellEditable(int row, int column) {
       return false;

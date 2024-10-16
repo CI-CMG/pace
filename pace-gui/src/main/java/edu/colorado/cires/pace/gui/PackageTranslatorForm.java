@@ -44,6 +44,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * PackageTranslatorForm extends BaseTranslatorForm and creates form
+ * entries relevant to packages
+ */
 public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator> {
   
   private final ContactsTranslatorForm contactsTranslatorForm;

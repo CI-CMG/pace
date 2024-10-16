@@ -12,6 +12,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * SoundPropagationModelsForm extends JPanel and provides structure relevant to
+ * sound propagation model forms
+ */
 public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTranslatorForm<SoundPropagationModelsPackageTranslator> {
   
   private final JComboBox<String> modeledFrequencyField = new JComboBox<>();
@@ -20,6 +24,11 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
   private final TimeTranslatorForm modelStartTimeForm;
   private final TimeTranslatorForm modelEndTimeForm;
 
+  /**
+   * Creates a sound propagation model form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public SoundPropagationModelsForm(String[] headerOptions, SoundPropagationModelsPackageTranslator initialTranslator) {
     this.modelStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.modelEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
@@ -70,6 +79,11 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
     }
   }
 
+  /**
+   * Builds a sound propagation models package translator using the selected items
+   * in the form
+   * @return SoundPropagationModelsPackageTranslator mapped as according to form
+   */
   @Override
   public SoundPropagationModelsPackageTranslator toTranslator() {
     return SoundPropagationModelsPackageTranslator.builder()
@@ -79,6 +93,10 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
         .build();
   }
 
+  /**
+   * Changes the selectable headers to the provided options
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(modeledFrequencyField, headerOptions);
     
@@ -88,7 +106,15 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
     modelEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
+  /**
+   * Returns the start time
+   * @return TimeTranslator modelStartTime
+   */
   public TimeTranslator getStartTime() { return modelStartTimeForm.toTranslator(); }
 
+  /**
+   * Returns the end time
+   * @return TimeTranslator modelEndTime
+   */
   public TimeTranslator getEndTime() { return modelEndTimeForm.toTranslator(); }
 }

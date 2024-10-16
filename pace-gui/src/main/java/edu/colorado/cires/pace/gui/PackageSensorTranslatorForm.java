@@ -14,12 +14,21 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * PackageSensorTranslatorForm extends JPanel and provides package sensor
+ * specific structuring
+ */
 public class PackageSensorTranslatorForm extends JPanel {
   
   private final PositionTranslatorForm positionTranslatorForm;
   private final JComboBox<String> nameField = new JComboBox<>();
   private final Consumer<PackageSensorTranslatorForm> removeAction;
 
+  /**
+   * Creates a package sensor translator form
+   * @param headerOptions selectable headers during mapping
+   * @param initialTranslator translator to build upon
+   */
   public PackageSensorTranslatorForm(String[] headerOptions, PackageSensorTranslator initialTranslator) {
     this.positionTranslatorForm = new PositionTranslatorForm(initialTranslator == null ? null : initialTranslator.getPosition(), headerOptions);
     this.removeAction = null;
@@ -28,7 +37,13 @@ public class PackageSensorTranslatorForm extends JPanel {
     addFields();
     initializeFields(headerOptions, initialTranslator);
   }
-  
+
+  /**
+   * Creates a package sensor translator form
+   * @param headerOptions selectable headers during mapping
+   * @param initialTranslator translator to build upon
+   * @param removeAction removes form from overall form upon running
+   */
   public PackageSensorTranslatorForm(String[] headerOptions, PackageSensorTranslator initialTranslator, Consumer<PackageSensorTranslatorForm> removeAction) {
     this.positionTranslatorForm = new PositionTranslatorForm(initialTranslator == null ? null : initialTranslator.getPosition(), headerOptions);
     this.removeAction = removeAction;
@@ -70,7 +85,11 @@ public class PackageSensorTranslatorForm extends JPanel {
     updateComboBoxModel(nameField, headerOptions);
     positionTranslatorForm.updateHeaderOptions(headerOptions);
   }
-  
+
+  /**
+   * Builds package sensor translator based on selected headers in form
+   * @return PackageSensorTranslator holding selected headers
+   */
   public PackageSensorTranslator toTranslator() {
     return PackageSensorTranslator.builder()
         .name((String) nameField.getSelectedItem())

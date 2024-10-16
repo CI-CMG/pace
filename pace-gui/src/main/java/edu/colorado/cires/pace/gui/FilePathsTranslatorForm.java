@@ -9,6 +9,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * FilePathsTranslatorForm extends JPanel and provides structure for file path
+ * translator form
+ */
 public class FilePathsTranslatorForm extends JPanel {
   
   private final JComboBox<String> temperaturePathField = new JComboBox<>();
@@ -17,6 +21,11 @@ public class FilePathsTranslatorForm extends JPanel {
   private final JComboBox<String> documentsPathField = new JComboBox<>();
   private final JComboBox<String> sourcePathField = new JComboBox<>();
 
+  /**
+   * Initializes a file paths translator form
+   * @param headerOptions possible headers to select from
+   * @param initialTranslator base translator to build upon
+   */
   public FilePathsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
     temperaturePathField.setName("temperaturePath");
     biologicalPathField.setName("biologicalPath");
@@ -60,26 +69,50 @@ public class FilePathsTranslatorForm extends JPanel {
     }
   }
 
+  /**
+   * Returns the temperature path value
+   * @return String temperature path
+   */
   public String getTemperaturePathValue() {
     return (String) temperaturePathField.getSelectedItem();
   }
 
+  /**
+   * Returns the biological path value
+   * @return String biological path
+   */
   public String getBiologicalPathValue() {
     return (String) biologicalPathField.getSelectedItem();
   }
 
+  /**
+   * Returns the other path value
+   * @return String other path
+   */
   public String getOtherPathValue() {
     return (String) otherPathField.getSelectedItem();
   }
 
+  /**
+   * Returns the documents path value
+   * @return String documents path
+   */
   public String getDocumentsPathValue() {
     return (String) documentsPathField.getSelectedItem();
   }
 
+  /**
+   * Returns the source path value
+   * @return String source path
+   */
   public String getSourcePathValue() {
     return (String) sourcePathField.getSelectedItem();
   }
 
+  /**
+   * Changes the possible selectable headers
+   * @param options new headers to change possible selections to
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(temperaturePathField, options);
     updateComboBoxModel(biologicalPathField, options);

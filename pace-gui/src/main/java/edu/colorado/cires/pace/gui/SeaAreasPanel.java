@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.SeaConverter;
 import java.util.UUID;
 
+/**
+ * SeaAreasPanel extends MetadataPanel and provides relevant
+ * fields to sea areas
+ */
 public class SeaAreasPanel extends MetadataPanel<Sea, SeaTranslator> {
-  
+
+  /**
+   * Creates sea areas panel
+   * @param repository holds existing sea areas objects
+   * @param translatorRepository holds existing translators
+   */
   public SeaAreasPanel(CRUDRepository<Sea> repository, TranslatorRepository translatorRepository) {
     super(
         "seaAreasPanel",

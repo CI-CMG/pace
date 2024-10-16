@@ -15,6 +15,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * TimeTranslatorForm extends JPanel and provides structure relevant
+ * to time translator forms
+ */
 public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<TimeTranslator> {
   
   private final JComboBox<String> timeZoneField = new JComboBox<>();
@@ -23,6 +27,11 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
   private final JLabel dateLabel = new JLabel("Date");
   private final JLabel timeLabel = new JLabel("Time");
 
+  /**
+   * Creates a time translator form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public TimeTranslatorForm(String[] headerOptions, TimeTranslator initialTranslator) {
     timeZoneField.setName("timeZone");
     dateField.setName("date");
@@ -140,7 +149,11 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
       }
     }
   }
-  
+
+  /**
+   * Builds a time translator using the selected items in the form
+   * @return TimeTranslator with selected headers mapped
+   */
   public TimeTranslator toTranslator() {
     if (dateField.getSelectedItem() != null && timeField.getSelectedItem() != null) {
       return DateTimeSeparatedTimeTranslator.builder()
@@ -161,6 +174,10 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
     }
   }
 
+  /**
+   * Changes the possible headers to select from during mapping
+   * @param options new headers to select from
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(timeZoneField, options);
     updateComboBoxModel(dateField, options);

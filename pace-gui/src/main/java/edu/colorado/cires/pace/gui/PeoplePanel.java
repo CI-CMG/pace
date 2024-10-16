@@ -7,9 +7,16 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.PersonConverter;
 import java.util.UUID;
 
+/**
+ * PeoplePanel extends MetadataPanel
+ */
 public class PeoplePanel extends MetadataPanel<Person, PersonTranslator> {
 
-  
+  /**
+   * Creates a people panel
+   * @param repository holds existing people objects
+   * @param translatorRepository holds existing people translators
+   */
   public PeoplePanel(CRUDRepository<Person> repository, TranslatorRepository translatorRepository) {
     super(
         "peoplePanel",

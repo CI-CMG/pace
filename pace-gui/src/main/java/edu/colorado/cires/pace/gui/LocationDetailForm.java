@@ -14,6 +14,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * LocationDetailForm extends JPanel and holds fields relevant to locations
+ */
 public class LocationDetailForm extends JPanel {
   
   private final JComboBox<String> locationTypeComboBox;
@@ -30,6 +33,12 @@ public class LocationDetailForm extends JPanel {
     }
   };
 
+  /**
+   * Initializes a location detail form
+   *
+   * @param headerOptions selectable headers when building translator
+   * @param initialTranslator base translator to build upon
+   */
   public LocationDetailForm(String[] headerOptions, LocationDetailTranslator initialTranslator) {
     this.locationTypeComboBox = getLocationTypeField(headerOptions, initialTranslator);
     locationTypeComboBox.setName("locationType");
@@ -110,11 +119,19 @@ public class LocationDetailForm extends JPanel {
     
     return comboBox;
   }
-  
+
+  /**
+   * Returns a translator based on the information in the form
+   * @return LocationDetailTranslator with held form info
+   */
   public LocationDetailTranslator toTranslator() {
     return locationDetailTranslatorForm.toTranslator();
   }
 
+  /**
+   * Changes the selectable header options
+   * @param options new headers to select from
+   */
   public void updateHeaderOptions(String[] options) {
     locationDetailTranslatorForm.setHeaderOptions(options);
 

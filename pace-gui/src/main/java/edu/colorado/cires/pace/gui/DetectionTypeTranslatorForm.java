@@ -13,12 +13,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * DetectionTypeTranslatorForm extends BaseTranslatorForm and structures the form
+ * for detection type
+ */
 public class DetectionTypeTranslatorForm extends BaseTranslatorForm<DetectionTypeTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> sourceField = new JComboBox<>();
   private final JComboBox<String> scienceNameField = new JComboBox<>();
 
+  /**
+   * Initializes a detection type translator form
+   * @param initialTranslator base translator to add to
+   * @param headerOptions selectable header options
+   */
   public DetectionTypeTranslatorForm(DetectionTypeTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     addUniqueFields();

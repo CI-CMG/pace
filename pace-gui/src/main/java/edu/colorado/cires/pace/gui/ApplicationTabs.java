@@ -39,6 +39,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import javax.swing.JTabbedPane;
 
+/**
+ * ApplicationTabs extends JTabbedPane and keeps track of the
+ * Packages, Metadata, and Translators tabs within the PACE application
+ */
 public class ApplicationTabs extends JTabbedPane {
 
   private DataPanelFactory createDataPanelFactory(ObjectMapper objectMapper) throws IOException {
@@ -126,10 +130,18 @@ public class ApplicationTabs extends JTabbedPane {
   
   private final ObjectMapper objectMapper;
 
+  /**
+   * Assigns the relevant object mapper
+   * @param objectMapper relevant to tabs
+   */
   public ApplicationTabs(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
-  
+
+  /**
+   * Initializes the tabs in the application
+   * @throws IOException in case of input or output error
+   */
   public void init() throws IOException {
     DataPanelFactory dataPanelFactory = createDataPanelFactory(objectMapper);
 

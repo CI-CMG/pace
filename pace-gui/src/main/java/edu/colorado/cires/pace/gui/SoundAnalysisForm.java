@@ -10,6 +10,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * SoundAnalysisForm extends JPanel and provides field structure relevant
+ * to sound analysis
+ * @param <T> Type of translator
+ */
 public class SoundAnalysisForm<T extends SoundAnalysisPackageTranslator> extends JPanel {
   
   private final JComboBox<String> analysisTimeZoneField = new JComboBox<>();
@@ -18,6 +23,11 @@ public class SoundAnalysisForm<T extends SoundAnalysisPackageTranslator> extends
   private final JComboBox<String> minFrequencyField = new JComboBox<>();
   private final JComboBox<String> maxFrequencyField = new JComboBox<>();
 
+  /**
+   * Creates sound analysis form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public SoundAnalysisForm(String[] headerOptions, T initialTranslator) {
     addFields();
     initializeFields(headerOptions, initialTranslator);
@@ -76,7 +86,11 @@ public class SoundAnalysisForm<T extends SoundAnalysisPackageTranslator> extends
       maxFrequencyField.setSelectedItem(initialTranslator.getMaxFrequency());
     }
   }
-  
+
+  /**
+   * Changes headers to select from during mapping
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(analysisTimeZoneField, headerOptions);
     updateComboBoxModel(analysisEffortField, headerOptions);
@@ -85,22 +99,42 @@ public class SoundAnalysisForm<T extends SoundAnalysisPackageTranslator> extends
     updateComboBoxModel(maxFrequencyField, headerOptions);
   }
 
+  /**
+   * Returns analysis time zone
+   * @return String analysis time zone field
+   */
   public String getAnalysisTimeZoneValue() {
     return (String) analysisTimeZoneField.getSelectedItem();
   }
 
+  /**
+   * Returns analysis effort
+   * @return String analysis effort field
+   */
   public String getAnalysisEffortValue() {
     return (String) analysisEffortField.getSelectedItem();
   }
 
+  /**
+   * Returns sample rate
+   * @return String sample rate field
+   */
   public String getSampleRateValue() {
     return (String) sampleRateField.getSelectedItem();
   }
 
+  /**
+   * Returns min frequency
+   * @return String min frequency field
+   */
   public String getMinFrequencyValue() {
     return (String) minFrequencyField.getSelectedItem();
   }
 
+  /**
+   * Returns max frequency
+   * @return String max frequency field
+   */
   public String getMaxFrequencyValue() {
     return (String) maxFrequencyField.getSelectedItem();
   }

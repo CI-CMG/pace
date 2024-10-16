@@ -19,11 +19,30 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+/**
+ * MetadataPanel extends TranslatePanel and holds the relevant functions
+ * for a metadata panel
+ * @param <O> Type of object
+ * @param <T> Type of translator
+ */
 abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translator> extends TranslatePanel<O, T> {
 
   private final Function<Object[], O> rowConversion;
   private final Function<O, Form<O>> formSupplier;
 
+  /**
+   * Initializes a metadata panel
+   * @param name name of object
+   * @param repository holds the relevant existing data
+   * @param headers labels within panel
+   * @param objectConversion function which converts to a list of objects
+   * @param clazz relevant class
+   * @param rowConversion converts values list to form dialogue
+   * @param formSupplier provides the relevant form
+   * @param translatorRepository holds all relevant translators
+   * @param converter creates object when provided translator and relevant data columns
+   * @param translatorClazz Type of translator
+   */
   public MetadataPanel(String name, CRUDRepository<O> repository, String[] headers, Function<O, Object[]> objectConversion,
       Class<O> clazz, 
       Function<Object[], O> rowConversion, Function<O, Form<O>> formSupplier, TranslatorRepository translatorRepository, Converter<T, O> converter,

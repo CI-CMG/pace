@@ -13,11 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * ShipTranslatorForm extends BaseTranslatorForm and provides structure
+ * relevant to ship translator forms
+ */
 public class ShipTranslatorForm extends BaseTranslatorForm<ShipTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
 
+  /**
+   * Creates ship translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public ShipTranslatorForm(ShipTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     addUniqueFields();

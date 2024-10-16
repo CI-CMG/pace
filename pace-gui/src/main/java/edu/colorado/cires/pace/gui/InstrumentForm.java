@@ -18,6 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+/**
+ * InstrumentForm extends ObjectWithNameForm and holds fields relevant
+ * to instruments
+ */
 public class InstrumentForm extends ObjectWithNameForm<Instrument> {
   
   private JPanel fileTypesPanel;
@@ -26,7 +30,13 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
   private InstrumentForm(Instrument initialInstrument, FileTypeRepository fileTypeRepository) {
     super(initialInstrument, false, false, fileTypeRepository);
   }
-  
+
+  /**
+   * Creates an instrument form
+   * @param initialInstrument instrument object to base form upon
+   * @param repository holds all possible existing file types
+   * @return InstrumentForm indicated by provided fields
+   */
   public static InstrumentForm create(Instrument initialInstrument, FileTypeRepository repository) {
     return new InstrumentForm(initialInstrument, repository);
   }

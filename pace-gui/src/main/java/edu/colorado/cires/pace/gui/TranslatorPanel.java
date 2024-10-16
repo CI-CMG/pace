@@ -15,11 +15,23 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+/**
+ * TranslatorPanel extends DataPanel and provides structure relevant to translators
+ * for panel layout
+ */
 public class TranslatorPanel extends DataPanel<Translator> {
   
   private final Function<Object[], Translator> rowConversion;
   private final Function<Translator, Form<Translator>> formSupplier;
 
+  /**
+   * Creates a translator panel
+   * @param repository relevant existing translators
+   * @param headers headers in table
+   * @param objectConversion creates an object list out of relevant fields
+   * @param rowConversion converts values list to
+   * @param formSupplier form dialogue
+   */
   public TranslatorPanel(CRUDRepository<Translator> repository, String[] headers,
       Function<Translator, Object[]> objectConversion, Function<Object[], Translator> rowConversion,
       Function<Translator, Form<Translator>> formSupplier) {

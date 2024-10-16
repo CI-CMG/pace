@@ -15,6 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+/**
+ * InstrumentFileTypePanel extends JPanel and holds fields relevant to instrument
+ * file type panels
+ */
 public class InstrumentFileTypePanel extends JPanel {
   
   private final Map<String, FileType> fileTypeOptions = new HashMap<>(0);
@@ -22,7 +26,14 @@ public class InstrumentFileTypePanel extends JPanel {
   private final JComboBox<String> comboBox = new JComboBox<>(comboBoxModel);
   private final FileTypeRepository fileTypeRepository;
   private final FileType initialFileType;
-  
+
+  /**
+   * Declares the structure for an instrument file type panel
+   *
+   * @param initialFileType instrument file type
+   * @param fileTypeRepository repository of existing file types
+   * @param fileTypePanelConsumer consumes the panel
+   */
   public InstrumentFileTypePanel(FileType initialFileType, FileTypeRepository fileTypeRepository, Consumer<InstrumentFileTypePanel> fileTypePanelConsumer) {
     this.initialFileType = initialFileType;
     this.fileTypeRepository = fileTypeRepository;
@@ -37,7 +48,11 @@ public class InstrumentFileTypePanel extends JPanel {
     
     initializeFields(initialFileType);
   }
-  
+
+  /**
+   * Initializes the panel
+   * @throws DatastoreException in case of error in accessing data
+   */
   public void init() throws DatastoreException {
     fileTypeOptions.putAll(fileTypeRepository.findAll().collect(
         Collectors.toMap(
@@ -57,7 +72,11 @@ public class InstrumentFileTypePanel extends JPanel {
       comboBox.setSelectedItem(initialFileType.getType());
     }
   }
-  
+
+  /**
+   * Gets the relevant file type from form and options
+   * @return FileType type of file indicated by form
+   */
   public FileType toFileType() {
     String selectedItem = (String) comboBox.getSelectedItem();
     return fileTypeOptions.get(selectedItem);

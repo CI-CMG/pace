@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.PlatformConverter;
 import java.util.UUID;
 
+/**
+ * PlatformsPanel extends MetadataPanel and provides structure
+ * relevant to platforms
+ */
 public class PlatformsPanel extends MetadataPanel<Platform, PlatformTranslator> {
 
+  /**
+   * Creates platforms panel
+   * @param repository holds existing platform object
+   * @param translatorRepository holds existing translators
+   */
   public PlatformsPanel(CRUDRepository<Platform> repository, TranslatorRepository translatorRepository) {
     super(
         "platformsPanel",

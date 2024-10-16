@@ -35,6 +35,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 
+/**
+ * TranslatorForm extends ObjectWithNameForm and provides structure for
+ * reading in csv and xlsx files
+ */
 public class TranslatorForm extends ObjectWithNameForm<Translator> {
   private String[] headerOptions = new String[] {};
   

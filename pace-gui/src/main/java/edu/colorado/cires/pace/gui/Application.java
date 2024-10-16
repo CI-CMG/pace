@@ -13,12 +13,22 @@ import javax.swing.plaf.FontUIResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Application extends JFrame and initializes the gui for PACE
+ */
 public class Application extends JFrame {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
+  /**
+   * Generates an application object
+   */
   public Application() {}
 
+  /**
+   * Runs the gui creation function
+   * @param args String arguments
+   */
   public static void main(String[] args) {
     new Application().createGUI();
   }

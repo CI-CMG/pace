@@ -9,6 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * DetectionTypeForm extends MetadataForm and structures the form for detections types
+ */
 public class DetectionTypeForm extends MetadataForm<DetectionType> {
   
   private JTextField scienceName;

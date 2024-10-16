@@ -9,11 +9,20 @@ import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+/**
+ * OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm and adds fields
+ * relevant to "other" sensors
+ */
 public class OtherSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<OtherSensorTranslator> {
   
   private final JComboBox<String> sensorTypeField = new JComboBox<>();
   private final JComboBox<String> propertiesField = new JComboBox<>();
 
+  /**
+   * Creates an other sensor translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions selectable headers during mapping
+   */
   public OtherSensorTranslatorForm(OtherSensorTranslator initialTranslator, String[] headerOptions) {
     super();
     sensorTypeField.setName("sensorType");

@@ -13,6 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * SampleRateForm extends JPanel and provides structure
+ * relevant to sample rate forms
+ */
 public class SampleRateForm extends JPanel implements AuxiliaryTranslatorForm<SampleRateTranslator> {
   
   private final JComboBox<String> sampleRateField = new JComboBox<>();
@@ -22,6 +26,12 @@ public class SampleRateForm extends JPanel implements AuxiliaryTranslatorForm<Sa
   
   private final Consumer<SampleRateForm> removeAction;
 
+  /**
+   * Creates sample rate form
+   * @param headerOptions headers to select from in mapping
+   * @param initialTranslator translator to build upon
+   * @param removeAction deletes form
+   */
   public SampleRateForm(String[] headerOptions, SampleRateTranslator initialTranslator, Consumer<SampleRateForm> removeAction) {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
@@ -73,7 +83,11 @@ public class SampleRateForm extends JPanel implements AuxiliaryTranslatorForm<Sa
       sampleBitsField.setSelectedItem(initialTranslator.getSampleBits());
     }
   }
-  
+
+  /**
+   * Changes headers to select from
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(sampleRateField, headerOptions);
     updateComboBoxModel(sampleBitsField, headerOptions);
@@ -81,7 +95,11 @@ public class SampleRateForm extends JPanel implements AuxiliaryTranslatorForm<Sa
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
   }
-  
+
+  /**
+   * Builds a sample rate translator based on selected items in form
+   * @return SampleRateTranslator mapped according to selected items
+   */
   public SampleRateTranslator toTranslator() {
     return SampleRateTranslator.builder()
         .startTime(startTimeForm.toTranslator())

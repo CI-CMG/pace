@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.SensorConverter;
 import java.util.List;
 
+/**
+ * SensorsPanel extends MetadataPanel and provides fields relevant
+ * to sensors panel
+ */
 public class SensorsPanel extends MetadataPanel<Sensor, SensorTranslator> {
 
+  /**
+   * Creates a sensors panel
+   * @param repository holds existing sensor objects
+   * @param translatorRepository holds existing translators
+   */
   public SensorsPanel(CRUDRepository<Sensor> repository, TranslatorRepository translatorRepository) {
     super(
         "sensorsPanel",

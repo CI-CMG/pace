@@ -9,6 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * ContactForm extends ObjectWithNameForm and holds the fields which apply to a contact
+ * @param <C> Contact type
+ */
 public abstract class ContactForm<C extends Contact> extends ObjectWithNameForm<C> {
   
   private JTextField street;
@@ -32,6 +36,10 @@ public abstract class ContactForm<C extends Contact> extends ObjectWithNameForm<
       String phone
   );
 
+  /**
+   * Initializes a contact form
+   * @param initialObject to create object with name
+   */
   public ContactForm(C initialObject) {
     super(initialObject);
   }

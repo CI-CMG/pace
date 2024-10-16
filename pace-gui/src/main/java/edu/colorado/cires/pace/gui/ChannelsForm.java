@@ -9,11 +9,19 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * ChannelsForm extends JPanel and adds fields relevant to channels
+ */
 public class ChannelsForm extends JPanel {
 
   private final JPanel channelsPanel = new JPanel(new GridBagLayout());
   private final JButton addButton;
 
+  /**
+   * Initializes a channels from
+   * @param headerOptions headers to select from
+   * @param initialTranslators base translator to add to
+   */
   public ChannelsForm(String[] headerOptions, List<ChannelTranslator> initialTranslators) {
     this.addButton = getAddButton(headerOptions);
     addFields();
@@ -66,7 +74,11 @@ public class ChannelsForm extends JPanel {
     }));
     revalidate();
   }
-  
+
+  /**
+   * Updates the selectable header options from dropdown menus
+   * @param headerOptions to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     Arrays.stream(channelsPanel.getComponents())
         .filter(p -> p instanceof CollapsiblePanel<?>)
@@ -79,7 +91,11 @@ public class ChannelsForm extends JPanel {
     );
     addButton.addActionListener(e -> addChannel(headerOptions, null));
   }
-  
+
+  /**
+   * Provides the list of channel translators
+   * @return ChannelTranslator list of held translators
+   */
   public List<ChannelTranslator> toTranslator() {
     return Arrays.stream(channelsPanel.getComponents())
         .filter(p -> p instanceof CollapsiblePanel<?>)

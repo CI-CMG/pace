@@ -13,12 +13,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * InstrumentTranslatorForm extends BaseTranslatorForm and provides the additional field
+ * structure for an instrument translator form
+ */
 public class InstrumentTranslatorForm extends BaseTranslatorForm<InstrumentTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
   private final JComboBox<String> fileTypesField = new JComboBox<>();
 
+  /**
+   * Initializes an instrument translator form
+   *
+   * @param initialTranslator base translator to build upon
+   * @param headerOptions selectable headers when building translator
+   */
   public InstrumentTranslatorForm(InstrumentTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("instrumentTranslatorForm");

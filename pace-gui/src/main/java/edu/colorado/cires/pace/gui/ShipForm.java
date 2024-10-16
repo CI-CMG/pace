@@ -3,8 +3,16 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.ship.Ship;
 import java.util.UUID;
 
+/**
+ * ShipForm extends ObjectWithNameForm and provides structure relevant
+ * to ship forms
+ */
 public class ShipForm extends ObjectWithNameForm<Ship> {
 
+  /**
+   * Creates ship form
+   * @param initialObject object to build upon
+   */
   public ShipForm(Ship initialObject) {
     super(initialObject);
   }

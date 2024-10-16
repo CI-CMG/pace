@@ -49,6 +49,12 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * TranslateForm extends JPanel and provides structure
+ * relevant to translator forms
+ * @param <O> Object type
+ * @param <T> Translator type
+ */
 public class TranslateForm<O extends AbstractObject, T extends Translator> extends JPanel {
   
   private final DefaultComboBoxModel<String> translatorComboBoxModel = new DefaultComboBoxModel<>();
@@ -63,6 +69,15 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
   private final Class<O> clazz;
   private final Runnable successAction;
 
+  /**
+   * Creates a translator form
+   * @param successAction action to be run upon successful translator build
+   * @param repository holds existing objects
+   * @param clazz class type
+   * @param translatorRepository holds existing translators
+   * @param converter creates object when provided translator and relevant data columns
+   * @param translatorClazz Type of translator
+   */
   public TranslateForm(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz, TranslatorRepository translatorRepository,
       Converter<T, O> converter, Class<T> translatorClazz) {
     this.translatorRepository = translatorRepository;
@@ -72,7 +87,11 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     this.clazz = clazz;
     this.successAction = successAction;
   }
-  
+
+  /**
+   * Initializes the translator form
+   * @throws DatastoreException thrown in case of issues accessing datastore
+   */
   public void init() throws DatastoreException {
     setName("translateForm");
     this.translatorComboBoxModel.removeAllElements();

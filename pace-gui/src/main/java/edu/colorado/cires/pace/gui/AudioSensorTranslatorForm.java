@@ -9,11 +9,21 @@ import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+/**
+ * AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm and updates
+ * the form and translator accordingly
+ */
 public class AudioSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<AudioSensorTranslator> {
   
   private final JComboBox<String> hydrophoneIdField = new JComboBox<>();
   private final JComboBox<String> preampIdField = new JComboBox<>();
 
+  /**
+   * Updates the translator to fit with audio type sensor
+   *
+   * @param initialTranslator base translator
+   * @param headerOptions possible headers to select
+   */
   public AudioSensorTranslatorForm(AudioSensorTranslator initialTranslator, String[] headerOptions) {
     super();
     hydrophoneIdField.setName("hydrophoneId");

@@ -13,6 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
+/**
+ * CollapsiblePanel extends JPanel and creates a panel which can be
+ * extended and minimized
+ * @param <P> Type of panel
+ */
 public class CollapsiblePanel<P extends JPanel> extends JPanel {
   
   private final String buttonTitle;
@@ -20,6 +25,12 @@ public class CollapsiblePanel<P extends JPanel> extends JPanel {
   private final ImageIcon upIcon;
   private final ImageIcon downIcon;
 
+  /**
+   * Initializes a collapsible panel
+   *
+   * @param buttonTitle gives the button name
+   * @param contentPanel is the panel to apply to
+   */
   public CollapsiblePanel(String buttonTitle, P contentPanel) {
     this.buttonTitle = buttonTitle;
     this.contentPanel = contentPanel;
@@ -30,6 +41,11 @@ public class CollapsiblePanel<P extends JPanel> extends JPanel {
     addFields();
   }
 
+  /**
+   * Returns the content panel
+   *
+   * @return P contentPanel
+   */
   public P getContentPanel() {
     return contentPanel;
   }

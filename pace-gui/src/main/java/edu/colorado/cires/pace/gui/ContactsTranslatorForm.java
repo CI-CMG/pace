@@ -9,6 +9,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * ContactsTranslatorForm extends JPanel and generates the
+ * fields for a contact translator form
+ */
 public class ContactsTranslatorForm extends JPanel {
   
   private final JComboBox<String> scientistsField = new JComboBox<>();
@@ -16,6 +20,12 @@ public class ContactsTranslatorForm extends JPanel {
   private final JComboBox<String> fundersField = new JComboBox<>();
   private final JComboBox<String> datasetPackagerField = new JComboBox<>();
 
+  /**
+   * Initializes a contacts translator form
+   *
+   * @param headerOptions Selectable headers within translator
+   * @param initialTranslator base translator to build onto
+   */
   public ContactsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
     scientistsField.setName("scientists");
     sponsorsField.setName("sponsors");
@@ -53,23 +63,43 @@ public class ContactsTranslatorForm extends JPanel {
       datasetPackagerField.setSelectedItem(initialTranslator.getDatasetPackager());
     }
   }
-  
+
+  /**
+   * Returns scientists value
+   * @return String scientists value
+   */
   public String getScientistsValue() {
     return (String) scientistsField.getSelectedItem();
   }
-  
+
+  /**
+   * Returns sponsors value
+   * @return String sponsors value
+   */
   public String getSponsorsValue() {
     return (String) sponsorsField.getSelectedItem();
   }
-  
+
+  /**
+   * Returns funders value
+   * @return String funders value
+   */
   public String getFundersValue() {
     return (String) fundersField.getSelectedItem();
   }
-  
+
+  /**
+   * Returns dataset packager value
+   * @return String dataset packager value
+   */
   public String getDatasetPackagerValue() {
     return (String) datasetPackagerField.getSelectedItem();
   }
 
+  /**
+   * Updates the header options to those provided
+   * @param options to allow selection of
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(scientistsField, options);
     updateComboBoxModel(sponsorsField, options);

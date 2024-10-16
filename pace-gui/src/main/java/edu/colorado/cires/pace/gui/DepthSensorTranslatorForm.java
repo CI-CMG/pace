@@ -4,8 +4,17 @@ import edu.colorado.cires.pace.data.object.sensor.depth.translator.DepthSensorTr
 import java.util.UUID;
 import javax.swing.JComboBox;
 
+/**
+ * DepthSensorTranslatorForm extends SensorTypeSpecificTranslatorForm and adds
+ * fields relevant to depth sensors
+ */
 public class DepthSensorTranslatorForm extends SensorTypeSpecificTranslatorForm<DepthSensorTranslator> {
 
+  /**
+   * Initializes a DepthSensorTranslatorForm object
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from
+   */
   public DepthSensorTranslatorForm(DepthSensorTranslator initialTranslator, String[] headerOptions) {
     super();
     addFields();

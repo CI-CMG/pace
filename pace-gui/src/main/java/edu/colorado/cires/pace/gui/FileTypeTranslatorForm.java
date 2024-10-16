@@ -13,12 +13,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * FileTypeTranslatorForm extends BaseTranslatorForm and provides structure for file type
+ * translator form
+ */
 public class FileTypeTranslatorForm extends BaseTranslatorForm<FileTypeTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> typeField = new JComboBox<>();
   private final JComboBox<String> commentField = new JComboBox<>();
 
+  /**
+   * Initializes the file type translator form
+   *
+   * @param initialTranslator base translator to build upon
+   * @param headerOptions possible headers to select from
+   */
   public FileTypeTranslatorForm(FileTypeTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("fileTypeTranslatorForm");

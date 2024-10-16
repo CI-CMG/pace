@@ -8,6 +8,10 @@ import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import javax.swing.JPanel;
 
+/**
+ * Form extends JPanel and provides the structure for forms in pace
+ * @param <O>
+ */
 public abstract class Form<O extends ObjectWithUniqueField> extends JPanel {
   
   protected abstract void initializeFields(O object, CRUDRepository<?>... dependencyRepositories);

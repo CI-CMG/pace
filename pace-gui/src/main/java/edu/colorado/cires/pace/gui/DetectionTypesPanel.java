@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.DetectionTypeConverter;
 import java.util.UUID;
 
+/**
+ * DetectionTypesPanel extends MetadataPanel and structures the form panel for
+ * detection types
+ */
 public class DetectionTypesPanel extends MetadataPanel<DetectionType, DetectionTypeTranslator> {
 
+  /**
+   * Initializes a detection types panel
+   * @param repository relevant data repository
+   * @param translatorRepository relevant translator repository
+   */
   public DetectionTypesPanel(CRUDRepository<DetectionType> repository, TranslatorRepository translatorRepository) {
     super(
         "detectionTypesPanel",

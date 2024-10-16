@@ -14,6 +14,10 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * ChannelTranslatorForm extends JPanel and specializes translator form functionality
+ * to channel type data
+ */
 public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<ChannelTranslator> {
   
   private final TimeTranslatorForm startTimeForm;
@@ -28,6 +32,13 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   
   private final Consumer<ChannelTranslatorForm> removeAction;
 
+  /**
+   * Initializes a channel translator form
+   *
+   * @param headerOptions provides the selectable headers
+   * @param initialTranslator base translator to edit
+   * @param removeAction allows channels to be removed from form
+   */
   public ChannelTranslatorForm(String[] headerOptions, ChannelTranslator initialTranslator, Consumer<ChannelTranslatorForm> removeAction) {
     this.addSampleRateButton = getAddButton("Add Sample Rate", () -> addSampleRate(headerOptions, null));
     this.addDutyCycleButton = getAddButton("Add Duty Cycle", () -> addDutyCycle(headerOptions, null));
@@ -175,7 +186,11 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     }));
     revalidate();
   }
-  
+
+  /**
+   * Sets the header options to a new list to select from
+   * @param headerOptions new list of selectable headers
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
@@ -206,7 +221,11 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     addDutyCycleButton.addActionListener(l -> addDutyCycle(headerOptions, null));
     addGainButton.addActionListener(l -> addGain(headerOptions, null));
   }
-  
+
+  /**
+   * Builds channel translator to map with
+   * @return ChannelTranslator representing current header selections
+   */
   public ChannelTranslator toTranslator() {
     return ChannelTranslator.builder()
         .startTime(startTimeForm.toTranslator())

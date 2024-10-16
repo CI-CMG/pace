@@ -8,12 +8,21 @@ import edu.colorado.cires.pace.data.object.dataset.soundClips.translator.SoundCl
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 
+/**
+ * SoundClipsForm extends JPanel and provides structure relevant
+ * to sound clips forms
+ */
 public class SoundClipsForm extends JPanel {
   private final TimeTranslatorForm audioStartTimeForm;
   private final TimeTranslatorForm audioEndTimeForm;
   private final TimeTranslatorForm clipStartTimeForm;
   private final TimeTranslatorForm clipEndTimeForm;
 
+  /**
+   * Creates sound clips form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public SoundClipsForm(String[] headerOptions, SoundClipsPackageTranslator initialTranslator) {
     this.audioStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioStartTime());
     this.audioEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioEndTime());
@@ -43,6 +52,10 @@ public class SoundClipsForm extends JPanel {
     }));
   }
 
+  /**
+   * Changes headers to select from during mapping
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     audioStartTimeForm.updateHeaderOptions(headerOptions);
     audioEndTimeForm.updateHeaderOptions(headerOptions);
@@ -50,15 +63,31 @@ public class SoundClipsForm extends JPanel {
     clipEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
+  /**
+   * Returns audio start time translator
+   * @return TimeTranslator audio start time translator
+   */
   public TimeTranslator getAudioStartTimeTranslator() {
     return audioStartTimeForm.toTranslator();
   }
 
+  /**
+   * Returns audio end time translator
+   * @return TimeTranslator audio end time translator
+   */
   public TimeTranslator getAudioEndTimeTranslator() {
     return audioEndTimeForm.toTranslator();
   }
 
+  /**
+   * Returns start time
+   * @return TimeTranslator start time
+   */
   public TimeTranslator getStartTime() { return clipStartTimeForm.toTranslator(); }
 
+  /**
+   * Returns end time
+   * @return TimeTranslator end time
+   */
   public TimeTranslator getEndTime() { return clipStartTimeForm.toTranslator(); }
 }

@@ -15,6 +15,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * AudioDataForm extends JPanel
+ * @param <T> type of translator
+ */
 public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel implements AuxiliaryTranslatorForm<AudioDataPackageTranslator> {
   
   private final JComboBox<String> instrumentIdField = new JComboBox<>();
@@ -28,6 +32,12 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
   private final TimeTranslatorForm audioStartTimeForm;
   private final TimeTranslatorForm audioEndTimeForm;
 
+  /**
+   * Initializes the audio data form
+   *
+   * @param headerOptions possible headers to select
+   * @param initialTranslator base translator
+   */
   public AudioDataForm(String[] headerOptions, T initialTranslator) {
     this.deploymentTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getDeploymentTime());
     this.recoveryTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getRecoveryTime());
@@ -92,7 +102,13 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
       c.gridx = 0; c.gridy = 7; c.weighty = 1;
     }));
   }
-  
+
+  /**
+   * Initializes the header options into fields
+   *
+   * @param headerOptions headers to select from
+   * @param initialTranslator base translator
+   */
   public void initializeFields(String[] headerOptions, T initialTranslator) {
     updateComboBoxModel(instrumentIdField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);
@@ -126,6 +142,10 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     revalidate();
   }
 
+  /**
+   * Builds an audio data package translator with current value
+   * @return AudioDataPackageTranslator given current held values
+   */
   @Override
   public AudioDataPackageTranslator toTranslator() {
     return AudioPackageTranslator.builder()
@@ -144,6 +164,10 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
         .build();
   }
 
+  /**
+   * Changes current possible header options to provided options
+   * @param headerOptions to be changed to
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(instrumentIdField, headerOptions);
     updateComboBoxModel(commentsField, headerOptions);

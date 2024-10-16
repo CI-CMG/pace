@@ -29,6 +29,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * MetadataFrom extends Form and takes input from users to create
+ * a metadata object
+ * @param <O> Type of form
+ */
 public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form<O> {
   
   private final JTextField uuid = new JTextField();

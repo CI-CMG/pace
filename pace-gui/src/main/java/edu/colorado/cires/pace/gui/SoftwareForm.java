@@ -10,6 +10,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * SoftwareForm extends JPanel and provides structure relevant to
+ * software forms
+ * @param <T> Type of translator
+ */
 public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends JPanel implements AuxiliaryTranslatorForm<SoftwareDependentPackageTranslator> {
 
   private final JComboBox<String> softwareNamesField = new JComboBox<>();
@@ -18,6 +23,11 @@ public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends 
   private final JComboBox<String> softwareDescriptionField = new JComboBox<>();
   private final JComboBox<String> softwareProcessingDescriptionField = new JComboBox<>();
 
+  /**
+   * Creates software form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translators to build upon
+   */
   public SoftwareForm(String[] headerOptions, T initialTranslator) {
     softwareNamesField.setName("softwareNames");
     softwareVersionsField.setName("softwareVersions");
@@ -82,6 +92,10 @@ public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends 
     }
   }
 
+  /**
+   * Builds software dependent package translator using selected items
+   * @return SoftwareDependentPackageTranslator mapping selected items
+   */
   @Override
   public SoftwareDependentPackageTranslator toTranslator() {
     return SoundClipsPackageTranslator.builder()
@@ -93,6 +107,10 @@ public class SoftwareForm<T extends SoftwareDependentPackageTranslator> extends 
         .build();
   }
 
+  /**
+   * Changes headers to select from
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(softwareNamesField, headerOptions);
     updateComboBoxModel(softwareVersionsField, headerOptions);

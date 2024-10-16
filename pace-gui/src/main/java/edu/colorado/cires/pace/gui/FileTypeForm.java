@@ -9,6 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * FileTypeForm extends MetadataForm and provides structure for file type forms
+ */
 public class FileTypeForm extends MetadataForm<FileType> {
   
   private JTextField comment;

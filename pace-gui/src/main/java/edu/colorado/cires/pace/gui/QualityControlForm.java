@@ -14,6 +14,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * QualityControlForm extends JPanel and provides structure
+ * relevant to quality control forms
+ */
 public class QualityControlForm extends JPanel {
   
   private final JComboBox<String> qualityAnalystField = new JComboBox<>();
@@ -24,6 +28,11 @@ public class QualityControlForm extends JPanel {
   
   private final JButton addEntryButton;
 
+  /**
+   * Creates a quality control form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public QualityControlForm(String[] headerOptions, QualityControlDetailTranslator initialTranslator) {
     this.addEntryButton = getAddEntryButton(headerOptions);
     qualityAnalystField.setName("qualityAnalyst");
@@ -103,7 +112,11 @@ public class QualityControlForm extends JPanel {
     }));
     revalidate();
   }
-  
+
+  /**
+   * Changes headers to select from during mapping
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(qualityAnalystField, headerOptions);
     updateComboBoxModel(qualityAnalysisObjectivesField, headerOptions);
@@ -121,7 +134,11 @@ public class QualityControlForm extends JPanel {
     );
     addEntryButton.addActionListener(e -> addQualityEntry(headerOptions, null));
   }
-  
+
+  /**
+   * Builds quality control detail translator
+   * @return QualityControlDetailTranslator holding selected items
+   */
   public QualityControlDetailTranslator toTranslator() {
     return QualityControlDetailTranslator.builder()
         .qualityAnalyst((String) qualityAnalystField.getSelectedItem())

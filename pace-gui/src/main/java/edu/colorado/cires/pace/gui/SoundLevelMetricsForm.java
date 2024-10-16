@@ -8,6 +8,10 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.Time
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 
+/**
+ * SoundLevelMetricsForm extends JPanel and provides structure
+ * relevant to sound level metrics forms
+ */
 public class SoundLevelMetricsForm extends JPanel {
   
   private final TimeTranslatorForm audioStartTimeForm;
@@ -15,6 +19,11 @@ public class SoundLevelMetricsForm extends JPanel {
   private final TimeTranslatorForm analysisStartTimeForm;
   private final TimeTranslatorForm analysisEndTimeForm;
 
+  /**
+   * Creates a sound level metrics form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public SoundLevelMetricsForm(String[] headerOptions, SoundLevelMetricsPackageTranslator initialTranslator) {
     this.audioStartTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioStartTimeTranslator());
     this.audioEndTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getAudioEndTimeTranslator());
@@ -46,7 +55,11 @@ public class SoundLevelMetricsForm extends JPanel {
       c.gridx = 0; c.gridy = 2; c.weighty = 1;
     }));
   }
-  
+
+  /**
+   * Changes headers to select from during mapping
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     audioStartTimeForm.updateHeaderOptions(headerOptions);
     audioEndTimeForm.updateHeaderOptions(headerOptions);
@@ -54,15 +67,31 @@ public class SoundLevelMetricsForm extends JPanel {
     analysisEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
+  /**
+   * Returns audio start time translator
+   * @return TimeTranslator audio start time translator
+   */
   public TimeTranslator getAudioStartTimeTranslator() {
     return audioStartTimeForm.toTranslator();
   }
 
+  /**
+   * Returns audio end time translator
+   * @return TimeTranslator audio end time translator
+   */
   public TimeTranslator getAudioEndTimeTranslator() {
     return audioEndTimeForm.toTranslator();
   }
 
+  /**
+   * Returns start time
+   * @return TimeTranslator start time
+   */
   public TimeTranslator getStartTime() { return analysisStartTimeForm.toTranslator(); }
 
+  /**
+   * Returns end time
+   * @return TimeTranslator end time
+   */
   public TimeTranslator getEndTime() { return analysisStartTimeForm.toTranslator(); }
 }

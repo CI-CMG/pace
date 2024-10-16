@@ -15,6 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * FormPanel extends JPanel and provides the structure for a form panel
+ * @param <O>
+ */
 public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
   
   private final Form<O> form;
@@ -23,7 +27,17 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
   private final Runnable searchAction;
   private final boolean isEdit;
   private final boolean isTranslator;
-  
+
+  /**
+   * Creates a form panel
+   *
+   * @param form relevant form to complete
+   * @param repository relevant repository data
+   * @param updatedObjectsConsumer removes changed objects
+   * @param searchAction runs a search
+   * @param isEdit if true indicates an edit
+   * @param isTranslator if true indicates is a translator
+   */
   public FormPanel(Form<O> form, CRUDRepository<O> repository, Consumer<Stream<O>> updatedObjectsConsumer, Runnable searchAction, boolean isEdit, boolean isTranslator) {
     this.form = form;
     this.repository = repository;
@@ -32,7 +46,10 @@ public class FormPanel<O extends ObjectWithUniqueField> extends JPanel {
     this.isEdit = isEdit;
     this.isTranslator = isTranslator;
   }
-  
+
+  /**
+   * Initializes a form panel
+   */
   public void init() {
     setName("formPanel");
     setLayout(new BorderLayout());

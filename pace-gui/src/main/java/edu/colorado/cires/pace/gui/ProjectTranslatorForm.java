@@ -13,11 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * ProjectTranslatorForm extends BaseTranslatorForm and provides structure
+ * for fields relevant to project translator forms
+ */
 public class ProjectTranslatorForm extends BaseTranslatorForm<ProjectTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
 
+  /**
+   * Creates project translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public ProjectTranslatorForm(ProjectTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("projectTranslatorForm");

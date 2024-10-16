@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.ProjectConverter;
 import java.util.UUID;
 
+/**
+ * ProjectsPanel extends MetadataPanel and provides structure
+ * for relevant projects fields
+ */
 public class ProjectsPanel extends MetadataPanel<Project, ProjectTranslator> {
 
+  /**
+   * Creates a projects panel
+   * @param repository holds existing project objects
+   * @param translatorRepository holds existing translators
+   */
   public ProjectsPanel(CRUDRepository<Project> repository,
       TranslatorRepository translatorRepository) {
     super(

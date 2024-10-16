@@ -11,6 +11,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * DetectionsForm extends JPanel and provides format for detection form
+ */
 public class DetectionsForm extends JPanel {
   
   private final JComboBox<String> soundSource = new JComboBox<>();
@@ -49,18 +52,34 @@ public class DetectionsForm extends JPanel {
       soundSource.setSelectedItem(initialTranslator.getSoundSource());
     }
   }
-  
+
+  /**
+   * Changes the selectable header options
+   * @param headerOptions possible selectable headers
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(soundSource, headerOptions);
     detectionStartTimeForm.updateHeaderOptions(headerOptions);
     detectionEndTimeForm.updateHeaderOptions(headerOptions);
   }
 
+  /**
+   * Returns the sound source value
+   * @return String sounds source value
+   */
   public String getSoundSourceValue() {
     return (String) soundSource.getSelectedItem();
   }
 
+  /**
+   * Returns the start time
+   * @return TimeTranslator start time
+   */
   public TimeTranslator getStartTime() { return detectionStartTimeForm.toTranslator(); }
 
+  /**
+   * Returns the end time
+   * @return TimeTranslator end time
+   */
   public TimeTranslator getEndTime() { return detectionEndTimeForm.toTranslator(); }
 }

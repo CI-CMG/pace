@@ -5,8 +5,16 @@ import java.util.UUID;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+/**
+ * SensorTypeSpecificTranslatorForm extends JPanel and provides necessary
+ * function outline
+ * @param <T>
+ */
 public abstract class SensorTypeSpecificTranslatorForm<T extends SensorTranslator> extends JPanel {
 
+  /**
+   * Declares sensor type specific translator form object
+   */
   public SensorTypeSpecificTranslatorForm() {
     
   }

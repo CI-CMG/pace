@@ -9,6 +9,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+/**
+ * StationaryTerrestrialLocationForm extends BaseLocationDetailTranslatorForm and
+ * provides structure relevant to stationary terrestrial locations
+ */
 public class StationaryTerrestrialLocationForm extends BaseLocationDetailTranslatorForm<StationaryTerrestrialLocationTranslator> {
   
   private final JComboBox<String> latitudeField = new JComboBox<>();
@@ -16,6 +20,11 @@ public class StationaryTerrestrialLocationForm extends BaseLocationDetailTransla
   private final JComboBox<String> surfaceElevationField = new JComboBox<>();
   private final JComboBox<String> instrumentElevationField = new JComboBox<>();
 
+  /**
+   * Creates a stationary terrestrial location form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public StationaryTerrestrialLocationForm(String[] headerOptions, StationaryTerrestrialLocationTranslator initialTranslator) {
     super(headerOptions);
     setName("stationaryTerrestrialForm");

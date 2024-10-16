@@ -53,6 +53,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * PackagesPanel extends TranslatePanel and provides structuring related
+ * to packaging
+ */
 public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   
   private static final int PACKAGING_SELECTED_COLUMN = 7;
@@ -72,6 +76,21 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private final SensorRepository sensorRepository;
   private final DetectionTypeRepository detectionTypeRepository;
 
+  /**
+   * Creates a packages panel
+   * @param repository holds packages that have been translated
+   * @param headers labels in packages panel
+   * @param objectConversion Creates an object list out of a package fields
+   * @param clazz indicates package type
+   * @param objectMapper serializes object
+   * @param translatorRepository holds existing translators
+   * @param converter functions to create packages from map
+   * @param personRepository holds existing person objects
+   * @param organizationRepository holds existing organization objects
+   * @param projectRepository holds existing project objects
+   * @param sensorRepository holds existing sensor objects
+   * @param detectionTypeRepository holds existing detection type objects
+   */
   public PackagesPanel(CRUDRepository<Package> repository, String[] headers,
       Function<Package, Object[]> objectConversion,
       Class<Package> clazz,

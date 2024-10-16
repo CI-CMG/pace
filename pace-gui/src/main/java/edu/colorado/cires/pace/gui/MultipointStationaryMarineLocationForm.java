@@ -14,11 +14,21 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * MultipointStationaryMarineLocationForm extends BaseLocationDetailTranslatorForm and
+ * collects fields specific to multipoint stationary marine locations
+ */
 public class MultipointStationaryMarineLocationForm extends BaseLocationDetailTranslatorForm<MultipointStationaryMarineLocationTranslator> {
   
   private final JComboBox<String> seaAreaField = new JComboBox<>();
   private final JPanel locationsPanel = new JPanel(new GridBagLayout());
 
+  /**
+   * Creates a multipoint marine location translator form
+   *
+   * @param headerOptions possible headers to select from in mapping
+   * @param initialTranslator base translator to build upon
+   */
   public MultipointStationaryMarineLocationForm(String[] headerOptions, MultipointStationaryMarineLocationTranslator initialTranslator) {
     super(headerOptions);
     addFields(headerOptions);

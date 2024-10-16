@@ -3,6 +3,9 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import java.util.UUID;
 
+/**
+ * OrganizationForm extends ContactForm
+ */
 public class OrganizationForm extends ContactForm<Organization> {
 
   @Override
@@ -22,6 +25,10 @@ public class OrganizationForm extends ContactForm<Organization> {
         .build();
   }
 
+  /**
+   * Creates an organization form
+   * @param initialObject object to build upon
+   */
   public OrganizationForm(Organization initialObject) {
     super(initialObject);
   }

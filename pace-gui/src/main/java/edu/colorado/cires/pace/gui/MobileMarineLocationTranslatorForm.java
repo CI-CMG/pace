@@ -11,6 +11,10 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+/**
+ * MobileMarineLocationTranslatorForm extends BaseLocationDetailTranslatorForm and provides
+ * fields specific to mobile marine location
+ */
 public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTranslatorForm<MobileMarineLocationTranslator> {
   
   private final JComboBox<String> seaAreaField = new JComboBox<>();
@@ -18,6 +22,11 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
   private final JComboBox<String> locationDerivationDescriptionField = new JComboBox<>();
   private final JComboBox<String> singleStringFiles = new JComboBox<>();
 
+  /**
+   * Creates a mobile marine location translator form
+   * @param headerOptions possible headers to select from in mapping
+   * @param initialTranslator base translator to build upon
+   */
   public MobileMarineLocationTranslatorForm(String[] headerOptions, MobileMarineLocationTranslator initialTranslator) {
     super(headerOptions);
     addFields();

@@ -13,11 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * SeaTranslatorForm extends BaseTranslatorForm and provides
+ * structure relevant to sea areas specifically
+ */
 public class SeaTranslatorForm extends BaseTranslatorForm<SeaTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
 
+  /**
+   * Creates a sea translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public SeaTranslatorForm(SeaTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("seaTranslatorForm");

@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.OrganizationConverter;
 import java.util.UUID;
 
+/**
+ * OrganizationsPanel extends MetadataPanel and provides a builder with
+ * relevant fields in builder
+ */
 public class OrganizationsPanel extends MetadataPanel<Organization, OrganizationTranslator> {
 
+  /**
+   * Builds an organization panel
+   * @param repository holds relevant repository data
+   * @param translatorRepository holds all existing relevant translators
+   */
   public OrganizationsPanel(CRUDRepository<Organization> repository,
       TranslatorRepository translatorRepository) {
     super(

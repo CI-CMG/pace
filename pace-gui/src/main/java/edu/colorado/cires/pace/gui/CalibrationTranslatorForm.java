@@ -11,6 +11,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * CalibrationTranslatorForm extends JPanel and specializes translator form functionality
+ * to calibration type data
+ */
 public class CalibrationTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<PackageTranslator> {
   
   private final JComboBox<String> calibrationDocumentsPathField = new JComboBox<>();
@@ -18,6 +22,12 @@ public class CalibrationTranslatorForm extends JPanel implements AuxiliaryTransl
   private final DateTranslatorForm preDeploymentCalibrationDateForm;
   private final DateTranslatorForm postDeploymentCalibrationDateForm;
 
+  /**
+   * Initializes internal forms of calibration translator form
+   *
+   * @param headerOptions possible headers to select from
+   * @param initialTranslator base translator
+   */
   public CalibrationTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
     this.preDeploymentCalibrationDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPreDeploymentCalibrationDate());
     this.postDeploymentCalibrationDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPostDeploymentCalibrationDate());
@@ -58,6 +68,10 @@ public class CalibrationTranslatorForm extends JPanel implements AuxiliaryTransl
     }
   }
 
+  /**
+   * Returns a package translator
+   * @return PackageTranslator given calibration data
+   */
   @Override
   public PackageTranslator toTranslator() {
     return PackageTranslator.builder()
@@ -68,6 +82,10 @@ public class CalibrationTranslatorForm extends JPanel implements AuxiliaryTransl
         .build();
   }
 
+  /**
+   * Changes header option to provided
+   * @param options provided headers to select from
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(calibrationDocumentsPathField, options);
     updateComboBoxModel(calibrationDescriptionField, options);

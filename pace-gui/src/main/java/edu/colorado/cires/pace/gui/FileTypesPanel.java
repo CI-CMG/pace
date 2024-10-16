@@ -7,8 +7,16 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.FileTypeConverter;
 import java.util.UUID;
 
+/**
+ * FileTypesPanel extends MetadataPanel and provides fields for file type panels
+ */
 public class FileTypesPanel extends MetadataPanel<FileType, FileTypeTranslator> {
 
+  /**
+   * Initializes a file types panel
+   * @param repository relevant repository data
+   * @param translatorRepository relevant translator repository
+   */
   public FileTypesPanel(CRUDRepository<FileType> repository, TranslatorRepository translatorRepository) {
     super(
         "fileTypesPanel",

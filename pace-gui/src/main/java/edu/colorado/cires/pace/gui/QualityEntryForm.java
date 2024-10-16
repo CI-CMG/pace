@@ -13,6 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * QualityEntryForm extends JPanel and provides relevant
+ * structure for quality entry forms
+ */
 public class QualityEntryForm extends JPanel {
   
   private final TimeTranslatorForm startTimeForm;
@@ -25,6 +29,12 @@ public class QualityEntryForm extends JPanel {
   
   private final Consumer<QualityEntryForm> removeAction;
 
+  /**
+   * Creates quality entry form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   * @param removeAction deletes quality entry form
+   */
   public QualityEntryForm(String[] headerOptions, DataQualityEntryTranslator initialTranslator, Consumer<QualityEntryForm> removeAction) {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
@@ -93,7 +103,11 @@ public class QualityEntryForm extends JPanel {
       channelNumbersField.setSelectedItem(initialTranslator.getChannelNumbers());
     }
   }
-  
+
+  /**
+   * Changes the selectable header options
+   * @param headerOptions new headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(minFrequencyField, headerOptions);
     updateComboBoxModel(maxFrequencyField, headerOptions);
@@ -104,7 +118,11 @@ public class QualityEntryForm extends JPanel {
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
   }
-  
+
+  /**
+   * Builds data quality entry translator using selected items in form
+   * @return DataQualityEntryTranslator with mapping from form
+   */
   public DataQualityEntryTranslator toTranslator() {
     return DataQualityEntryTranslator.builder()
         .startTime(startTimeForm.toTranslator())

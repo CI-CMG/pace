@@ -9,12 +9,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * PersonForm extends ContactForm and creates entry fields
+ * relevant to person forms specifically
+ */
 public class PersonForm extends ContactForm<Person> {
   
   private JTextField orcid;
   private JTextField position;
   private JTextField organization;
 
+  /**
+   * Creates a person form
+   * @param initialObject object to build upon
+   */
   public PersonForm(Person initialObject) {
     super(initialObject);
   }

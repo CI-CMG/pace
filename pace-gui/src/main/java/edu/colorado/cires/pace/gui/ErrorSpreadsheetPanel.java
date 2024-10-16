@@ -53,6 +53,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
+/**
+ * ErrorSpreadsheetPanel extends JPanel
+ * @param <O> Type of error objects
+ */
 public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
   
   private final boolean autoResizeColumns;
@@ -61,6 +65,14 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
   private final CRUDRepository<O> repository;
   private final Runnable refreshTable;
 
+  /**
+   * Structures an error spreadsheet panel
+   * @param file which exceptions are found in
+   * @param exceptions exceptions to show in panel
+   * @param autoResizeColumns declares whether the columns should automatically resize
+   * @param repository relevant repository of data
+   * @param refreshTable runnable which refreshes the table after changes
+   */
   public ErrorSpreadsheetPanel(File file, List<ObjectWithRowError<O>> exceptions, boolean autoResizeColumns, CRUDRepository<O> repository, Runnable refreshTable) {
     this.file = file;
     this.exceptions = exceptions;
@@ -68,7 +80,10 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
     this.repository = repository;
     this.refreshTable = refreshTable;
   }
-  
+
+  /**
+   * Initializes the error spreadsheet panel
+   */
   public void init() {
     TableData tableData = readSpreadsheet(file, exceptions);
     setLayout(new BorderLayout());
@@ -175,6 +190,12 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
     table.setGridColor(Color.RED);
 
     table.addMouseMotionListener(new MouseAdapter() {
+      /**
+       * Upon mouse movement, checks if the mouse now hovers over an icon and determines if
+       * it should indicate that it is clickable by changing the icon
+       *
+       * @param e the event to be processed
+       */
       @Override
       public void mouseMoved(MouseEvent e) {
         Point p = e.getPoint();
@@ -228,6 +249,11 @@ public class ErrorSpreadsheetPanel<O extends AbstractObject> extends JPanel {
     });
 
     table.addMouseListener(new MouseAdapter() {
+      /**
+       * Upon a mouse click, checks if the cell clicked has information about
+       * a specific error to display and then displays it if it does
+       * @param e the event to be processed
+       */
       @Override
       public void mousePressed(MouseEvent e) {
         JTable table = (JTable) e.getSource();

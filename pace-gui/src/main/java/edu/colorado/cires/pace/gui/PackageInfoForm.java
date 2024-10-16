@@ -12,6 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * PackageInfoForm extends JPanel and provides package info specific structuring
+ */
 public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<PackageTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
@@ -28,6 +31,11 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
   private final DateTranslatorForm publicReleaseDateForm;
   private final JComboBox<String> dataCollectionNameField = new JComboBox<>();
 
+  /**
+   * Creates a package info form
+   * @param headerOptions selectable headers during mapping
+   * @param initialTranslator translator to build upon
+   */
   public PackageInfoForm(String[] headerOptions, PackageTranslator initialTranslator) {
     this.publicReleaseDateForm = new DateTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getPublicReleaseDate());
 
@@ -139,6 +147,10 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     }
   }
 
+  /**
+   * Builds a package translator based on currently selected headers within the form
+   * @return PackageTranslator holding current selections
+   */
   @Override
   public PackageTranslator toTranslator() {
     return PackageTranslator.builder()
@@ -158,6 +170,10 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
         .build();
   }
 
+  /**
+   * Changes header options to be the provided options
+   * @param options headers to now be selectable
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(uuidField, options);
     updateComboBoxModel(dataCollectionNameField, options);

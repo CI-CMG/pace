@@ -13,6 +13,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * GainForm extends JPanel and provides fields for gain type forms
+ */
 public class GainForm extends JPanel implements AuxiliaryTranslatorForm<GainTranslator> {
   
   private final JComboBox<String> gainField = new JComboBox<>();
@@ -21,6 +24,12 @@ public class GainForm extends JPanel implements AuxiliaryTranslatorForm<GainTran
   
   private final Consumer<GainForm> removeAction;
 
+  /**
+   * Initializes a gain form
+   * @param headerOptions possible headers to select from
+   * @param initialTranslator base translator to add to
+   * @param removeAction removes the current gain form
+   */
   public GainForm(String[] headerOptions, GainTranslator initialTranslator, Consumer<GainForm> removeAction) {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
@@ -67,14 +76,22 @@ public class GainForm extends JPanel implements AuxiliaryTranslatorForm<GainTran
       gainField.setSelectedItem(initialTranslator.getGain());
     }
   }
-  
+
+  /**
+   * Changes the possible header options to be the provided headers
+   * @param headerOptions headers to now select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(gainField, headerOptions);
     
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
   }
-  
+
+  /**
+   * Builds a gain translator given the held info
+   * @return GainTranslator with held form information
+   */
   public GainTranslator toTranslator() {
     return GainTranslator.builder()
         .startTime(startTimeForm.toTranslator())

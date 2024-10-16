@@ -9,11 +9,19 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * DateTranslatorForm extends JPanel and structures date translator forms
+ */
 public class DateTranslatorForm extends JPanel {
   
   private final JComboBox<String> dateField = new JComboBox<>();
   private final JComboBox<String> timeZoneField = new JComboBox<>();
 
+  /**
+   * Initializes a DateTranslatorForm object
+   * @param headerOptions possible selectable headers
+   * @param initialTranslator base translator to build upon
+   */
   public DateTranslatorForm(String[] headerOptions, DateTranslator initialTranslator) {
     dateField.setName("date");
     timeZoneField.setName("timeZone");
@@ -39,7 +47,11 @@ public class DateTranslatorForm extends JPanel {
       timeZoneField.setSelectedItem(initialTranslator.getTimeZone());
     }
   }
-  
+
+  /**
+   * Builds and returns a DateTranslator
+   * @return DateTranslator holding the form's data
+   */
   public DateTranslator toTranslator() {
     return DateTranslator.builder()
         .date((String) dateField.getSelectedItem())
@@ -47,6 +59,10 @@ public class DateTranslatorForm extends JPanel {
         .build();
   }
 
+  /**
+   * Changes the header options to the provided options
+   * @param options possible headers to now select from
+   */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(dateField, options);
     updateComboBoxModel(timeZoneField, options);

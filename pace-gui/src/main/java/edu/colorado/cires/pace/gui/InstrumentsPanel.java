@@ -8,8 +8,18 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.InstrumentConverter;
 import java.util.List;
 
+/**
+ * InstrumentsPanel extends MetadataPanel and holds uploaded instrument
+ * information within pace gui
+ */
 public class InstrumentsPanel extends MetadataPanel<Instrument, InstrumentTranslator> {
 
+  /**
+   * Initializes an instrument panel object
+   * @param repository repository holding currently held instruments
+   * @param fileTypeRepository holds the fileTypes which new instruments can be linked to
+   * @param translatorRepository holds instrument translators
+   */
   public InstrumentsPanel(
       CRUDRepository<Instrument> repository,
       FileTypeRepository fileTypeRepository,

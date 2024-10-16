@@ -13,11 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * PlatformTranslatorForm extends BaseTranslatorForm and provides structure
+ * relevant to platforms
+ */
 public class PlatformTranslatorForm extends BaseTranslatorForm<PlatformTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
-  
+
+  /**
+   * Creates a platform translator form
+   * @param initialTranslator base translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public PlatformTranslatorForm(PlatformTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     setName("platformTranslatorForm");

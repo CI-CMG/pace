@@ -9,12 +9,21 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * PositionTranslatorForm extends JPanel and provides structure
+ * relevant to position translators
+ */
 public class PositionTranslatorForm extends JPanel {
   
   private final JComboBox<String> xField = new JComboBox<>();
   private final JComboBox<String> yField = new JComboBox<>();
   private final JComboBox<String> zField = new JComboBox<>();
 
+  /**
+   * Creates a position translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public PositionTranslatorForm(PositionTranslator initialTranslator, String[] headerOptions) {
     xField.setName("x");
     yField.setName("y");
@@ -41,7 +50,11 @@ public class PositionTranslatorForm extends JPanel {
       zField.setSelectedItem(initialTranslator.getZ());
     }
   }
-  
+
+  /**
+   * Builds a position translator given selected items in form
+   * @return PositionTranslator with selected items in form
+   */
   public PositionTranslator toTranslator() {
     return PositionTranslator.builder()
         .x((String) xField.getSelectedItem())
@@ -49,7 +62,11 @@ public class PositionTranslatorForm extends JPanel {
         .z((String) zField.getSelectedItem())
         .build();
   }
-  
+
+  /**
+   * Changes the selectable headers in form
+   * @param headerOptions headers to select from
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(xField, headerOptions);
     updateComboBoxModel(yField, headerOptions);

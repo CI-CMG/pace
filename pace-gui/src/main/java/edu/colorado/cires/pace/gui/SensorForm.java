@@ -17,6 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * SensorForm extends ObjectWithNameForm and provides structure
+ * relevant to sensor forms specifically
+ */
 public class SensorForm extends ObjectWithNameForm<Sensor> {
   
   private static Sensor initialSensor;
@@ -35,7 +39,12 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
   private SensorForm(Sensor initialSensor) {
     super(initialSensor);
   }
-  
+
+  /**
+   * Creates sensor form
+   * @param sensor initial sensor
+   * @return SensorForm
+   */
   public static SensorForm create(Sensor sensor) {
     initialSensor = sensor;
     return new SensorForm(sensor);

@@ -24,6 +24,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+/**
+ * SensorTranslatorForm extends BaseTranslatorForm and provides structure
+ * relevant to sensor translators
+ */
 public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
@@ -59,6 +63,11 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     }
   };
 
+  /**
+   * Creates a sensor translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions headers to select from during mapping
+   */
   public SensorTranslatorForm(SensorTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     uuidField.setName("uuid");

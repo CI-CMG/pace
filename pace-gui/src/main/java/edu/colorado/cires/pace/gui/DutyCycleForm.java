@@ -13,6 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * DutyCycleForm extends JPanel and provides the form structure for collecting
+ * duty cycle information
+ */
 public class DutyCycleForm extends JPanel implements AuxiliaryTranslatorForm<DutyCycleTranslator> {
   
   private final JComboBox<String> durationField = new JComboBox<>();
@@ -22,6 +26,13 @@ public class DutyCycleForm extends JPanel implements AuxiliaryTranslatorForm<Dut
   
   private final Consumer<DutyCycleForm> removeAction;
 
+  /**
+   * Initializes a duty cycle form
+   *
+   * @param headerOptions selectable header options
+   * @param initialTranslator base translator to add to
+   * @param removeAction allows removal of duty cycle form
+   */
   public DutyCycleForm(String[] headerOptions, DutyCycleTranslator initialTranslator, Consumer<DutyCycleForm> removeAction) {
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
@@ -77,14 +88,22 @@ public class DutyCycleForm extends JPanel implements AuxiliaryTranslatorForm<Dut
       intervalField.setSelectedItem(initialTranslator.getInterval());
     }
   }
-  
+
+  /**
+   * Changes the selectable header options
+   * @param headerOptions options to update selection to
+   */
   public void updateHeaderOptions(String[] headerOptions) {
     updateComboBoxModel(durationField, headerOptions);
     updateComboBoxModel(intervalField, headerOptions);
     startTimeForm.updateHeaderOptions(headerOptions);
     endTimeForm.updateHeaderOptions(headerOptions);
   }
-  
+
+  /**
+   * returns a DutyCycleTranslator based on currently held data
+   * @return DutyCycleTranslator
+   */
   public DutyCycleTranslator toTranslator() {
     return DutyCycleTranslator.builder()
         .startTime(startTimeForm.toTranslator())

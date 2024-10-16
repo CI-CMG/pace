@@ -66,12 +66,20 @@ public class DataPanelFactory {
     this.packageRepository = packageRepository;
   }
 
+  /**
+   * Returns a new projects panel
+   * @return DataPanel of Project
+   */
   public DataPanel<Project> createProjectsPanel() {
     ProjectsPanel panel = new ProjectsPanel(projectRepository, translatorRepository);
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new platform panel
+   * @return DataPanel of Platform
+   */
   public DataPanel<Platform> createPlatformPanel() {
     PlatformsPanel panel = new PlatformsPanel(
         platformRepository, translatorRepository
@@ -79,7 +87,11 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new file type panel
+   * @return DataPanel of FileType
+   */
   public DataPanel<FileType> createFileTypesPanel() {
     FileTypesPanel panel = new FileTypesPanel(
         fileTypeRepository, translatorRepository
@@ -87,13 +99,21 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new people panel
+   * @return DataPanel of People
+   */
   public DataPanel<Person> createPeoplePanel() {
     PeoplePanel panel = new PeoplePanel(personRepository, translatorRepository);
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new organization panel
+   * @return DataPanel of Organization
+   */
   public DataPanel<Organization> createOrganizationsPanel() {
     OrganizationsPanel panel = new OrganizationsPanel(
         organizationRepository, translatorRepository
@@ -101,7 +121,11 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new packages panel
+   * @return DataPanel of Packages
+   */
   public DataPanel<Package> createPackagesPanel() {
     PackagesPanel panel = new PackagesPanel(
         packageRepository,
@@ -140,6 +164,10 @@ public class DataPanelFactory {
     return panel;
   }
 
+  /**
+   * Returns a new translator panel
+   * @return DataPanel of Translator
+   */
   public DataPanel<Translator> createTranslatorsPanel() {
     TranslatorPanel panel = new TranslatorPanel(
         translatorRepository,
@@ -156,7 +184,11 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new instrument panel
+   * @return DataPanel of Instrument
+   */
   public DataPanel<Instrument> createInstrumentsPanel() {
     InstrumentsPanel panel = new InstrumentsPanel(
         instrumentRepository, fileTypeRepository, translatorRepository
@@ -164,7 +196,11 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new sensor panel
+   * @return DataPanel of Sensor
+   */
   public DataPanel<Sensor> createSensorsPanel() {
     SensorsPanel panel = new SensorsPanel(
         sensorRepository, translatorRepository
@@ -173,6 +209,10 @@ public class DataPanelFactory {
     return panel; 
   }
 
+  /**
+   * Returns a new sea areas panel
+   * @return DataPanel of Sea
+   */
   public DataPanel<Sea> createSeaAreasPanel() {
     SeaAreasPanel panel = new SeaAreasPanel(
         seaRepository, translatorRepository
@@ -181,6 +221,10 @@ public class DataPanelFactory {
     return panel;
   }
 
+  /**
+   * Returns a new detection type panel
+   * @return DataPanel of DetectionType
+   */
   public DataPanel<DetectionType> createDetectionTypesPanel() {
     DetectionTypesPanel panel = new DetectionTypesPanel(
         detectionTypeRepository, translatorRepository
@@ -188,7 +232,11 @@ public class DataPanelFactory {
     panel.init();
     return panel;
   }
-  
+
+  /**
+   * Returns a new ship panel
+   * @return DataPanel of Ship
+   */
   public DataPanel<Ship> createShipsPanel() {
     ShipsPanel panel = new ShipsPanel(
         shipRepository, translatorRepository

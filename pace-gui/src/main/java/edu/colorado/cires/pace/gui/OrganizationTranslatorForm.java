@@ -13,7 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-public class OrganizationTranslatorForm  extends BaseTranslatorForm<OrganizationTranslator> {
+/**
+ * OrganizationTranslatorForm extends BaseTranslatorForm and outlines the structure
+ * relevant to an organization translator form
+ */
+public class OrganizationTranslatorForm extends BaseTranslatorForm<OrganizationTranslator> {
   
   private final JComboBox<String> uuidField = new JComboBox<>();
   private final JComboBox<String> nameField = new JComboBox<>();
@@ -25,6 +29,11 @@ public class OrganizationTranslatorForm  extends BaseTranslatorForm<Organization
   private final JComboBox<String> emailField = new JComboBox<>();
   private final JComboBox<String> phoneField = new JComboBox<>();
 
+  /**
+   * Creates an organization translator form
+   * @param initialTranslator translator to build upon
+   * @param headerOptions selectable headers during mapping
+   */
   public OrganizationTranslatorForm(OrganizationTranslator initialTranslator, String[] headerOptions) {
     super(headerOptions);
     addUniqueFields();

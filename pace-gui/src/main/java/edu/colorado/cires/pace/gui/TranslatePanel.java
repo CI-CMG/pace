@@ -10,6 +10,11 @@ import java.awt.Dimension;
 import java.util.function.Function;
 import javax.swing.JDialog;
 
+/**
+ * TranslatePanel extends DataPanel and provides structure relevant to translate panel
+ * @param <O> Object type
+ * @param <T> Translator type
+ */
 public abstract class TranslatePanel<O extends AbstractObject, T extends Translator> extends DataPanel<O> {
 
   private final Class<O> clazz;
@@ -17,6 +22,17 @@ public abstract class TranslatePanel<O extends AbstractObject, T extends Transla
   private final Converter<T, O> converter;
   private final Class<T> translatorClazz;
 
+  /**
+   * Creates a translate panel
+   * @param name panel name
+   * @param repository repository holding existing data
+   * @param headers headers in panel table
+   * @param objectConversion creates an object list out of translator fields
+   * @param clazz class type
+   * @param translatorRepository repository holding existing translators
+   * @param converter creates object when provided translator and relevant data column
+   * @param translatorClazz type of translators
+   */
   public TranslatePanel(String name, CRUDRepository<O> repository, String[] headers,
       Function<O, Object[]> objectConversion,
       Class<O> clazz, TranslatorRepository translatorRepository, Converter<T, O> converter, Class<T> translatorClazz) {

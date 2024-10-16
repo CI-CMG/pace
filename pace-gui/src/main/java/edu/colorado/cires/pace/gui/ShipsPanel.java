@@ -7,8 +7,17 @@ import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.ShipConverter;
 import java.util.UUID;
 
+/**
+ * ShipsPanel extends MetadataPanel and provides structure relevant
+ * to ships panel
+ */
 public class ShipsPanel extends MetadataPanel<Ship, ShipTranslator> {
 
+  /**
+   * Creates ships panel
+   * @param repository holds existing ship objects
+   * @param translatorRepository holds existing translators
+   */
   public ShipsPanel(CRUDRepository<Ship> repository, TranslatorRepository translatorRepository) {
     super(
         "shipsPanel",

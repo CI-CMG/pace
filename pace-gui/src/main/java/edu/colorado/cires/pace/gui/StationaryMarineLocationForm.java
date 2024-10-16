@@ -10,12 +10,21 @@ import java.awt.GridBagLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+/**
+ * StationaryMarineLocationForm extends BaseLocationDetailTranslatorForm and provides structure
+ * relevant to stationary marine locations
+ */
 public class StationaryMarineLocationForm extends BaseLocationDetailTranslatorForm<StationaryMarineLocationTranslator> {
   
   private final JComboBox<String> seaAreaField = new JComboBox<>();
   private final MarineInstrumentLocationForm deploymentLocationForm;
   private final MarineInstrumentLocationForm recoveryLocationForm;
 
+  /**
+   * Creates a stationary marine location form
+   * @param headerOptions headers to select from during mapping
+   * @param initialTranslator translator to build upon
+   */
   public StationaryMarineLocationForm(String[] headerOptions, StationaryMarineLocationTranslator initialTranslator) {
     super(headerOptions);
     this.deploymentLocationForm = new MarineInstrumentLocationForm(headerOptions, initialTranslator == null ? null : initialTranslator.getDeploymentLocationTranslator());
