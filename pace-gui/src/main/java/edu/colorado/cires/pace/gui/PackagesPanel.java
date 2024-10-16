@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.packaging.FileUtils;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.PassivePackerFactory;
@@ -262,6 +263,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     JPanel submitPanel = new JPanel(new BorderLayout());
     JButton submitButton = new JButton("Submit");
     submitPanel.add(submitButton, BorderLayout.EAST);
+
+    JButton metadataButton = new JButton("Metadata Only");
+    submitPanel.add(metadataButton, BorderLayout.WEST);
+
     chooseDestinationPanel.add(submitPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
     
     chooseDestinationButton.addActionListener((e) -> {
@@ -318,6 +323,39 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
               repository.update(processedPackage.getUuid(), processedPackage);
             }
           } catch (DatastoreException | IOException | PackagingException | ConflictException | NotFoundException | BadArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          } finally {
+            progressIndicator.indicateStatus(0);
+            resetTable();
+            actionButton.setEnabled(true);
+            selectAllButton.setEnabled(true);
+            deselectAllButton.setEnabled(true);
+            searchData();
+          }
+
+        }).start();
+
+        chooseDestinationDialog.dispose();
+      }
+    });
+
+    metadataButton.addActionListener((e) -> {
+      String destinationText = destinationField.getText();
+      if (StringUtils.isBlank(destinationText)) {
+        JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
+      } else {
+        actionButton.setEnabled(false);
+        selectAllButton.setEnabled(false);
+        deselectAllButton.setEnabled(false);
+
+        new Thread(() -> {
+          GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
+
+          try {
+            for(Package p : packages) {
+              FileUtils.writeMetadata(passivePackerFactory.createPackage(p), Paths.get(destinationField.getText()));
+            }
+          } catch (DatastoreException | IOException | NotFoundException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           } finally {
             progressIndicator.indicateStatus(0);

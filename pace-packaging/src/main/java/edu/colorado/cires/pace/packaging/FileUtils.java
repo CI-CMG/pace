@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 
-final class FileUtils {
+public class FileUtils {
 
   public static void copyFile(Path source, Path target) throws IOException {
     Path parentPath = target.getParent();
