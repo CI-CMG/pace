@@ -90,6 +90,7 @@ public final class ApplicationPropertyResolver {
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "organizations");
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "people");
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "translators");
+      DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "seas");
     } catch (Exception e) {
       throw new IllegalStateException("Unable to initialize data directory", e);
     }

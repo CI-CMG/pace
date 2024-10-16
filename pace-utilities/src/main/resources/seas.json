@@ -1,0 +1,507 @@
+[
+  {
+    "visible": true,
+    "name": "Adriatic Sea",
+    "uuid": "095c1e5e-6ccf-4d0b-a869-12c2e4eb9fc3"
+  },
+  {
+    "visible": true,
+    "name": "Aegean Sea",
+    "uuid": "598f9f70-f525-423c-aa03-470294822b5e"
+  },
+  {
+    "visible": true,
+    "name": "Alboran Sea",
+    "uuid": "20af4158-17db-477e-b3ef-c5156b651634"
+  },
+  {
+    "visible": true,
+    "name": "Andaman or Burma Sea",
+    "uuid": "66fd82a9-fcc9-4458-af94-41a446e8ce6a"
+  },
+  {
+    "visible": true,
+    "name": "Arabian Sea",
+    "uuid": "1e8da423-01f5-4dd3-97b4-339fae46e0f9"
+  },
+  {
+    "visible": true,
+    "name": "Arafura Sea",
+    "uuid": "b1b9d972-1b0b-44a8-944f-89f9a45d7b60"
+  },
+  {
+    "visible": true,
+    "name": "Arctic Ocean",
+    "uuid": "1ad39684-72cc-440e-806a-8b8b1ce3200f"
+  },
+  {
+    "visible": true,
+    "name": "Baffin Bay",
+    "uuid": "2dacf174-d9f7-490a-934e-fcee17ae2686"
+  },
+  {
+    "visible": true,
+    "name": "Balearic Sea",
+    "uuid": "06ea2daa-a587-44cd-a493-1274159a4914"
+  },
+  {
+    "visible": true,
+    "name": "Bali Sea",
+    "uuid": "84744ca7-7599-4d2a-bb3f-21d24a9bfccc"
+  },
+  {
+    "visible": true,
+    "name": "Baltic Sea",
+    "uuid": "4dc68082-f433-4905-8f6a-6ab911351729"
+  },
+  {
+    "visible": true,
+    "name": "Banda Sea",
+    "uuid": "f94cb07a-80e6-49f2-b3e6-071c003fd76b"
+  },
+  {
+    "visible": true,
+    "name": "Barentsz Sea",
+    "uuid": "720fe36d-ee06-432e-bce3-f1e89224c764"
+  },
+  {
+    "visible": true,
+    "name": "Bass Strait",
+    "uuid": "4de126e8-c545-46ea-88be-f3b5a984a4ce"
+  },
+  {
+    "visible": true,
+    "name": "Bay of Bengal",
+    "uuid": "c41e482c-eb38-4b92-bb31-9efdae454ec1"
+  },
+  {
+    "visible": true,
+    "name": "Bay of Biscay",
+    "uuid": "dbc015b8-8cfe-4ff2-b5c6-a562cd9fa996"
+  },
+  {
+    "visible": true,
+    "name": "Bay of Fundy",
+    "uuid": "1ec1d045-c5c6-4d15-ab37-812fe3d980f6"
+  },
+  {
+    "visible": true,
+    "name": "Beaufort Sea",
+    "uuid": "4b81aac8-63cf-4b6d-b2cb-0e66d92f6a13"
+  },
+  {
+    "visible": true,
+    "name": "Bering Sea",
+    "uuid": "6b2ed73d-f43e-44cc-97ad-6259e5ccff6a"
+  },
+  {
+    "visible": true,
+    "name": "Bismarck Sea",
+    "uuid": "deebe7d1-1c39-4d04-a592-1377a795d981"
+  },
+  {
+    "visible": true,
+    "name": "Black Sea",
+    "uuid": "2dcb0230-840d-4d46-b7f8-d9a1f1f57fca"
+  },
+  {
+    "visible": true,
+    "name": "Bristol Channel",
+    "uuid": "fcb5668f-7399-484e-bec9-b837b1829fff"
+  },
+  {
+    "visible": true,
+    "name": "Caribbean Sea",
+    "uuid": "baf3b2d0-6ba3-4fa8-aa4f-7ff2dfa37ba1"
+  },
+  {
+    "visible": true,
+    "name": "Celebes Sea",
+    "uuid": "51bc1fdd-d581-4cbc-b4bd-a2027fa00faa"
+  },
+  {
+    "visible": true,
+    "name": "Celtic Sea",
+    "uuid": "0fcd67d1-0546-4b80-8e17-3298d7b95c1a"
+  },
+  {
+    "visible": true,
+    "name": "Ceram Sea",
+    "uuid": "58c4b99c-4e48-41eb-b5a0-fb5d123e36ca"
+  },
+  {
+    "visible": true,
+    "name": "Chukchi Sea",
+    "uuid": "fdba79e5-cd6d-4cae-87cc-807f83eab581"
+  },
+  {
+    "visible": true,
+    "name": "Coral Sea",
+    "uuid": "78afb2b0-1820-40ff-ab1c-f0587b811cdb"
+  },
+  {
+    "visible": true,
+    "name": "Davis Strait",
+    "uuid": "f3763221-76cb-440f-bcf9-153c3354e102"
+  },
+  {
+    "visible": true,
+    "name": "East Siberian Sea",
+    "uuid": "f2ca0a2d-75a8-4ca1-9590-b8b5206fa0eb"
+  },
+  {
+    "visible": true,
+    "name": "Eastern China Sea",
+    "uuid": "db75d92e-1bcd-4a30-b95f-17a132b1a3c8"
+  },
+  {
+    "visible": true,
+    "name": "English Channel",
+    "uuid": "94edd06e-4059-4c34-87cb-0734fa6362d8"
+  },
+  {
+    "visible": true,
+    "name": "Flores Sea",
+    "uuid": "2960f098-f397-4c5d-989a-85e22cfc070c"
+  },
+  {
+    "visible": true,
+    "name": "Great Australian Bight",
+    "uuid": "1b1d4e57-5811-42e0-acdc-09cf874eec43"
+  },
+  {
+    "visible": true,
+    "name": "Greenland Sea",
+    "uuid": "df3fa546-d72b-42ab-b6f1-397af9c042d8"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Aden",
+    "uuid": "1b631b28-79b7-42a5-82b0-8a0ba1cf906e"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Alaska",
+    "uuid": "f55d142b-69b6-4f9a-9265-e89b6ab4409b"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Aqaba",
+    "uuid": "381fd62e-197d-4118-b0b1-4f2bb6b3f446"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Boni",
+    "uuid": "b12d3784-4a38-4963-b62d-1d179bd48884"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Bothnia",
+    "uuid": "136e4919-a631-470c-9717-2fd003d22ddb"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of California",
+    "uuid": "8a8c4591-a53c-49fe-be52-a845f4224b19"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Finland",
+    "uuid": "19067cc0-3952-4a6c-8daf-5c0917768b7d"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Guinea",
+    "uuid": "836130fc-2dc8-4970-91f7-87bc71100a9b"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Mexico",
+    "uuid": "8496a65d-f51c-4ee9-ba61-ca37790be7df"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Oman",
+    "uuid": "9bd7bf5f-6bc7-49c7-8665-7e4e2c4800b0"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Riga",
+    "uuid": "b19d9231-2489-4eba-b467-0052bc044ea6"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of St-Lawrence",
+    "uuid": "bc3d1ce9-b922-4877-9475-0ae952216fc8"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Suez",
+    "uuid": "862a5562-ddda-421a-a9eb-3659cbd00b13"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Thailand",
+    "uuid": "cae29e11-4565-4689-bf6e-0c498797b1e9"
+  },
+  {
+    "visible": true,
+    "name": "Gulf of Tomini",
+    "uuid": "dc21aede-fb95-4bf7-bdee-254fe3f6e0df"
+  },
+  {
+    "visible": true,
+    "name": "Halamahera Sea",
+    "uuid": "15666390-5c98-46d5-8566-191c484e7320"
+  },
+  {
+    "visible": true,
+    "name": "Hudson Bay",
+    "uuid": "837458f4-6c5f-41b3-836c-365f2e3bd122"
+  },
+  {
+    "visible": true,
+    "name": "Hudson Strait",
+    "uuid": "bc9df619-677c-4641-899f-4a62520341c7"
+  },
+  {
+    "visible": true,
+    "name": "Indian Ocean",
+    "uuid": "85ee6798-535f-4e3f-9a88-0a45845eda2e"
+  },
+  {
+    "visible": true,
+    "name": "Inland Sea",
+    "uuid": "6ef2cc62-c9d0-400c-bda2-959362c06552"
+  },
+  {
+    "visible": true,
+    "name": "Inner Seas off the West Coast of Scotland",
+    "uuid": "04f231b4-dc92-43a5-9fac-1e5afe560474"
+  },
+  {
+    "visible": true,
+    "name": "Ionian Sea",
+    "uuid": "b40c9070-7130-4ce2-ae1f-cbcf22d58a9c"
+  },
+  {
+    "visible": true,
+    "name": "Irish Sea and St. George's Channel",
+    "uuid": "c1fdbde1-2dc8-4453-98f2-76ffaa64de37"
+  },
+  {
+    "visible": true,
+    "name": "Japan Sea",
+    "uuid": "8a52567f-e027-4ee4-af17-a7dd00e346c5"
+  },
+  {
+    "visible": true,
+    "name": "Java Sea",
+    "uuid": "ad09d5d0-7ad4-4cde-9e04-b7e3bc370c93"
+  },
+  {
+    "visible": true,
+    "name": "Kara Sea",
+    "uuid": "2b09c8d5-78b2-40ee-a9f0-4a7c4d0e6f4a"
+  },
+  {
+    "visible": true,
+    "name": "Kattegat",
+    "uuid": "57f315fb-9270-401c-97ad-70daf36f9cb4"
+  },
+  {
+    "visible": true,
+    "name": "Labrador Sea",
+    "uuid": "d2ca4496-54af-4398-a526-3c2d1c65cfde"
+  },
+  {
+    "visible": true,
+    "name": "Laccadive Sea",
+    "uuid": "c2eee98d-30ee-4d1c-a80e-982a01d91793"
+  },
+  {
+    "visible": true,
+    "name": "Laptev Sea",
+    "uuid": "10b8b33d-a451-48e9-afcd-7277f5dacc82"
+  },
+  {
+    "visible": true,
+    "name": "Ligurian Sea",
+    "uuid": "08e35374-d4cb-4307-bab3-c8962a7056f1"
+  },
+  {
+    "visible": true,
+    "name": "Lincoln Sea",
+    "uuid": "160e0b34-9af3-410d-80c9-e7011427724f"
+  },
+  {
+    "visible": true,
+    "name": "Makassar Strait",
+    "uuid": "a9df9850-49b7-4d12-a276-0cf229080809"
+  },
+  {
+    "visible": true,
+    "name": "Malacca Strait",
+    "uuid": "29f1a423-7323-407f-acdd-3a8b65ef1513"
+  },
+  {
+    "visible": true,
+    "name": "Mediterranean Sea - Eastern Basin",
+    "uuid": "b3cf1c3b-cb21-4d2e-b623-7f9b52c722b3"
+  },
+  {
+    "visible": true,
+    "name": "Mediterranean Sea - Western Basin",
+    "uuid": "38fc6e4f-6c26-461d-a4c4-509b157a5878"
+  },
+  {
+    "visible": true,
+    "name": "Molukka Sea",
+    "uuid": "b34edda1-677c-451c-9c5a-8bb4db3562df"
+  },
+  {
+    "visible": true,
+    "name": "Mozambique Channel",
+    "uuid": "3af7ad80-1d72-4617-b1bf-1f061438474b"
+  },
+  {
+    "visible": true,
+    "name": "North Atlantic Ocean",
+    "uuid": "421eeb44-7c80-4e89-a590-a05204f6ffac"
+  },
+  {
+    "visible": true,
+    "name": "North Pacific Ocean",
+    "uuid": "a1ce9d27-b45e-4ca3-a246-e79ceff2fea8"
+  },
+  {
+    "visible": true,
+    "name": "North Sea",
+    "uuid": "79747846-b525-4c5c-b9ca-daee3bf267cc"
+  },
+  {
+    "visible": true,
+    "name": "Northwestern Passages",
+    "uuid": "6350c7d5-2a40-43f3-b68d-f16682b2501e"
+  },
+  {
+    "visible": true,
+    "name": "Norwegian Sea",
+    "uuid": "a2ab6926-9575-4de7-b712-e8678d188c59"
+  },
+  {
+    "visible": true,
+    "name": "Persian Gulf",
+    "uuid": "2fdadab2-6e3f-49a4-8bbe-3a7e385b0f5e"
+  },
+  {
+    "visible": true,
+    "name": "Philippine Sea",
+    "uuid": "79a23325-477a-4063-b93a-2b005440de30"
+  },
+  {
+    "visible": true,
+    "name": "Red Sea",
+    "uuid": "702e2827-9868-410e-97dc-5d3b5d4b9605"
+  },
+  {
+    "visible": true,
+    "name": "Rio de La Plata",
+    "uuid": "a9073dc4-0199-406c-87bd-439fb9d33bb6"
+  },
+  {
+    "visible": true,
+    "name": "Savu Sea",
+    "uuid": "20fab9ea-e1b3-4ca4-bb8f-05d329798d33"
+  },
+  {
+    "visible": true,
+    "name": "Sea of Azov",
+    "uuid": "20fab9ea-e1b3-4ca4-bb8f-05d929798d33"
+  },
+  {
+    "visible": true,
+    "name": "Sea of Marmara",
+    "uuid": "d8155efe-1301-4551-b950-83fee877ab3e"
+  },
+  {
+    "visible": true,
+    "name": "Sea of Okhotsk",
+    "uuid": "1cd4aafa-8f15-4f3a-9ab6-4f5639ace6e3"
+  },
+  {
+    "visible": true,
+    "name": "Singapore Strait",
+    "uuid": "1cd347b7-b01f-48f3-844d-cf7b93e6dc39"
+  },
+  {
+    "visible": true,
+    "name": "Skaggerak",
+    "uuid": "189d4af4-083f-4e6d-ae39-f552625bd0a3"
+  },
+  {
+    "visible": true,
+    "name": "Solomon Sea",
+    "uuid": "af10932c-0b23-48ae-a8c0-9efba7ad5008"
+  },
+  {
+    "visible": true,
+    "name": "South Atlantic Ocean",
+    "uuid": "a2075d09-94a2-43f8-af3d-7441e4cadc92"
+  },
+  {
+    "visible": true,
+    "name": "South China Sea",
+    "uuid": "9f5abb2b-f16e-4d2b-88fa-749deda1dc75"
+  },
+  {
+    "visible": true,
+    "name": "South Pacific Ocean",
+    "uuid": "f607f2f1-a10b-490d-9509-aae7c85e1da1"
+  },
+  {
+    "visible": true,
+    "name": "Southern Ocean",
+    "uuid": "f95a1d2e-da8f-461c-9c71-b7ae35fd2f64"
+  },
+  {
+    "visible": true,
+    "name": "Strait of Gibraltar",
+    "uuid": "3b29ed22-ac76-453e-bbd8-939f17747c14"
+  },
+  {
+    "visible": true,
+    "name": "Sulu Sea",
+    "uuid": "887bd551-3b86-42a5-aaed-dbf937dc9c65"
+  },
+  {
+    "visible": true,
+    "name": "Tasman Sea",
+    "uuid": "56f2cb07-de21-461e-a092-0cd39726fa58"
+  },
+  {
+    "visible": true,
+    "name": "The Coastal Waters of Southeast Alaska and British Columbia",
+    "uuid": "03c058c7-d847-4a3a-89d9-554486fba45c"
+  },
+  {
+    "visible": true,
+    "name": "Timor Sea",
+    "uuid": "51596898-76e2-4977-9ae7-fb9ed3a031c2"
+  },
+  {
+    "visible": true,
+    "name": "Tyrrhenian Sea",
+    "uuid": "6695d74f-8e64-4324-9324-813455d24296"
+  },
+  {
+    "visible": true,
+    "name": "White Sea",
+    "uuid": "7f83bc71-6401-4c8d-bcdc-df1285532c51"
+  },
+  {
+    "visible": true,
+    "name": "Yellow Sea",
+    "uuid": "0c166491-31aa-48ad-b7f1-afc7fc76d892"
+  }
+]

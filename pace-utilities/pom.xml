@@ -51,6 +51,7 @@
           <include>organizations.json</include>
           <include>people.json</include>
           <include>translators.json</include>
+          <include>seas.json</include>
         </includes>
       </resource>
     </resources>
