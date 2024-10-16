@@ -11,10 +11,20 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Migrator provides the migrate function which maps from one repository to
+ * another, usually from a sqlite repository to a json repository
+ */
 public final class Migrator {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(Migrator.class);
-  
+
+  /**
+   * Maps from one repository to another
+   * @param migrationRepositoryPair pair of repositories to map between
+   * @param runtimeException exception to throw in case of error
+   * @param <O> type of object
+   */
   public static <O extends ObjectWithUniqueField> void migrate(MigrationRepositoryPair<O> migrationRepositoryPair, RuntimeException runtimeException) {
     RuntimeException rte;
     try {
