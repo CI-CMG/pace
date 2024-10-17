@@ -68,6 +68,9 @@ abstract class MetadataPanel<O extends ObjectWithUniqueField, T extends Translat
                 table.getModel().getValueAt(row, i)
             );
           }
+          if (getHumanReadableObjectName().equals("Sea Area")){
+            return;
+          }
           createFormDialog(rowConversion.apply(values.toArray()));
         }
       }
