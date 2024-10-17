@@ -199,7 +199,7 @@ public class TranslatorForm extends ObjectWithNameForm<Translator> {
             "Instrument",
             "Platform",
             "Project",
-            "Sea Area",
+//            "Sea Area",
             "Sensor"
         }
     ));

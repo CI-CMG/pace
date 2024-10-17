@@ -2,10 +2,14 @@ package edu.colorado.cires.pace.gui;
 
 import edu.colorado.cires.pace.data.object.sea.Sea;
 import edu.colorado.cires.pace.data.object.sea.translator.SeaTranslator;
+import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.SeaConverter;
+import java.awt.BorderLayout;
 import java.util.UUID;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * SeaAreasPanel extends MetadataPanel and provides relevant
@@ -35,6 +39,14 @@ public class SeaAreasPanel extends MetadataPanel<Sea, SeaTranslator> {
         new SeaConverter(),
         SeaTranslator.class
     );
+  }
+
+  @Override
+  protected JPanel createControlPanel() {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BorderLayout());
+
+    return panel;
   }
 
   @Override
