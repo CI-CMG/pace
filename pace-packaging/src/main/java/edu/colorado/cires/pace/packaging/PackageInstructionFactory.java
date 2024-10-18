@@ -20,8 +20,20 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * PackageInstructionFactory generates a group of instructions for
+ * a packing job
+ */
 class PackageInstructionFactory {
-  
+
+  /**
+   * Returns the count of instructions including those generated
+   * @param packingJob package being packaged
+   * @param outputDirectory location for package to be place
+   * @param logger holds logs of processing
+   * @return long instruction count
+   * @throws PackagingException thrown in case of error in packaging
+   */
   public static long getInstructionCount(Package packingJob, Path outputDirectory, Logger logger) throws PackagingException {
     return getPackageInstructions(
         packingJob,
@@ -33,7 +45,19 @@ class PackageInstructionFactory {
         logger
     ).count() + 4L; // account for generated files
   }
-  
+
+  /**
+   * Returns the package instructions
+   * @param packingJob package to be packaged
+   * @param metadataPath path to metadata
+   * @param peoplePath path to people
+   * @param organizationsPath path to organizations
+   * @param projectsPath path to projects
+   * @param outputDirectory location to package to
+   * @param logger holds logs of processing
+   * @return Stream of package instructions
+   * @throws PackagingException thrown in case of error packaging
+   */
   public static Stream<PackageInstruction> getPackageInstructions(
       Package packingJob,
       Path metadataPath,

@@ -18,8 +18,17 @@ import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 
+/**
+ * FileUtils provides functions for packaging
+ */
 public class FileUtils {
 
+  /**
+   * Moves a file from the source to the target location
+   * @param source location to pull file from
+   * @param target location to push file to
+   * @throws IOException thrown in case of error moving file
+   */
   public static void copyFile(Path source, Path target) throws IOException {
     Path parentPath = target.getParent();
     
@@ -29,7 +38,14 @@ public class FileUtils {
 
     Files.copy(source, target);
   }
-  
+
+  /**
+   * Creates checksum based on file data and appends it to packaging directory
+   * @param fileWriter creates a file
+   * @param path location to create checksum within
+   * @param manifestParentDirectory location to place checksum
+   * @throws IOException thrown in case of checksum creation and movement
+   */
   public static void appendChecksumToManifest(FileWriter fileWriter, Path path, Path manifestParentDirectory) throws IOException {
     String checksum;
     try (InputStream inputStream = new FileInputStream(path.toFile())) {
@@ -40,17 +56,35 @@ public class FileUtils {
         "%s  %s", manifestParentDirectory.relativize(path), checksum
     )).append("\n");
   }
-  
+
+  /**
+   * Creates directory at provided location
+   * @param path location to build directory
+   * @throws IOException thrown in case of error making directory
+   */
   public static void mkdir(Path path) throws IOException {
     if (!path.toFile().exists()) {
       Files.createDirectory(path);
     }
   }
 
+  /**
+   * Returns whether the provided file is hidden
+   * @param path file to check
+   * @return boolean indicating if file is hidden
+   * @throws IOException thrown in case of file access error
+   */
   public static boolean filterHidden(Path path) throws IOException {
     return Files.isRegularFile(path) && !Files.isHidden(path);
   }
 
+  /**
+   * Checks the equality of checksums
+   * @param source location of first file
+   * @param target location of second file
+   * @return boolean indicating the quality of the checksums of the two files
+   * @throws IOException thrown in case of error accessing files
+   */
   public static boolean filterByChecksum(Path source, Path target) throws IOException {
     if (Files.exists(target)) {
       try (InputStream sourceStream = new FileInputStream(source.toFile()); InputStream targetStream = new FileInputStream(target.toFile())) {
@@ -64,7 +98,14 @@ public class FileUtils {
   private static String computeChecksum(InputStream inputStream) throws IOException {
     return DigestUtils.sha256Hex(inputStream);
   }
-  
+
+  /**
+   * Creates metadata file for package
+   * @param aPackage package to create metadata file of
+   * @param targetDirectory location to place metadata file
+   * @return Path target path
+   * @throws IOException thrown in case of file access error
+   */
   public static Path writeMetadata(PassivePackerPackage aPackage, Path targetDirectory) throws IOException {
     ObjectMapper objectMapper = SerializationUtils.createObjectMapper()
         .setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_SNAKE_CASE)
@@ -104,7 +145,17 @@ public class FileUtils {
     
     return targetPath;
   }
-  
+
+  /**
+   * Writes object blobs to specified location
+   * @param objects list of objects to write to file
+   * @param objectMapper maps object to file format
+   * @param targetDirectory location to place blob
+   * @param fileName name of file output
+   * @return Path target path
+   * @param <O> object type
+   * @throws IOException thrown in case of file access errors
+   */
   public static <O extends ObjectWithUniqueField> Path writeObjectsBlob(List<O> objects, ObjectMapper objectMapper, Path targetDirectory, String fileName) throws IOException {
     String jsonBlob = objectMapper.writeValueAsString(objects);
     

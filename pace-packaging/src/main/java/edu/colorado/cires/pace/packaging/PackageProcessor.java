@@ -25,6 +25,10 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.WriterAppender;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
+/**
+ * PackageProcessor takes in packages and relevant data, processes
+ * the data, and then writes it to the correct location
+ */
 public class PackageProcessor {
   
   private final ObjectMapper objectMapper;
@@ -37,6 +41,17 @@ public class PackageProcessor {
   private final Path outputDir;
   private final PassivePackerFactory passivePackerFactory;
 
+  /**
+   * Creates a package processor
+   * @param objectMapper builds json object out of object data
+   * @param people list of relevant person objects
+   * @param organizations list of relevant organization objects
+   * @param projects list of relevant project objects
+   * @param packages list of packages to process
+   * @param outputDir location to output processed files
+   * @param passivePackerFactory creates passive packer schema out of package data
+   * @param progressIndicators tracks the progress of processing the packages
+   */
   public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
       List<Package> packages, Path outputDir, PassivePackerFactory passivePackerFactory,
       ProgressIndicator... progressIndicators) {
@@ -50,7 +65,16 @@ public class PackageProcessor {
     this.progressIndicators = progressIndicators;
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
   }
-  
+
+  /**
+   * Processes the package and places the output in the
+   * relevant output directory
+   * @return List of processed packages
+   * @throws IOException thrown in case of error accessing file structure
+   * @throws PackagingException thrown in case of error during packaging
+   * @throws NotFoundException thrown in case of uuid missing
+   * @throws DatastoreException thrown in case of error accessing datastore
+   */
   public List<Package> process() throws IOException, PackagingException, NotFoundException, DatastoreException {
     FileUtils.mkdir(outputDir);
 

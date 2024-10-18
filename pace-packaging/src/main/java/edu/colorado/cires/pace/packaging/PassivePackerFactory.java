@@ -72,6 +72,10 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.IntStreams;
 
+/**
+ * PassivePackerFactory builds passive packer packages
+ * using the pace repositories
+ */
 public class PassivePackerFactory {
   
   private final PersonRepository personRepository;
@@ -79,6 +83,13 @@ public class PassivePackerFactory {
   private final SensorRepository sensorRepository;
   private final DetectionTypeRepository detectionTypeRepository;
 
+  /**
+   * Creates a passive packer factory
+   * @param personRepository holds existing person objects
+   * @param organizationRepository holds existing organization objects
+   * @param sensorRepository holds existing sensor objects
+   * @param detectionTypeRepository holds existing detection type objects
+   */
   public PassivePackerFactory(PersonRepository personRepository, OrganizationRepository organizationRepository, SensorRepository sensorRepository,
       DetectionTypeRepository detectionTypeRepository) {
     this.personRepository = personRepository;
@@ -87,6 +98,13 @@ public class PassivePackerFactory {
     this.detectionTypeRepository = detectionTypeRepository;
   }
 
+  /**
+   * Creates a passive packer package
+   * @param aPackage pace package to convert
+   * @return PassivePackerPackage converted package
+   * @throws NotFoundException thrown in case of package not identifiable
+   * @throws DatastoreException thrown in case of error accessing datastore
+   */
   public PassivePackerPackage createPackage(Package aPackage) throws NotFoundException, DatastoreException {
     PassivePackerPackage passivePackerPackage = PassivePackerPackage.builder()
         .dataCollectionName(aPackage.getPackageId())

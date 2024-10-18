@@ -9,8 +9,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Packager provides the functionality for packaging data and
+ * creating checksums for packages
+ */
 class Packager {
-  
+
+  /**
+   * Packages data
+   * @param moveInstructions stream of instructions to run for manifest
+   * @param outputDir location to place files
+   * @param logger logs outcomes of running
+   * @param progressIndicators tracks progress of packaging
+   * @throws PackagingException thrown in case of error to indicate packaging error
+   */
   public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, Logger logger, ProgressIndicator... progressIndicators) throws PackagingException {
     mkdir(outputDir);
     logger.info("Created output directory: {}", outputDir);
