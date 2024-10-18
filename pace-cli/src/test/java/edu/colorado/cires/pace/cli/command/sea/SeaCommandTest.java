@@ -1,16 +1,23 @@
 package edu.colorado.cires.pace.cli.command.sea;
 
+import static edu.colorado.cires.pace.packaging.FileUtils.mkdir;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.cli.command.ReadOnlyCommandTest;
 import edu.colorado.cires.pace.cli.command.TranslateCommandTest;
 import edu.colorado.cires.pace.data.object.sea.Sea;
 import edu.colorado.cires.pace.data.object.sea.translator.SeaTranslator;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
+public class SeaCommandTest extends ReadOnlyCommandTest<Sea> {
 
   @Override
   public Sea createObject(String uniqueField, boolean withUUID) {
@@ -72,27 +79,21 @@ public class SeaCommandTest extends TranslateCommandTest<Sea, SeaTranslator> {
   }
 
   @Override
-  protected String[] getTranslatorFields() {
-    return new String[] {
-        "UUID",
-        "seaName"
-    };
+  public Sea writeObject(Sea object) throws IOException {
+    return writeObject(testPath, object, objectMapper);
   }
 
-  @Override
-  protected SeaTranslator createTranslator(String name) {
-    return SeaTranslator.builder()
-        .name(name)
-        .seaUUID("UUID")
-        .seaName("seaName")
+  public static Sea writeObject(Path testPath, Sea object, ObjectMapper objectMapper) throws IOException {
+    Path seasDirectory = testPath.resolve("test-metadata").resolve("seas").toAbsolutePath();
+    mkdir(seasDirectory);
+    object = object.toBuilder()
+        .uuid(object.getUuid() == null ? UUID.randomUUID() : object.getUuid())
         .build();
-  }
+    File file = seasDirectory.resolve(object.getUuid().toString()+".json").toFile();
+    Files.createFile(file.toPath());
 
-  @Override
-  protected String[] objectToRow(Sea object) {
-    return new String[] {
-        object.getUuid() == null ? "" : object.getUuid().toString(),
-        object.getName()
-    };
+    objectMapper.writeValue(file, object);
+
+    return objectMapper.readValue(file, Sea.class);
   }
 }

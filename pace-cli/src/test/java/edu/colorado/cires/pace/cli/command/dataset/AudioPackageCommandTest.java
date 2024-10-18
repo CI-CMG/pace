@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.colorado.cires.pace.cli.command.sea.SeaCommandTest;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
@@ -102,9 +103,9 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         ))
         .build(), "instrument");
     
-    seaArea = saveObject(Sea.builder()
+    seaArea = SeaCommandTest.writeObject(testPath, Sea.builder()
         .name("seaArea")
-        .build(), "sea");
+        .build(), objectMapper);
     
     qualityAnalyst = saveObject(Person.builder()
         .name("analyst")
