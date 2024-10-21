@@ -4,8 +4,17 @@ import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.datastore.Datastore;
 
+/**
+ * ProjectRepository extends PackageDependencyRepository and holds specifically
+ * project objects
+ */
 public class ProjectRepository extends PackageDependencyRepository<Project> {
 
+  /**
+   * Creates a project repository
+   * @param datastore holds project objects
+   * @param packageDatastore holds package objects
+   */
   public ProjectRepository(Datastore<Project> datastore, Datastore<Package> packageDatastore) {
     super(datastore, packageDatastore);
   }

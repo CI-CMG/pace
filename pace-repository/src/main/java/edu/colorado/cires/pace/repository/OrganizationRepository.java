@@ -5,9 +5,17 @@ import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.List;
 
+/**
+ * OrganizationRepository extends PackageDependencyRepository and holds specifically
+ * organization objects
+ */
 public class OrganizationRepository extends PackageDependencyRepository<Organization> {
 
-
+  /**
+   * Creates an organization repository
+   * @param datastore holds organization objects
+   * @param dependencyDatastore holds package objects
+   */
   public OrganizationRepository(Datastore<Organization> datastore, Datastore<Package> dependencyDatastore) {
     super(datastore, true, dependencyDatastore);
   }

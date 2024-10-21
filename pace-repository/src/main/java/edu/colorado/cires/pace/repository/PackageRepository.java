@@ -30,6 +30,10 @@ import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * PackageRepository extends CRUDRepository and specifically holds
+ * package objects
+ */
 public class PackageRepository extends CRUDRepository<Package> implements DownstreamDependencyRepository<Package> {
   
   private final Datastore<DetectionType> detectionTypeDatastore;
@@ -42,6 +46,19 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
   private final Datastore<Sensor> sensorDatastore;
   private final Datastore<Ship> shipDatastore;
 
+  /**
+   * Creates a package repository
+   * @param datastore holds package objects
+   * @param detectionTypeDatastore holds detection type objects
+   * @param instrumentDatastore holds instrument objects
+   * @param organizationDatastore holds organization objects
+   * @param personDatastore holds person objects
+   * @param platformDatastore holds platform objects
+   * @param projectDatastore holds project objects
+   * @param seaDatastore holds sea area objects
+   * @param sensorDatastore holds sensor objects
+   * @param shipDatastore holds ship objects
+   */
   public PackageRepository(Datastore<Package> datastore, Datastore<DetectionType> detectionTypeDatastore, Datastore<Instrument> instrumentDatastore,
       Datastore<Organization> organizationDatastore, Datastore<Person> personDatastore, Datastore<Platform> platformDatastore,
       Datastore<Project> projectDatastore, Datastore<Sea> seaDatastore, Datastore<Sensor> sensorDatastore, Datastore<Ship> shipDatastore) {
@@ -57,18 +74,42 @@ public class PackageRepository extends CRUDRepository<Package> implements Downst
     this.shipDatastore = shipDatastore;
   }
 
+  /**
+   * Saves a package to the datastore
+   * @param object object to be saved to the repository
+   * @return Package object after any changes
+   * @throws DatastoreException thrown in case of error interacting with datastore
+   * @throws ConflictException thrown in case of duplicate uuid in datastore
+   * @throws NotFoundException thrown in case of object not found
+   * @throws BadArgumentException thrown in case of bad argument
+   */
   @Override
   public Package create(Package object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     checkDownstreamDependencies(object);
     return super.create(object);
   }
 
+  /**
+   * Updates a package in the datastore with the provided uuid to the provided package
+   * @param uuid uuid to identify object to update by
+   * @param object updated object
+   * @return Package updated package
+   * @throws DatastoreException thrown in case of error interacting with datastore
+   * @throws ConflictException thrown in case of duplicate uuid in datastore
+   * @throws NotFoundException thrown in case of object not found
+   * @throws BadArgumentException thrown in case of bad argument
+   */
   @Override
   public Package update(UUID uuid, Package object) throws DatastoreException, ConflictException, NotFoundException, BadArgumentException {
     checkDownstreamDependencies(object);
     return super.update(uuid, object);
   }
 
+  /**
+   * Checks the downstream dependencies of a package object
+   * @param object package object to check the dependencies of
+   * @throws DatastoreException thrown in case of error interacting with datastore
+   */
   @Override
   public void checkDownstreamDependencies(Package object) throws DatastoreException {
     validate(object);

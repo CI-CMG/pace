@@ -5,8 +5,17 @@ import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.sea.Sea;
 import edu.colorado.cires.pace.datastore.Datastore;
 
+/**
+ * SeaRepository extends PackageDependencyRepository and holds specifically
+ * sea objects
+ */
 public class SeaRepository extends PackageDependencyRepository<Sea> {
 
+  /**
+   * Creates a sea repository
+   * @param datastore holds sea objects
+   * @param packageDatastore holds package objects
+   */
   public SeaRepository(Datastore<Sea> datastore, Datastore<Package> packageDatastore) {
     super(datastore, packageDatastore);
   }

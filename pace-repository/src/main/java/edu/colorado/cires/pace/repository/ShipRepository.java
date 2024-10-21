@@ -6,8 +6,17 @@ import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.ship.Ship;
 import edu.colorado.cires.pace.datastore.Datastore;
 
+/**
+ * ShipRepository extends PackageDependencyRepository and holds specifically
+ * ship objects
+ */
 public class ShipRepository extends PackageDependencyRepository<Ship> {
 
+  /**
+   * Creates a ship repository
+   * @param datastore holds ship objects
+   * @param packageDatastore holds package objects
+   */
   public ShipRepository(Datastore<Ship> datastore, Datastore<Package> packageDatastore) {
     super(datastore, packageDatastore);
   }

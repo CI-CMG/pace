@@ -8,8 +8,17 @@ import edu.colorado.cires.pace.data.object.sensor.base.Sensor;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.List;
 
+/**
+ * SensorRepository extends PackageDependencyRepository and holds specifically
+ * sensor objects
+ */
 public class SensorRepository extends PackageDependencyRepository<Sensor> {
 
+  /**
+   * Creates a sensor repository
+   * @param datastore holds sensor objects
+   * @param packageDatastore holds package objects
+   */
   public SensorRepository(Datastore<Sensor> datastore, Datastore<Package> packageDatastore) {
     super(datastore, packageDatastore);
   }

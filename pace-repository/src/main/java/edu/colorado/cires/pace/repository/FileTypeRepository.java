@@ -4,6 +4,10 @@ import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import edu.colorado.cires.pace.datastore.Datastore;
 
+/**
+ * FileTypeRepository extends UpstreamDependencyRepository and holds specifically
+ * file type objects
+ */
 public class FileTypeRepository extends UpstreamDependencyRepository<FileType, Instrument> {
 
   @Override
@@ -28,6 +32,11 @@ public class FileTypeRepository extends UpstreamDependencyRepository<FileType, I
         .build();
   }
 
+  /**
+   * Creates a file type repository
+   * @param datastore holds file type objects
+   * @param instrumentDatastore holds instrument type objects
+   */
   public FileTypeRepository(Datastore<FileType> datastore, Datastore<Instrument> instrumentDatastore) {
     super(datastore, false, instrumentDatastore);
   }

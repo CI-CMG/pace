@@ -6,9 +6,17 @@ import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.datastore.Datastore;
 import java.util.List;
 
+/**
+ * PersonRepository extends PackageDependencyRepository and holds specifically
+ * person objects
+ */
 public class PersonRepository extends PackageDependencyRepository<Person> {
 
-
+  /**
+   * Creates a person repository
+   * @param datastore holds person objects
+   * @param dependencyDatastore holds package objects
+   */
   public PersonRepository(Datastore<Person> datastore, Datastore<Package> dependencyDatastore) {
     super(datastore, true, dependencyDatastore);
   }

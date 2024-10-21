@@ -5,8 +5,17 @@ import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.datastore.Datastore;
 
+/**
+ * DetectionTypeRepository extends PackageDependencyRepository and holds specifically
+ * detection type objects
+ */
 public class DetectionTypeRepository extends PackageDependencyRepository<DetectionType> {
 
+  /**
+   * Creates a detection type repository
+   * @param datastore holds detection type objects
+   * @param packageDatastore holds package objects
+   */
   public DetectionTypeRepository(Datastore<DetectionType> datastore, Datastore<Package> packageDatastore) {
     super(datastore, packageDatastore);
   }
