@@ -82,6 +82,7 @@ public final class ApplicationPropertyResolver {
     try{
       Path path = getDataDir();
       if (path.toFile().exists()) {
+        DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "seas");
         return;
       }
       DataInitializer.initialize(path, SerializationUtils.createObjectMapper(), "file-types");

@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.utilities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -13,6 +14,13 @@ import org.apache.commons.io.FileUtils;
 class DataInitializer {
   public static void initialize(Path outputPath, ObjectMapper objectMapper, String jsonName) throws URISyntaxException, IOException {
     Path jsonPath = outputPath.resolve(jsonName);
+    if (jsonName.equals("seas")){
+      File file = jsonPath.toFile();
+      for (File subfile : file.listFiles()){
+        subfile.delete();
+      }
+      file.delete();
+    }
     if (!jsonPath.toFile().exists()) {
       if (!jsonPath.toFile().mkdirs()) {
         throw new IOException(String.format("Unable to create directory %s.", jsonPath.toAbsolutePath().toString()));
