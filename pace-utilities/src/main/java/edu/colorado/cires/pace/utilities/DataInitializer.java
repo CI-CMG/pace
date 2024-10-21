@@ -9,17 +9,25 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 
 class DataInitializer {
-  public static void initialize(Path outputPath, ObjectMapper objectMapper, String jsonName) throws URISyntaxException, IOException {
+  public static void initialize(Path outputPath, ObjectMapper objectMapper, String jsonName) throws IOException {
     Path jsonPath = outputPath.resolve(jsonName);
-    if (jsonName.equals("seas")){
+    if (jsonName.equals("seas") && jsonPath.toFile().exists()){
       File file = jsonPath.toFile();
-      for (File subfile : file.listFiles()){
-        subfile.delete();
+      File[] fileList = file.listFiles();
+      if (fileList != null) {
+        for (File subfile :fileList) {
+          if (!subfile.delete()) {
+            throw new IOException("Failed to delete " + subfile);
+          }
+        }
       }
-      file.delete();
+      if (!file.delete()){
+        throw new IOException("Failed to delete " + jsonName);
+      }
     }
     if (!jsonPath.toFile().exists()) {
       if (!jsonPath.toFile().mkdirs()) {
