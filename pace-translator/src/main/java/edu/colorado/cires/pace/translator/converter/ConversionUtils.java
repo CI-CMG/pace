@@ -133,6 +133,12 @@ final class ConversionUtils {
     if (timeZone == null) {
       return null;
     }
+    if (timeTranslator instanceof DateOnlyTimeTranslator) {
+      timeTranslator = DefaultTimeTranslator.builder()
+          .time(((DateOnlyTimeTranslator) timeTranslator).getDate()+"T00:00:00")
+          .timeZone("timeZone")
+          .build();
+    }
     if (timeTranslator instanceof DefaultTimeTranslator defaultTimeTranslator) {
       DateTimeFormatter dateTimeFormatter;
       try {
