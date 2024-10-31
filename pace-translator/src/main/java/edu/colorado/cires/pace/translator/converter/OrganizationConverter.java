@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.contact.organization.translator.Organ
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * OrganizationConverter extends Converter and provides convert function for
+ * Organization objects
+ */
 public class OrganizationConverter extends Converter<OrganizationTranslator, Organization> {
 
+  /**
+   * Creates an organization object from the provided properties
+   * @param translator translates to organization object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Organization object
+   */
   @Override
   public Organization convert(OrganizationTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {

@@ -9,8 +9,20 @@ import edu.colorado.cires.pace.data.object.instrument.translator.InstrumentTrans
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * InstrumentConverter extends Converter and provides convert function for
+ * Instrument objects
+ */
 public class InstrumentConverter extends Converter<InstrumentTranslator, Instrument> {
 
+  /**
+   * Creates an instrument object from the provided properties
+   * @param translator translates to instrument object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Instrument object
+   */
   @Override
   public Instrument convert(InstrumentTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {

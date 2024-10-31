@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Provides list of location types
+ */
 public enum LocationType {
   STATIONARY_MARINE("stationary marine"),
   MULTIPOINT_STATIONARY_MARINE("multipoint stationary marine"),
@@ -21,10 +24,19 @@ public enum LocationType {
     this.name = name;
   }
 
+  /**
+   * Returns name of location type
+   * @return String location type
+   */
   public String getName() {
     return name;
   }
-  
+
+  /**
+   * Returns type given string of name
+   * @param name string name of location type
+   * @return LocationType location type
+   */
   public static LocationType fromName(String name) {
     return switch (name) {
       case "stationary marine" -> STATIONARY_MARINE;
@@ -40,7 +52,12 @@ public enum LocationType {
       ));
     };
   }
-  
+
+  /**
+   * Returns location type of location detail
+   * @param locationDetail locationDetail to check type of
+   * @return LocationType of data package
+   */
   public static LocationType fromLocationDetail(LocationDetail locationDetail) {
     return switch (locationDetail.getClass().getSimpleName()) {
       case "StationaryMarineLocation" -> STATIONARY_MARINE;

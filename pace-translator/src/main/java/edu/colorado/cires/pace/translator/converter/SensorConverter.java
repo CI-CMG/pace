@@ -15,15 +15,27 @@ import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * SensorConverter extends Converter and provides convert function for
+ * Sensor objects
+ */
 public class SensorConverter extends Converter<SensorTranslator, Sensor> {
 
+  /**
+   * Creates a sea object from the provided properties
+   * @param translator translates to sea object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Sea object
+   */
   @Override
   public Sensor convert(SensorTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     return sensorFromMap(translator, properties, row, runtimeException);
   }
 
-  public static Sensor sensorFromMap(SensorTranslator sensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
+  private static Sensor sensorFromMap(SensorTranslator sensorTranslator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {
     if (sensorTranslator instanceof DepthSensorTranslator depthSensorTranslator) {
       return depthSensorFromMap(depthSensorTranslator, properties, row, runtimeException);

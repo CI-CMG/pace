@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.contact.person.translator.PersonTrans
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * PersonConverter extends Converter and provides convert function for
+ * Person objects
+ */
 public class PersonConverter extends Converter<PersonTranslator, Person> {
 
+  /**
+   * Creates a person object from the provided properties
+   * @param translator translates to person object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Person object
+   */
   @Override
   public Person convert(PersonTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Person.builder()

@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Provides list of dataset types
+ */
 public enum DatasetType {
   SOUND_CLIPS("sound clips"),
   AUDIO("audio"),
@@ -25,10 +28,19 @@ public enum DatasetType {
     this.name = name;
   }
 
+  /**
+   * Returns name of dataset type
+   * @return String dataset type
+   */
   public String getName() {
     return name;
   }
-  
+
+  /**
+   * Returns type given string of name
+   * @param name string name of dataset type
+   * @return DatasetType dataset type
+   */
   public static DatasetType fromName(String name) {
     return switch (name) {
       case "sound clips" -> SOUND_CLIPS;
@@ -46,7 +58,12 @@ public enum DatasetType {
       ));
     };
   }
-  
+
+  /**
+   * Returns dataset type of data package
+   * @param dataPackage package to check type of
+   * @return DatasetType of data package
+   */
   public static DatasetType fromPackage(Package dataPackage) {
     return switch (dataPackage.getClass().getSimpleName()) {
       case "AudioPackage" -> AUDIO;

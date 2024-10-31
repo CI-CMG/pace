@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.fileType.translator.FileTypeTranslato
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * FileTypeConverter extends Converter and provides convert function for
+ * file type objects
+ */
 public class FileTypeConverter extends Converter<FileTypeTranslator, FileType> {
 
+  /**
+   * Creates a file type object from the provided properties
+   * @param translator translates to file type object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return FileType object
+   */
   @Override
   public FileType convert(FileTypeTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {

@@ -11,8 +11,17 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+/**
+ * CSVReader provides the ability to read data from a csv file
+ */
 public class CSVReader {
-  
+
+  /**
+   * Creates stream for reading csv file
+   * @param reader reads csv files
+   * @return Stream of map with row number objects
+   * @throws IOException thrown in case of error reading from csv file
+   */
   public static Stream<MapWithRowNumber> read(Reader reader) throws IOException {
     CSVFormat format = CSVFormat.DEFAULT.builder()
         .setSkipHeaderRecord(false)

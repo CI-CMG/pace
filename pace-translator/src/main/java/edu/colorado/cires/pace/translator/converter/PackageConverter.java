@@ -67,8 +67,20 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * PackageConverter extends Converter and provides convert function for
+ * Package objects
+ */
 public class PackageConverter extends Converter<PackageTranslator, Package> {
 
+  /**
+   * Creates a package object from the provided properties
+   * @param translator translates to package object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Package object
+   */
   @Override
   public Package convert(PackageTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException)
       throws TranslationException {

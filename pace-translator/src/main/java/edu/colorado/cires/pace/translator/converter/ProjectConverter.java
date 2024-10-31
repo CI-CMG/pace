@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.project.translator.ProjectTranslator;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * ProjectConverter extends Converter and provides convert function for
+ * Project objects
+ */
 public class ProjectConverter extends Converter<ProjectTranslator, Project> {
 
+  /**
+   * Creates a project object from the provided properties
+   * @param translator translates to project object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Project object
+   */
   @Override
   public Project convert(ProjectTranslator translator, Map<String, ValueWithColumnNumber> properties, int row, RuntimeException runtimeException) {
     return Project.builder()

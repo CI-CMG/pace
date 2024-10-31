@@ -6,8 +6,20 @@ import edu.colorado.cires.pace.translator.converter.Converter;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * Provides ability to translate spreadsheets to objects
+ */
 public class SpreadsheetConverter {
-  
+
+  /**
+   * Executes the translation of spreadsheets to objects
+   * @param reader reads spreadsheet
+   * @param translator translator to apply to spreadsheet rows
+   * @param converter maps information to objects
+   * @return Stream of objects
+   * @param <T> Translator type
+   * @param <O> Object type
+   */
   public static <T extends Translator, O extends AbstractObject> Stream<ObjectWithRowError<O>> execute(Supplier<Stream<MapWithRowNumber>> reader, T translator, Converter<T, O> converter) {
     RuntimeException runtimeException = new RuntimeException("Translation failed");
 

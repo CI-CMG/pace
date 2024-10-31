@@ -11,8 +11,18 @@ import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 
+/**
+ * ExcelReader provides the ability to read data from an Excel file
+ */
 public class ExcelReader {
-  
+
+  /**
+   * Creates stream for reading Excel file
+   * @param inputStream input stream of Excel data
+   * @param sheetIndex index of sheet to read from
+   * @return Stream of map with row number objects
+   * @throws IOException thrown in case of error reading from Excel file
+   */
   public static Stream<MapWithRowNumber> read(InputStream inputStream, int sheetIndex) throws IOException {
     try (ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
       return workbook.getSheet(sheetIndex).map(

@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.platform.translator.PlatformTranslato
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * PlatformConverter extends Converter and provides convert function for
+ * Platform objects
+ */
 public class PlatformConverter extends Converter<PlatformTranslator, Platform> {
 
+  /**
+   * Creates a platform object from the provided properties
+   * @param translator translates to platform object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return Platform object
+   */
   @Override
   public Platform convert(PlatformTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {

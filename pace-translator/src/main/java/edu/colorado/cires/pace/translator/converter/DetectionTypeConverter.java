@@ -8,8 +8,20 @@ import edu.colorado.cires.pace.data.object.detectionType.translator.DetectionTyp
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import java.util.Map;
 
+/**
+ * DetectionTypeConverter extends Converter and provides convert function for
+ * detection type objects
+ */
 public class DetectionTypeConverter extends Converter<DetectionTypeTranslator, DetectionType> {
 
+  /**
+   * Creates a detection type object from the provided properties
+   * @param translator translates to detection type object
+   * @param properties maps property names to values
+   * @param row relevant row
+   * @param runtimeException thrown in case of error mapping
+   * @return DetectionType object
+   */
   @Override
   public DetectionType convert(DetectionTypeTranslator translator, Map<String, ValueWithColumnNumber> properties, int row,
       RuntimeException runtimeException) {
