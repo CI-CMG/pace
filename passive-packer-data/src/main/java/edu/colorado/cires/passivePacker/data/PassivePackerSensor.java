@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * PassivePackerSensor provides builder structure for
+ * PassivePackerSensor objects
+ */
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
@@ -36,6 +40,13 @@ public abstract class PassivePackerSensor {
   @JsonProperty("description")
   private final String description;
 
+  /**
+   * Passes sensor to inheriting builder
+   * @param inheritingTypeBuilder builder to pass to
+   * @return Sensor object of inheriting type
+   * @param <S> Sensor type
+   * @param <B> Builder type
+   */
   public <S extends PassivePackerSensor, B extends PassivePackerSensor.PassivePackerSensorBuilder<S, ?>> S toInheritingType(B inheritingTypeBuilder) {
     return inheritingTypeBuilder
         .type(getType())

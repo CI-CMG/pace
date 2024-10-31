@@ -5,6 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerOtherSensor extends PassivePackerSensor provides builder structure for
+ * PassivePackerOtherSensor objects
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)

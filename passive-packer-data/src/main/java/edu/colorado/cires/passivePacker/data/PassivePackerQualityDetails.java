@@ -8,6 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerQualityDetails provides builder structure for
+ * PassivePackerQualityDetails objects
+ */
 @Data
 @EqualsAndHashCode
 @Builder(toBuilder = true)

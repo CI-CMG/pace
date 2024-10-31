@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerGain extends PassivePackerTimeRange provides builder structure for
+ * PassivePackerGain objects
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)

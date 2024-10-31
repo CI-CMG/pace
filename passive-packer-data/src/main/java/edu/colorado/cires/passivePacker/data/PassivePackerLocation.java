@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerLocation provides builder structure for PassivePackerLocation objects
+ * and provides functionality for passing object to inheriting location builder
+ */
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)
@@ -23,7 +27,14 @@ import lombok.extern.jackson.Jacksonized;
 public class PassivePackerLocation {
   
   private final String deployType;
-  
+
+  /**
+   * Passes location to inheriting builder
+   * @param inheritingTypeBuilder builder to pass to
+   * @return Location object of inheriting type
+   * @param <L> Location type
+   * @param <B> Builder type
+   */
   public <L extends PassivePackerLocation, B extends PassivePackerLocation.PassivePackerLocationBuilder<L, ?>> L toInheritingType(B inheritingTypeBuilder) {
     return inheritingTypeBuilder
         .deployType(getDeployType())

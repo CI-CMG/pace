@@ -5,6 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerStationaryTerrestrialLocation extends PassivePackerLocation and provides builder structure for
+ * PassivePackerStationaryTerrestrialLocation objects
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)

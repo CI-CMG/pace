@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerMarineInstrumentLocation provides builder structure for
+ * PassivePackerMarineInstrumentLocation objects
+ */
 @Data
 @EqualsAndHashCode
 @Builder

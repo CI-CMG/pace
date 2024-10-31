@@ -6,6 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerCalibrationInfo provides builder structure for PassivePackerCalibrationInfo
+ * objects
+ */
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)

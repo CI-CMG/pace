@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * AbstractObjectWithName provides builder structure for objects
+ * with a name and uuid
+ */
 @Data
 @Builder
 @Jacksonized

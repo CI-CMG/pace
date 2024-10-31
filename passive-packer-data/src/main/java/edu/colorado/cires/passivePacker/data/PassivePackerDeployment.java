@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerDeployment provides builder structure for PassivePackerDeployment
+ * objects
+ */
 @Data
 @EqualsAndHashCode
 @SuperBuilder(toBuilder = true)

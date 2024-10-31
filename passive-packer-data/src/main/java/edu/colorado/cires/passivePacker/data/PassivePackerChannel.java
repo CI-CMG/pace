@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerChannel provides builder structure for PassivePackerChannel
+ * objects
+ */
 @Data
 @EqualsAndHashCode
 @Builder

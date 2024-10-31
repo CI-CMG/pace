@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * PassivePackerMultipointStationaryMarineLocation extends PassivePackerLocation provides builder structure for
+ * PassivePackerMultipointStationaryMarineLocation objects
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
