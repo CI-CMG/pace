@@ -12,7 +12,18 @@ import java.nio.file.Path;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 
+/**
+ * DataInitializer provides structure to initialize PACE data directories with default data
+ */
 class DataInitializer {
+
+  /**
+   * Initializes default data
+   * @param outputPath path to write to
+   * @param objectMapper creates objects from json files
+   * @param jsonName json to read from
+   * @throws IOException thrown in case of error reading or writing to json files
+   */
   public static void initialize(Path outputPath, ObjectMapper objectMapper, String jsonName) throws IOException {
     Path jsonPath = outputPath.resolve(jsonName);
     if (jsonName.equals("seas") && jsonPath.toFile().exists()){

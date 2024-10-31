@@ -13,6 +13,10 @@ import java.util.function.Function;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * ApplicationPropertyResolver checks to ensure the background structure
+ * of PACE properties relative to the folder structure
+ */
 public final class ApplicationPropertyResolver {
 
   private static final Path APPLICATION_BASE_DIR = Paths.get(System.getProperty("user.home")).resolve(".pace");
@@ -36,6 +40,13 @@ public final class ApplicationPropertyResolver {
     initializeDataDirectory();
   }
 
+  /**
+   * Returns the property value given the property name to check for
+   * @param propertyName property name to check for
+   * @param transform transform function to apply to property value
+   * @return property value after transform
+   * @param <T> Type of transformed property value
+   */
   public static <T> T getPropertyValue(String propertyName, Function<String, T> transform) {
     String propertyValue = System.getProperty(propertyName);
 
@@ -97,6 +108,10 @@ public final class ApplicationPropertyResolver {
     }
   }
 
+  /**
+   * Returns the path to the data directory
+   * @return Path to data directory
+   */
   public static Path getDataDir() {
     String dirString = getPropertyValue("pace.metadata-directory", (s) -> s);
     Path defaultDataDir = APPLICATION_BASE_DIR.resolve("data").toAbsolutePath();
@@ -111,10 +126,19 @@ public final class ApplicationPropertyResolver {
     return userOptionDir;
   }
 
+  /**
+   * Returns version name
+   * @return String version
+   */
   public static String getVersion() {
     return getVersion(true);
   }
 
+  /**
+   * Returns the version with toggle for patch version inclusion
+   * @param includePatchVersion patch version toggle
+   * @return String version
+   */
   public static String getVersion(boolean includePatchVersion) {
     String fullVersion = getPropertyValue("pace.version", (s) -> s);
     

@@ -20,8 +20,15 @@ import java.util.function.Function;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * SerializationUtils provides serialization functionality
+ */
 public final class SerializationUtils {
 
+  /**
+   * Creates an object mapper
+   * @return ObjectMapper for creating objects
+   */
   public static ObjectMapper createObjectMapper() {
     DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
     prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
@@ -53,6 +60,17 @@ public final class SerializationUtils {
         ? IOUtils.toString(System.in, StandardCharsets.UTF_8) : FileUtils.readFileToString(file, StandardCharsets.UTF_8);
   }
 
+  /**
+   * Takes json file and creates an object
+   * @param objectMapper maps json file to object
+   * @param file json file to read from
+   * @param tClass class of object
+   * @param typeReference reference to type
+   * @param processor processes deserialized object
+   * @return Object read from json file
+   * @param <T> class type
+   * @throws IOException thrown in case of error reading from json file
+   */
   public static <T> Object deserializeAndProcess(ObjectMapper objectMapper, File file, Class<T> tClass, TypeReference<List<T>> typeReference, Function<T, T> processor) throws IOException {
     String jsonContents = getJsonContents(file);
 
