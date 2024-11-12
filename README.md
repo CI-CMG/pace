@@ -4,6 +4,7 @@
   - [Releases](#releases)
   - [Supported Platforms](#supported-platforms)
   - [GUI](#gui)
+    - [GUI Guides](#gui-guides)
     - [GUI Installation](#gui-installation)
   - [CLI](#cli)
     - [Installation](#installation)
@@ -18,7 +19,7 @@
   - [PACE Templates](#pace-templates)
 
 ## Releases
-- Latest Release: [0.1.0](https://github.com/CI-CMG/pace/releases/tag/v0.1.0)
+- Latest Release: [0.2.0](https://github.com/CI-CMG/pace/releases/tag/v0.2.0)
 - Development Release: [trunk-latest](https://github.com/CI-CMG/pace/releases/tag/trunk-latest)
 
 ## Supported Platforms
@@ -28,39 +29,43 @@
 | Windows (ARM)  | ❌  | ❌  |
 | Linux (x86)  | ✅  | ✅  |
 | Linux (ARM)  | ❌  | ❌  |
-| MacOS (ARM)  | ✅  | ✅  |
+| MacOS (x86)  | ✅  | ✅  |
 | MacOS (ARM)  | ✅  | ✅  |
 
 ## GUI
+### GUI Guides
+For a video walkthrough of the PACE GUI, go to the following [link](https://www.youtube.com/watch?v=q3v-Cji4OT4).
+For an in-depth PACE GUI guide, go to the following [link](https://github.com/CI-CMG/pace/blob/trunk/docs/PACE%20GUI%20Guide.pdf).
+
 ### GUI Installation
 1. Go to this [link](https://github.com/CI-CMG/pace/releases)
-2. Look under the most recent release version which is not trunk-latest (currently v0.1.0)
+2. Look under the most recent release version which is not trunk-latest (currently v0.2.0)
 3. Find the files which start with "pace-gui"
 4. Click the relevant version to download:\
    a. Older Mac (Intel CPU): "pace-gui-macOS-X64"\
    b. Newer Mac (M1, M2, or M3 CPU): "pace-gui-macOS-ARM64"\
-   c. Windows: "pace-gui-Windows-X64-0.1.0.msi"\
+   c. Windows: "pace-gui-Windows-X64-(version number).msi"\
    d. Debian-Based Linux: "pace-gui-Linux-X64-(version number).deb"\
    e. RedHat-Based Linux: "pace-gui-Linux-X64-(version number).rpm"
 
 ## CLI
 ### Installation
 #### MacOS
-1. Download file using ``curl``: ``curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-macOS-ARM64-0.1.1-SNAPSHOT.pkg``
-2. Use ``installer`` to install ``pace-cli`` (requires sudo): ``installer -pkg pace-cli-macOS-ARM64-0.1.1-SNAPSHOT.pkg -target /``
+1. Download file using ``curl``: ``curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-macOS-ARM64-0.2.1-SNAPSHOT.pkg``
+2. Use ``installer`` to install ``pace-cli`` (requires sudo): ``installer -pkg pace-cli-macOS-ARM64-0.2.1-SNAPSHOT.pkg -target /``
 3. Add the following line to ``.zshrc`` or ``.bash_profile`` depending on your shell preference: ``export PATH="/Applications/pace-cli.app/Contents/MacOS:$PATH"``
 4. Open new terminal window
 5. Verify installation: ``pace-cli --version``
 #### Linux
-1. Download file using ``curl``: ``curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-Linux-X64-0.1.1-SNAPSHOT.zip``
-2. Unzip file: ``unzip pace-cli-Linux-X64-0.1.1-SNAPSHOT.zip``
+1. Download file using ``curl``: ``curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-Linux-X64-0.2.1-SNAPSHOT.zip``
+2. Unzip file: ``unzip pace-cli-Linux-X64-0.2.1-SNAPSHOT.zip``
 3. Add the following line to ``.bashrc``: ``export PATH="$HOME/pace-cli-Linux-X64/bin:$PATH"``
 4. Set ``pace-cli`` as executable: ``chmod +x $HOME/pace-cli-Linux-X64/bin/pace-cli``
 5. Open new terminal window
 6. Verify installation: ``pace-cli --version``
 #### Windows
-1. Download file using `curl`: `curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-Windows-X64-0.1.1-SNAPSHOT.msi`
-2. Execute downloaded file and follow installer prompts: `msiexec \i  pace-cli-Windows-X64-0.1.1-SNAPSHOT.msi`
+1. Download file using `curl`: `curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-Windows-X64-0.2.1-SNAPSHOT.msi`
+2. Execute downloaded file and follow installer prompts: `msiexec \i  pace-cli-Windows-X64-0.2.1-SNAPSHOT.msi`
 3. Add PATH listing in Windows environment variable menu: ``%USERPROFILE%\AppData\Local\pace-cli``
 4. Restart command prompt
 5. Verify installation: `pace-cli --version`
