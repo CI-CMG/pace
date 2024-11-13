@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.gui;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
   public void setHeaderOptions(String[] headerOptions) {
     this.headerOptions = Arrays.stream(headerOptions)
         .filter(StringUtils::isNotEmpty)
-        .collect(Collectors.toSet()).stream().sorted().toArray(String[]::new);
+        .collect(Collectors.toSet()).stream().sorted(Comparator.comparing(String::new, String.CASE_INSENSITIVE_ORDER)).toArray(String[]::new);
     this.headerOptions = ArrayUtils.addFirst(this.headerOptions, null);
     updateHeaderOptions(this.headerOptions);
   }
