@@ -545,6 +545,15 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerQualityDetails getQualityDetails(DataQuality<String> dataQuality) throws NotFoundException, DatastoreException {
+    String analyst = dataQuality.getQualityAnalyst();
+    if (analyst == null || analyst.isEmpty()) {
+      return PassivePackerQualityDetails.builder()
+          .description(dataQuality.getQualityAssessmentDescription())
+          .method(dataQuality.getQualityAnalysisMethod())
+          .objectives(dataQuality.getQualityAnalysisObjectives())
+          .qualityDetails(getQualityEntries(dataQuality.getQualityEntries()))
+          .build();
+    }
     Person person = personRepository.getByUniqueField(dataQuality.getQualityAnalyst());
     return PassivePackerQualityDetails.builder()
         .analyst(dataQuality.getQualityAnalyst())
