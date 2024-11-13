@@ -230,7 +230,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
               saveAction,
               successAction
           );
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
           JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           yield Collections.emptyList();
         }
@@ -285,28 +285,29 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     );
   }
   
-  private List<ObjectWithRowError<O>> postProcessStream(Stream<ObjectWithRowError<O>> stream, Function<ObjectWithRowError<O>, ObjectWithRowError<O>> saveAction, Runnable successAction) {
+  private List<ObjectWithRowError<O>> postProcessStream(Stream<ObjectWithRowError<O>> stream, Function<ObjectWithRowError<O>, ObjectWithRowError<O>> saveAction, Runnable successAction)
+      throws IllegalArgumentException {
     List<ObjectWithRowError<O>> exceptions = new ArrayList<>(0);
     stream.peek(o -> {
-      Throwable exception = o.throwable();
-      if (exception != null) {
-        if (exception.getSuppressed().length == 0) {
-          exceptions.add(new ObjectWithRowError<>(o.object(), o.row(), exception));
-        } else {
-          exceptions.addAll(
-              Arrays.stream(exception.getSuppressed())
-                  .map(throwable -> new ObjectWithRowError<>(o.object(), o.row(), throwable))
-                  .toList()
-          );
-        }
-      }
-    }).filter(o -> Objects.nonNull(o.object()) && Objects.isNull(o.throwable()))
-    .map(saveAction)
-    .filter(objectWithRowConversionException -> Objects.nonNull(objectWithRowConversionException.throwable()))
-    .forEach(exceptions::add);
-    
+          Throwable exception = o.throwable();
+          if (exception != null) {
+            if (exception.getSuppressed().length == 0) {
+              exceptions.add(new ObjectWithRowError<>(o.object(), o.row(), exception));
+            } else {
+              exceptions.addAll(
+                  Arrays.stream(exception.getSuppressed())
+                      .map(throwable -> new ObjectWithRowError<>(o.object(), o.row(), throwable))
+                      .toList()
+              );
+            }
+          }
+        }).filter(o -> Objects.nonNull(o.object()) && Objects.isNull(o.throwable()))
+        .map(saveAction)
+        .filter(objectWithRowConversionException -> Objects.nonNull(objectWithRowConversionException.throwable()))
+        .forEach(exceptions::add);
+
     successAction.run();
-    
+
     return exceptions;
   }
 }

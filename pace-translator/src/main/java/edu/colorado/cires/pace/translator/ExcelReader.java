@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.translator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class ExcelReader {
    * @return Stream of map with row number objects
    * @throws IOException thrown in case of error reading from Excel file
    */
-  public static Stream<MapWithRowNumber> read(InputStream inputStream, int sheetIndex) throws IOException {
+  public static Stream<MapWithRowNumber> read(InputStream inputStream, int sheetIndex) throws IOException, IllegalArgumentException {
     try (ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
       return workbook.getSheet(sheetIndex).map(
           sheet -> {
@@ -46,6 +47,11 @@ public class ExcelReader {
   }
   
   private static MapWithRowNumber rowToPropertyMap(Row row, List<String> headers) {
+    for (int i =0; i < headers.size(); i++) {
+      if (Collections.frequency(headers, headers.get(i)) > 1){
+        throw new IllegalArgumentException("Duplicate header option: " + headers.get(i));
+      }
+    }
     return new MapWithRowNumber(
         IntStream.range(0, headers.size()).boxed().collect(Collectors.toMap(
             headers::get,

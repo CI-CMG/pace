@@ -4,8 +4,7 @@ import edu.colorado.cires.pace.data.object.base.Translator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.swing.JPanel;
@@ -44,6 +43,14 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
     this.headerOptions = Arrays.stream(headerOptions)
         .filter(StringUtils::isNotEmpty)
         .collect(Collectors.toSet()).stream().sorted(Comparator.comparing(String::new, String.CASE_INSENSITIVE_ORDER)).toArray(String[]::new);
+
+    List<String> headerList = List.of(headerOptions);
+    for (int i =0; i < this.headerOptions.length; i++) {
+      if (Collections.frequency(headerList, headerOptions[i]) > 1){
+        throw new IllegalArgumentException("Duplicate header option: " + headerOptions[i]);
+      }
+    }
+
     this.headerOptions = ArrayUtils.addFirst(this.headerOptions, null);
     updateHeaderOptions(this.headerOptions);
   }
