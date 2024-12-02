@@ -17,9 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 @SuperBuilder(toBuilder = true)
 @Jacksonized
 public class AudioSensor extends Sensor {
-  @NotBlank
   private String hydrophoneId;
-  @NotBlank
   private String preampId;
 
   /**
