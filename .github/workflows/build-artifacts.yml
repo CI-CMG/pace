@@ -62,7 +62,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ macos-14, macos-12 ]
+        os: [ macos-14 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up JDK 17
@@ -150,7 +150,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ macos-14, macos-12 ]
+        os: [ macos-14]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up JDK 17
