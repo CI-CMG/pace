@@ -464,9 +464,9 @@ jobs:
       - run: cp pace-gui-Linux-X64-deb/*.deb release/pace-gui-Linux-X64-${{ needs.build.outputs.version }}.deb
       - run: cp pace-gui-Linux-X64-rpm/*.rpm release/pace-gui-Linux-X64-${{ needs.build.outputs.version }}.rpm
       - run: cp pace-cli-macOS-ARM64/*.pkg release/pace-cli-macOS-ARM64-${{ needs.build.outputs.version }}.pkg
-      - run: cp pace-cli-macOS-X64/*.pkg release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.pkg
+#      - run: cp pace-cli-macOS-X64/*.pkg release/pace-cli-macOS-X64-${{ needs.build.outputs.version }}.pkg
       - run: cp pace-gui-macOS-ARM64/*.dmg release/pace-gui-macOS-ARM64-${{ needs.build.outputs.version }}.dmg
-      - run: cp pace-gui-macOS-X64/*.dmg release/pace-gui-macOS-X64-${{ needs.build.outputs.version }}.dmg
+#      - run: cp pace-gui-macOS-X64/*.dmg release/pace-gui-macOS-X64-${{ needs.build.outputs.version }}.dmg
       - run: cp pace-cli-Windows-X64/pace-cli-${{ needs.package-cli-windows.outputs.appver }}.msi release/pace-cli-Windows-X64-${{ needs.build.outputs.version }}.msi
       - run: cp pace-gui-Windows-X64/pace-${{ needs.package-gui-windows.outputs.appver }}.msi release/pace-gui-Windows-X64-${{ needs.build.outputs.version }}.msi
       - run: cp cli-jar/* release/pace-cli-${{ needs.build.outputs.version }}-exe.jar
