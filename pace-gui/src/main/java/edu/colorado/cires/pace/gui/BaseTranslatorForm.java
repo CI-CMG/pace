@@ -39,17 +39,17 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
    * Sets the possible header options as provided
    * @param headerOptions possible header options
    */
-  public void setHeaderOptions(String[] headerOptions) {
+  public void setHeaderOptions(String[] headerOptions, boolean duringUpdate) {
     this.headerOptions = Arrays.stream(headerOptions)
         .filter(StringUtils::isNotEmpty)
         .collect(Collectors.toSet()).stream().sorted(Comparator.comparing(String::new, String.CASE_INSENSITIVE_ORDER)).toArray(String[]::new);
 
-    List<String> headerList = List.of(headerOptions);
-    for (int i =0; i < this.headerOptions.length; i++) {
-      if (Collections.frequency(headerList, headerOptions[i]) > 1){
-        throw new IllegalArgumentException("Duplicate header option: " + headerOptions[i]);
-      }
-    }
+//    List<String> headerList = List.of(headerOptions);
+//    for (int i =0; i < this.headerOptions.length; i++) {
+//      if (Collections.frequency(headerList, headerOptions[i]) > 1){
+//        throw new IllegalArgumentException("Duplicate header option: " + headerOptions[i]);
+//      }
+//    }
 
     this.headerOptions = ArrayUtils.addFirst(this.headerOptions, null);
     updateHeaderOptions(this.headerOptions);
