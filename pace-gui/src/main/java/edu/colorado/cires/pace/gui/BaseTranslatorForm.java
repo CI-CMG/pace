@@ -39,7 +39,7 @@ public abstract class BaseTranslatorForm<T extends Translator> extends JPanel {
    * Sets the possible header options as provided
    * @param headerOptions possible header options
    */
-  public void setHeaderOptions(String[] headerOptions, boolean duringUpdate) {
+  public void setHeaderOptions(String[] headerOptions) {
     this.headerOptions = Arrays.stream(headerOptions)
         .filter(StringUtils::isNotEmpty)
         .collect(Collectors.toSet()).stream().sorted(Comparator.comparing(String::new, String.CASE_INSENSITIVE_ORDER)).toArray(String[]::new);
