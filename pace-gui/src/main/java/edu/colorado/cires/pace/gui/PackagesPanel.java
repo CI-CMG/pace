@@ -3,8 +3,15 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiPointStationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.FileUtils;
@@ -22,13 +29,20 @@ import edu.colorado.cires.pace.repository.ProjectRepository;
 import edu.colorado.cires.pace.repository.SensorRepository;
 import edu.colorado.cires.pace.repository.TranslatorRepository;
 import edu.colorado.cires.pace.translator.converter.Converter;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +51,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -292,7 +308,121 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         personRepository, organizationRepository, sensorRepository, detectionTypeRepository
     );
 
+    JDialog verifyMap = new JDialog();
+    Dimension sizeMap = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
+    verifyMap.setSize(1350,700);
+    verifyMap.setPreferredSize(sizeMap);
+    verifyMap.setTitle("Verify Package Locations");
+    verifyMap.setModal(true);
+    verifyMap.setLocationRelativeTo(this);
+    JPanel submitPanel2 = new JPanel(new BorderLayout());
+    JButton submitButton2 = new JButton("Submit");
+    JButton cancelButton = new JButton("Cancel");
+
+    cancelButton.addActionListener((e) -> {
+      verifyMap.dispose();
+      chooseDestinationDialog.dispose();
+    });
+
     submitButton.addActionListener((e) -> {
+      String destinationText = destinationField.getText();
+      if (StringUtils.isBlank(destinationText)) {
+        JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
+      } else {
+        BufferedImage myPicture;
+        try {
+          String path = "map.png";
+
+          myPicture = ImageIO.read(
+              Objects.requireNonNull(
+                  this.getClass().getResourceAsStream(String.format("/%s", path))
+              )
+          );
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+
+        Graphics2D g2d = myPicture.createGraphics();
+        g2d.setColor(Color.RED);
+
+        int mapWidth = 1280;
+        int mapHeight = 640;
+        int xMin = mapWidth;
+        int yMin = mapHeight;
+        int xMax = 0;
+        int yMax = 0;
+
+        for (Package p : packages) {
+          LocationDetail loc = p.getLocationDetail();
+          double lon = 0;
+          double lat = 0;
+          if (loc instanceof StationaryMarineLocation stationaryMarineLocation) {
+            lon = stationaryMarineLocation.getDeploymentLocation().getLongitude();
+            lat = stationaryMarineLocation.getDeploymentLocation().getLatitude();
+          }
+          if (loc instanceof StationaryTerrestrialLocation stationaryT) {
+            lon = stationaryT.getLongitude();
+            lat = stationaryT.getLatitude();
+          }
+          if (loc instanceof MultiPointStationaryMarineLocation multiPoint) {
+            if (!multiPoint.getLocations().isEmpty()) {
+              @NotNull @NotEmpty List<@Valid MarineInstrumentLocation> location = multiPoint.getLocations();
+              lon = location.get(0).getLongitude();
+              lat = location.get(0).getLatitude();
+            }
+          }
+
+          int x = (int) ((lon + 180) * ((double) mapWidth / 360));
+          int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
+          int radius = 5;
+
+          g2d.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+
+          if (x < xMin) {
+            xMin = x;
+          }
+          if (y < yMin) {
+            yMin = y;
+          }
+          if (x > xMax) {
+            xMax = x;
+          }
+          if (y > yMax) {
+            yMax = y;
+          }
+        }
+
+        try {
+          ImageIO.write(myPicture, "png", new File("map_dot.png"));
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+
+        g2d.dispose();
+
+        int margin = 50;
+        xMin -= margin;
+        yMin -= margin;
+        xMax += margin;
+        yMax += margin;
+        if (xMin < 0) { xMin = 0; }
+        if (yMin < 0) { yMin = 0; }
+        if (xMax > mapWidth) { xMax = mapWidth; }
+        if (yMax > mapHeight) { yMax = mapHeight; }
+
+        myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
+
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        verifyMap.setSize(xMax-xMin+30, yMax-yMin+80);
+        verifyMap.add(picLabel);
+        submitPanel2.add(cancelButton, BorderLayout.WEST);
+        submitPanel2.add(submitButton2, BorderLayout.EAST);
+        verifyMap.add(submitPanel2, BorderLayout.SOUTH);
+        verifyMap.setVisible(true);
+      }
+    });
+
+    submitButton2.addActionListener((e) -> {
       String destinationText = destinationField.getText();
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
@@ -300,7 +430,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         actionButton.setEnabled(false);
         selectAllButton.setEnabled(false);
         deselectAllButton.setEnabled(false);
-        
+
         new Thread(() -> {
           GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
 
@@ -335,7 +465,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
         }).start();
 
-        chooseDestinationDialog.dispose();
+        verifyMap.dispose();
       }
     });
 
