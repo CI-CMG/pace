@@ -65,6 +65,20 @@ public @interface ValidMarineInstrumentLocation {
           
           return false;
         }
+
+        if ((seaFloorDepth != null && seaFloorDepth <= -11000) || instrumentDepth <= -11000) {
+          context.disableDefaultConstraintViolation();
+
+          context.buildConstraintViolationWithTemplate("must be greater than or equal to -11000")
+              .addPropertyNode("seaFloorDepth")
+              .addConstraintViolation();
+
+          context.buildConstraintViolationWithTemplate("must be greater than or equal to -11000")
+              .addPropertyNode("instrumentDepth")
+              .addConstraintViolation();
+
+          return false;
+        }
       }
       
       return true;
