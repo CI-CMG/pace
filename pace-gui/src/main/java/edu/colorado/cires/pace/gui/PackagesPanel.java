@@ -3,12 +3,10 @@ package edu.colorado.cires.pace.gui;
 import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
@@ -34,7 +32,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -42,6 +39,7 @@ import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -329,96 +327,19 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
-        BufferedImage myPicture;
+        List<Path> zeroBytePaths;
         try {
-          String path = "map.png";
-
-          myPicture = ImageIO.read(
-              Objects.requireNonNull(
-                  this.getClass().getResourceAsStream(String.format("/%s", path))
-              )
-          );
+          zeroBytePaths = this.verifyFileSizes(packages);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }
-
-        Graphics2D g2d = myPicture.createGraphics();
-        g2d.setColor(Color.RED);
-
-        int mapWidth = 1280;
-        int mapHeight = 640;
-        int xMin = mapWidth;
-        int yMin = mapHeight;
-        int xMax = 0;
-        int yMax = 0;
-
-        for (Package p : packages) {
-          LocationDetail loc = p.getLocationDetail();
-          double lon = 0;
-          double lat = 0;
-          if (loc instanceof StationaryMarineLocation stationaryMarineLocation) {
-            lon = stationaryMarineLocation.getDeploymentLocation().getLongitude();
-            lat = stationaryMarineLocation.getDeploymentLocation().getLatitude();
-          }
-          if (loc instanceof StationaryTerrestrialLocation stationaryT) {
-            lon = stationaryT.getLongitude();
-            lat = stationaryT.getLatitude();
-          }
-          if (loc instanceof MultiPointStationaryMarineLocation multiPoint) {
-            if (!multiPoint.getLocations().isEmpty()) {
-              @NotNull @NotEmpty List<@Valid MarineInstrumentLocation> location = multiPoint.getLocations();
-              lon = location.get(0).getLongitude();
-              lat = location.get(0).getLatitude();
-            }
-          }
-
-          int x = (int) ((lon + 180) * ((double) mapWidth / 360));
-          int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
-          int radius = 5;
-
-          g2d.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
-
-          if (x < xMin) {
-            xMin = x;
-          }
-          if (y < yMin) {
-            yMin = y;
-          }
-          if (x > xMax) {
-            xMax = x;
-          }
-          if (y > yMax) {
-            yMax = y;
-          }
+        if (zeroBytePaths.isEmpty()) {
+          this.mapLocationVerification(packages, verifyMap, submitPanel2, submitButton2, cancelButton);
+        } else {
+          JOptionPane.showMessageDialog(this, String.format("The following files are zero bytes in size: %s",
+              zeroBytePaths), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        try {
-          ImageIO.write(myPicture, "png", new File("map_dot.png"));
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-
-        g2d.dispose();
-
-        int margin = 50;
-        xMin -= margin;
-        yMin -= margin;
-        xMax += margin;
-        yMax += margin;
-        if (xMin < 0) { xMin = 0; }
-        if (yMin < 0) { yMin = 0; }
-        if (xMax > mapWidth) { xMax = mapWidth; }
-        if (yMax > mapHeight) { yMax = mapHeight; }
-
-        myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
-
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        verifyMap.setSize(xMax-xMin+30, yMax-yMin+80);
-        verifyMap.add(picLabel);
-        submitPanel2.add(cancelButton, BorderLayout.WEST);
-        submitPanel2.add(submitButton2, BorderLayout.EAST);
-        verifyMap.add(submitPanel2, BorderLayout.SOUTH);
-        verifyMap.setVisible(true);
       }
     });
 
@@ -504,6 +425,129 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     chooseDestinationDialog.pack();
     chooseDestinationDialog.setVisible(true);
+  }
+
+  private void displayZeroByteFiles() {
+
+  }
+
+  protected List<Path> verifyFileSizes(List<Package> packages) throws IOException {
+    List<Path> zeroBytes = new ArrayList<>();
+    for (Package p : packages) {
+      Path source = p.getSourcePath();
+      Files.find(source,
+              Integer.MAX_VALUE,
+              (filePath, fileAttr) -> fileAttr.isRegularFile())
+          .forEach(file -> {
+            try {
+              long size = Files.size(file);
+              if (size == 0) {
+                zeroBytes.add(file);
+              }
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+          });
+    }
+    return zeroBytes;
+  }
+
+  protected void mapLocationVerification(List<Package> packages, JDialog verifyMap, JPanel submitPanel,
+      JButton submitButton, JButton cancelButton) {
+    /**
+     * Pops up a map with the locations indicated in packages for verification before packaging
+     * up packages.
+     */
+    BufferedImage myPicture;
+    try {
+      String path = "map.png";
+
+      myPicture = ImageIO.read(
+          Objects.requireNonNull(
+              this.getClass().getResourceAsStream(String.format("/%s", path))
+          )
+      );
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+
+    Graphics2D g2d = myPicture.createGraphics();
+    g2d.setColor(Color.RED);
+
+    int mapWidth = 1280;
+    int mapHeight = 640;
+    int xMin = mapWidth;
+    int yMin = mapHeight;
+    int xMax = 0;
+    int yMax = 0;
+
+    for (Package p : packages) {
+      LocationDetail loc = p.getLocationDetail();
+      double lon = 0;
+      double lat = 0;
+      if (loc instanceof StationaryMarineLocation stationaryMarineLocation) {
+        lon = stationaryMarineLocation.getDeploymentLocation().getLongitude();
+        lat = stationaryMarineLocation.getDeploymentLocation().getLatitude();
+      }
+      if (loc instanceof StationaryTerrestrialLocation stationaryT) {
+        lon = stationaryT.getLongitude();
+        lat = stationaryT.getLatitude();
+      }
+      if (loc instanceof MultiPointStationaryMarineLocation multiPoint) {
+        if (!multiPoint.getLocations().isEmpty()) {
+          @NotNull @NotEmpty List<@Valid MarineInstrumentLocation> location = multiPoint.getLocations();
+          lon = location.get(0).getLongitude();
+          lat = location.get(0).getLatitude();
+        }
+      }
+
+      int x = (int) ((lon + 180) * ((double) mapWidth / 360));
+      int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
+      int radius = 5;
+
+      g2d.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+
+      if (x < xMin) {
+        xMin = x;
+      }
+      if (y < yMin) {
+        yMin = y;
+      }
+      if (x > xMax) {
+        xMax = x;
+      }
+      if (y > yMax) {
+        yMax = y;
+      }
+    }
+
+    try {
+      ImageIO.write(myPicture, "png", new File("map_dot.png"));
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+
+    g2d.dispose();
+
+    int margin = 50;
+    xMin -= margin;
+    yMin -= margin;
+    xMax += margin;
+    yMax += margin;
+    if (xMin < 0) { xMin = 0; }
+    if (yMin < 0) { yMin = 0; }
+    if (xMax > mapWidth) { xMax = mapWidth; }
+    if (yMax > mapHeight) { yMax = mapHeight; }
+
+    myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
+
+    JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+    verifyMap.setSize(xMax-xMin+30, yMax-yMin+80);
+    verifyMap.add(picLabel);
+    submitPanel.add(cancelButton, BorderLayout.WEST);
+    submitPanel.add(submitButton, BorderLayout.EAST);
+    verifyMap.add(submitPanel, BorderLayout.SOUTH);
+    verifyMap.setVisible(true);
   }
 
   @Override
