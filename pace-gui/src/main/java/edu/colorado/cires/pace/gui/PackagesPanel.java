@@ -16,6 +16,7 @@ import edu.colorado.cires.pace.packaging.FileUtils;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
 import edu.colorado.cires.pace.packaging.PackagingException;
 import edu.colorado.cires.pace.packaging.PassivePackerFactory;
+import edu.colorado.cires.pace.packaging.ProcessSet;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
@@ -37,9 +38,12 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -327,19 +331,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
-        List<Path> zeroBytePaths;
-        try {
-          zeroBytePaths = this.verifyFileSizes(packages);
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-        if (zeroBytePaths.isEmpty()) {
-          this.mapLocationVerification(packages, verifyMap, submitPanel2, submitButton2, cancelButton);
-        } else {
-          JOptionPane.showMessageDialog(this, String.format("The following files are zero bytes in size: %s",
-              zeroBytePaths), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
+        this.mapLocationVerification(packages, verifyMap, submitPanel2, submitButton2, cancelButton);
       }
     });
 
@@ -367,11 +359,18 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
                 progressIndicator
             );
 
-            List<Package> processedPackages = packageProcessor.process().stream()
+            ProcessSet pSet = packageProcessor.process();
+            List<Package> processedPackages = pSet.processedPackages.stream()
                 .filter(p -> Objects.nonNull(p.getUuid()))
                 .toList();
             for (Package processedPackage : processedPackages) {
               repository.update(processedPackage.getUuid(), processedPackage);
+            }
+            for (int i = 0; i < pSet.zeroBytePackages.size(); i++) {
+              Package unprocessedPackage = pSet.zeroBytePackages.get(i);
+              String message = "Error processing "+ unprocessedPackage.getDataCollectionName() + " due to zero byte "
+                  + "files " + pSet.zeroByteLists.get(i);
+              JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             }
           } catch (DatastoreException | IOException | PackagingException | ConflictException | NotFoundException | BadArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -427,37 +426,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     chooseDestinationDialog.setVisible(true);
   }
 
-  private void displayZeroByteFiles() {
-
-  }
-
-  protected List<Path> verifyFileSizes(List<Package> packages) throws IOException {
-    List<Path> zeroBytes = new ArrayList<>();
-    for (Package p : packages) {
-      Path source = p.getSourcePath();
-      Files.find(source,
-              Integer.MAX_VALUE,
-              (filePath, fileAttr) -> fileAttr.isRegularFile())
-          .forEach(file -> {
-            try {
-              long size = Files.size(file);
-              if (size == 0) {
-                zeroBytes.add(file);
-              }
-            } catch (IOException e) {
-              throw new RuntimeException(e);
-            }
-          });
-    }
-    return zeroBytes;
-  }
-
+  /**
+   * Pops up a map with the locations indicated in packages for verification before packaging
+   * up packages.
+   */
   protected void mapLocationVerification(List<Package> packages, JDialog verifyMap, JPanel submitPanel,
       JButton submitButton, JButton cancelButton) {
-    /**
-     * Pops up a map with the locations indicated in packages for verification before packaging
-     * up packages.
-     */
     BufferedImage myPicture;
     try {
       String path = "map.png";
