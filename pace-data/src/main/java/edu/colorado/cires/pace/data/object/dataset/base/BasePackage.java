@@ -135,5 +135,4 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
       return self();
     }
   }
-
 }
