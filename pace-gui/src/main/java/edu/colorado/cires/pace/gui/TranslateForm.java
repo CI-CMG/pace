@@ -175,13 +175,13 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
 
 
 
+
     JPanel buttonPanel = new JPanel(new BorderLayout());
     JButton submitButton = new JButton("Accept");
     buttonPanel.add(submitButton, BorderLayout.EAST);
 
     JButton cancelButton = new JButton("Cancel");
     buttonPanel.add(cancelButton, BorderLayout.WEST);
-
 
     submitButton.addActionListener((e) -> this.confirmInformation(successAction, infoDialog));
     cancelButton.addActionListener((e) -> {
@@ -193,7 +193,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     });
     infoDialog.add(panel, BorderLayout.NORTH);
     infoDialog.add(buttonPanel, BorderLayout.SOUTH);
-    infoDialog.setSize(300, 300);
+    infoDialog.setSize(400, 200);
     infoDialog.setVisible(true);
   }
   
