@@ -1,7 +1,6 @@
 package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.BasePackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
@@ -13,23 +12,22 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.appender.WriterAppender;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 
 /**
  * PackageProcessor takes in packages and relevant data, processes
@@ -83,43 +81,44 @@ public class PackageProcessor {
    */
   public ProcessSet process() throws IOException, PackagingException, NotFoundException, DatastoreException {
     FileUtils.mkdir(outputDir);
+    System.out.println("Processing");
 
-    new Thread(this::initializeProgressIndicators).start();
+//    new Thread(this::initializeProgressIndicators).start();
 
     List<Package> processedPackages = new ArrayList<>(0);
     List<Package> zeroBytePackages = new ArrayList<>(0);
     List<List<Path>> zeroByteLists = new ArrayList<>(0);
     
     for (Package aPackage : packages) {
-      List<Path> zeroBytes = verifyFileSizes(aPackage);
+      List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
       if (!zeroBytes.isEmpty()) {
         zeroBytePackages.add(aPackage);
         zeroByteLists.add(zeroBytes);
         continue;
       }
 
-      Path packageOutputDir = getPackageOutputDir(aPackage);
-      FileUtils.mkdir(packageOutputDir);
-
-      WriterAppender writerAppender = WriterAppender.newBuilder()
-          .setName(aPackage.getPackageId())
-          .setLayout(PatternLayout.createDefaultLayout())
-          .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
-          .build();
-      writerAppender.start();
-
-      Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
-      logger.addAppender(writerAppender);
-      processPackage(aPackage, packageOutputDir, logger);
-      logger.removeAppender(writerAppender);
-      
-      processedPackages.add(aPackage.setVisible(false));
+//      Path packageOutputDir = getPackageOutputDir(aPackage);
+//      FileUtils.mkdir(packageOutputDir);
+//
+//      WriterAppender writerAppender = WriterAppender.newBuilder()
+//          .setName(aPackage.getPackageId())
+//          .setLayout(PatternLayout.createDefaultLayout())
+//          .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
+//          .build();
+//      writerAppender.start();
+//
+//      Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
+//      logger.addAppender(writerAppender);
+//      processPackage(aPackage, packageOutputDir, logger);
+//      logger.removeAppender(writerAppender);
+//
+//      processedPackages.add(aPackage.setVisible(false));
     }
 
-    ProcessSet output = new ProcessSet(processedPackages, zeroBytePackages, zeroByteLists);
-    return output;
+    System.out.println("Processing complete");
+    return new ProcessSet(processedPackages, zeroBytePackages, zeroByteLists);
   }
-  
+
   private void initializeProgressIndicators() {
     try {
       for (Package aPackage : packages) {
@@ -175,29 +174,17 @@ public class PackageProcessor {
     return outputDir.resolve(packingJob.getPackageId());
   }
 
-  protected List<Path> verifyFileSizes(BasePackage p) throws IOException {
-    List<Path> zeroBytes = new ArrayList<>();
-    Path source = p.getSourcePath();
-    String s;
-    Process proc;
-    try {
-      proc = Runtime.getRuntime().exec("find " + source + " -type f -size -10c");
-      InputStream inStream = proc.getInputStream();
-      BufferedReader br = new BufferedReader(
-          new InputStreamReader(inStream, StandardCharsets.UTF_8));
-      while ((s = br.readLine()) != null) {
-        System.out.println("line: " + s);
-        zeroBytes.add(Paths.get(s));
-      }
-      proc.waitFor();
-      System.out.println ("exit: " + proc.exitValue());
-      inStream.close();
-      proc.destroy();
-      br.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return zeroBytes;
-  }
+  protected List<Path> verifyFileSizesAndNames(BasePackage basePackage) throws IOException {
+    Path source = basePackage.getSourcePath();
+    Pattern pattern = Pattern.compile("[^A-Za-z0-9/.\\-_]");
+
+    try(Stream<Path> path= Files.walk(source)) {
+      return path
+          .filter(p -> p.toFile().isFile())
+          .filter(
+              p -> p.toFile().length() < 10 || pattern.matcher(p.toAbsolutePath().toFile().toString()).find()
+          )
+          .collect(Collectors.toList());
+    }}
 
 }
