@@ -12,7 +12,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.WriterAppender;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 /**
  * PackageProcessor takes in packages and relevant data, processes
@@ -81,9 +85,8 @@ public class PackageProcessor {
    */
   public ProcessSet process() throws IOException, PackagingException, NotFoundException, DatastoreException {
     FileUtils.mkdir(outputDir);
-    System.out.println("Processing");
 
-//    new Thread(this::initializeProgressIndicators).start();
+    new Thread(this::initializeProgressIndicators).start();
 
     List<Package> processedPackages = new ArrayList<>(0);
     List<Package> zeroBytePackages = new ArrayList<>(0);
@@ -97,25 +100,24 @@ public class PackageProcessor {
         continue;
       }
 
-//      Path packageOutputDir = getPackageOutputDir(aPackage);
-//      FileUtils.mkdir(packageOutputDir);
-//
-//      WriterAppender writerAppender = WriterAppender.newBuilder()
-//          .setName(aPackage.getPackageId())
-//          .setLayout(PatternLayout.createDefaultLayout())
-//          .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
-//          .build();
-//      writerAppender.start();
-//
-//      Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
-//      logger.addAppender(writerAppender);
-//      processPackage(aPackage, packageOutputDir, logger);
-//      logger.removeAppender(writerAppender);
-//
-//      processedPackages.add(aPackage.setVisible(false));
+      Path packageOutputDir = getPackageOutputDir(aPackage);
+      FileUtils.mkdir(packageOutputDir);
+
+      WriterAppender writerAppender = WriterAppender.newBuilder()
+          .setName(aPackage.getPackageId())
+          .setLayout(PatternLayout.createDefaultLayout())
+          .setTarget(new FileWriter(outputDir.resolve(aPackage.getPackageId()).resolve("process.log").toFile(), StandardCharsets.UTF_8))
+          .build();
+      writerAppender.start();
+
+      Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
+      logger.addAppender(writerAppender);
+      processPackage(aPackage, packageOutputDir, logger);
+      logger.removeAppender(writerAppender);
+
+      processedPackages.add(aPackage.setVisible(false));
     }
 
-    System.out.println("Processing complete");
     return new ProcessSet(processedPackages, zeroBytePackages, zeroByteLists);
   }
 
