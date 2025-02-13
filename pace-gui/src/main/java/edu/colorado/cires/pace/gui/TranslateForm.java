@@ -6,6 +6,7 @@ import static edu.colorado.cires.pace.utilities.TranslationType.csv;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.Translator;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
@@ -152,6 +153,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
 
   private void createInfoDialog(List<ObjectWithRowError<O>> exceptions, Runnable successAction, CRUDRepository<O> repository) {
     JDialog infoDialog = new JDialog();
+    infoDialog.setSize(400, 200);
     JLabel verificationLabel = new JLabel();
     JLabel publishDateLabel = new JLabel();
     JLabel startDateLabel = new JLabel();
@@ -173,7 +175,7 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     panel.add(startDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 2; c.weightx = 0; }));
     panel.add(endDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 3; c.weightx = 0; }));
 
-
+    sanityChecks(exceptions, panel, infoDialog);
 
 
     JPanel buttonPanel = new JPanel(new BorderLayout());
@@ -193,10 +195,38 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     });
     infoDialog.add(panel, BorderLayout.NORTH);
     infoDialog.add(buttonPanel, BorderLayout.SOUTH);
-    infoDialog.setSize(400, 200);
     infoDialog.setVisible(true);
   }
-  
+
+  private void sanityChecks(List<ObjectWithRowError<O>> exceptions, JPanel panel, JDialog infoDialog) {
+    int yVal = 5;
+    for (ObjectWithRowError<O> exception : exceptions) {
+      O object = exception.object();
+      if (object instanceof AudioPackage a) {
+        Float sampleRate = a.getChannels().get(0).getSampleRates().get(0).getSampleRate();
+        Float interval = a.getChannels().get(0).getDutyCycles().get(0).getInterval();
+        Float duration = a.getChannels().get(0).getDutyCycles().get(0).getDuration();
+        System.out.println(sampleRate);
+        if (sampleRate != null && sampleRate > 1000) {
+          JLabel lab = new JLabel("Sample rate of " + a.getDataCollectionName() + " is greater than 1000 kHz");
+          int finalYVal = yVal;
+          panel.add(lab, configureLayout((c) -> {c.gridx = 2; c.gridy = finalYVal; c.weightx = 0;}));
+          yVal++;
+          Dimension prev = infoDialog.getSize();
+          infoDialog.setSize(new Dimension(prev.width, prev.height+14));
+        }
+        if (duration != null && interval != null && duration > interval) {
+          JLabel lab = new JLabel("Interval of duty cycle in " + a.getDataCollectionName() + " is less than duration");
+          int finalYVal = yVal;
+          panel.add(lab, configureLayout((c) -> {c.gridx = 2; c.gridy = finalYVal; c.weightx = 0;}));
+          yVal++;
+          Dimension prev = infoDialog.getSize();
+          infoDialog.setSize(new Dimension(prev.width, prev.height+14));
+        }
+      }
+    }
+  }
+
   private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz) {
     String translatorName = (String) translatorComboBoxModel.getSelectedItem();
     if (translatorName == null) {
