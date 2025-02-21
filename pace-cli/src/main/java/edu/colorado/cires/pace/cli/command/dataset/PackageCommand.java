@@ -315,7 +315,7 @@ public class PackageCommand {
             objectMapper, people, organizations, projects, packages, outputPath, passivePackerFactory, progressIndicators
         );
 
-        List<Package> processedPackages = packageProcessor.process().stream()
+        List<Package> processedPackages = packageProcessor.process().processedPackages.stream()
             .filter(p -> Objects.nonNull(p.getUuid()))
             .toList();
 

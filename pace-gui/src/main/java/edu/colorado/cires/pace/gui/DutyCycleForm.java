@@ -48,13 +48,13 @@ public class DutyCycleForm extends JPanel implements AuxiliaryTranslatorForm<Dut
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Duration"), configureLayout(c -> {
+    add(new JLabel("Duration (seconds)"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1;
     }));
     add(durationField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Interval"), configureLayout(c -> {
+    add(new JLabel("Interval (seconds)"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 2; c.weightx = 1;
     }));
     add(intervalField, configureLayout(c -> {
