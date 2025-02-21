@@ -4,6 +4,7 @@ import static edu.colorado.cires.pace.gui.UIUtils.configureFormLayout;
 import static edu.colorado.cires.pace.gui.UIUtils.configureLayout;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
@@ -311,6 +312,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     );
 
     JDialog verifyMap = new JDialog();
+    verifyMap.setLayout(new BorderLayout(5, 5));
     Dimension sizeMap = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     verifyMap.setSize(1350,700);
     verifyMap.setPreferredSize(sizeMap);
@@ -331,7 +333,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
-        this.mapLocationVerification(packages, verifyMap, submitPanel2, submitButton2, cancelButton);
+        this.mapLocationVerification(packages, verifyMap);
+        this.dateVerification(packages, verifyMap);
+        submitPanel2.add(cancelButton, BorderLayout.WEST);
+        submitPanel2.add(submitButton2, BorderLayout.EAST);
+        verifyMap.add(submitPanel2, BorderLayout.SOUTH);
+        verifyMap.setVisible(true);
       }
     });
 
@@ -430,8 +437,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
    * Pops up a map with the locations indicated in packages for verification before packaging
    * up packages.
    */
-  protected void mapLocationVerification(List<Package> packages, JDialog verifyMap, JPanel submitPanel,
-      JButton submitButton, JButton cancelButton) {
+  protected void mapLocationVerification(List<Package> packages, JDialog verifyMap) {
     BufferedImage myPicture;
     try {
       String path = "map.png";
@@ -516,12 +522,36 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
 
     JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-    verifyMap.setSize(xMax-xMin+30, yMax-yMin+80);
-    verifyMap.add(picLabel);
-    submitPanel.add(cancelButton, BorderLayout.WEST);
-    submitPanel.add(submitButton, BorderLayout.EAST);
-    verifyMap.add(submitPanel, BorderLayout.SOUTH);
-    verifyMap.setVisible(true);
+    verifyMap.setSize(xMax-xMin+30, yMax-yMin+280);
+    if (xMax-xMin+30 < 400) {
+      verifyMap.setSize(400, yMax-yMin+280);
+    }
+    verifyMap.add(picLabel, BorderLayout.NORTH);
+  }
+
+  protected void dateVerification(List<Package> packages, JDialog verifyMap) {
+    JLabel verificationLabel = new JLabel();
+    JLabel publishDateLabel = new JLabel();
+    JLabel startDateLabel = new JLabel();
+    JLabel endDateLabel = new JLabel();
+    JLabel space = new JLabel();
+
+    if (packages.get(0) instanceof AudioPackage a) {
+      verificationLabel = new JLabel("Please verify that the below information is correct.");
+      space = new JLabel(" ");
+      publishDateLabel = new JLabel("    - Publish Date: " + a.getPublicReleaseDate());
+      startDateLabel = new JLabel("    - Start Date:      " + a.getAudioStartTime());
+      endDateLabel = new JLabel("    - End Date:       " + a.getAudioEndTime());
+    }
+
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.add(verificationLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
+    panel.add(space, configureLayout((c) -> { c.gridx = 2; c.gridy = 1; c.weightx = 0; }));
+    panel.add(publishDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 2; c.weightx = 0; }));
+    panel.add(startDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 3; c.weightx = 0; }));
+    panel.add(endDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 4; c.weightx = 0; }));
+
+    verifyMap.add(panel, BorderLayout.CENTER);
   }
 
   @Override
