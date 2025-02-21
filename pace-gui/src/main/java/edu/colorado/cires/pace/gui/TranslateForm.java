@@ -151,53 +151,6 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
     return panel;
   }
 
-  private void createInfoDialog(List<ObjectWithRowError<O>> exceptions, Runnable successAction, CRUDRepository<O> repository) {
-    JDialog infoDialog = new JDialog();
-    JLabel verificationLabel = new JLabel();
-    JLabel publishDateLabel = new JLabel();
-    JLabel startDateLabel = new JLabel();
-    JLabel endDateLabel = new JLabel();
-    infoDialog.setTitle("Verify Information");
-    infoDialog.setModal(true);
-    O p = exceptions.get(0).object();
-    if (p instanceof AudioPackage a) {
-      verificationLabel = new JLabel("Please verify that the below information is correct.");
-      publishDateLabel = new JLabel("    - Publish Date: " + a.getPublicReleaseDate());
-      startDateLabel = new JLabel("    - Start Date:      " + a.getAudioStartTime());
-      endDateLabel = new JLabel("    - End Date:       " + a.getAudioEndTime());
-
-
-    }
-    JPanel panel = new JPanel(new GridBagLayout());
-    panel.add(verificationLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
-    panel.add(publishDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 1; c.weightx = 0; }));
-    panel.add(startDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 2; c.weightx = 0; }));
-    panel.add(endDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 3; c.weightx = 0; }));
-
-
-
-
-    JPanel buttonPanel = new JPanel(new BorderLayout());
-    JButton submitButton = new JButton("Accept");
-    buttonPanel.add(submitButton, BorderLayout.EAST);
-
-    JButton cancelButton = new JButton("Cancel");
-    buttonPanel.add(cancelButton, BorderLayout.WEST);
-
-    submitButton.addActionListener((e) -> this.confirmInformation(successAction, infoDialog));
-    cancelButton.addActionListener((e) -> {
-        try {
-            this.cancelInformation(exceptions, repository, infoDialog);
-        } catch (BadArgumentException | NotFoundException | DatastoreException ex) {
-            throw new RuntimeException(ex);
-        }
-    });
-    infoDialog.add(panel, BorderLayout.NORTH);
-    infoDialog.add(buttonPanel, BorderLayout.SOUTH);
-    infoDialog.setSize(400, 200);
-    infoDialog.setVisible(true);
-  }
-  
   private void translateSpreadsheet(Runnable successAction, CRUDRepository<O> repository, Class<O> clazz) {
     String translatorName = (String) translatorComboBoxModel.getSelectedItem();
     if (translatorName == null) {
@@ -351,18 +304,6 @@ public class TranslateForm<O extends AbstractObject, T extends Translator> exten
         .map(saveAction)
         .filter(objectWithRowConversionException -> Objects.nonNull(objectWithRowConversionException.throwable()))
         .forEach(exceptions::add);
-    createInfoDialog(exceptions, successAction, repository);
     return exceptions;
-  }
-  private void confirmInformation (Runnable successAction, JDialog infoDialog) {
-    successAction.run();
-    infoDialog.dispose();
-  }
-  private void cancelInformation (List<ObjectWithRowError<O>> exceptions, CRUDRepository<O> repository, JDialog infoDialog) throws BadArgumentException, NotFoundException, DatastoreException {
-    infoDialog.dispose();
-    for (ObjectWithRowError<O> exception : exceptions) {
-      UUID uuid = exception.object().getUuid();
-      repository.delete(uuid);
-    }
   }
 }
