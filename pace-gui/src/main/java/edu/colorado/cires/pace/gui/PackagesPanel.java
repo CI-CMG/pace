@@ -521,7 +521,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     String[] columnNames = {"Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
 
     if (packages.get(0) instanceof AudioPackage) {
-      verificationLabel = new JLabel("Please verify that the below information is correct before clicking Submit");
+      verificationLabel = new JLabel("Please verify that the information below is correct before clicking Submit");
       verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
       verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
       verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
