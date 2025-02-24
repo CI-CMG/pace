@@ -262,14 +262,14 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     chooseDestinationPanel.add(new JPanel(), configureLayout((c) -> { c.gridy = 2; c.gridx = 0; c.weightx = c.weighty = 1; }));
     
-    JPanel submitPanel = new JPanel(new BorderLayout());
-    JButton submitButton = new JButton("Submit");
-    submitPanel.add(submitButton, BorderLayout.EAST);
+    JPanel submitDestinationPanel = new JPanel(new BorderLayout());
+    JButton submitDestinationButton = new JButton("Submit Directory");
+    submitDestinationPanel.add(submitDestinationButton, BorderLayout.EAST);
 
     JButton metadataButton = new JButton("Metadata Only");
-    submitPanel.add(metadataButton, BorderLayout.WEST);
+    submitDestinationPanel.add(metadataButton, BorderLayout.WEST);
 
-    chooseDestinationPanel.add(submitPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
+    chooseDestinationPanel.add(submitDestinationPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
     
     chooseDestinationButton.addActionListener((e) -> {
       JFileChooser chooser = new JFileChooser();
@@ -285,7 +285,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     chooseDestinationDialog.setSize(size);
     chooseDestinationDialog.setPreferredSize(size);
-    chooseDestinationDialog.setTitle("Choose Destination");
+    chooseDestinationDialog.setTitle("Choose Destination for Packaged Data");
     chooseDestinationDialog.setModal(true);
     chooseDestinationDialog.setLocationRelativeTo(this);
     chooseDestinationDialog.add(chooseDestinationPanel);
@@ -311,7 +311,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       chooseDestinationDialog.dispose();
     });
 
-    submitButton.addActionListener((e) -> {
+    submitDestinationButton.addActionListener((e) -> {
       String destinationText = destinationField.getText();
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
@@ -520,7 +520,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     String[] columnNames = {"Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
 
     if (packages.get(0) instanceof AudioPackage) {
-      verificationLabel = new JLabel("Please verify that the information below is correct before clicking Submit");
+      verificationLabel = new JLabel("Please verify that the information below is correct before clicking Verify");
       verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
       verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
       verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
