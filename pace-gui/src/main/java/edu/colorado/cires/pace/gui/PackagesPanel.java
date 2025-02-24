@@ -348,6 +348,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
                 packages,
                 Paths.get(destinationField.getText()),
                 passivePackerFactory,
+                false,
                 progressIndicator
             );
 

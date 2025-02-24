@@ -130,7 +130,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -233,7 +233,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     List<Package> packages = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
     ).process().processedPackages;
     assertTrue(packages.stream().noneMatch(Package::isVisible));
     verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();

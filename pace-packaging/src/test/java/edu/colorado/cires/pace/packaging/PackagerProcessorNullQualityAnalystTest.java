@@ -66,6 +66,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +131,7 @@ class PackagerProcessorNullQualityAnalystTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -232,9 +233,12 @@ class PackagerProcessorNullQualityAnalystTest {
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
-    List<Package> packages = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+    ProcessSet packagesSet = new PackageProcessor(
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
     ).process();
+    List<Package> packages = new ArrayList<>();
+    packages.addAll(packagesSet.processedPackages);
+    packages.addAll(packagesSet.zeroBytePackages);
     assertTrue(packages.stream().noneMatch(Package::isVisible));
     verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
     

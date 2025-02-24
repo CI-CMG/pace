@@ -48,6 +48,7 @@ public class PackageProcessor {
   private final List<Package> packages;
   private final Path outputDir;
   private final PassivePackerFactory passivePackerFactory;
+  private boolean skipZeroByte;
 
   /**
    * Creates a package processor
@@ -62,7 +63,7 @@ public class PackageProcessor {
    */
   public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
       List<Package> packages, Path outputDir, PassivePackerFactory passivePackerFactory,
-      ProgressIndicator... progressIndicators) {
+      Boolean skipZeroByte, ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
@@ -72,6 +73,7 @@ public class PackageProcessor {
     this.passivePackerFactory = passivePackerFactory;
     this.progressIndicators = progressIndicators;
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+    this.skipZeroByte = skipZeroByte;
   }
 
   /**
@@ -93,11 +95,13 @@ public class PackageProcessor {
     List<List<Path>> zeroByteLists = new ArrayList<>(0);
     
     for (Package aPackage : packages) {
-      List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
-      if (!zeroBytes.isEmpty()) {
-        zeroBytePackages.add(aPackage);
-        zeroByteLists.add(zeroBytes);
-        continue;
+      if (this.skipZeroByte) {
+        List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
+        if (!zeroBytes.isEmpty()) {
+          zeroBytePackages.add(aPackage);
+          zeroByteLists.add(zeroBytes);
+          continue;
+        }
       }
 
       Path packageOutputDir = getPackageOutputDir(aPackage);
@@ -180,6 +184,11 @@ public class PackageProcessor {
     Path source = basePackage.getSourcePath();
     Pattern pattern = Pattern.compile("[^A-Za-z0-9/.\\-_]");
 
+    if (source == null && basePackage instanceof Package p) {
+      Set<ConstraintViolation<Package>> violations = validator.validate(p);
+      throw new ConstraintViolationException("Package validation failed", violations);
+    }
+
     try(Stream<Path> path= Files.walk(source)) {
       return path
           .filter(p -> p.toFile().isFile())
@@ -187,6 +196,7 @@ public class PackageProcessor {
               p -> p.toFile().length() < 10 || pattern.matcher(p.toAbsolutePath().toFile().toString()).find()
           )
           .collect(Collectors.toList());
-    }}
+    }
+  }
 
 }
