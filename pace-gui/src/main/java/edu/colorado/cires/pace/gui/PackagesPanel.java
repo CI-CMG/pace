@@ -32,12 +32,8 @@ import edu.colorado.cires.pace.translator.converter.Converter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,20 +51,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.apache.commons.lang3.StringUtils;
@@ -279,14 +262,14 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     chooseDestinationPanel.add(new JPanel(), configureLayout((c) -> { c.gridy = 2; c.gridx = 0; c.weightx = c.weighty = 1; }));
     
-    JPanel submitDestinationPanel = new JPanel(new BorderLayout());
-    JButton submitDestinationButton = new JButton("Submit Destination");
-    submitDestinationPanel.add(submitDestinationButton, BorderLayout.EAST);
+    JPanel submitPanel = new JPanel(new BorderLayout());
+    JButton submitButton = new JButton("Submit");
+    submitPanel.add(submitButton, BorderLayout.EAST);
 
     JButton metadataButton = new JButton("Metadata Only");
-    submitDestinationPanel.add(metadataButton, BorderLayout.WEST);
+    submitPanel.add(metadataButton, BorderLayout.WEST);
 
-    chooseDestinationPanel.add(submitDestinationPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
+    chooseDestinationPanel.add(submitPanel, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.gridwidth = GridBagConstraints.REMAINDER; }));
     
     chooseDestinationButton.addActionListener((e) -> {
       JFileChooser chooser = new JFileChooser();
@@ -302,7 +285,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     Dimension size = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     chooseDestinationDialog.setSize(size);
     chooseDestinationDialog.setPreferredSize(size);
-    chooseDestinationDialog.setTitle("Choose Destination for Packaged Data");
+    chooseDestinationDialog.setTitle("Choose Destination");
     chooseDestinationDialog.setModal(true);
     chooseDestinationDialog.setLocationRelativeTo(this);
     chooseDestinationDialog.add(chooseDestinationPanel);
@@ -328,7 +311,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       chooseDestinationDialog.dispose();
     });
 
-    submitDestinationButton.addActionListener((e) -> {
+    submitButton.addActionListener((e) -> {
       String destinationText = destinationField.getText();
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
@@ -338,6 +321,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         infoVerifyPanel.add(cancelButton, BorderLayout.WEST);
         infoVerifyPanel.add(verifyButton, BorderLayout.EAST);
         verifyMap.add(infoVerifyPanel, BorderLayout.SOUTH);
+        verifyMap.setLocationRelativeTo(chooseDestinationDialog);
+        chooseDestinationDialog.setVisible(false);
         verifyMap.setVisible(true);
       }
     });
@@ -523,33 +508,43 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     JLabel picLabel = new JLabel(new ImageIcon(myPicture));
     verifyMap.setSize(xMax-xMin+30, yMax-yMin+280);
-    if (xMax-xMin+30 < 400) {
-      verifyMap.setSize(400, yMax-yMin+280);
+    if (xMax-xMin+30 < 800) {
+      verifyMap.setSize(800, yMax-yMin+480);
     }
     verifyMap.add(picLabel, BorderLayout.NORTH);
   }
 
   protected void dateVerification(List<Package> packages, JDialog verifyMap) {
     JLabel verificationLabel = new JLabel();
-    JLabel publishDateLabel = new JLabel();
-    JLabel startDateLabel = new JLabel();
-    JLabel endDateLabel = new JLabel();
-    JLabel space = new JLabel();
+    List<Object[]> dataList = new ArrayList<>();
+    String[] columnNames = {"Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
 
-    if (packages.get(0) instanceof AudioPackage a) {
-      verificationLabel = new JLabel("Please verify that the below information is correct.");
-      space = new JLabel(" ");
-      publishDateLabel = new JLabel("    - Publish Date: " + a.getPublicReleaseDate());
-      startDateLabel = new JLabel("    - Start Date:      " + a.getAudioStartTime());
-      endDateLabel = new JLabel("    - End Date:       " + a.getAudioEndTime());
+    if (packages.get(0) instanceof AudioPackage) {
+      verificationLabel = new JLabel("Please verify that the information below is correct before clicking Submit");
+      verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
+      verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
     }
 
-    JPanel panel = new JPanel(new GridBagLayout());
-    panel.add(verificationLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));
-    panel.add(space, configureLayout((c) -> { c.gridx = 2; c.gridy = 1; c.weightx = 0; }));
-    panel.add(publishDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 2; c.weightx = 0; }));
-    panel.add(startDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 3; c.weightx = 0; }));
-    panel.add(endDateLabel, configureLayout((c) -> { c.gridx = 2; c.gridy = 4; c.weightx = 0; }));
+    for (Package p : packages) {
+      if (p instanceof AudioPackage a) {
+        Object[] newRow = {a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime()};
+        dataList.add(newRow);
+      }
+    }
+
+    Object[][] data = dataList.toArray(new Object[0][]);
+    DefaultTableModel model = new DefaultTableModel(data, columnNames);
+    JTable table = new JTable(model);
+
+    table.setPreferredScrollableViewportSize(new Dimension(300, table.getPreferredSize().height));
+
+    JScrollPane scrollPane = new JScrollPane(table);
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+    verificationLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+    panel.add(verificationLabel, BorderLayout.NORTH);
+    panel.add(scrollPane, BorderLayout.CENTER);
 
     verifyMap.add(panel, BorderLayout.CENTER);
   }
