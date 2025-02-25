@@ -52,6 +52,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.apache.commons.lang3.StringUtils;
@@ -316,8 +317,18 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       if (StringUtils.isBlank(destinationText)) {
         JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
       } else {
-        this.mapLocationVerification(packages, verifyMap);
-        this.dateVerification(packages, verifyMap);
+        List<Color> colors = new ArrayList<>();
+        colors.add(Color.RED);
+        colors.add(Color.GREEN);
+        colors.add(Color.BLUE);
+        colors.add(Color.ORANGE);
+        colors.add(Color.CYAN);
+        colors.add(Color.MAGENTA);
+        colors.add(Color.BLACK);
+        colors.add(Color.GRAY);
+
+        this.mapLocationVerification(packages, verifyMap, colors);
+        this.dateVerification(packages, verifyMap, colors);
         infoVerifyPanel.add(cancelButton, BorderLayout.WEST);
         infoVerifyPanel.add(verifyButton, BorderLayout.EAST);
         verifyMap.add(infoVerifyPanel, BorderLayout.SOUTH);
@@ -423,10 +434,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
    * Pops up a map with the locations indicated in packages for verification before packaging
    * up packages.
    */
-  protected void mapLocationVerification(List<Package> packages, JDialog verifyMap) {
+  protected void mapLocationVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
     BufferedImage myPicture;
     try {
-      String path = "map.png";
+      String path = "test_map.png";
 
       myPicture = ImageIO.read(
           Objects.requireNonNull(
@@ -440,12 +451,14 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     Graphics2D g2d = myPicture.createGraphics();
     g2d.setColor(Color.RED);
 
-    int mapWidth = 1280;
-    int mapHeight = 640;
+    int mapWidth = 2700;
+    int mapHeight = 1350;
     int xMin = mapWidth;
     int yMin = mapHeight;
     int xMax = 0;
     int yMax = 0;
+
+    int colorIndex = 0;
 
     for (Package p : packages) {
       LocationDetail loc = p.getLocationDetail();
@@ -471,7 +484,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
       int radius = 5;
 
+      Color color = colors.get(colorIndex % colors.size());
+      g2d.setColor(color);
       g2d.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
+      colorIndex++;
 
       if (x < xMin) {
         xMin = x;
@@ -495,7 +511,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     g2d.dispose();
 
-    int margin = 50;
+    int margin = 75;
     xMin -= margin;
     yMin -= margin;
     xMax += margin;
@@ -515,7 +531,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     verifyMap.add(picLabel, BorderLayout.NORTH);
   }
 
-  protected void dateVerification(List<Package> packages, JDialog verifyMap) {
+  protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
     JLabel verificationLabel = new JLabel();
     List<Object[]> dataList = new ArrayList<>();
     String[] columnNames = {"Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
@@ -535,8 +551,23 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     }
 
     Object[][] data = dataList.toArray(new Object[0][]);
-    DefaultTableModel model = new DefaultTableModel(data, columnNames);
-    JTable table = new JTable(model);
+    JTable table = new JTable(data, columnNames) {
+        @Override
+        public Class<?> getColumnClass(int column) {
+            if(convertColumnIndexToModel(column)==0) return Double.class;
+            return super.getColumnClass(column);
+        }
+    };
+
+    table.setDefaultRenderer(Double.class, new DefaultTableCellRenderer(){
+      @Override
+      public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
+        Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+        Color color = colors.get(row % colors.size());
+        c.setForeground(color);
+        return c;
+      }
+    });
 
     table.setPreferredScrollableViewportSize(new Dimension(300, table.getPreferredSize().height));
 
