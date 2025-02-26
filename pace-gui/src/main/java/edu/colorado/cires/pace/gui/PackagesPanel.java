@@ -502,8 +502,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         xMin /= 2;
         yMin /= 2;
         List<List<Integer>> adjusted = new ArrayList<>();
-        for(List<Integer> d : spots) {
-          adjusted.add(new ArrayList<>(Arrays.asList(d.get(0)/3, d.get(1)/3)));
+        for(List<Integer> spot : spots) {
+          adjusted.add(new ArrayList<>(Arrays.asList(spot.get(0)/3, spot.get(1)/3)));
         }
         spots = adjusted;
       }
