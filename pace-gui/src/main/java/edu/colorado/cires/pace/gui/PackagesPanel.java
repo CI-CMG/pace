@@ -300,7 +300,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     Dimension sizeMap = UIUtils.getPercentageOfWindowDimension(0.5, 0.4);
     verifyMap.setSize(1350,700);
     verifyMap.setPreferredSize(sizeMap);
-    verifyMap.setTitle("Verify Package Locations");
+    verifyMap.setTitle("Verify Package Information");
     verifyMap.setModal(true);
     verifyMap.setLocationRelativeTo(this);
     JPanel infoVerifyPanel = new JPanel(new BorderLayout());
@@ -436,20 +436,6 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
    */
   protected void mapLocationVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
     BufferedImage myPicture;
-    try {
-      String path = "test_map.png";
-
-      myPicture = ImageIO.read(
-          Objects.requireNonNull(
-              this.getClass().getResourceAsStream(String.format("/%s", path))
-          )
-      );
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
-
-    Graphics2D g2d = myPicture.createGraphics();
-    g2d.setColor(Color.RED);
 
     int mapWidth = 2700;
     int mapHeight = 1350;
@@ -459,6 +445,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     int yMax = 0;
 
     int colorIndex = 0;
+
+    List<List<Integer>> spots = new ArrayList<>();
 
     for (Package p : packages) {
       LocationDetail loc = p.getLocationDetail();
@@ -482,12 +470,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
       int x = (int) ((lon + 180) * ((double) mapWidth / 360));
       int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
-      int radius = 5;
 
-      Color color = colors.get(colorIndex % colors.size());
-      g2d.setColor(color);
-      g2d.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
-      colorIndex++;
+      spots.add(new ArrayList<>(Arrays.asList(x, y)));
 
       if (x < xMin) {
         xMin = x;
@@ -503,6 +487,45 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       }
     }
 
+    int margin = 75;
+    try {
+      String path = "map.png";
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      int width = (int) screenSize.getWidth();
+      if (width < (xMax-xMin) + 100) {
+        path = "small_map.png";
+        mapWidth = 900;
+        mapHeight = 450;
+        margin = 100;
+        xMax /= 2;
+        yMax /= 2;
+        xMin /= 2;
+        yMin /= 2;
+        List<List<Integer>> adjusted = new ArrayList<>();
+        for(List<Integer> d : spots) {
+          adjusted.add(new ArrayList<>(Arrays.asList(d.get(0)/3, d.get(1)/3)));
+        }
+        spots = adjusted;
+      }
+
+      myPicture = ImageIO.read(
+          Objects.requireNonNull(
+              this.getClass().getResourceAsStream(String.format("/%s", path))
+          )
+      );
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+
+    Graphics2D g2d = myPicture.createGraphics();
+    for (List<Integer> spot : spots) {
+      int radius = 5;
+      Color color = colors.get(colorIndex % colors.size());
+      g2d.setColor(color);
+      g2d.fillOval(spot.get(0) - radius, spot.get(1) - radius, 2 * radius, 2 * radius);
+      colorIndex++;
+    }
+
     try {
       ImageIO.write(myPicture, "png", new File("map_dot.png"));
     } catch (IOException ex) {
@@ -511,7 +534,6 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     g2d.dispose();
 
-    int margin = 75;
     xMin -= margin;
     yMin -= margin;
     xMax += margin;
@@ -524,7 +546,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
 
     JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-    verifyMap.setSize(xMax-xMin+30, yMax-yMin+280);
+    verifyMap.setSize(xMax-xMin+30, yMax-yMin+480);
     if (xMax-xMin+30 < 800) {
       verifyMap.setSize(800, yMax-yMin+480);
     }
