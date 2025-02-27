@@ -444,8 +444,6 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     int xMax = 0;
     int yMax = 0;
 
-    int colorIndex = 0;
-
     List<List<Integer>> spots = new ArrayList<>();
 
     for (Package p : packages) {
@@ -518,12 +516,17 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     }
 
     Graphics2D g2d = myPicture.createGraphics();
+    int i = 1;
+    int colorIndex = 0;
     for (List<Integer> spot : spots) {
       int radius = 5;
       Color color = colors.get(colorIndex % colors.size());
       g2d.setColor(color);
       g2d.fillOval(spot.get(0) - radius, spot.get(1) - radius, 2 * radius, 2 * radius);
+      g2d.setFont(new Font("Times New Roman", Font.BOLD, 20));
+      g2d.drawString(String.valueOf(i), spot.get(0) - radius, spot.get(1) - radius);
       colorIndex++;
+      i++;
     }
 
     try {
@@ -533,6 +536,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     }
 
     g2d.dispose();
+
+    if (xMax - xMin < 2*margin) { xMax += 2*margin; xMin -= 2*margin; }
+    if (yMax - yMin < 2*margin) { yMax += 2*margin; yMin -= 2*margin; }
 
     xMin -= margin;
     yMin -= margin;
@@ -556,7 +562,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
     JLabel verificationLabel = new JLabel();
     List<Object[]> dataList = new ArrayList<>();
-    String[] columnNames = {"Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
+    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
 
     if (packages.get(0) instanceof AudioPackage) {
       verificationLabel = new JLabel("Please verify that the information below is correct before clicking Verify");
@@ -565,10 +571,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
     }
 
+    int i = 1;
     for (Package p : packages) {
       if (p instanceof AudioPackage a) {
-        Object[] newRow = {a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime()};
+        Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime()};
         dataList.add(newRow);
+        i++;
       }
     }
 
@@ -581,7 +589,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         }
     };
 
-    table.setDefaultRenderer(Double.class, new DefaultTableCellRenderer(){
+    table.setPreferredScrollableViewportSize(new Dimension(300, table.getPreferredSize().height));
+
+    DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer(){
       @Override
       public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
         Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
@@ -589,9 +599,13 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         c.setForeground(color);
         return c;
       }
-    });
-
-    table.setPreferredScrollableViewportSize(new Dimension(300, table.getPreferredSize().height));
+    };
+    cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+    table.getColumnModel().getColumn(0).setPreferredWidth(3);
+    table.getColumnModel().getColumn(1).setPreferredWidth(99);
+    table.getColumnModel().getColumn(2).setPreferredWidth(99);
+    table.getColumnModel().getColumn(3).setPreferredWidth(99);
+    table.setDefaultRenderer(Double.class, cellRenderer);
 
     JScrollPane scrollPane = new JScrollPane(table);
     JPanel panel = new JPanel(new BorderLayout());
