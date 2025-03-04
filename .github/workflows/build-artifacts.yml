@@ -28,6 +28,8 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B clean package -Pcoverage -Pdep-check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
       - id: version
         run: |
           echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
