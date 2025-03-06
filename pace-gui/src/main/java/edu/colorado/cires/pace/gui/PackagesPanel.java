@@ -54,6 +54,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import org.apache.commons.lang3.StringUtils;
 
@@ -562,10 +563,10 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
     JLabel verificationLabel = new JLabel();
     List<Object[]> dataList = new ArrayList<>();
-    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time"};
+    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude"};
 
     if (packages.get(0) instanceof AudioPackage) {
-      verificationLabel = new JLabel("Please verify that the information below is correct before clicking Verify");
+      verificationLabel = new JLabel("Please confirm that the information below is correct before clicking Verify");
       verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
       verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
       verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -574,37 +575,65 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     int i = 1;
     for (Package p : packages) {
       if (p instanceof AudioPackage a) {
-        Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime()};
-        dataList.add(newRow);
-        i++;
-      }
-    }
 
-    Object[][] data = dataList.toArray(new Object[0][]);
-    JTable table = new JTable(data, columnNames) {
+        LocationDetail loc = p.getLocationDetail();
+        double lon = 0;
+        double lat = 0;
+        if (loc instanceof StationaryMarineLocation stationaryMarineLocation) {
+          lon = stationaryMarineLocation.getDeploymentLocation().getLongitude();
+          lat = stationaryMarineLocation.getDeploymentLocation().getLatitude();
+        }
+        if (loc instanceof StationaryTerrestrialLocation stationaryT) {
+          lon = stationaryT.getLongitude();
+          lat = stationaryT.getLatitude();
+        }
+        if (loc instanceof MultiPointStationaryMarineLocation multiPoint) {
+          if (!multiPoint.getLocations().isEmpty()) {
+            @NotNull @NotEmpty List<@Valid MarineInstrumentLocation> location = multiPoint.getLocations();
+            lon = location.get(0).getLongitude();
+            lat = location.get(0).getLatitude();
+          }
+        }
+      Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime(), lon, lat};
+      dataList.add(newRow);
+      i++;
+    }
+  }
+
+      Object[][] data = dataList.toArray(new Object[0][]);
+      JTable table = new JTable(data, columnNames) {
         @Override
         public Class<?> getColumnClass(int column) {
             if(convertColumnIndexToModel(column)==0) return Double.class;
             return super.getColumnClass(column);
         }
-    };
+      };
 
+    JTableHeader header = table.getTableHeader();
+    header.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+    DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) header.getDefaultRenderer();
+    renderer.setHorizontalAlignment(SwingConstants.LEFT);
     table.setPreferredScrollableViewportSize(new Dimension(300, table.getPreferredSize().height));
 
     DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer(){
       @Override
       public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
-        Component c = super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         Color color = colors.get(row % colors.size());
         c.setForeground(color);
         return c;
       }
     };
-    cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-    table.getColumnModel().getColumn(0).setPreferredWidth(3);
-    table.getColumnModel().getColumn(1).setPreferredWidth(99);
+
+    cellRenderer.setHorizontalAlignment(JLabel.LEFT);
+    table.getColumnModel().getColumn(0).setPreferredWidth(1);
+    table.getColumnModel().getColumn(1).setPreferredWidth(30);
     table.getColumnModel().getColumn(2).setPreferredWidth(99);
     table.getColumnModel().getColumn(3).setPreferredWidth(99);
+    table.getColumnModel().getColumn(4).setPreferredWidth(99);
+    table.getColumnModel().getColumn(5).setPreferredWidth(1);
+    table.getColumnModel().getColumn(6).setPreferredWidth(1);
+//    table.getColumnModel().getColumn(7).setPreferredWidth(99);
     table.setDefaultRenderer(Double.class, cellRenderer);
 
     JScrollPane scrollPane = new JScrollPane(table);
