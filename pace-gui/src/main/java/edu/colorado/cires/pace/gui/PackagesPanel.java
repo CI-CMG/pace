@@ -497,7 +497,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       String path = "map.png";
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       int width = (int) screenSize.getWidth();
-      if (width < (xMax-xMin) + 100) {
+      int height = (int) screenSize.getHeight();
+      if (width < (xMax-xMin) + 100 || height < (yMax-yMin) + 250) {
         path = "small_map.png";
         mapWidth = 900;
         mapHeight = 450;
