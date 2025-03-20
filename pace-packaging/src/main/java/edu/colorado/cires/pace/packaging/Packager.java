@@ -50,7 +50,7 @@ class Packager {
   }
 
   protected static void writeTagManifestFile(Path bagInfoFile, Path bagitFile, Path manifestFile, Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
-    Path outputFile = outputDir.resolve("tagmanifest-sha256.txt");
+    Path outputFile = outputDir.resolve("tagmanifest-md5.txt");
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       FileUtils.appendChecksumToManifest(writer, bagInfoFile, outputDir);
       logger.info("Appended {} checksum to {}", bagInfoFile, outputFile);
@@ -70,7 +70,7 @@ class Packager {
   }
 
   protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
-    Path outputFile = outputDir.resolve("manifest-sha256.txt");
+    Path outputFile = outputDir.resolve("manifest-md5.txt");
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions

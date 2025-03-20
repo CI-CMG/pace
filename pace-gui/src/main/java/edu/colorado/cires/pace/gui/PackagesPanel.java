@@ -37,6 +37,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.nio.file.Files;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -50,6 +51,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -329,8 +331,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         colors.add(Color.GRAY);
 
         this.mapLocationVerification(packages, verifyMap, colors);
-        this.dateVerification(packages, verifyMap, colors);
-        infoVerifyPanel.add(cancelButton, BorderLayout.WEST);
+          try {
+              this.dateVerification(packages, verifyMap, colors);
+          } catch (IOException ex) {
+              throw new RuntimeException(ex);
+          }
+          infoVerifyPanel.add(cancelButton, BorderLayout.WEST);
         infoVerifyPanel.add(verifyButton, BorderLayout.EAST);
         verifyMap.add(infoVerifyPanel, BorderLayout.SOUTH);
         verifyMap.setLocationRelativeTo(chooseDestinationDialog);
@@ -560,11 +566,11 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     verifyMap.add(picLabel, BorderLayout.NORTH);
   }
 
-  protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) {
+  protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) throws IOException {
     JLabel verificationLabel = new JLabel();
     List<Object[]> dataList = new ArrayList<>();
-    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude"};
-
+    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude", "File Count"};
+    // Possibly an issue if we're looking to get all file types since we're doing 'instanceof AudioPackage'
     if (packages.get(0) instanceof AudioPackage) {
       verificationLabel = new JLabel("Please confirm that the information below is correct before clicking Verify");
       verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
@@ -574,7 +580,15 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
 
     int i = 1;
     for (Package p : packages) {
-      if (p instanceof AudioPackage a) {
+      Path path = p.getSourcePath();
+      long fileCount = 0;
+      try {
+        fileCount = Files.walk(path).filter(Files::isRegularFile).count();
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+
+        if (p instanceof AudioPackage a) {
 
         LocationDetail loc = p.getLocationDetail();
         double lon = 0;
@@ -594,7 +608,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
             lat = location.get(0).getLatitude();
           }
         }
-      Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime(), lon, lat};
+
+
+      Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime(), lon, lat, fileCount -1};
       dataList.add(newRow);
       i++;
     }

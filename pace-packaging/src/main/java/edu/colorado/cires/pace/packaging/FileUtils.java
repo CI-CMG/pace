@@ -96,7 +96,7 @@ public class FileUtils {
   }
   
   private static String computeChecksum(InputStream inputStream) throws IOException {
-    return DigestUtils.sha256Hex(inputStream);
+    return DigestUtils.md5Hex(inputStream);
   }
 
   /**
