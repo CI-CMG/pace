@@ -277,6 +277,7 @@ public class PassivePackerFactory {
 
   private PassivePackerDatasetDetails getDatasetDetails(Package aPackage) throws NotFoundException, DatastoreException {
     PassivePackerDatasetDetails datasetDetails = PassivePackerDatasetDetails.builder()
+        .type(typeFromPackage(aPackage))
         .subType(subtypeFromPackage(aPackage))
         .sourcePath(String.valueOf(aPackage.getSourcePath()))
         .build();
@@ -356,6 +357,34 @@ public class PassivePackerFactory {
     }
 
     return datasetDetails;
+  }
+
+  private String typeFromPackage(Package aPackage) {
+    if (aPackage instanceof AudioPackage) {
+      return "Raw";
+    }
+
+    if (aPackage instanceof CPODPackage) {
+      return "Raw";
+    }
+
+    if (aPackage instanceof SoundLevelMetricsPackage) {
+      return "Product";
+    }
+
+    if (aPackage instanceof SoundPropagationModelsPackage) {
+      return "Product";
+    }
+
+    if (aPackage instanceof DetectionsPackage) {
+      return "Product";
+    }
+
+    if (aPackage instanceof SoundClipsPackage) {
+      return "Product";
+    }
+
+    return null;
   }
 
   private String subtypeFromPackage(Package aPackage) {

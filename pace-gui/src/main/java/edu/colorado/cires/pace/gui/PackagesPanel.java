@@ -584,7 +584,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       Path path = p.getSourcePath();
       long fileCount = 0;
       try {
-        fileCount = Files.walk(path).filter(Files::isRegularFile).count();
+        fileCount = Files.walk(path)
+                         .filter(Files::isRegularFile)
+                         .count();
       } catch (IOException ex) {
         ex.printStackTrace();
       }
