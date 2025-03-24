@@ -8,4 +8,11 @@
     <packageUrl regex="true">^pkg:maven/org\.glassfish\.expressly/expressly@.*$</packageUrl>
     <cve>CVE-2023-5763</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: pace-sqlite-datastore-0.2.2-SNAPSHOT.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/io\.github\.ci-cmg/pace-sqlite-datastore@.*$</packageUrl>
+    <cpe>cpe:/a:sqlite:sqlite</cpe>
+  </suppress>
 </suppressions>

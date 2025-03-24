@@ -26,6 +26,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
     <log4j.version>2.23.1</log4j.version>
+    <project-root>${project.basedir}</project-root>
+    <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
   </properties>
 
   <scm>
@@ -63,6 +65,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.owasp</groupId>
+          <artifactId>dependency-check-maven</artifactId>
+          <version>12.1.0</version>
+        </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
@@ -119,4 +126,33 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>dep-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <configuration>
+              <failBuildOnCVSS>0</failBuildOnCVSS>
+              <suppressionFiles>
+                <suppressionFile>${project-root}/owasp-dep-check-suppression.xml</suppressionFile>
+              </suppressionFiles>
+              <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+            </configuration>
+            <executions>
+              <execution>
+                <id>check-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
