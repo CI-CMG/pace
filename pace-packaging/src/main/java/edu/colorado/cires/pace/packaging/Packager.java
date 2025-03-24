@@ -1,11 +1,16 @@
 package edu.colorado.cires.pace.packaging;
 
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.repository.PersonRepository;
+import edu.colorado.cires.passivePacker.data.PassivePackerPerson;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +28,7 @@ class Packager {
    * @param progressIndicators tracks progress of packaging
    * @throws PackagingException thrown in case of error to indicate packaging error
    */
-  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, Logger logger, ProgressIndicator... progressIndicators) throws PackagingException {
+  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, List<Package> packages, List<Person> people, Logger logger, ProgressIndicator... progressIndicators) throws PackagingException {
     mkdir(outputDir);
     logger.info("Created output directory: {}", outputDir);
     
@@ -33,7 +38,7 @@ class Packager {
         moveInstructions, outputDir, incrementProgressFn, logger
     );
     
-    Path bagInfoFile = writeBagInfoFile(outputDir, incrementProgressFn, logger);
+    Path bagInfoFile = writeBagInfoFile(outputDir, incrementProgressFn, logger, packages, people);
     Path bagitFile = writeBagItFile(outputDir, incrementProgressFn, logger);
     
     writeTagManifestFile(
@@ -100,15 +105,44 @@ class Packager {
     return outputFile;
   }
   
-  protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
+  protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn, Logger logger, List<Package> packages, List<Person> people) throws PackagingException {
     Path bagInfoFile = outputDir.resolve("bag-info.txt");
     
     try (FileWriter writer = new FileWriter(bagInfoFile.toFile(), StandardCharsets.UTF_8, true)) {
       LocalDate localDate = LocalDate.now();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      String formattedString = localDate.format(formatter);
+      String formattedDateString = localDate.format(formatter);
+      String packager = packages.get(0).getDatasetPackager();
+      Person person = null;
+      for (Person p : people) {
+        if (p.getName().equals(packager)){
+          person = p;
+        }
+      }
+
       writer.append(String.format(
-         "Bagging-Date: %s", formattedString
+          "Source-Organization: %s%n", packages.get(0).getSponsors().get(0)
+      ));
+      writer.append(String.format(
+         "Bagging-Date: %s%n", formattedDateString
+      ));
+      writer.append(String.format(
+          "Contact-Name: %s%n", packager
+      ));
+      writer.append(String.format(
+          "Contact-Phone: %s%n", person.getPhone()
+      ));
+      writer.append(String.format(
+          "Contact-Email: %s%n", person.getEmail()
+      ));
+      writer.append(String.format(
+          "External-Description: %s%n", packages.get(0).getDeploymentTitle()
+      ));
+      writer.append(String.format(
+          "External-Identifier: %s%n", packages.get(0).getDataCollectionName()
+      ));
+      writer.append(String.format(
+          "Packager version: %s", "PACE"
       ));
     } catch (IOException e) {
       throw new PackagingException(String.format(

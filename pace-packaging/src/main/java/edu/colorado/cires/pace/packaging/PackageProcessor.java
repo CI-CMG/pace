@@ -8,6 +8,7 @@ import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
+import edu.colorado.cires.pace.repository.PersonRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -116,7 +117,7 @@ public class PackageProcessor {
 
       Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
       logger.addAppender(writerAppender);
-      processPackage(aPackage, packageOutputDir, logger);
+      processPackage(aPackage, packageOutputDir, people, logger);
       logger.removeAppender(writerAppender);
 
       processedPackages.add(aPackage.setVisible(false));
@@ -143,7 +144,7 @@ public class PackageProcessor {
     }
   }
 
-  private void processPackage(Package packingJob, Path packageOutputDir, Logger logger)
+  private void processPackage(Package packingJob, Path packageOutputDir, List<Person> people, Logger logger)
       throws PackagingException, IOException, NotFoundException, DatastoreException {
     validatePackingJob(packingJob);
     
@@ -162,6 +163,8 @@ public class PackageProcessor {
     Packager.run(
         instructionStream,
         packageOutputDir,
+        packages,
+        people,
         logger,
         progressIndicators
     );

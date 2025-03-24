@@ -87,7 +87,11 @@ class PackagerProcessorNullQualityAnalystTest {
           .name("person")
           .organization("organization")
           .position("position")
-      .build()); 
+      .build(),
+      Person.builder()
+          .name("dataset-packager")
+          .build()
+  );
   
   private static final List<Organization> ORGANIZATIONS = List.of(Organization.builder()
           .name("organization")

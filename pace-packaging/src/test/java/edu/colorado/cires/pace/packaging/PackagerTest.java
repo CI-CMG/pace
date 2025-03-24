@@ -1,5 +1,6 @@
 package edu.colorado.cires.pace.packaging;
 
+import static edu.colorado.cires.pace.packaging.FileUtils.filterHidden;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +10,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
+import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
+import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import edu.colorado.cires.pace.data.object.position.Position;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -19,8 +32,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -80,8 +98,12 @@ class PackagerTest {
   void testRun() throws IOException, PackagingException {
     List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
+    List<Package> packages = new ArrayList<Package>();
+    packages.add(buildPackage());
+    List<Person> people = new ArrayList<Person>();
+    people.add(buildPerson());
     
-    Packager.run(packageInstructions.stream(), TARGET_DIR, LogManager.getLogger("test"), progressIndicator);
+    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), progressIndicator);
     
     Path bagitFile = TARGET_DIR.resolve("bagit.txt");
     List<String> lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
@@ -93,15 +115,13 @@ class PackagerTest {
     
     Path bagInfoFile = TARGET_DIR.resolve("bag-info.txt");
     lines = FileUtils.readLines(bagInfoFile.toFile(), StandardCharsets.UTF_8);
-    assertEquals(1, lines.size());
+    assertEquals(8, lines.size());
     
     LocalDate localDate = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     String formattedString = localDate.format(formatter);
     assertEquals(
-        String.format(
-            "Bagging-Date: %s", formattedString
-        ),
+        "Source-Organization: organization-1",
         lines.get(0)
     );
     
@@ -156,7 +176,18 @@ class PackagerTest {
     
     verify(progressIndicator, times(packageInstructions.size() + 4)).incrementProcessedRecords();
   }
-  
+
+  private Person buildPerson() {
+    return Person.builder()
+        .name("dataset-packager")
+        .organization("organization")
+        .position("position")
+        .phone("123-123-1234")
+        .email("fakeemail@aol.com")
+        .uuid(UUID.randomUUID())
+        .build();
+  }
+
   @Test
   void testWriteBagitFileDirectoryDoesNotExist() {
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
@@ -173,8 +204,10 @@ class PackagerTest {
   @Test
   void testWriteBagInfoFileDirectoryDoesNotExist() {
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
-    
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test")));
+    List<Package> packages = new ArrayList<Package>();
+    List<Person> people = new ArrayList<Person>();
+
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.writeBagInfoFile(TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test"), packages, people));
     assertEquals(String.format(
         "Failed to write %s", TARGET_DIR.resolve("bag-info.txt")
     ), exception.getMessage());
@@ -207,6 +240,10 @@ class PackagerTest {
     try (MockedStatic<edu.colorado.cires.pace.packaging.FileUtils> mockedStatic = Mockito.mockStatic(
         edu.colorado.cires.pace.packaging.FileUtils.class)) {
       Exception exception = new IOException("test file error");
+
+      List<Package> packages = new ArrayList<Package>();
+      List<Person> people = new ArrayList<Person>();
+
       mockedStatic.when(() -> edu.colorado.cires.pace.packaging.FileUtils.appendChecksumToManifest(any(), any(), any())).thenThrow(
           exception
       );
@@ -216,7 +253,7 @@ class PackagerTest {
       
       ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
 
-      Exception packagingException = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, LogManager.getLogger("test"), progressIndicator));
+      Exception packagingException = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), progressIndicator));
       assertEquals(String.format(
           "Packaging failed: java.io.IOException: %s", exception.getMessage()
       ), packagingException.getMessage());
@@ -237,4 +274,107 @@ class PackagerTest {
     verify(progressIndicator, times(0)).incrementProcessedRecords();
   }
 
+  private Package buildPackage(){
+    return AudioPackage.builder()
+        .uuid(UUID.randomUUID())
+        .siteOrCruiseName("siteOrCruiseName")
+        .deploymentId("deploymentId")
+        .datasetPackager("dataset-packager")
+        .projects(List.of(
+            "project-name-1", "project-name-2"
+        )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .scientists(List.of(
+            "scientist-1", "scientist-2"
+        )).sponsors(List.of(
+            "organization-1", "organization-2"
+        )).funders(List.of(
+            "organization-3", "organization-4"
+        )).platform(
+            "platform"
+        ).instrument("instrument")
+        .instrumentId("instrumentId")
+        .preDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).minusDays(1))
+        .postDeploymentCalibrationDate(LocalDate.of(2024, 7, 29).plusDays(1))
+        .calibrationDescription("calibration-description")
+        .deploymentTitle("deployment-title")
+        .deploymentPurpose("deployment-purpose")
+        .deploymentDescription("deployment-description")
+        .alternateSiteName("alternate-site-name")
+        .alternateDeploymentName("alternate-deployment-name")
+        .qualityAnalyst("")
+        .qualityAnalysisObjectives("quality-analysis-objectives")
+        .qualityAnalysisMethod("quality-analysis-method")
+        .qualityAssessmentDescription("quality-assessment-description")
+        .qualityEntries(List.of(
+            DataQualityEntry.builder()
+                .comments("comment-1")
+                .qualityLevel(QualityLevel.good)
+                .maxFrequency(10f)
+                .minFrequency(5f)
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+                .channelNumbers(List.of(1))
+                .build(),
+            DataQualityEntry.builder()
+                .comments("comment-2")
+                .qualityLevel(QualityLevel.unusable)
+                .maxFrequency(10f)
+                .minFrequency(5f)
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                .channelNumbers(List.of(1))
+                .build()
+        )).deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(4))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusDays(1))
+        .comments("deployment-comments")
+        .sensors(List.of(
+            PackageSensor.<String>builder()
+                .sensor("audio-sensor")
+                .position(Position.builder()
+                    .x(1f)
+                    .y(2f)
+                    .z(3f)
+                    .build())
+                .build(),
+            PackageSensor.<String>builder()
+                .sensor("depth-sensor")
+                .position(Position.builder()
+                    .x(4f)
+                    .y(5f)
+                    .z(6f)
+                    .build())
+                .build()
+        )).channels(List.of(
+            Channel.<String>builder()
+                .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(2))
+                .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+                .sampleRates(List.of(
+                    SampleRate.builder()
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(1))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+                        .sampleBits(10)
+                        .sampleRate(10f)
+                        .build()
+                )).dutyCycles(List.of(
+                    DutyCycle.builder()
+                        .duration(100f)
+                        .interval(1000f)
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
+                        .build()
+                )).gains(List.of(
+                    Gain.builder()
+                        .startTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(20))
+                        .endTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(5))
+                        .gain(1000f)
+                        .build()
+                ))
+                .build()
+        )).locationDetail(MobileMarineLocation.builder()
+            .seaArea("seaArea")
+            .vessel("vessel")
+            .locationDerivationDescription("the description of the location")
+            .build())
+        .build();
+  }
 }
