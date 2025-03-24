@@ -210,25 +210,25 @@ class PackagerProcessorTest {
     
     int expectedNumberOfInvocations = 0;
     if (biologicalPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (calibrationDocumentsPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (documentsPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (navigationPath != null) {
       expectedNumberOfInvocations += 20;
     }
     if (otherPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (temperaturePath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (sourcePath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
@@ -236,7 +236,7 @@ class PackagerProcessorTest {
         objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
     ).process().processedPackages;
     assertTrue(packages.stream().noneMatch(Package::isVisible));
-    verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
+    verify(progressIndicator, times(expectedNumberOfInvocations +8)).incrementProcessedRecords();
     
     Path baseExpectedOutputPath = testOutputPath.resolve(packingJob.getPackageId()).resolve("data");
 
@@ -386,6 +386,7 @@ class PackagerProcessorTest {
         .instrumentType("instrument")
         .instrumentId("instrumentId")
         .datasetDetails(PassivePackerDatasetDetails.builder()
+            .type("Raw")
             .subType("Audio")
             .sourcePath(sourcePath.toString())
             .dataComment("deployment-comments")
@@ -702,15 +703,15 @@ class PackagerProcessorTest {
     
     Set<Path> outputPaths = Files.walk(expectedOutputDirectory)
         .filter(p -> p.toFile().isFile())
-        .map(expectedOutputDirectory::relativize)
+        .map(Path::getFileName)
         .collect(Collectors.toSet());
     
     Set<Path> inputPaths = Files.walk(inputDirectory)
         .filter(p -> p.toFile().isFile() && !p.toFile().isHidden())
-        .map(inputDirectory::relativize)
+        .map(Path::getFileName)
         .collect(Collectors.toSet());
 
-    assertEquals(20, outputPaths.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
+    assertEquals(10, outputPaths.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
 
     assertEquals(inputPaths, outputPaths);
   }

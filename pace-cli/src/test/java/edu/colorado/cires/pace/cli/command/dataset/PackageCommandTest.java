@@ -323,7 +323,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       "target/test-dir/output/test/bagit.txt",
       "target/test-dir/output/test/bag-info.txt",
       "target/test-dir/output/test/process.log",
-      "target/test-dir/output/test/tagmanifest-sha256.txt",
+      "target/test-dir/output/test/tagmanifest-md5.txt",
       "target/test-dir/output/test/data/calibration/calibrationDocumentsPath.txt",
       "target/test-dir/output/test/data/test.json",
       "target/test-dir/output/test/data/other/otherPath.txt",
@@ -334,7 +334,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       "target/test-dir/output/test/data/biological/biologicalPath.txt",
       "target/test-dir/output/test/data/people.json",
       "target/test-dir/output/test/data/temperature/temperaturePath.txt",
-      "target/test-dir/output/test/manifest-sha256.txt"
+      "target/test-dir/output/test/manifest-md5.txt"
     );
 
     Set<String> actualPaths = Files.walk(outputDirectory.toPath())

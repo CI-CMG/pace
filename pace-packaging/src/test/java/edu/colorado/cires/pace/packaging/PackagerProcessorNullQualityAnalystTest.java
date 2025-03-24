@@ -211,25 +211,25 @@ class PackagerProcessorNullQualityAnalystTest {
     
     int expectedNumberOfInvocations = 0;
     if (biologicalPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (calibrationDocumentsPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (documentsPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (navigationPath != null) {
       expectedNumberOfInvocations += 20;
     }
     if (otherPath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (temperaturePath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     if (sourcePath != null) {
-      expectedNumberOfInvocations += 20;
+      expectedNumberOfInvocations += 10;
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
@@ -389,6 +389,7 @@ class PackagerProcessorNullQualityAnalystTest {
         .instrumentType("instrument")
         .instrumentId("instrumentId")
         .datasetDetails(PassivePackerDatasetDetails.builder()
+            .type("Raw")
             .subType("Audio")
             .sourcePath(sourcePath.toString())
             .dataComment("deployment-comments")
@@ -706,10 +707,10 @@ class PackagerProcessorNullQualityAnalystTest {
     
     Set<Path> inputPaths = Files.walk(inputDirectory)
         .filter(p -> p.toFile().isFile() && !p.toFile().isHidden())
-        .map(inputDirectory::relativize)
+        .map(Path::getFileName)
         .collect(Collectors.toSet());
 
-    assertEquals(20, outputPaths.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
+    assertEquals(10, outputPaths.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
 
     assertEquals(inputPaths, outputPaths);
   }

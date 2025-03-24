@@ -171,7 +171,7 @@ class PackageInstructionFactory {
       additionalFiles
     ).flatMap(stream -> stream);
   }
-  
+
   private static Stream<PackageInstruction> processDirectory(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
     Path path = pathGetter.get();
     if (path == null) {
@@ -179,7 +179,7 @@ class PackageInstructionFactory {
     }
 
     try {
-      return processPaths(Files.walk(path), outputDirectory, logger, path::relativize);
+      return processPaths(Files.walk(path), outputDirectory, logger, Path::getFileName);
     } catch (IOException e) {
       throw new PackagingException(String.format(
           "Failed to compute packaging destinations for %s", path

@@ -62,6 +62,7 @@
         "RECOVER_BOTTOM_DEPTH": "-190.0"
     },
     "DATASET_DETAILS": {
+        "TYPE": "Product",
         "SUB_TYPE": "Sound Level Metrics",
         "SOURCE_PATH": "/Users/user/Desktop/Project 12_Site 12_12",
         "DATA_FILES": "/Users/user/Desktop/Project 12_Site 12_12",

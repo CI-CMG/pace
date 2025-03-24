@@ -352,7 +352,7 @@ class PackageInstructionFactoryTest {
     for (PackageInstruction instruction : dataTypeSpecificInstructions) {
       assertEquals(
           expectedOutputDirectory.resolve(
-              value.relativize(instruction.source())
+              instruction.source().getFileName()
           ).toAbsolutePath(),
           instruction.target().toAbsolutePath()
       );

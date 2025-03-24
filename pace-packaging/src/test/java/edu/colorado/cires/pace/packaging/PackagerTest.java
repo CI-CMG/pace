@@ -105,7 +105,7 @@ class PackagerTest {
         lines.get(0)
     );
     
-    Path manifestFile = TARGET_DIR.resolve("manifest-sha256.txt");
+    Path manifestFile = TARGET_DIR.resolve("manifest-md5.txt");
     lines = FileUtils.readLines(manifestFile.toFile(), StandardCharsets.UTF_8);
     assertEquals(10, lines.size());
     
@@ -125,12 +125,12 @@ class PackagerTest {
       assertTrue(sourceFile.toFile().isFile());
       
       try (InputStream inputStream = new FileInputStream(sourceFile.toFile())) {
-        String expectedChecksum = DigestUtils.sha256Hex(inputStream);
+        String expectedChecksum = DigestUtils.md5Hex(inputStream);
         assertEquals(expectedChecksum, checksum);
       }
     }
     
-    Path tagmanifestFile = TARGET_DIR.resolve("tagmanifest-sha256.txt");
+    Path tagmanifestFile = TARGET_DIR.resolve("tagmanifest-md5.txt");
     lines = FileUtils.readLines(tagmanifestFile.toFile(), StandardCharsets.UTF_8);
     assertEquals(3, lines.size());
     
@@ -149,7 +149,7 @@ class PackagerTest {
       assertFalse(sourceFile.toFile().exists());
       
       try (InputStream inputStream = new FileInputStream(targetFile.toFile())) {
-        String expectedChecksum = DigestUtils.sha256Hex(inputStream);
+        String expectedChecksum = DigestUtils.md5Hex(inputStream);
         assertEquals(expectedChecksum, checksum);
       }
     }
@@ -190,13 +190,13 @@ class PackagerTest {
     Exception exception = assertThrows(PackagingException.class, () -> Packager.writeTagManifestFile(
         TARGET_DIR.resolve("bag-info.txt"),
         TARGET_DIR.resolve("bagit.txt"),
-        TARGET_DIR.resolve("manifest-sha256.txt"),
+        TARGET_DIR.resolve("manifest-md5.txt"),
         TARGET_DIR,
         progressIndicator::incrementProcessedRecords,
         LogManager.getLogger("test")
     ));
     assertEquals(String.format(
-        "Failed to write %s", TARGET_DIR.resolve("tagmanifest-sha256.txt")
+        "Failed to write %s", TARGET_DIR.resolve("tagmanifest-md5.txt")
     ), exception.getMessage());
     
     verify(progressIndicator, times(0)).incrementProcessedRecords();
@@ -231,7 +231,7 @@ class PackagerTest {
     
     Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test")));
     assertEquals(String.format(
-        "Packaging failed: %s (No such file or directory)", TARGET_DIR.resolve("manifest-sha256.txt")
+        "Packaging failed: %s (No such file or directory)", TARGET_DIR.resolve("manifest-md5.txt")
     ), exception.getMessage());
     
     verify(progressIndicator, times(0)).incrementProcessedRecords();
