@@ -73,7 +73,7 @@ class PackagerTest {
   private void writeDir() throws IOException {
     for (int i = 0; i < 10; i++) {
       String fileName = String.format(
-          "test-%s.txt", i
+          "test-%s.wav", i
       );
       try (FileWriter writer = new FileWriter(SOURCE_DIR.resolve(fileName).toFile(), StandardCharsets.UTF_8, true)) {
         for (int j = 0; j < 10; j++) {

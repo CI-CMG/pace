@@ -29,14 +29,14 @@ class FileUtilTest {
   
   @Test
   void testFilterHidden() throws IOException {
-    Path path = TEST_PATH.resolve("test.txt");
+    Path path = TEST_PATH.resolve("test.wav");
     org.apache.commons.io.FileUtils.createParentDirectories(path.toFile());
     Files.createFile(path);
     
     assertTrue(FileUtils.filterHidden(path)); // regular, visible file = pass
     assertFalse(FileUtils.filterHidden(path.getParent())); // directory = fail
     
-    path = TEST_PATH.resolve(".hidden").resolve(".test.txt"); // hidden file = fail
+    path = TEST_PATH.resolve(".hidden").resolve(".test.wav"); // hidden file = fail
     org.apache.commons.io.FileUtils.createParentDirectories(path.toFile());
     Files.createFile(path);
     try {
@@ -47,13 +47,13 @@ class FileUtilTest {
   
   @Test
   void testFilterByChecksum() throws IOException {
-    Path path = TEST_PATH.resolve("test.txt");
+    Path path = TEST_PATH.resolve("test.wav");
     org.apache.commons.io.FileUtils.createParentDirectories(path.toFile());
     Files.createFile(path);
     
     assertFalse(FileUtils.filterByChecksum(path, path)); // same file = fail
     
-    Path path2 = TEST_PATH.resolve("test1.txt");
+    Path path2 = TEST_PATH.resolve("test1.wav");
     assertTrue(FileUtils.filterByChecksum(path, path2)); // target does not exist = pass
 
     org.apache.commons.io.FileUtils.writeStringToFile(path2.toFile(), "Hello World", StandardCharsets.UTF_8);

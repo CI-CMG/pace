@@ -135,7 +135,7 @@ class PackagerProcessorNullQualityAnalystTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -238,13 +238,13 @@ class PackagerProcessorNullQualityAnalystTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ProcessSet packagesSet = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, true, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process();
     List<Package> packages = new ArrayList<>();
     packages.addAll(packagesSet.processedPackages);
     packages.addAll(packagesSet.zeroBytePackages);
     assertTrue(packages.stream().noneMatch(Package::isVisible));
-    verify(progressIndicator, times(expectedNumberOfInvocations + 8)).incrementProcessedRecords();
+    verify(progressIndicator, times(expectedNumberOfInvocations +8)).incrementProcessedRecords();
     
     Path baseExpectedOutputPath = testOutputPath.resolve(packingJob.getPackageId()).resolve("data");
 
@@ -649,7 +649,7 @@ class PackagerProcessorNullQualityAnalystTest {
 
     for (int i = 0; i < 10; i++) {
       Path filePath = path.resolve(String.format(
-          "test-%s.txt", i
+          "test-%s.wav", i
       ));
       Path hiddenFilePath = path.resolve(String.format(
           ".test-%s.hidden", i
@@ -673,7 +673,7 @@ class PackagerProcessorNullQualityAnalystTest {
       } catch (UnsupportedOperationException ignored) {} // not running on Windows OS
 
       Path fileDirectoryPath = path.resolve("subdir").resolve(String.format(
-          "test-%s.txt", i
+          "test-%s.wav", i
       ));
       Path hiddenFileDirectoryPath = path.resolve("subdir").resolve(String.format(
           ".test-%s.hidden", i

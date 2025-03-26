@@ -858,8 +858,8 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
             .vessel("vessel")
             .locationDerivationDescription("location description")
             .fileList(List.of(
-                Paths.get("test-1.txt"),
-                Paths.get("test-2.txt")
+                Paths.get("test-1.wav"),
+                Paths.get("test-2.wav")
             ))
             .build())
         .build();

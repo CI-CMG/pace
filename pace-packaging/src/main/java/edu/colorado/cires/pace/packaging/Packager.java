@@ -7,7 +7,9 @@ import edu.colorado.cires.passivePacker.data.PassivePackerPerson;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -79,19 +81,21 @@ class Packager {
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions
+          .filter(packageInstruction -> !packageInstruction.target().toString().contains("acoustic_files/")
+              || isAudioFile(packageInstruction.target().getFileName()))
           .forEach(packageInstruction -> {
             try {
               FileUtils.copyFile(packageInstruction.source(), packageInstruction.target());
               logger.info("Copied {} to {}", packageInstruction.source(), packageInstruction.target());
               FileUtils.appendChecksumToManifest(writer, packageInstruction.target(), outputDir);
               logger.info("Appended {} checksum to {}", packageInstruction.target(), outputFile);
-              
+
               incrementProgressFn.run();
             } catch (IOException e) {
               throw new RuntimeException(e);
             }
           });
-      
+
     } catch (IOException | RuntimeException e) {
       throw new PackagingException(String.format(
           "Packaging failed: %s", e.getMessage()
@@ -104,7 +108,14 @@ class Packager {
     
     return outputFile;
   }
-  
+
+  private static boolean isAudioFile(Path fileName) {
+    return fileName.toString().endsWith(".aif") ||
+        fileName.toString().endsWith(".wav") ||
+        fileName.toString().endsWith(".flac") ||
+        fileName.toString().endsWith(".aiff");
+  }
+
   protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn, Logger logger, List<Package> packages, List<Person> people) throws PackagingException {
     Path bagInfoFile = outputDir.resolve("bag-info.txt");
     
