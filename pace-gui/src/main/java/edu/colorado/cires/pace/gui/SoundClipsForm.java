@@ -89,5 +89,5 @@ public class SoundClipsForm extends JPanel {
    * Returns end time
    * @return TimeTranslator end time
    */
-  public TimeTranslator getEndTime() { return clipStartTimeForm.toTranslator(); }
+  public TimeTranslator getEndTime() { return clipEndTimeForm.toTranslator(); }
 }

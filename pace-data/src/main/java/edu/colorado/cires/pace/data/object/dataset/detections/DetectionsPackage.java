@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -90,4 +91,15 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   public DetectionsPackage setSoundSource(String soundSource) {
     return toBuilder().soundSource(soundSource).build();
   }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.ofNullable(startTime);
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.ofNullable(endTime);
+  }
+
 }

@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.data.object.dataset.base.metadata.location;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.util.OptionalDouble;
 
 /**
  * Provides the JSON structure for location details
@@ -14,5 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = StationaryTerrestrialLocation.class, name = "stationary terrestrial")
 })
 public interface LocationDetail {
+  OptionalDouble resolveLatitude();
+  OptionalDouble resolveLongitude();
 
 }

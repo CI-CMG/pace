@@ -12,6 +12,8 @@ import edu.colorado.cires.pace.data.object.dataset.soundClips.SoundClipsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.SoundLevelMetricsPackage;
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.SoundPropagationModelsPackage;
 import edu.colorado.cires.pace.data.validation.ValidPackageIdentifiers;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -55,4 +57,16 @@ public class Package extends BasePackage {
   public Package setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
   }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.empty();
+  }
 }
+
+

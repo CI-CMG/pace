@@ -5,6 +5,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,4 +55,15 @@ public class SoundPropagationModelsPackage extends Package implements BaseSoundP
   public SoundPropagationModelsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
   }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.ofNullable(audioStartTime);
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.ofNullable(audioEndTime);
+  }
+
 }

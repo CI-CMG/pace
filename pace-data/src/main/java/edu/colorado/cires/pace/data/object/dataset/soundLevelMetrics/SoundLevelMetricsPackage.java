@@ -5,6 +5,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.Data
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -75,4 +76,15 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   public SoundLevelMetricsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
   }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.ofNullable(audioStartTime);
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.ofNullable(audioEndTime);
+  }
+
 }

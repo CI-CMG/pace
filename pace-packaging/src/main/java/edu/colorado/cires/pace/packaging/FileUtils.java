@@ -53,7 +53,7 @@ public class FileUtils {
     }
 
     fileWriter.append(String.format(
-        "%s  %s", manifestParentDirectory.relativize(path), checksum
+        "%s  %s", checksum, manifestParentDirectory.relativize(path)
     )).append("\n");
   }
 

@@ -12,6 +12,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiP
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
+import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.packaging.FileUtils;
 import edu.colorado.cires.pace.packaging.PackageProcessor;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalDouble;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -568,16 +570,13 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   }
 
   protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) throws IOException {
-    JLabel verificationLabel = new JLabel();
+    JLabel verificationLabel;
     List<Object[]> dataList = new ArrayList<>();
     String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude", "File Count"};
-    // Possibly an issue if we're looking to get all file types since we're doing 'instanceof AudioPackage'
-    if (packages.get(0) instanceof AudioPackage) {
-      verificationLabel = new JLabel("Please confirm that the information below is correct before clicking Verify");
-      verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
-      verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
-    }
+    verificationLabel = new JLabel("Please confirm that the information below is correct before clicking Verify");
+    verificationLabel.setFont(verificationLabel.getFont().deriveFont(Font.BOLD, 18));
+    verificationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    verificationLabel.setVerticalAlignment(SwingConstants.CENTER);
 
     int i = 1;
     for (Package p : packages) {
@@ -590,33 +589,22 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       } catch (IOException ex) {
         ex.printStackTrace();
       }
+        OptionalDouble lon = p.getLocationDetail().resolveLongitude();
+        OptionalDouble lat = p.getLocationDetail().resolveLatitude();
 
-        if (p instanceof AudioPackage a) {
+      Object[] newRow = {
+          i,
+          p.getPackageId(),
+          p.getPublicReleaseDate(),
+          p.resolveAudioStartTime().orElse(null),
+          p.resolveAudioEndTime().orElse(null),
+          lon.isPresent() ? lon.getAsDouble() : null,
+          lat.isPresent() ? lat.getAsDouble() : null,
+          fileCount -1
+      };
 
-        LocationDetail loc = p.getLocationDetail();
-        double lon = 0;
-        double lat = 0;
-        if (loc instanceof StationaryMarineLocation stationaryMarineLocation) {
-          lon = stationaryMarineLocation.getDeploymentLocation().getLongitude();
-          lat = stationaryMarineLocation.getDeploymentLocation().getLatitude();
-        }
-        if (loc instanceof StationaryTerrestrialLocation stationaryT) {
-          lon = stationaryT.getLongitude();
-          lat = stationaryT.getLatitude();
-        }
-        if (loc instanceof MultiPointStationaryMarineLocation multiPoint) {
-          if (!multiPoint.getLocations().isEmpty()) {
-            @NotNull @NotEmpty List<@Valid MarineInstrumentLocation> location = multiPoint.getLocations();
-            lon = location.get(0).getLongitude();
-            lat = location.get(0).getLatitude();
-          }
-        }
-
-
-      Object[] newRow = {i, a.getPackageId(), a.getPublicReleaseDate(), a.getAudioStartTime(), a.getAudioEndTime(), lon, lat, fileCount -1};
       dataList.add(newRow);
       i++;
-    }
   }
 
       Object[][] data = dataList.toArray(new Object[0][]);

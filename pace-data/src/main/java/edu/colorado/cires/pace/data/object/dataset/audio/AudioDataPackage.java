@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -70,5 +71,15 @@ public class AudioDataPackage extends Package implements BaseAudioDataPackage<St
   @Override
   public AudioDataPackage setQualityAnalyst(String qualityAnalyst) {
     return toBuilder().qualityAnalyst(qualityAnalyst).build();
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.ofNullable(audioStartTime);
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.ofNullable(audioEndTime);
   }
 }

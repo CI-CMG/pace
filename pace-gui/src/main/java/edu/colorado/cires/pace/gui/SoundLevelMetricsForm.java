@@ -93,5 +93,5 @@ public class SoundLevelMetricsForm extends JPanel {
    * Returns end time
    * @return TimeTranslator end time
    */
-  public TimeTranslator getEndTime() { return analysisStartTimeForm.toTranslator(); }
+  public TimeTranslator getEndTime() { return analysisEndTimeForm.toTranslator(); }
 }

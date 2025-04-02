@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -126,6 +127,10 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
     return packageId;
   }
 
+  public abstract Optional<LocalDateTime> resolveAudioStartTime();
+
+  public abstract Optional<LocalDateTime> resolveAudioEndTime();
+
   /**
    * Creates a BasePackage using a builder
    */
@@ -135,4 +140,5 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
       return self();
     }
   }
+
 }

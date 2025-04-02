@@ -13,3 +13,5 @@ public interface MarineLocation extends LocationDetail {
   MarineLocation setSeaArea(String seaArea);
 
 }
+
+

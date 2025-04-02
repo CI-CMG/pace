@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
+import java.util.OptionalDouble;
+import javax.swing.text.html.Option;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -48,5 +50,15 @@ public class MobileMarineLocation implements MarineLocation {
    */
   public MobileMarineLocation setVessel(String vessel) {
     return toBuilder().vessel(vessel).build();
+  }
+
+  @Override
+  public OptionalDouble resolveLatitude() {
+    return OptionalDouble.empty();
+  }
+
+  @Override
+  public OptionalDouble resolveLongitude() {
+    return OptionalDouble.empty();
   }
 }

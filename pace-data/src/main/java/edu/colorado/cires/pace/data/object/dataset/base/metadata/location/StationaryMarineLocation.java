@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.data.object.dataset.base.metadata.location;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.OptionalDouble;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -32,5 +33,21 @@ public class StationaryMarineLocation implements MarineLocation {
     return toBuilder()
         .seaArea(seaArea)
         .build();
+  }
+
+  @Override
+  public OptionalDouble resolveLatitude() {
+    if (getDeploymentLocation().getLatitude() == null) {
+      return OptionalDouble.empty();
+    }
+    return OptionalDouble.of(getDeploymentLocation().getLatitude());
+  }
+
+  @Override
+  public OptionalDouble resolveLongitude() {
+    if (getDeploymentLocation().getLongitude() == null) {
+      return OptionalDouble.empty();
+    }
+    return OptionalDouble.of(getDeploymentLocation().getLongitude());
   }
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalDouble;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -33,5 +34,23 @@ public class MultiPointStationaryMarineLocation implements MarineLocation {
     return toBuilder()
         .seaArea(seaArea)
         .build();
+  }
+
+  @Override
+  public OptionalDouble resolveLatitude() {
+    if (!getLocations().isEmpty()) {
+      List<MarineInstrumentLocation> location = getLocations();
+      return OptionalDouble.of(location.get(0).getLatitude());
+    }
+    return OptionalDouble.empty();
+  }
+
+  @Override
+  public OptionalDouble resolveLongitude() {
+    if (!getLocations().isEmpty()) {
+      List<MarineInstrumentLocation> location = getLocations();
+      return OptionalDouble.of(location.get(0).getLongitude());
+    }
+    return OptionalDouble.empty();
   }
 }

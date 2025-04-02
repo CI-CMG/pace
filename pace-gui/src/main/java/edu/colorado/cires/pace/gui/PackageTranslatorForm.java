@@ -673,8 +673,8 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .softwareProtocolCitation(softwareDependentPackageTranslator.getSoftwareProtocolCitation())
         .softwareDescription(softwareDependentPackageTranslator.getSoftwareDescription())
         .softwareProcessingDescription(softwareDependentPackageTranslator.getSoftwareProcessingDescription())
-        .startTime(softwareDependentPackageTranslator.getStartTime())
-        .endTime(softwareDependentPackageTranslator.getEndTime())
+        .startTime(detectionsForm.getStartTime())
+        .endTime(detectionsForm.getEndTime())
         .build();
   }
   
@@ -694,7 +694,7 @@ public class PackageTranslatorForm extends BaseTranslatorForm<PackageTranslator>
         .endTime(soundClipsForm.getEndTime())
         .build();
   }
-  
+
   private SoundLevelMetricsPackageTranslator toSoundLevelMetricsTranslator(PackageTranslator packageTranslator) {
     SoundLevelMetricsForm soundLevelMetricsForm = (SoundLevelMetricsForm) packageDetailForm.getComponent();
     QualityControlForm qualityForm = (QualityControlForm) qualityControlForm.getComponent();

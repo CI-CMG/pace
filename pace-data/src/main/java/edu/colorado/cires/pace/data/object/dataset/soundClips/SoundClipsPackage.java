@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.data.object.dataset.soundClips;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,5 +51,15 @@ public class SoundClipsPackage extends Package implements BaseSoundClipsPackage,
   @Override
   public SoundClipsPackage setVisible(boolean visible) {
     return toBuilder().visible(visible).build();
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioStartTime() {
+    return Optional.ofNullable(audioStartTime);
+  }
+
+  @Override
+  public Optional<LocalDateTime> resolveAudioEndTime() {
+    return Optional.ofNullable(audioEndTime);
   }
 }
