@@ -8,6 +8,7 @@ import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
+import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MultiPointStationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.StationaryTerrestrialLocation;
@@ -471,6 +472,9 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
           lat = location.get(0).getLatitude();
         }
       }
+      if (loc instanceof MobileMarineLocation) {
+        spots.add(new ArrayList<>(Arrays.asList(null, null)));
+      }
 
       int x = (int) ((lon + 180) * ((double) mapWidth / 360));
       int y = (int) (((lat * -1) + 90) * ((double) mapHeight / 180));
@@ -508,7 +512,12 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         yMin /= 2;
         List<List<Integer>> adjusted = new ArrayList<>();
         for(List<Integer> spot : spots) {
-          adjusted.add(new ArrayList<>(Arrays.asList(spot.get(0)/3, spot.get(1)/3)));
+          if (spot.get(0) == null){
+            adjusted.add(new ArrayList<>(Arrays.asList(null, null)));
+          }
+          else {
+            adjusted.add(new ArrayList<>(Arrays.asList(spot.get(0) / 3, spot.get(1) / 3)));
+          }
         }
         spots = adjusted;
       }
@@ -529,6 +538,11 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       int radius = 5;
       Color color = colors.get(colorIndex % colors.size());
       g2d.setColor(color);
+      if (spot.get(0) == null) {
+        colorIndex++;
+        i++;
+        continue;
+      }
       g2d.fillOval(spot.get(0) - radius, spot.get(1) - radius, 2 * radius, 2 * radius);
       g2d.setFont(new Font("Times New Roman", Font.BOLD, 20));
       g2d.drawString(String.valueOf(i), spot.get(0) - radius, spot.get(1) - radius);
