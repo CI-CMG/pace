@@ -368,7 +368,7 @@ class PackageInstructionFactoryTest {
     
     for (int i = 0; i < 10; i++) {
       Path filePath = path.resolve(String.format(
-          "test-%s.txt", i
+          "test-%s.wav", i
       ));
       Path hiddenFilePath = path.resolve(String.format(
           ".test-%s.hidden", i
@@ -392,7 +392,7 @@ class PackageInstructionFactoryTest {
       } catch (UnsupportedOperationException ignored) {} // not running on Windows OS
       
       Path fileDirectoryPath = path.resolve("subdir").resolve(String.format(
-          "test-%s.txt", i
+          "test-%s.wav", i
       ));
       Path hiddenFileDirectoryPath = path.resolve("subdir").resolve(String.format(
           ".test-%s.hidden", i

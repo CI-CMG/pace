@@ -49,7 +49,6 @@ public class PackageProcessor {
   private final List<Package> packages;
   private final Path outputDir;
   private final PassivePackerFactory passivePackerFactory;
-  private boolean skipZeroByte;
 
   /**
    * Creates a package processor
@@ -64,7 +63,7 @@ public class PackageProcessor {
    */
   public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
       List<Package> packages, Path outputDir, PassivePackerFactory passivePackerFactory,
-      Boolean skipZeroByte, ProgressIndicator... progressIndicators) {
+      ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
@@ -74,7 +73,6 @@ public class PackageProcessor {
     this.passivePackerFactory = passivePackerFactory;
     this.progressIndicators = progressIndicators;
     this.validator = Validation.buildDefaultValidatorFactory().getValidator();
-    this.skipZeroByte = skipZeroByte;
   }
 
   /**
@@ -96,13 +94,11 @@ public class PackageProcessor {
     List<List<Path>> zeroByteLists = new ArrayList<>(0);
     
     for (Package aPackage : packages) {
-      if (this.skipZeroByte) {
-        List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
-        if (!zeroBytes.isEmpty()) {
-          zeroBytePackages.add(aPackage);
-          zeroByteLists.add(zeroBytes);
-          continue;
-        }
+      List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
+      if (!zeroBytes.isEmpty()) {
+        zeroBytePackages.add(aPackage);
+        zeroByteLists.add(zeroBytes);
+        continue;
       }
 
       Path packageOutputDir = getPackageOutputDir(aPackage);

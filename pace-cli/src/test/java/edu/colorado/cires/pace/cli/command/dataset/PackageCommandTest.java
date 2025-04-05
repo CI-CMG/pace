@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.cli.command.dataset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -324,16 +325,16 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       "target/test-dir/output/test/bag-info.txt",
       "target/test-dir/output/test/process.log",
       "target/test-dir/output/test/tagmanifest-md5.txt",
-      "target/test-dir/output/test/data/calibration/calibrationDocumentsPath.txt",
+      "target/test-dir/output/test/data/calibration/calibrationDocumentsPath.wav",
       "target/test-dir/output/test/data/test.json",
-      "target/test-dir/output/test/data/other/otherPath.txt",
+      "target/test-dir/output/test/data/other/otherPath.wav",
       "target/test-dir/output/test/data/organizations.json",
-      "target/test-dir/output/test/data/docs/documentsPath.txt",
+      "target/test-dir/output/test/data/docs/documentsPath.wav",
       "target/test-dir/output/test/data/projects.json",
-      "target/test-dir/output/test/data/acoustic_files/sourcePath.txt",
-      "target/test-dir/output/test/data/biological/biologicalPath.txt",
+      "target/test-dir/output/test/data/acoustic_files/sourcePath.wav",
+      "target/test-dir/output/test/data/biological/biologicalPath.wav",
       "target/test-dir/output/test/data/people.json",
-      "target/test-dir/output/test/data/temperature/temperaturePath.txt",
+      "target/test-dir/output/test/data/temperature/temperaturePath.wav",
       "target/test-dir/output/test/manifest-md5.txt"
     );
 
@@ -360,10 +361,10 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     FileUtils.forceMkdir(directory);
     
     File file = path.resolve(String.format(
-        "%s.txt", path.getFileName()
+        "%s.wav", path.getFileName()
     )).toFile();
     
-    FileUtils.writeStringToFile(file, "test", StandardCharsets.UTF_8);
+    FileUtils.writeStringToFile(file, "ThisStringMustBeAtLeast10BytesOfData", StandardCharsets.UTF_8);
   }
   
   @Test
@@ -371,23 +372,19 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
     Package p = writeObject(
         createObject("test")
     );
-    createDirectoryAndWriteFile(p.getTemperaturePath());
-    createDirectoryAndWriteFile(p.getBiologicalPath());
-    createDirectoryAndWriteFile(p.getOtherPath());
-    createDirectoryAndWriteFile(p.getDocumentsPath());
-    createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
+//    createDirectoryAndWriteFile(p.getTemperaturePath());
+//    createDirectoryAndWriteFile(p.getBiologicalPath());
+//    createDirectoryAndWriteFile(p.getOtherPath());
+//    createDirectoryAndWriteFile(p.getDocumentsPath());
+//    createDirectoryAndWriteFile(p.getCalibrationDocumentsPath());
 
     File outputDirectory = testPath.resolve("output").toFile();
     clearOut();
     execute("package", "process", testPath.resolve("test.json").toFile().toString(), outputDirectory.toString());
 
     CLIError exception = getCLIException();
-    assertEquals(String.format(
-        "Failed to read file or directory: %s", p.getSourcePath().toAbsolutePath()
-    ), exception.detail());
-    assertEquals(String.format(
-        "Failed to compute packaging destinations for %s", p.getSourcePath().toAbsolutePath()
-    ), exception.message());
+    assertNull(exception.detail());
+    assertEquals(p.getSourcePath().toAbsolutePath().toString(), exception.message());
   }
   
   @Test

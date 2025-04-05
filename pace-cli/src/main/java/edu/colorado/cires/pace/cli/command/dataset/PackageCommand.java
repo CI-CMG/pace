@@ -312,7 +312,7 @@ public class PackageCommand {
         );
 
         PackageProcessor packageProcessor = new PackageProcessor(
-            objectMapper, people, organizations, projects, packages, outputPath, passivePackerFactory, false, progressIndicators
+            objectMapper, people, organizations, projects, packages, outputPath, passivePackerFactory, progressIndicators
         );
 
         List<Package> processedPackages = packageProcessor.process().processedPackages.stream()
