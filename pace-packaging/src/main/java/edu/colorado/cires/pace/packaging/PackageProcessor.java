@@ -181,7 +181,7 @@ public class PackageProcessor {
 
   protected List<Path> verifyFileSizesAndNames(BasePackage basePackage) throws IOException {
     Path source = basePackage.getSourcePath();
-    Pattern pattern = Pattern.compile("[^A-Za-z0-9/.\\-_]");
+    Pattern pattern = Pattern.compile("[^A-Za-z0-9/.\\-_:\\\\]");
 
     if (source == null && basePackage instanceof Package p) {
       Set<ConstraintViolation<Package>> violations = validator.validate(p);
