@@ -34,7 +34,7 @@
 
 ## GUI
 ### GUI Guides
-For a video walkthrough of the PACE GUI, go to the following [link](https://www.youtube.com/watch?v=q3v-Cji4OT4).
+For a video walkthrough of the PACE GUI, go to the following [link](https://www.youtube.com/watch?v=v8NlUkiZFG8).
 For an in-depth PACE GUI guide, go to the following [link](https://github.com/CI-CMG/pace/blob/trunk/docs/PACE%20GUI%20Guide.pdf).
 
 ### GUI Installation
