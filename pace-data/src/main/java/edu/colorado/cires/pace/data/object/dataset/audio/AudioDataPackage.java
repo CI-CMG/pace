@@ -23,9 +23,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class AudioDataPackage extends Package implements BaseAudioDataPackage<String> {
   private final String instrumentId;
+  @NotNull
   private final LocalDateTime deploymentTime;
+  @NotNull
   private final LocalDateTime recoveryTime;
+  @NotNull
   private final LocalDateTime audioStartTime;
+  @NotNull
   private final LocalDateTime audioEndTime;
   private final String comments;
   @Builder.Default
