@@ -186,6 +186,11 @@
   },
   {
     "visible": true,
+    "name": "Gulf of America",
+    "uuid": "8496a65d-f51c-4ee9-ba61-ca37790be7de"
+  },
+  {
+    "visible": true,
     "name": "Gulf of Aqaba",
     "uuid": "381fd62e-197d-4118-b0b1-4f2bb6b3f446"
   },
