@@ -52,6 +52,7 @@ public class ValidPackageIdentifiersValidatorTest {
     Set<ConstraintViolation<AudioPackage>> constraintViolations = validator.validate(audioPackage);
     
     if (expectedPass) {
+      System.out.println(constraintViolations);
       assertEquals(0, constraintViolations.size());
     } else {
       assertEquals(3, constraintViolations.size());
@@ -82,6 +83,10 @@ public class ValidPackageIdentifiersValidatorTest {
         .biologicalPath(Paths.get("biologicalPath"))
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
+        .deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .audioStartTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .audioEndTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .datasetPackager("dataset-packager")
         .projects(List.of(
             "project-name-1", "project-name-2"

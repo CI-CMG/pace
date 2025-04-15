@@ -510,6 +510,10 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
+        .deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .audioStartTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .audioEndTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .datasetPackager("packager-name")
         .projects(List.of(
             "project-name-1", "project-name-2"
@@ -879,6 +883,10 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         .deploymentId(String.format(
             "deploymentId-%s", suffix
         ))
+        .deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .audioStartTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .audioEndTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .datasetPackager("dataset-packager")
         .projects(List.of(
             "project-name-1", "project-name-2"

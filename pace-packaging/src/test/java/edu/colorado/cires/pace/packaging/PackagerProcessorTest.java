@@ -405,6 +405,8 @@ class PackagerProcessorTest {
         .deployment(PassivePackerDeployment.builder()
             .deploymentTime("2024-07-25T12:01:00")
             .recoveryTime("2024-07-28T12:01:00")
+            .audioStart("2024-07-29T11:51:00")
+            .audioEnd("2024-07-29T12:01:00")
             .location(PassivePackerMobileMarineLocation.builder()
                 .seaArea("seaArea")
                 .deployShip("vessel")
@@ -529,6 +531,10 @@ class PackagerProcessorTest {
         .biologicalPath(biologicalPath)
         .siteOrCruiseName("siteOrCruiseName")
         .deploymentId("deploymentId")
+        .deploymentTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .recoveryTime(LocalDateTime.of(2024, 7, 29, 12, 1))
+        .audioStartTime(LocalDateTime.of(2024, 7, 29, 12, 1).minusMinutes(10))
+        .audioEndTime(LocalDateTime.of(2024, 7, 29, 12, 1))
         .datasetPackager("dataset-packager")
         .projects(List.of(
             "project-name-1", "project-name-2"
