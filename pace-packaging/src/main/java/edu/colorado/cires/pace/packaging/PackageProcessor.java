@@ -94,7 +94,7 @@ public class PackageProcessor {
     List<List<Path>> zeroByteLists = new ArrayList<>(0);
     
     for (Package aPackage : packages) {
-      List<Path> zeroBytes = verifyFileSizesAndNames(aPackage);
+      List<Path> zeroBytes = verifyFileSizes(aPackage);
       if (!zeroBytes.isEmpty()) {
         zeroBytePackages.add(aPackage);
         zeroByteLists.add(zeroBytes);
@@ -179,9 +179,8 @@ public class PackageProcessor {
     return outputDir.resolve(packingJob.getPackageId());
   }
 
-  protected List<Path> verifyFileSizesAndNames(BasePackage basePackage) throws IOException {
+  protected List<Path> verifyFileSizes(BasePackage basePackage) throws IOException {
     Path source = basePackage.getSourcePath();
-    Pattern pattern = Pattern.compile("[^A-Za-z0-9/.\\-_:\\\\]");
 
     if (source == null && basePackage instanceof Package p) {
       Set<ConstraintViolation<Package>> violations = validator.validate(p);
@@ -192,7 +191,7 @@ public class PackageProcessor {
       return path
           .filter(p -> p.toFile().isFile())
           .filter(
-              p -> p.toFile().length() < 10 || pattern.matcher(p.toAbsolutePath().toFile().toString()).find()
+              p -> p.toFile().length() < 10
           )
           .collect(Collectors.toList());
     }

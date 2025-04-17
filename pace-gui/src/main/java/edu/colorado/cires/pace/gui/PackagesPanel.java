@@ -380,7 +380,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
             for (int i = 0; i < pSet.zeroBytePackages.size(); i++) {
               Package unprocessedPackage = pSet.zeroBytePackages.get(i);
               String message = "Error processing "+ unprocessedPackage.getDataCollectionName() + " due to zero byte "
-                  + "files and illegal characters " + pSet.zeroByteLists.get(i);
+                  + pSet.zeroByteLists.get(i);
               JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             }
           } catch (DatastoreException | IOException | PackagingException | ConflictException | NotFoundException | BadArgumentException ex) {
