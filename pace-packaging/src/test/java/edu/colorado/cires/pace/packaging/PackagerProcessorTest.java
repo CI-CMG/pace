@@ -214,22 +214,22 @@ class PackagerProcessorTest {
     
     int expectedNumberOfInvocations = 0;
     if (biologicalPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (calibrationDocumentsPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (documentsPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (navigationPath != null) {
       expectedNumberOfInvocations += 20;
     }
     if (otherPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (temperaturePath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (sourcePath != null) {
       expectedNumberOfInvocations += 10;
