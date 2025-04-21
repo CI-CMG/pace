@@ -72,7 +72,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .build(), "person");
     
     project = saveObject(Project.builder()
-        .name("project 1")
+        .name("project_1")
         .build(), "project");
     
     scientist = saveObject(Person.builder()

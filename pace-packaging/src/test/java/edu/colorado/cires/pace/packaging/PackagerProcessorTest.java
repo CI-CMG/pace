@@ -288,7 +288,7 @@ class PackagerProcessorTest {
       String fileExtension = FilenameUtils.getExtension(fileName);
       String baseName = FilenameUtils.getBaseName(fileName);
       expectedPath = expectedOutputNavPath.resolve(String.format(
-          "%s (1).%s", baseName, fileExtension
+          "%s__1_.%s", baseName, fileExtension
       ));
     } else {
       expectedPath = expectedOutputNavPath.resolve(fileName);

@@ -327,7 +327,7 @@ final class ConversionUtils {
    * Parses semicolon delimited list of property names and returns the relevant
    * mappings in properties for each object in the list
    * @param properties maps property names to values
-   * @param propertyName property names to search by, separated by semi colongs
+   * @param propertyName property names to search by, separated by semicolons
    * @return List of string property values
    */
   public static List<String> stringListFromMap(Map<String, ValueWithColumnNumber> properties, String propertyName) {
@@ -336,6 +336,24 @@ final class ConversionUtils {
       return Collections.emptyList();
     }
     return Arrays.stream(value.split(";")).toList();
+  }
+
+  /**
+   * Parses semicolon delimited list of property names and returns the relevant
+   * mappings in properties for each object in the list
+   * @param properties maps property names to values
+   * @param propertyName property names to search by, separated by semicolons
+   * @return List of string property values
+   */
+  public static List<String> stringListFromMapReplace(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+    String value = stringFromMap(properties, propertyName);
+    if (value == null) {
+      return Collections.emptyList();
+    }
+    return Arrays.stream(
+        value.split(";"))
+        .map(s -> s.replace(" ", "_"))
+        .toList();
   }
 
   /**
@@ -348,6 +366,22 @@ final class ConversionUtils {
     return stringFromProperty(
         propertyFromMap(properties, propertyName)
     );
+  }
+
+  /**
+   * Pulls the relevant property value string using property name to identify value
+   * @param properties maps property names to values
+   * @param propertyName property name to search by
+   * @return String property value related to property name
+   */
+  public static @Nullable String stringFromMapReplace(Map<String, ValueWithColumnNumber> properties, String propertyName) {
+    String s = stringFromProperty(
+        propertyFromMap(properties, propertyName)
+    );
+    if (s != null) {
+      s = s.replace(" ", "_");
+    }
+    return s;
   }
 
   /**

@@ -203,7 +203,7 @@ class PackageInstructionFactory {
           })
           .map(p -> new PackageInstruction(
                   p,
-                  outputDirectory.resolve(getPathTailSegment.apply(p))
+                  fixIllegalCharacters(outputDirectory.resolve(getPathTailSegment.apply(p)))
               )
           ).filter(packageInstruction -> {
             try {
@@ -216,6 +216,12 @@ class PackageInstructionFactory {
               throw new RuntimeException(e);
             }
           });
+  }
+
+  private static Path fixIllegalCharacters(Path resolve) {
+    String pattern = "[^A-Za-z0-9/.\\-_:\\\\]";
+    String targetString = resolve.toString().replaceAll(pattern, "_");
+    return Paths.get(targetString);
   }
 
 }
