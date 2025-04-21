@@ -215,22 +215,22 @@ class PackagerProcessorNullQualityAnalystTest {
     
     int expectedNumberOfInvocations = 0;
     if (biologicalPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (calibrationDocumentsPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (documentsPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (navigationPath != null) {
       expectedNumberOfInvocations += 20;
     }
     if (otherPath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (temperaturePath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     if (sourcePath != null) {
       expectedNumberOfInvocations += 10;
@@ -263,7 +263,7 @@ class PackagerProcessorNullQualityAnalystTest {
     
     checkTargetPaths(packingJob.getOtherPath(), baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packingJob.getTemperaturePath(), baseExpectedOutputPath.resolve("temperature"));
-    checkTargetPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
+    checkTargetDataPaths(packingJob.getSourcePath(), baseExpectedOutputPath.resolve(
         "acoustic_files"
     ));
     
@@ -717,6 +717,27 @@ class PackagerProcessorNullQualityAnalystTest {
     
     Set<Path> inputPaths = Files.walk(inputDirectory)
         .filter(p -> p.toFile().isFile() && !p.toFile().isHidden())
+        .map(inputDirectory::relativize)
+        .collect(Collectors.toSet());
+
+    assertEquals(20, outputPaths.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
+
+    assertEquals(inputPaths, outputPaths);
+  }
+
+  private void checkTargetDataPaths(Path inputDirectory, Path expectedOutputDirectory) throws IOException {
+    if (inputDirectory == null) {
+      assertFalse(expectedOutputDirectory.toFile().exists());
+      return;
+    }
+
+    Set<Path> outputPaths = Files.walk(expectedOutputDirectory)
+        .filter(p -> p.toFile().isFile())
+        .map(Path::getFileName)
+        .collect(Collectors.toSet());
+
+    Set<Path> inputPaths = Files.walk(inputDirectory)
+        .filter(p -> p.toFile().isFile() && !p.toFile().isHidden())
         .map(Path::getFileName)
         .collect(Collectors.toSet());
 
@@ -724,5 +745,6 @@ class PackagerProcessorNullQualityAnalystTest {
 
     assertEquals(inputPaths, outputPaths);
   }
+
 
 }

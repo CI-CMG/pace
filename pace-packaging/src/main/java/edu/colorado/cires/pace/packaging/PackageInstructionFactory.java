@@ -147,7 +147,7 @@ class PackageInstructionFactory {
     }
     
     logger.info("Scanning source files from {}", packingJob.getSourcePath());
-    Stream<PackageInstruction> sourceFiles = processDirectory(
+    Stream<PackageInstruction> sourceFiles = processDataDirectory(
         packingJob::getSourcePath, 
         (packingJob instanceof AudioPackage || packingJob instanceof CPODPackage) ? dataDirectory.resolve("acoustic_files") : dataDirectory.resolve("data_files"),
         logger
@@ -173,6 +173,21 @@ class PackageInstructionFactory {
   }
 
   private static Stream<PackageInstruction> processDirectory(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
+    Path path = pathGetter.get();
+    if (path == null) {
+      return Stream.empty();
+    }
+
+    try {
+      return processPaths(Files.walk(path), outputDirectory, logger, path::relativize);
+    } catch (IOException e) {
+      throw new PackagingException(String.format(
+          "Failed to compute packaging destinations for %s", path
+      ), e);
+    }
+  }
+
+  private static Stream<PackageInstruction> processDataDirectory(Supplier<Path> pathGetter, Path outputDirectory, Logger logger) throws PackagingException {
     Path path = pathGetter.get();
     if (path == null) {
       return Stream.empty();

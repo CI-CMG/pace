@@ -160,7 +160,7 @@ class PackageInstructionFactoryTest {
     }
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
+    checkTargetDataPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
     assertTrue(
         packageInstructions.stream()
             .anyMatch(packageInstruction -> 
@@ -235,7 +235,7 @@ class PackageInstructionFactoryTest {
     assertFalse(baseExpectedOutputPath.resolve("nav_files").toFile().exists());
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
+    checkTargetDataPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("acoustic_files"));
     assertTrue(
         packageInstructions.stream()
             .anyMatch(packageInstruction ->
@@ -304,7 +304,7 @@ class PackageInstructionFactoryTest {
     assertFalse(baseExpectedOutputPath.resolve("nav_files").toFile().exists());
     checkTargetPaths(packageInstructions, packingJob::getOtherPath, baseExpectedOutputPath.resolve("other"));
     checkTargetPaths(packageInstructions, packingJob::getTemperaturePath, baseExpectedOutputPath.resolve("temperature"));
-    checkTargetPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("data_files"));
+    checkTargetDataPaths(packageInstructions, packingJob::getSourcePath, baseExpectedOutputPath.resolve("data_files"));
     assertTrue(
         packageInstructions.stream()
             .anyMatch(packageInstruction ->
@@ -352,13 +352,38 @@ class PackageInstructionFactoryTest {
     for (PackageInstruction instruction : dataTypeSpecificInstructions) {
       assertEquals(
           expectedOutputDirectory.resolve(
+              value.relativize(instruction.source())
+          ).toAbsolutePath(),
+          instruction.target().toAbsolutePath()
+      );
+    }
+  }
+
+  private void checkTargetDataPaths(List<PackageInstruction> packageInstructions, Supplier<Path> valueGetter, Path expectedOutputDirectory) {
+    List<PackageInstruction> dataTypeSpecificInstructions = packageInstructions.stream()
+        .filter(packageInstruction -> packageInstruction.target().toFile().toString().contains(expectedOutputDirectory.toFile().toString()))
+        .sorted(Comparator.comparing(PackageInstruction::target))
+        .toList();
+
+    Path value = valueGetter.get();
+    if (value == null) {
+      assertTrue(dataTypeSpecificInstructions.isEmpty());
+      return;
+    }
+
+    assertEquals(20, dataTypeSpecificInstructions.size()); // should not contain hidden files. should contain subdirectory contents in tree structure
+
+    for (PackageInstruction instruction : dataTypeSpecificInstructions) {
+      assertEquals(
+          expectedOutputDirectory.resolve(
               instruction.source().getFileName()
           ).toAbsolutePath(),
           instruction.target().toAbsolutePath()
       );
     }
   }
-  
+
+
   private void writeFiles(Path value) throws IOException {
     if (value == null) {
       return;
