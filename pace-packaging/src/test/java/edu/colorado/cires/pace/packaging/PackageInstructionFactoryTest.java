@@ -143,7 +143,7 @@ class PackageInstructionFactoryTest {
                 String baseName = FilenameUtils.getBaseName(fileName);
                 assertEquals(
                     baseExpectedOutputPath.resolve("nav_files").resolve(
-                        String.format("%s (1).%s", baseName, extension)
+                        String.format("%s__1_.%s", baseName, extension)
                     ).toString(),
                     packageInstruction.target().toString()
                 );
