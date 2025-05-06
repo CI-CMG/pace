@@ -36,11 +36,11 @@ public class MobileMarineLocationTranslatorForm extends BaseLocationDetailTransl
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Sea Area"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+    add(new JLabel("Sea Area*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(seaAreaField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    add(new JLabel("Vessel"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    add(new JLabel("Vessel*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(vesselField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
-    add(new JLabel("Location Derivation Description"), configureLayout((c) -> { c.gridx = 0; c.gridy  = 4; c.weightx = 1; }));
+    add(new JLabel("Location Derivation Description*"), configureLayout((c) -> { c.gridx = 0; c.gridy  = 4; c.weightx = 1; }));
     add(locationDerivationDescriptionField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("File(s)"), configureLayout((c) -> { c.gridx = 0; c.gridy  = 6; c.weightx = 1; }));
     add(singleStringFiles, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));

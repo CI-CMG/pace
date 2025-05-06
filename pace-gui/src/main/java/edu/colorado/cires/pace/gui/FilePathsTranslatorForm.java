@@ -47,7 +47,7 @@ public class FilePathsTranslatorForm extends JPanel {
     add(otherPathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("Documents Path"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(documentsPathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
-    add(new JLabel("Source Path"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+    add(new JLabel("Source Path*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
     add(sourcePathField, configureLayout((c) -> { c.gridx = 0; c.gridy = 11; c.weightx = 1; }));
 
     add(new JLabel(), configureLayout((c) -> { c.gridx = 0; c.gridy = 12; c.weighty = 1; }));

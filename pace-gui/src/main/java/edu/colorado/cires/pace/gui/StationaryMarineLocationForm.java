@@ -36,13 +36,13 @@ public class StationaryMarineLocationForm extends BaseLocationDetailTranslatorFo
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Sea Area"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+    add(new JLabel("Sea Area*"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(seaAreaField, configureLayout(c -> { 
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    deploymentLocationForm.setBorder(createEtchedBorder("Deployment Location"));
+    deploymentLocationForm.setBorder(createEtchedBorder("Deployment Location*"));
     add(deploymentLocationForm, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    recoveryLocationForm.setBorder(createEtchedBorder("Recovery Location"));
+    recoveryLocationForm.setBorder(createEtchedBorder("Recovery Location*"));
     add(recoveryLocationForm, configureLayout(c -> { c.gridx = 1; c.gridy = 2; c.weightx = 1; }));
   }
   

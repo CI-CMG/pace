@@ -68,11 +68,11 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     add(dataCollectionNameField, configureLayout((c) -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Site Or Cruise Name"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
+    add(new JLabel("Site Or Cruise Name*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     add(siteOrCruiseNameField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Deployment ID"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
+    add(new JLabel("Deployment ID*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(deploymentIdField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 7; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -80,11 +80,11 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     add(projectsField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 9; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Platform"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
+    add(new JLabel("Platform*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));
     add(platformField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 11; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Instrument"), configureLayout((c) -> { c.gridx = 0; c.gridy = 12; c.weightx = 1; }));
+    add(new JLabel("Instrument*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 12; c.weightx = 1; }));
     add(instrumentField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 13; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -109,7 +109,7 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
       c.gridx = 0; c.gridy = 23; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
 
-    publicReleaseDateForm.setBorder(createEtchedBorder("Public Release Date"));
+    publicReleaseDateForm.setBorder(createEtchedBorder("Public Release Date*"));
     add(publicReleaseDateForm, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 26; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));

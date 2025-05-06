@@ -69,19 +69,19 @@ public class AudioDataForm<T extends AudioDataPackageTranslator> extends JPanel 
     add(commentsField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    deploymentTimeForm.setBorder(createEtchedBorder("Deployment Time"));
+    deploymentTimeForm.setBorder(createEtchedBorder("Deployment Time*"));
     add(deploymentTimeForm, configureLayout(c -> {
       c.gridx = 0; c.gridy = 4; c.weightx = 1;
     }));
-    recoveryTimeForm.setBorder(createEtchedBorder("Recovery Time"));
+    recoveryTimeForm.setBorder(createEtchedBorder("Recovery Time*"));
     add(recoveryTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 4; c.weightx = 1;
     }));
-    audioStartTimeForm.setBorder(createEtchedBorder("Audio Start Time"));
+    audioStartTimeForm.setBorder(createEtchedBorder("Audio Start Time*"));
     add(audioStartTimeForm, configureLayout(c -> {
       c.gridx = 0; c.gridy = 5; c.weightx = 1;
     }));
-    audioEndTimeForm.setBorder(createEtchedBorder("Audio End Time"));
+    audioEndTimeForm.setBorder(createEtchedBorder("Audio End Time*"));
     add(audioEndTimeForm, configureLayout(c -> {
       c.gridx = 1; c.gridy = 5; c.weightx = 1;
     }));

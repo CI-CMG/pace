@@ -54,13 +54,13 @@ public class SoundAnalysisForm<T extends SoundAnalysisPackageTranslator> extends
     add(sampleRateField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 5; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Min Frequency"), configureLayout(c -> {
+    add(new JLabel("Min Frequency*"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 6; c.weightx = 1;
     }));
     add(minFrequencyField, configureLayout(c -> {
       c.gridx = 0; c.gridy = 7; c.weightx = 1;
     }));
-    add(new JLabel("Max Frequency"), configureLayout(c -> {
+    add(new JLabel("Max Frequency*"), configureLayout(c -> {
       c.gridx = 1; c.gridy = 6; c.weightx = 1;
     }));
     add(maxFrequencyField, configureLayout(c -> {

@@ -44,7 +44,7 @@ public class SoundPropagationModelsForm extends JPanel implements AuxiliaryTrans
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Modeled Frequency"), configureLayout(c -> {
+    add(new JLabel("Modeled Frequency*"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1;
     }));
     add(modeledFrequencyField, configureLayout(c -> {

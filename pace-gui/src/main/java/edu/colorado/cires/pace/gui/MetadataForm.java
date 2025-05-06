@@ -63,7 +63,7 @@ public abstract class MetadataForm<O extends ObjectWithUniqueField> extends Form
     contentPanel.setName("contentPanel");
     contentPanel.add(new JLabel("UUID"), configureFormLayout(0, 0));
     contentPanel.add(uuid, configureFormLayout(0, 1));
-    contentPanel.add(new JLabel(humanReadableUniqueFieldName), configureFormLayout(0, 2));
+    contentPanel.add(new JLabel(humanReadableUniqueFieldName+"*"), configureFormLayout(0, 2));
     contentPanel.add(uniqueField, configureFormLayout(0, 3));
     addAdditionalFields(contentPanel, dependencyRepositories);
     contentPanel.add(visible, configureFormLayout(0, 100));

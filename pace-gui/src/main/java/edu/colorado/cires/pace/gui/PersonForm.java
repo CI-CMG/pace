@@ -60,7 +60,7 @@ public class PersonForm extends ContactForm<Person> {
     contentPanel.add(orcid, configureFormLayout(0, contentPanel.getComponentCount()));
     contentPanel.add(new JLabel("Position"), configureFormLayout(0, contentPanel.getComponentCount()));
     contentPanel.add(position, configureFormLayout(0, contentPanel.getComponentCount()));
-    contentPanel.add(new JLabel("Organization"), configureFormLayout(0, contentPanel.getComponentCount()));
+    contentPanel.add(new JLabel("Organization*"), configureFormLayout(0, contentPanel.getComponentCount()));
     contentPanel.add(organization, configureFormLayout(0, contentPanel.getComponentCount()));
     
     super.addAdditionalFields(contentPanel);

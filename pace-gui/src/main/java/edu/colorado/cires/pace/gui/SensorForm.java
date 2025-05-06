@@ -87,7 +87,7 @@ public class SensorForm extends ObjectWithNameForm<Sensor> {
         c.weighty = 1;
       }));
       case other -> {
-        specificFieldsPanel.add(new JLabel("Sensor Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
+        specificFieldsPanel.add(new JLabel("Sensor Type*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
         specificFieldsPanel.add(sensorTypeField, configureLayout((c) -> { c.gridx = 0; c.gridy = 8; c.weightx = 1; }));
         specificFieldsPanel.add(new JLabel("Properties"), configureLayout((c) -> { c.gridx = 0; c.gridy = 9; c.weightx = 1; }));
         specificFieldsPanel.add(propertiesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 10; c.weightx = 1; }));

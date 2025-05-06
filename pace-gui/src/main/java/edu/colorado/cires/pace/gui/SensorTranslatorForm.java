@@ -123,7 +123,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    formPanel.add(new JLabel("Name"), configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    formPanel.add(new JLabel("Name*"), configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     formPanel.add(nameField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     formPanel.add(new JLabel("Description"), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     formPanel.add(descriptionField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
@@ -139,7 +139,7 @@ public class SensorTranslatorForm extends BaseTranslatorForm<SensorTranslator> {
     } else {
       JPanel sensorTypePanel = getSensorTypePanel(formPanel);
       
-      tabbedPane.add("Sensor Type", sensorTypePanel);
+      tabbedPane.add("Sensor Type*", sensorTypePanel);
       tabbedPane.add("Sensor", new JScrollPane(formPanel));
     }
     

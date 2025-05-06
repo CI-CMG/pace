@@ -48,7 +48,7 @@ public class LocationDetailForm extends JPanel {
   private void addFields(String[] headerOptions, LocationDetailTranslator initialTranslator) {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Location Type"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+    add(new JLabel("Location Type*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(locationTypeComboBox, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     
     if (initialTranslator != null) {

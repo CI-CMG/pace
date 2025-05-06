@@ -47,7 +47,7 @@ public class FileTypeTranslatorForm extends BaseTranslatorForm<FileTypeTranslato
     JPanel formPanel = new JPanel(new GridBagLayout());
     formPanel.add(new JLabel("UUID"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     formPanel.add(uuidField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    formPanel.add(new JLabel("Type"), configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
+    formPanel.add(new JLabel("Type*"), configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     formPanel.add(typeField, configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     formPanel.add(new JLabel("Comment"), configureLayout(c -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     formPanel.add(commentField, configureLayout(c -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));

@@ -30,7 +30,7 @@ public class DetectionsForm extends JPanel {
   private void addFields() {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Sound Source"), configureLayout(c -> {
+    add(new JLabel("Sound Source*"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 0; c.weightx = 1;
     }));
     add(soundSource, configureLayout(c -> {

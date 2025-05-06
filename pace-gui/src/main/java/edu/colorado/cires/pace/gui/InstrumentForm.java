@@ -75,7 +75,7 @@ public class InstrumentForm extends ObjectWithNameForm<Instrument> {
     fileTypesPanel.add(new JPanel(), configureLayout(c -> { c.gridx = 0; c.gridy = 1000; c.weightx = 1; c.weighty = 1; }));
     JPanel controlPanel = new JPanel(new GridBagLayout());
     controlPanel.setName("controlPanel");
-    controlPanel.add(new JLabel("File Types"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
+    controlPanel.add(new JLabel("File Types*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 0; c.weightx = 0; }));
     controlPanel.add(new JPanel(), configureLayout((c) -> { c.gridx = 1; c.gridy = 0; c.weightx = 1; }));
     JButton addFileTypeButton = new JButton("Add File Type");
     controlPanel.add(addFileTypeButton, configureLayout((c) -> { c.gridx = 2; c.gridy = 0; c.weightx = 0; }));

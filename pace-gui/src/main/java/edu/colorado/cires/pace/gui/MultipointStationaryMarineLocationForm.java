@@ -38,9 +38,9 @@ public class MultipointStationaryMarineLocationForm extends BaseLocationDetailTr
   private void addFields(String[] headerOptions) {
     setLayout(new GridBagLayout());
     
-    add(new JLabel("Sea Area"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
+    add(new JLabel("Sea Area*"), configureLayout(c -> { c.gridx = 0; c.gridy = 0; c.weightx = 1; }));
     add(seaAreaField, configureLayout(c -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
-    locationsPanel.setBorder(createEtchedBorder("Locations"));
+    locationsPanel.setBorder(createEtchedBorder("Locations*"));
     add(locationsPanel, configureLayout(c -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
     add(getAddLocationButton(headerOptions), configureLayout(c -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
   }
