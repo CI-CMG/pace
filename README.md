@@ -3,10 +3,10 @@
 - [PACE - Passive Acoustic Collection Engine](#pace---passive-acoustic-collection-engine)
   - [Releases](#releases)
   - [Supported Platforms](#supported-platforms)
-  - [GUI](#gui)
+  - [GUI](#graphical-user-interface)
     - [GUI Guides](#gui-guides)
-    - [GUI Installation](#gui-installation)
-  - [CLI](#cli)
+    - [Installing the Application](#installing-the-application)
+  - [CLI](#command-line-interface)
     - [Installation](#installation)
       - [MacOS](#macos)
       - [Linux](#linux)
@@ -32,12 +32,12 @@
 | MacOS (x86)  | ✅  | ✅  |
 | MacOS (ARM)  | ✅  | ✅  |
 
-## GUI
+## Graphical User Interface
 ### GUI Guides
 For a video walkthrough of the PACE GUI, go to the following [link](https://www.youtube.com/watch?v=v8NlUkiZFG8).
 For an in-depth PACE GUI guide, go to the following [link](https://github.com/CI-CMG/pace/blob/trunk/docs/PACE%20GUI%20Guide.pdf).
 
-### GUI Installation
+### Installing the Application
 1. Go to this [link](https://github.com/CI-CMG/pace/releases)
 2. Look under the most recent release version which is not trunk-latest (currently v1.0.3)
 3. Find the files which start with "pace-gui"
@@ -48,7 +48,7 @@ For an in-depth PACE GUI guide, go to the following [link](https://github.com/CI
    d. Debian-Based Linux: "pace-gui-Linux-X64-(version number).deb"\
    e. RedHat-Based Linux: "pace-gui-Linux-X64-(version number).rpm"
 
-## CLI
+## Command Line Interface
 ### Installation
 #### MacOS
 1. Download file using ``curl``: ``curl -L -O https://github.com/CI-CMG/pace/releases/download/trunk-latest/pace-cli-macOS-ARM64-1.0.3-SNAPSHOT.pkg``
