@@ -129,7 +129,7 @@ public class DataPanelFactory {
   public DataPanel<Package> createPackagesPanel() {
     PackagesPanel panel = new PackagesPanel(
         packageRepository,
-        new String[] { "UUID", "Package ID", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Visible", "Object", "Select for Deletion" },
+        new String[] { "UUID", "Archive Dataset Name", "Site Or Cruise Name", "Deployment ID", "Projects", "Dataset Type", "Location Type", "Select for Packaging", "Visible", "Object", "Select for Deletion" },
         (p) -> new Object[] { 
             p.getUuid(),
             p.getPackageId(),

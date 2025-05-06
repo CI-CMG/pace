@@ -64,7 +64,7 @@ public class PackageInfoForm extends JPanel implements AuxiliaryTranslatorForm<P
     add(uuidField, configureLayout((c) -> { 
       c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    add(new JLabel("Data Collection Name"), configureFormLayout(0, 2));
+    add(new JLabel("Archive Dataset Name"), configureFormLayout(0, 2));
     add(dataCollectionNameField, configureLayout((c) -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));

@@ -583,7 +583,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   protected void dateVerification(List<Package> packages, JDialog verifyMap, List<Color> colors) throws IOException {
     JLabel verificationLabel = new JLabel();
     List<Object[]> dataList = new ArrayList<>();
-    String[] columnNames = {"#", "Package", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude", "File Count"};
+    String[] columnNames = {"#", "Archive Dataset Name", "Public Release Date", "Audio Start Time", "Audio End Time", "Start Longitude", "Start Latitude", "File Count"};
     // Possibly an issue if we're looking to get all file types since we're doing 'instanceof AudioPackage'
     if (packages.get(0) instanceof AudioPackage) {
       verificationLabel = new JLabel("Please confirm that the information below is correct before clicking Verify");
