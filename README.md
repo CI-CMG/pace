@@ -18,6 +18,8 @@
     - [Additional Maven profiles](#additional-maven-profiles)
   - [PACE Templates](#pace-templates)
 
+The Passive Acoustic Collection Engine (PACE) tool provides a programmatic approach to packaging passive acoustic data for submission to NCEI. PACE is designed for users with a  need to submit large numbers of datasets to NCEI and/or users who manage metadata in a system such as Tethys or a relational database. PACE can be controlled via a GUI or from the command line (CLI) and supports user-created metadata spreadsheets or direct integration with database systems. PACE creates data packages like those created by PassivePacker without the need for PassivePacker’s manual metadata entry.
+
 ## Releases
 - Latest Release: [1.0.3](https://github.com/CI-CMG/pace/releases/tag/v1.0.3)
 - Development Release: [trunk-latest](https://github.com/CI-CMG/pace/releases/tag/trunk-latest)
