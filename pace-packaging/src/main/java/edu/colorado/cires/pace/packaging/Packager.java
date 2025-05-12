@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Packager provides the functionality for packaging data and
@@ -84,15 +85,40 @@ class Packager {
           .filter(packageInstruction -> !packageInstruction.target().toString().contains("acoustic_files/")
               || isAudioFile(packageInstruction.target().getFileName()))
           .forEach(packageInstruction -> {
-            try {
-              FileUtils.copyFile(packageInstruction.source(), packageInstruction.target());
-              logger.info("Copied {} to {}", packageInstruction.source(), packageInstruction.target());
-              FileUtils.appendChecksumToManifest(writer, packageInstruction.target(), outputDir);
-              logger.info("Appended {} checksum to {}", packageInstruction.target(), outputFile);
-
-              incrementProgressFn.run();
-            } catch (IOException e) {
-              throw new RuntimeException(e);
+            int i = 0;
+            while(true){
+              IOException output;
+              try {
+                output = copyFileAttempt(packageInstruction, logger);
+              } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+              }
+              if (output == null){
+                break;
+              } else {
+                i++;
+                if (i == 5){
+                  throw new RuntimeException(output);
+                }
+              }
+            }
+            i = 0;
+            while(true){
+              IOException output;
+              try {
+                output = appendToManifestAttempt(packageInstruction, logger, writer,
+                    outputDir, outputFile, incrementProgressFn);
+              } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+              }
+              if (output == null){
+                break;
+              } else {
+                i++;
+                if (i == 5){
+                  throw new RuntimeException(output);
+                }
+              }
             }
           });
 
@@ -107,6 +133,32 @@ class Packager {
     logger.info("Wrote {}", outputFile);
     
     return outputFile;
+  }
+
+  private static IOException appendToManifestAttempt(PackageInstruction packageInstruction, Logger logger, FileWriter writer, Path outputDir,
+      Path outputFile, Runnable incrementProgressFn) throws InterruptedException {
+    try {
+      FileUtils.appendChecksumToManifest(writer, packageInstruction.target(), outputDir);
+      logger.info("Appended {} checksum to {}", packageInstruction.target(), outputFile);
+
+      incrementProgressFn.run();
+
+      return null;
+    } catch (IOException e) {
+      TimeUnit.SECONDS.sleep(1);
+      return e;
+    }
+  }
+
+  private static IOException copyFileAttempt(PackageInstruction packageInstruction, Logger logger) throws InterruptedException {
+    try {
+      FileUtils.copyFile(packageInstruction.source(), packageInstruction.target());
+      logger.info("Copied {} to {}", packageInstruction.source(), packageInstruction.target());
+      return null;
+    } catch (IOException e) {
+      TimeUnit.SECONDS.sleep(1);
+      return e;
+    }
   }
 
   private static boolean isAudioFile(Path fileName) {
