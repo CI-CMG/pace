@@ -19,9 +19,9 @@ class ValidCalibrationDetailValidatorTest {
       "2024-12-03,2024-12-03,,",
       "2024-12-03,2024-12-10,,",
       "2024-12-15,2024-12-10,must be before or equal to postDeploymentCalibrationDate,must be after or equal to preDeploymentCalibrationDate",
-      ",,,",
-      ",2024-12-10,,",
-      "2024-12-03,,,",
+      ",,must not be null,must not be null",
+      ",2024-12-10,must not be null,",
+      "2024-12-03,,,must not be null",
   })
   void testValidCalibrationDetail(String preString, String postString, String expectedPreMessage, String expectedPostMessage) {
     CalibrationDetail calibrationDetail = new CalibrationDetail() {

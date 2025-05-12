@@ -28,7 +28,7 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   
   private final JButton addSampleRateButton;
   private final JButton addDutyCycleButton;
-  private final JButton addGainButton;
+//  private final JButton addGainButton;
   
   private final Consumer<ChannelTranslatorForm> removeAction;
 
@@ -42,7 +42,7 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
   public ChannelTranslatorForm(String[] headerOptions, ChannelTranslator initialTranslator, Consumer<ChannelTranslatorForm> removeAction) {
     this.addSampleRateButton = getAddButton("Add Sample Rate", () -> addSampleRate(headerOptions, null));
     this.addDutyCycleButton = getAddButton("Add Duty Cycle", () -> addDutyCycle(headerOptions, null));
-    this.addGainButton = getAddButton("Add Gain", () -> addGain(headerOptions, null));
+//    this.addGainButton = getAddButton("Add Gain", () -> addGain(headerOptions, null));
     this.removeAction = removeAction;
     this.startTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getStartTime());
     this.endTimeForm = new TimeTranslatorForm(headerOptions, initialTranslator == null ? null : initialTranslator.getEndTime());
@@ -84,18 +84,18 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
     add(dutyCyclesPanel, configureLayout(c -> {
       c.gridx = 0; c.gridy = 3; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
-    JPanel gainsPanel = new JPanel(new GridBagLayout());
-    gainsPanel.setName("gains");
-    gainsPanel.add(gainTranslatorsPanel, configureLayout(c -> { 
-      c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
-    gainsPanel.add(addGainButton, configureLayout(c -> { 
-      c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
-    gainsPanel.setBorder(createEtchedBorder("Gains"));
-    add(gainsPanel, configureLayout(c -> {
-      c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
-    }));
+//    JPanel gainsPanel = new JPanel(new GridBagLayout());
+//    gainsPanel.setName("gains");
+//    gainsPanel.add(gainTranslatorsPanel, configureLayout(c -> {
+//      c.gridx = 0; c.gridy = 0; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+//    }));
+//    gainsPanel.add(addGainButton, configureLayout(c -> {
+//      c.gridx = 0; c.gridy = 1; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+//    }));
+//    gainsPanel.setBorder(createEtchedBorder("Gains"));
+//    add(gainsPanel, configureLayout(c -> {
+//      c.gridx = 0; c.gridy = 4; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
+//    }));
     add(getRemoveButton("Remove Channel"), configureLayout(c -> {
       c.gridx = 0; c.gridy = 8; c.weightx = 1; c.gridwidth = GridBagConstraints.REMAINDER;
     }));
@@ -214,12 +214,12 @@ public class ChannelTranslatorForm extends JPanel implements AuxiliaryTranslator
       .forEach(addSampleRateButton::removeActionListener);
     Arrays.stream(addDutyCycleButton.getActionListeners())
       .forEach(addDutyCycleButton::removeActionListener);
-    Arrays.stream(addGainButton.getActionListeners())
-      .forEach(addGainButton::removeActionListener);
+//    Arrays.stream(addGainButton.getActionListeners())
+//      .forEach(addGainButton::removeActionListener);
 
     addSampleRateButton.addActionListener(l -> addSampleRate(headerOptions, null));
     addDutyCycleButton.addActionListener(l -> addDutyCycle(headerOptions, null));
-    addGainButton.addActionListener(l -> addGain(headerOptions, null));
+//    addGainButton.addActionListener(l -> addGain(headerOptions, null));
   }
 
   /**

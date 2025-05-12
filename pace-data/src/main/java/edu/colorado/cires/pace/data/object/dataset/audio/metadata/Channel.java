@@ -1,6 +1,8 @@
 package edu.colorado.cires.pace.data.object.dataset.audio.metadata;
 
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
