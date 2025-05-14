@@ -197,7 +197,6 @@ jobs:
       - name: Package jar as dmg installer
         run: >
           jpackage
-          --verbose
           --icon icons/pace.icns
           --vendor 'CIRES - University of Colorado'
           --name 'pace'
@@ -267,7 +266,6 @@ jobs:
         run: >
           jpackage
           --type app-image
-          --verbose
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
           -i jars
@@ -309,7 +307,6 @@ jobs:
       - name: Package jar as deb
         run: >
           jpackage
-          --verbose
           --type deb
           --icon icons/pace.png
           --vendor 'CIRES - University of Colorado'
@@ -322,7 +319,6 @@ jobs:
       - name: Package jar as rpm
         run: >
           jpackage
-          --verbose
           --type rpm
           --icon icons/pace.png
           --vendor 'CIRES - University of Colorado'
@@ -375,7 +371,6 @@ jobs:
         run: >
           jpackage
           --type msi
-          --verbose
           --vendor 'CIRES - University of Colorado'
           --name 'pace-cli'
           -i jars
@@ -428,7 +423,6 @@ jobs:
       - name: Package jar as msi
         run: >
           jpackage 
-          --verbose 
           --dest application 
           --name "pace" 
           -i jars 
