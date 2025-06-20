@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
-import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Gain;
-import edu.colorado.cires.pace.data.object.dataset.audio.metadata.SampleRate;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MarineInstrumentLocation;
@@ -58,7 +55,7 @@ public class AudioPackageTest extends PackageTest<AudioPackage> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"

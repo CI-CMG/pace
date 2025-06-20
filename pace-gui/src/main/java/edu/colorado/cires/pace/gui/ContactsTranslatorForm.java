@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 public class ContactsTranslatorForm extends JPanel {
   
   private final JComboBox<String> scientistsField = new JComboBox<>();
-  private final JComboBox<String> sponsorsField = new JComboBox<>();
+  private final JComboBox<String> sourcesField = new JComboBox<>();
   private final JComboBox<String> fundersField = new JComboBox<>();
   private final JComboBox<String> datasetPackagerField = new JComboBox<>();
 
@@ -28,7 +28,7 @@ public class ContactsTranslatorForm extends JPanel {
    */
   public ContactsTranslatorForm(String[] headerOptions, PackageTranslator initialTranslator) {
     scientistsField.setName("scientists");
-    sponsorsField.setName("sponsors");
+    sourcesField.setName("sources");
     fundersField.setName("funders");
     datasetPackagerField.setName("datasetPackager");
     addComponents();
@@ -41,7 +41,7 @@ public class ContactsTranslatorForm extends JPanel {
     add(new JLabel("Scientists"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     add(scientistsField, configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     add(new JLabel("Sources*"), configureLayout((c) -> { c.gridx = 0; c.gridy = 2; c.weightx = 1; }));
-    add(sponsorsField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
+    add(sourcesField, configureLayout((c) -> { c.gridx = 0; c.gridy = 3; c.weightx = 1; }));
     add(new JLabel("Funders"), configureLayout((c) -> { c.gridx = 0; c.gridy = 4; c.weightx = 1; }));
     add(fundersField, configureLayout((c) -> { c.gridx = 0; c.gridy = 5; c.weightx = 1; }));
     add(new JLabel("Dataset Packager"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
@@ -52,13 +52,13 @@ public class ContactsTranslatorForm extends JPanel {
   
   private void initializeFields(String[] headerOptions, PackageTranslator initialTranslator) {
     updateComboBoxModel(scientistsField, headerOptions);
-    updateComboBoxModel(sponsorsField, headerOptions);
+    updateComboBoxModel(sourcesField, headerOptions);
     updateComboBoxModel(fundersField, headerOptions);
     updateComboBoxModel(datasetPackagerField, headerOptions);
     
     if (initialTranslator != null) {
       scientistsField.setSelectedItem(initialTranslator.getScientists());
-      sponsorsField.setSelectedItem(initialTranslator.getSponsors());
+      sourcesField.setSelectedItem(initialTranslator.getSources());
       fundersField.setSelectedItem(initialTranslator.getFunders());
       datasetPackagerField.setSelectedItem(initialTranslator.getDatasetPackager());
     }
@@ -73,11 +73,11 @@ public class ContactsTranslatorForm extends JPanel {
   }
 
   /**
-   * Returns sponsors value
-   * @return String sponsors value
+   * Returns sources value
+   * @return String sources value
    */
-  public String getSponsorsValue() {
-    return (String) sponsorsField.getSelectedItem();
+  public String getSourcesValue() {
+    return (String) sourcesField.getSelectedItem();
   }
 
   /**
@@ -102,7 +102,7 @@ public class ContactsTranslatorForm extends JPanel {
    */
   public void updateHeaderOptions(String[] options) {
     updateComboBoxModel(scientistsField, options);
-    updateComboBoxModel(sponsorsField, options);
+    updateComboBoxModel(sourcesField, options);
     updateComboBoxModel(fundersField, options);
     updateComboBoxModel(datasetPackagerField, options);
   }

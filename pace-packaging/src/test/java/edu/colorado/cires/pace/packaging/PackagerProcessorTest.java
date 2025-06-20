@@ -319,7 +319,7 @@ class PackagerProcessorTest {
             AbstractObjectWithName.builder()
                 .name("scientist-2")
                 .build()
-        )).sponsors(List.of(
+        )).sources(List.of(
             AbstractObjectWithName.builder()
                 .name("organization-1")
                 .build(),
@@ -487,7 +487,7 @@ class PackagerProcessorTest {
                       .name(funder.getName())
               .build());
     }
-    for (AbstractObjectWithName sponsor : passivePackerPackage.getSponsors()) {
+    for (AbstractObjectWithName sponsor : passivePackerPackage.getSources()) {
       when(organizationRepository.getByUniqueField(sponsor.getName())).thenReturn(Organization.builder()
                       .name(sponsor.getName())
               .build());
@@ -541,7 +541,7 @@ class PackagerProcessorTest {
         )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"

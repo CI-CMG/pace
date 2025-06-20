@@ -33,7 +33,7 @@ class SoundLevelMetricsPackageTranslatorTest {
             .date("date")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -85,7 +85,7 @@ class SoundLevelMetricsPackageTranslatorTest {
     assertEquals(packageTranslator.getPublicReleaseDate().getDate(), soundLevelMetricsPackageTranslator.getPublicReleaseDate().getDate());
     assertEquals(packageTranslator.getPublicReleaseDate().getTimeZone(), soundLevelMetricsPackageTranslator.getPublicReleaseDate().getTimeZone());
     assertEquals(packageTranslator.getScientists(), soundLevelMetricsPackageTranslator.getScientists());
-    assertEquals(packageTranslator.getSponsors(), soundLevelMetricsPackageTranslator.getSponsors());
+    assertEquals(packageTranslator.getSources(), soundLevelMetricsPackageTranslator.getSources());
     assertEquals(packageTranslator.getFunders(), soundLevelMetricsPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), soundLevelMetricsPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), soundLevelMetricsPackageTranslator.getInstrument());

@@ -31,7 +31,7 @@ public class SoundClipsPackageTranslatorRepositoryTest extends TranslatorReposit
             .timeZone(String.format("time-zone-%s", suffix))
             .build())
         .scientists(String.format("scientists-%s", suffix))
-        .sponsors(String.format("sponsors-%s", suffix))
+        .sources(String.format("sources-%s", suffix))
         .funders(String.format("funders-%s", suffix))
         .platform(String.format("platform-%s", suffix))
         .instrument(String.format("instrument-%s", suffix))
@@ -100,7 +100,7 @@ public class SoundClipsPackageTranslatorRepositoryTest extends TranslatorReposit
     assertEquals(expectedPackageTranslator.getProjects(), actualPackageTranslator.getProjects());
     assertEquals(expectedPackageTranslator.getPublicReleaseDate(), actualPackageTranslator.getPublicReleaseDate());
     assertEquals(expectedPackageTranslator.getScientists(), actualPackageTranslator.getScientists());
-    assertEquals(expectedPackageTranslator.getSponsors(), actualPackageTranslator.getSponsors());
+    assertEquals(expectedPackageTranslator.getSources(), actualPackageTranslator.getSources());
     assertEquals(expectedPackageTranslator.getFunders(), actualPackageTranslator.getFunders());
     assertEquals(expectedPackageTranslator.getPlatform(), actualPackageTranslator.getPlatform());
     assertEquals(expectedPackageTranslator.getInstrument(), actualPackageTranslator.getInstrument());

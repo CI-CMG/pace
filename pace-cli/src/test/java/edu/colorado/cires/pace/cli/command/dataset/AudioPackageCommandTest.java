@@ -484,7 +484,7 @@ class AudioPackageCommandTest extends PackageCommandTest<AudioPackage, AudioPack
         .projects(List.of(project.getName()))
         .publicReleaseDate(LocalDate.of(2020, 1,1))
         .scientists(List.of(scientist.getName()))
-        .sponsors(List.of(sponsor.getName()))
+        .sources(List.of(sponsor.getName()))
         .funders(List.of(funder.getName()))
         .platform(platform.getName())
         .instrument(instrument.getName())

@@ -33,7 +33,7 @@ class AudioPackageTranslatorTest {
             .date("date")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -85,7 +85,7 @@ class AudioPackageTranslatorTest {
     assertEquals(packageTranslator.getPublicReleaseDate().getDate(), audioPackageTranslator.getPublicReleaseDate().getDate());
     assertEquals(packageTranslator.getPublicReleaseDate().getTimeZone(), audioPackageTranslator.getPublicReleaseDate().getTimeZone());
     assertEquals(packageTranslator.getScientists(), audioPackageTranslator.getScientists());
-    assertEquals(packageTranslator.getSponsors(), audioPackageTranslator.getSponsors());
+    assertEquals(packageTranslator.getSources(), audioPackageTranslator.getSources());
     assertEquals(packageTranslator.getFunders(), audioPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), audioPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), audioPackageTranslator.getInstrument());

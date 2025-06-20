@@ -121,7 +121,7 @@ public class PassivePackerFactory {
         .instrumentType(aPackage.getInstrument())
         .metadataAuthor(getPerson(aPackage.getDatasetPackager()))
         .scientists(getPeople(aPackage.getScientists()))
-        .sponsors(getOrganizations(aPackage.getSponsors()))
+        .sources(getOrganizations(aPackage.getSources()))
         .funders(getOrganizations(aPackage.getFunders()))
         .calibrationInfo(getCalibrationInfo(aPackage))
         .datasetDetails(getDatasetDetails(aPackage))

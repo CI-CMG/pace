@@ -67,7 +67,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * PackageConverter extends Converter and provides convert function for
@@ -132,7 +131,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, cpodPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", cpodPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, cpodPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, cpodPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, cpodPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, cpodPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, cpodPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, cpodPackageTranslator.getInstrument()))
@@ -202,7 +201,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, audioPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", audioPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, audioPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, audioPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, audioPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, audioPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, audioPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, audioPackageTranslator.getInstrument()))
@@ -252,7 +251,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, detectionsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", detectionsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, detectionsPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, detectionsPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, detectionsPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, detectionsPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, detectionsPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, detectionsPackageTranslator.getInstrument()))
@@ -377,7 +376,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, soundClipsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", soundClipsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, soundClipsPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, soundClipsPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, soundClipsPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, soundClipsPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, soundClipsPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, soundClipsPackageTranslator.getInstrument()))
@@ -420,7 +419,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, soundLevelMetricsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", soundLevelMetricsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, soundLevelMetricsPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, soundLevelMetricsPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, soundLevelMetricsPackageTranslator.getInstrument()))
@@ -472,7 +471,7 @@ public class PackageConverter extends Converter<PackageTranslator, Package> {
         .projects(stringListFromMapReplace(properties, soundPropagationModelsPackageTranslator.getProjects()))
         .publicReleaseDate(localDateFromMap(properties, "Public Release Date", soundPropagationModelsPackageTranslator.getPublicReleaseDate(), row, runtimeException))
         .scientists(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getScientists()))
-        .sponsors(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getSponsors()))
+        .sources(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getSources()))
         .funders(stringListFromMap(properties, soundPropagationModelsPackageTranslator.getFunders()))
         .platform(stringFromMap(properties, soundPropagationModelsPackageTranslator.getPlatform()))
         .instrument(stringFromMap(properties, soundPropagationModelsPackageTranslator.getInstrument()))

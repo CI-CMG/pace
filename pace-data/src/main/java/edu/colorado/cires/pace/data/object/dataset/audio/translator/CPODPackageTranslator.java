@@ -34,7 +34,7 @@ public class CPODPackageTranslator extends AudioDataPackageTranslator {
         .projects(packageTranslator.getProjects())
         .publicReleaseDate(packageTranslator.getPublicReleaseDate())
         .scientists(packageTranslator.getScientists())
-        .sponsors(packageTranslator.getSponsors())
+        .sources(packageTranslator.getSources())
         .funders(packageTranslator.getFunders())
         .platform(packageTranslator.getPlatform())
         .instrument(packageTranslator.getInstrument())

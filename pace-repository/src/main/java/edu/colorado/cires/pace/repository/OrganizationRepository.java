@@ -23,7 +23,7 @@ public class OrganizationRepository extends PackageDependencyRepository<Organiza
   @Override
   protected boolean dependencyAppliesToObject(Package dependency, Organization object) {
     String name = object.getName();
-    return dependency.getFunders().contains(name) || dependency.getSponsors().contains(name);
+    return dependency.getFunders().contains(name) || dependency.getSources().contains(name);
   }
 
   @Override
@@ -31,11 +31,11 @@ public class OrganizationRepository extends PackageDependencyRepository<Organiza
     String originalName = original.getName();
     String newName = updated.getName();
     
-    List<String> sponsors = replaceStringInList(dependency.getSponsors(), originalName, newName);
+    List<String> sources = replaceStringInList(dependency.getSources(), originalName, newName);
     List<String> funders = replaceStringInList(dependency.getFunders(), originalName, newName);
 
     return dependency.toBuilder()
-        .sponsors(sponsors)
+        .sources(sources)
         .funders(funders)
         .build();
   }

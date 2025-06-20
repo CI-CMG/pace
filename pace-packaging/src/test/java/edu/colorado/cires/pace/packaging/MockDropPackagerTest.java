@@ -302,7 +302,7 @@ class MockDropPackagerTest {
         )).publicReleaseDate(LocalDate.of(2024, 7, 29).plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"

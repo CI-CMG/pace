@@ -293,7 +293,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
 
     insertObjectsIntoMap(
         organizations,
-        (List<Organization>) p.getSponsors().stream()
+        (List<Organization>) p.getSources().stream()
             .map(name -> Organization.builder()
                 .uuid(UUID.randomUUID())
                 .name(name)
@@ -520,7 +520,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
@@ -641,7 +641,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
@@ -697,7 +697,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
@@ -763,7 +763,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
@@ -820,7 +820,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"
@@ -893,7 +893,7 @@ class PackageRepositoryTest extends CrudRepositoryTest<Package> {
         )).publicReleaseDate(LocalDate.now().plusDays(1))
         .scientists(List.of(
             "scientist-1", "scientist-2"
-        )).sponsors(List.of(
+        )).sources(List.of(
             "organization-1", "organization-2"
         )).funders(List.of(
             "organization-3", "organization-4"

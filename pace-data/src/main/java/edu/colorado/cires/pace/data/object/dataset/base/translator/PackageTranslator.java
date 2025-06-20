@@ -32,7 +32,7 @@ public class PackageTranslator extends Translator {
   private final String projects;
   private final DateTranslator publicReleaseDate;
   private final String scientists;
-  private final String sponsors;
+  private final String sources;
   private final String funders;
   private final String platform;
   private final String instrument;

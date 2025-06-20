@@ -33,7 +33,7 @@ class CPODPackageTranslatorTest {
             .date("date")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -85,7 +85,7 @@ class CPODPackageTranslatorTest {
     assertEquals(packageTranslator.getPublicReleaseDate().getDate(), cpodPackageTranslator.getPublicReleaseDate().getDate());
     assertEquals(packageTranslator.getPublicReleaseDate().getTimeZone(), cpodPackageTranslator.getPublicReleaseDate().getTimeZone());
     assertEquals(packageTranslator.getScientists(), cpodPackageTranslator.getScientists());
-    assertEquals(packageTranslator.getSponsors(), cpodPackageTranslator.getSponsors());
+    assertEquals(packageTranslator.getSources(), cpodPackageTranslator.getSources());
     assertEquals(packageTranslator.getFunders(), cpodPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), cpodPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), cpodPackageTranslator.getInstrument());

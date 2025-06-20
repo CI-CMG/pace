@@ -414,7 +414,7 @@ class PassivePackerFactoryTest {
         .calibrationDescription("calibration description")
         .calibrationDocumentsPath(Paths.get("/Users/user/Desktop/Project 10_Site 10_10"))
         .scientists(List.of("Chuck Anderson"))
-        .sponsors(List.of("NOAA AFSC"))
+        .sources(List.of("NOAA AFSC"))
         .funders(List.of("BOEM"))
         .datasetPackager("Chuck Anderson")
         .platform("Drifter")

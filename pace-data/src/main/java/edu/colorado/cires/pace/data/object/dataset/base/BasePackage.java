@@ -3,7 +3,6 @@ package edu.colorado.cires.pace.data.object.dataset.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.CalibrationDetail;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +10,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -63,7 +61,7 @@ public abstract class BasePackage implements AbstractObject, CalibrationDetail {
   @Builder.Default
   private final List<String> scientists = Collections.emptyList();
   @Builder.Default @NotNull @NotEmpty
-  private final List<@NotBlank String> sponsors = Collections.emptyList();
+  private final List<@NotBlank String> sources = Collections.emptyList();
   @Builder.Default
   private final List<String> funders = Collections.emptyList();
   @NotBlank

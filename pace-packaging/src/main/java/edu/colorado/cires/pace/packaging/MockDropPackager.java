@@ -192,7 +192,7 @@ class MockDropPackager {
       }
 
       writer.append(String.format(
-          "Source-Organization: %s%n", packages.get(0).getSponsors().get(0)
+          "Source-Organization: %s%n", packages.get(0).getSources().get(0)
       ));
       writer.append(String.format(
          "Bagging-Date: %s%n", formattedDateString

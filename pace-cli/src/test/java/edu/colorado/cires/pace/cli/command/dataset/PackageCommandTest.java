@@ -82,7 +82,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         "projects",
         "publicReleaseDate",
         "scientists",
-        "sponsors",
+        "sources",
         "funders",
         "platform",
         "instrument",
@@ -121,7 +121,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
             .date("publicReleaseDate")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -170,7 +170,7 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
         String.join(";", object.getProjects()),
         object.getPublicReleaseDate().toString(),
         String.join(";", object.getScientists()),
-        String.join(";", object.getSponsors()),
+        String.join(";", object.getSources()),
         String.join(";", object.getFunders()),
         object.getPlatform(),
         object.getInstrument(),
@@ -252,10 +252,10 @@ abstract class PackageCommandTest<P extends Package, T extends PackageTranslator
       );
     }
 
-    for (int i = 0; i < expected.getSponsors().size(); i++) {
+    for (int i = 0; i < expected.getSources().size(); i++) {
       assertEquals(
-          expected.getSponsors().get(i),
-          actual.getSponsors().get(i)
+          expected.getSources().get(i),
+          actual.getSources().get(i)
       );
     }
 

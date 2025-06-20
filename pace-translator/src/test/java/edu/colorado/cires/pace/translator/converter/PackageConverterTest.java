@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.dataset.audio.AudioPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.CPODPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.Channel;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
-import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.LocationDetailTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
 import edu.colorado.cires.pace.data.object.dataset.detections.DetectionsPackage;
 import edu.colorado.cires.pace.data.object.dataset.audio.metadata.DutyCycle;
@@ -48,7 +46,6 @@ import edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics.translator.
 import edu.colorado.cires.pace.data.object.dataset.soundPropagationModels.translator.SoundPropagationModelsPackageTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryMarineLocationTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.translator.StationaryTerrestrialLocationTranslator;
-import edu.colorado.cires.pace.translator.FieldException;
 import edu.colorado.cires.pace.translator.TranslationException;
 import edu.colorado.cires.pace.translator.ValueWithColumnNumber;
 import edu.colorado.cires.pace.utilities.SerializationUtils;
@@ -90,7 +87,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -272,7 +269,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -459,7 +456,7 @@ class PackageConverterTest {
     map.put(audioPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(audioPackage.getPublicReleaseDate().toString()), 13));
     map.put(audioPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(audioPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getScientists())), 14));
-    map.put(audioPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getSponsors())), 15));
+    map.put(audioPackageTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getSources())), 15));
     map.put(audioPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", audioPackage.getFunders())), 16));
     map.put(audioPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(audioPackage.getPlatform()), 17));
     map.put(audioPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(audioPackage.getInstrument()), 18));
@@ -631,7 +628,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -799,7 +796,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -1087,7 +1084,7 @@ class PackageConverterTest {
     map.put(cpodPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPublicReleaseDate().toString()), 13));
     map.put(cpodPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(cpodPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getScientists())), 14));
-    map.put(cpodPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getSponsors())), 15));
+    map.put(cpodPackageTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getSources())), 15));
     map.put(cpodPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", cpodPackage.getFunders())), 16));
     map.put(cpodPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(cpodPackage.getPlatform()), 17));
     map.put(cpodPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(cpodPackage.getInstrument()), 18));
@@ -1246,7 +1243,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -1323,7 +1320,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -1420,7 +1417,7 @@ class PackageConverterTest {
     map.put(detectionsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPublicReleaseDate().toString()), 13));
     map.put(detectionsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(detectionsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getScientists())), 14));
-    map.put(detectionsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getSponsors())), 15));
+    map.put(detectionsPackageTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getSources())), 15));
     map.put(detectionsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", detectionsPackage.getFunders())), 16));
     map.put(detectionsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getPlatform()), 17));
     map.put(detectionsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(detectionsPackage.getInstrument()), 18));
@@ -1505,7 +1502,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -1567,7 +1564,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -1641,7 +1638,7 @@ class PackageConverterTest {
     map.put(soundClipsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPublicReleaseDate().toString()), 13));
     map.put(soundClipsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundClipsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getScientists())), 14));
-    map.put(soundClipsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getSponsors())), 15));
+    map.put(soundClipsPackageTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getSources())), 15));
     map.put(soundClipsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundClipsPackage.getFunders())), 16));
     map.put(soundClipsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getPlatform()), 17));
     map.put(soundClipsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundClipsPackage.getInstrument()), 18));
@@ -1711,7 +1708,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -1800,7 +1797,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -1915,7 +1912,7 @@ class PackageConverterTest {
     map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPublicReleaseDate().toString()), 13));
     map.put(soundLevelMetricsPackageTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundLevelMetricsPackageTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getScientists())), 14));
-    map.put(soundLevelMetricsPackageTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getSponsors())), 15));
+    map.put(soundLevelMetricsPackageTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getSources())), 15));
     map.put(soundLevelMetricsPackageTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundLevelMetricsPackage.getFunders())), 16));
     map.put(soundLevelMetricsPackageTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getPlatform()), 17));
     map.put(soundLevelMetricsPackageTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundLevelMetricsPackage.getInstrument()), 18));
@@ -2010,7 +2007,7 @@ class PackageConverterTest {
         .scientists(List.of(
             "scientist-1", "scientist-2"
         ))
-        .sponsors(List.of(
+        .sources(List.of(
             "organization-1", "organization-2"
         ))
         .funders(List.of(
@@ -2071,7 +2068,7 @@ class PackageConverterTest {
             .timeZone("timeZone")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -2144,7 +2141,7 @@ class PackageConverterTest {
     map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getDate(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPublicReleaseDate().toString()), 13));
     map.put(soundPropagationModelsTranslator.getPublicReleaseDate().getTimeZone(), new ValueWithColumnNumber(Optional.of("UTC"), 13));
     map.put(soundPropagationModelsTranslator.getScientists(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getScientists())), 14));
-    map.put(soundPropagationModelsTranslator.getSponsors(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getSponsors())), 15));
+    map.put(soundPropagationModelsTranslator.getSources(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getSources())), 15));
     map.put(soundPropagationModelsTranslator.getFunders(), new ValueWithColumnNumber(Optional.of(String.join(";", soundPropagationModelsPackage.getFunders())), 16));
     map.put(soundPropagationModelsTranslator.getPlatform(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getPlatform()), 17));
     map.put(soundPropagationModelsTranslator.getInstrument(), new ValueWithColumnNumber(Optional.of(soundPropagationModelsPackage.getInstrument()), 18));

@@ -35,7 +35,7 @@ public class PassivePackerPackage {
   private final String instrumentType;
   private final PassivePackerPerson metadataAuthor;
   private final List<AbstractObjectWithName> scientists;
-  private final List<AbstractObjectWithName> sponsors;
+  private final List<AbstractObjectWithName> sources;
   private final List<AbstractObjectWithName> funders;
   private final PassivePackerCalibrationInfo calibrationInfo;
   private final PassivePackerDeployment deployment;

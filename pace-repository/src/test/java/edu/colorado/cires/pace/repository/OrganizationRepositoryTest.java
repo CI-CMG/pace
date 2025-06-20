@@ -129,14 +129,14 @@ class OrganizationRepositoryTest extends PackageDependencyRepositoryTest<Organiz
   protected boolean objectInDependentObject(Organization updated, UUID dependentObjectUUID) {
     String name = updated.getName();
     Package p = packages.get(dependentObjectUUID);
-    return p.getSponsors().contains(name) || p.getFunders().contains(name);
+    return p.getSources().contains(name) || p.getFunders().contains(name);
   }
 
   @Override
   protected Package createAndSaveDependentObject(Organization object) {
     Package p = ((DetectionsPackage) PackageRepositoryTest.createDetectionsDataset(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .sponsors(Collections.singletonList(object.getName()))
+        .sources(Collections.singletonList(object.getName()))
         .funders(Collections.singletonList(object.getName()))
         .build();
     
@@ -148,7 +148,7 @@ class OrganizationRepositoryTest extends PackageDependencyRepositoryTest<Organiz
   protected Package createAndSaveIndependentDependentObject() {
     Package p = ((AudioPackage) PackageRepositoryTest.createAudioPackingJob(1)).toBuilder()
         .uuid(UUID.randomUUID())
-        .sponsors(Collections.singletonList("unrelated-sponsor"))
+        .sources(Collections.singletonList("unrelated-sponsor"))
         .funders(Collections.singletonList("unrelated-funder"))
         .build();
     packages.put(p.getUuid(), p);

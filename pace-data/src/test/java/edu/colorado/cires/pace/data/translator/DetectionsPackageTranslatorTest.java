@@ -33,7 +33,7 @@ class DetectionsPackageTranslatorTest {
             .date("date")
             .build())
         .scientists("scientists")
-        .sponsors("sponsors")
+        .sources("sources")
         .funders("funders")
         .platform("platform")
         .instrument("instrument")
@@ -85,7 +85,7 @@ class DetectionsPackageTranslatorTest {
     assertEquals(packageTranslator.getPublicReleaseDate().getDate(), detectionsPackageTranslator.getPublicReleaseDate().getDate());
     assertEquals(packageTranslator.getPublicReleaseDate().getTimeZone(), detectionsPackageTranslator.getPublicReleaseDate().getTimeZone());
     assertEquals(packageTranslator.getScientists(), detectionsPackageTranslator.getScientists());
-    assertEquals(packageTranslator.getSponsors(), detectionsPackageTranslator.getSponsors());
+    assertEquals(packageTranslator.getSources(), detectionsPackageTranslator.getSources());
     assertEquals(packageTranslator.getFunders(), detectionsPackageTranslator.getFunders());
     assertEquals(packageTranslator.getPlatform(), detectionsPackageTranslator.getPlatform());
     assertEquals(packageTranslator.getInstrument(), detectionsPackageTranslator.getInstrument());

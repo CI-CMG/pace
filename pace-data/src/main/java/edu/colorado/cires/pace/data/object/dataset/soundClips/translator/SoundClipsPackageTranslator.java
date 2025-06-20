@@ -45,7 +45,7 @@ public class SoundClipsPackageTranslator extends SoftwareDependentPackageTransla
         .projects(packageTranslator.getProjects())
         .publicReleaseDate(packageTranslator.getPublicReleaseDate())
         .scientists(packageTranslator.getScientists())
-        .sponsors(packageTranslator.getSponsors())
+        .sources(packageTranslator.getSources())
         .funders(packageTranslator.getFunders())
         .platform(packageTranslator.getPlatform())
         .instrument(packageTranslator.getInstrument())
