@@ -232,7 +232,7 @@ class PackagerProcessorTest {
       expectedNumberOfInvocations += 20;
     }
     if (sourcePath != null) {
-      expectedNumberOfInvocations += 10;
+      expectedNumberOfInvocations += 20;
     }
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);

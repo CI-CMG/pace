@@ -82,7 +82,10 @@ class Packager {
     Path outputFile = outputDir.resolve("manifest-md5.txt");
     File outputFileActual = new File(String.valueOf(outputFile));
     if (outputFileActual.exists()) {
-      outputFileActual.delete();
+      boolean deleted = outputFileActual.delete();
+      if (!deleted) {
+        throw new PackagingException("failed to delete" + outputFile.toString(), new Throwable("deletion failed"));
+      }
     }
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
