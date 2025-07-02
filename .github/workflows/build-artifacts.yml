@@ -343,7 +343,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ windows-2019 ]
+        os: [ windows-2022 ]
     runs-on: ${{ matrix.os }}
     outputs:
       appver: ${{ steps.appver.outputs.appver }}
@@ -391,7 +391,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ windows-2019 ]
+        os: [ windows-2022 ]
     runs-on: ${{ matrix.os }}
     outputs:
       appver: ${{ steps.appver.outputs.appver }}
