@@ -220,17 +220,18 @@ class PackageInstructionFactory {
                   p,
                   fixIllegalCharacters(outputDirectory.resolve(getPathTailSegment.apply(p)))
               )
-          ).filter(packageInstruction -> {
-            try {
-              boolean shouldMoveFile = FileUtils.filterByChecksum(packageInstruction.source(), packageInstruction.target());
-              if (!shouldMoveFile) {
-                logger.warn("Identical file already exists: {}", packageInstruction.target());
-              }
-              return shouldMoveFile;
-            } catch (IOException e) {
-              throw new RuntimeException(e);
-            }
-          });
+          )//.filter(packageInstruction -> {
+//            try {
+//              boolean shouldMoveFile = FileUtils.filterByChecksum(packageInstruction.source(), packageInstruction.target());
+//              if (!shouldMoveFile) {
+//                logger.warn("Identical file already exists: {}", packageInstruction.target());
+//              }
+//              return shouldMoveFile;
+//            } catch (IOException e) {
+//              throw new RuntimeException(e);
+//            }
+//          })
+          ;
   }
 
   private static Path fixIllegalCharacters(Path resolve) {

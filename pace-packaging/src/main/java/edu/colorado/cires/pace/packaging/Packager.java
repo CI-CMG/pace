@@ -4,6 +4,7 @@ import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.passivePacker.data.PassivePackerPerson;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -79,18 +80,27 @@ class Packager {
 
   protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
     Path outputFile = outputDir.resolve("manifest-md5.txt");
+    File outputFileActual = new File(String.valueOf(outputFile));
+    if (outputFileActual.exists()) {
+      outputFileActual.delete();
+    }
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions
-          .filter(packageInstruction -> !packageInstruction.target().toString().contains("acoustic_files/")
+          .filter(packageInstruction -> (!packageInstruction.target().toString().contains("acoustic_files/") || !packageInstruction.target().toString().contains("acoustic_files\\"))
               || isAudioFile(packageInstruction.target().getFileName()))
           .forEach(packageInstruction -> {
             int i = 0;
             while(true){
               IOException output;
               try {
-                output = copyFileAttempt(packageInstruction, logger);
-              } catch (InterruptedException e) {
+                if (FileUtils.filterByChecksum(packageInstruction.source(), packageInstruction.target())){
+                  output = copyFileAttempt(packageInstruction, logger);
+                } else {
+                  logger.warn("Identical file already exists: {}", packageInstruction.target());
+                  output = null;
+                }
+              } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
               }
               if (output == null){
