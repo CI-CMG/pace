@@ -7,20 +7,26 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.Date
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DateTimeSeparatedTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DefaultTimeTranslator;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.TimeTranslator;
+import java.awt.Component;
 import java.awt.GridBagLayout;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * TimeTranslatorForm extends JPanel and provides structure relevant
  * to time translator forms
  */
 public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorForm<TimeTranslator> {
-  
+
   private final JComboBox<String> timeZoneField = new JComboBox<>();
   private final JComboBox<String> dateField = new JComboBox<>();
   private final JComboBox<String> timeField = new JComboBox<>();
@@ -39,10 +45,10 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
     addFields(initialTranslator);
     initializeFields(headerOptions, initialTranslator);
   }
-  
+
   private void addFields(TimeTranslator initialTranslator) {
     setLayout(new GridBagLayout());
-    
+
     add(new JLabel("Time Format"), configureLayout((c) -> { c.gridx = c.gridy = 0; c.weightx = 1; }));
     add(getTimeFormatComboBox(initialTranslator), configureLayout((c) -> { c.gridx = 0; c.gridy = 1; c.weightx = 1; }));
     if (initialTranslator == null || initialTranslator instanceof DefaultTimeTranslator || initialTranslator instanceof DateTimeSeparatedTimeTranslator) {
@@ -56,23 +62,16 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
     add(new JLabel("Time Zone"), configureLayout((c) -> { c.gridx = 0; c.gridy = 6; c.weightx = 1; }));
     add(timeZoneField, configureLayout((c) -> { c.gridx = 0; c.gridy = 7; c.weightx = 1; }));
   }
-  
+
   private JComboBox<String> getTimeFormatComboBox(TimeTranslator initialTranslator) {
-    JComboBox<String> timeFormatField = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
-        "Default", "Date-Time Separated","Date Only"
-    }));
-    timeFormatField.setName("timeFormat");
-    if (initialTranslator != null) {
-      if (initialTranslator instanceof DateTimeSeparatedTimeTranslator) {
-        timeFormatField.setSelectedItem("Date-Time Separated");
-      } else if (initialTranslator instanceof DateOnlyTimeTranslator) {
-        timeFormatField.setSelectedItem("Date Only");
-      } else {
-        timeFormatField.setSelectedItem("Default");
-      }
-    } else {
-      timeFormatField.setSelectedItem("Default");
-    }
+    String[] keys = { "Default", "Date-Time Separated", "Date Only" };
+    String[] examples = {
+        DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalTime.now()),
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+        LocalDate.now().toString()
+    };
+
+    JComboBox<String> timeFormatField = getStringJComboBox(initialTranslator, keys, examples);
 
     //Default = 0, Date-Time Separated = 1, Date Only = 2
     AtomicInteger previousFormat = new AtomicInteger(0);
@@ -126,15 +125,43 @@ public class TimeTranslatorForm extends JPanel implements AuxiliaryTranslatorFor
         previousFormat.set(0);
       }
     });
-    
+
     return timeFormatField;
   }
-  
+
+  private @NotNull JComboBox<String> getStringJComboBox(TimeTranslator initialTranslator, String[] keys, String[] examples) {
+    JComboBox<String> timeFormatField = new JComboBox<>(keys);
+    timeFormatField.setRenderer(new DefaultListCellRenderer(){
+      public Component getListCellRendererComponent(JList<?> list, Object value,
+          int index, boolean isSelected, boolean cellHasFocus) {
+        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (index >= 0) {
+          setText(value + " (" + examples[index] + ")");
+        }
+        return this;
+      }
+    });
+
+    timeFormatField.setName("timeFormat");
+    if (initialTranslator != null) {
+      if (initialTranslator instanceof DateTimeSeparatedTimeTranslator) {
+        timeFormatField.setSelectedItem("Date-Time Separated");
+      } else if (initialTranslator instanceof DateOnlyTimeTranslator) {
+        timeFormatField.setSelectedItem("Date Only");
+      } else {
+        timeFormatField.setSelectedItem("Default");
+      }
+    } else {
+      timeFormatField.setSelectedItem("Default");
+    }
+    return timeFormatField;
+  }
+
   private void initializeFields(String[] headerOptions, TimeTranslator initialTranslator) {
     updateComboBoxModel(timeZoneField, headerOptions);
     updateComboBoxModel(timeField, headerOptions);
     updateComboBoxModel(dateField, headerOptions);
-    
+
     if (initialTranslator != null) {
       if (initialTranslator instanceof DateTimeSeparatedTimeTranslator dateTimeSeparatedTimeTranslator) {
         timeZoneField.setSelectedItem(dateTimeSeparatedTimeTranslator.getTimeZone());
