@@ -596,6 +596,13 @@ public class PassivePackerFactory {
 
   private List<PassivePackerQualityEntry> getQualityEntries(List<DataQualityEntry> qualityEntries) {
     return qualityEntries.stream()
+        .filter(e ->
+            e.getMinFrequency() != null ||
+            e.getMaxFrequency() != null ||
+            e.getStartTime() != null ||
+            e.getEndTime() != null ||
+            e.getQualityLevel() != null ||
+            e.getComments() != null)
         .map(e -> {
           String channelNumbers = e.getChannelNumbers().stream()
               .map(String::valueOf)
