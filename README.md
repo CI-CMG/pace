@@ -91,4 +91,5 @@ If you cannot open the jupyter notebook, you can view the non-interactive versio
 For a further understanding of PACE's internal JSON schema or for a look at possible alternate PACE work cycles, go to the following [link](https://github.com/CI-CMG/pace-templates) which provides PACE templates.
 
 ## Latest Updates (v1.2.1)
-Added in the ability to "package in place" which writes the manifest according to files that have been moved into the package.
+- Added examples to the dropdown menu options for the "Time Format" field in the PACE GUI when creating new translators.
+- Bugfix to filter out "Quality Detail" entries that are invalid due to missing start or end times.  
