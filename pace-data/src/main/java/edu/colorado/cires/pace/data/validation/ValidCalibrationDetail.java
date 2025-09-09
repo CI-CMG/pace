@@ -45,9 +45,23 @@ public @interface ValidCalibrationDetail {
      */
     @Override
     public boolean isValid(CalibrationDetail value, ConstraintValidatorContext context) {
-      return value.getPreDeploymentCalibrationDate() == null ||
-          value.getPostDeploymentCalibrationDate() == null ||
-          value.getPreDeploymentCalibrationDate().isBefore(value.getPostDeploymentCalibrationDate());
+
+      if (value.getPreDeploymentCalibrationDate() != null &&
+          value.getPostDeploymentCalibrationDate() != null &&
+          value.getPreDeploymentCalibrationDate().isAfter(value.getPostDeploymentCalibrationDate())) {
+        context.disableDefaultConstraintViolation();
+
+        context.buildConstraintViolationWithTemplate(
+            "must be before or equal to postDeploymentCalibrationDate"
+            ).addPropertyNode("preDeploymentCalibrationDate")
+            .addConstraintViolation();
+        context.buildConstraintViolationWithTemplate(
+                "must be after or equal to preDeploymentCalibrationDate"
+            ).addPropertyNode("postDeploymentCalibrationDate")
+            .addConstraintViolation();
+        return false;
+      }
+      return true;
     }
   }
 
