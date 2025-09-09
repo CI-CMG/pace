@@ -45,61 +45,9 @@ public @interface ValidCalibrationDetail {
      */
     @Override
     public boolean isValid(CalibrationDetail value, ConstraintValidatorContext context) {
-      return ValidationUtils.validateAbstractTimeRange(new AbstractTimeRange<LocalDate>() {
-        /**
-         * Returns start time property name
-         * @return String preDeploymentCalibrationDate
-         */
-        @Override
-        public String getStartTimePropertyName() {
-          return "preDeploymentCalibrationDate";
-        }
-
-        /**
-         * Returns the value held in preDeploymentCalibrationDate
-         * @return LocalDate pre deployment calibration date
-         */
-        @Override
-        public LocalDate getStartTime() {
-          return value.getPreDeploymentCalibrationDate();
-        }
-
-        /**
-         * Returns end time property name
-         * @return String postDeploymentCalibrationDate
-         */
-        @Override
-        public String getEndTimePropertyName() {
-          return "postDeploymentCalibrationDate";
-        }
-
-        /**
-         * Returns the value held in postDeploymentCalibrationDate
-         * @return LocalDate post deployment calibration date
-         */
-        @Override
-        public LocalDate getEndTime() {
-          return value.getPostDeploymentCalibrationDate();
-        }
-
-        /**
-         * Returns null
-         * @return null
-         */
-        @Override
-        public Function<LocalDate, Boolean> isEqualMethod() {
-          return null;
-        }
-
-        /**
-         * Returns a function which finds if a provided value is after the provided date
-         * @return Function of LocalDate and Boolean which checks if a value is after the provided date
-         */
-        @Override
-        public Function<LocalDate, Boolean> isAfterMethod() {
-          return value.getPreDeploymentCalibrationDate()::isAfter;
-        }
-      }, context);
+      return value.getPreDeploymentCalibrationDate() == null ||
+          value.getPostDeploymentCalibrationDate() == null ||
+          value.getPreDeploymentCalibrationDate().isBefore(value.getPostDeploymentCalibrationDate());
     }
   }
 
