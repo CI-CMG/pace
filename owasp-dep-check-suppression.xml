@@ -15,4 +15,11 @@
     <packageUrl regex="true">^pkg:maven/io\.github\.ci-cmg/pace-sqlite-datastore@.*$</packageUrl>
     <cpe>cpe:/a:sqlite:sqlite</cpe>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: hibernate-validator-9.1.0.Final.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.hibernate\.validator/hibernate-validator@.*$</packageUrl>
+    <cve>CVE-2025-15104</cve>
+  </suppress>
 </suppressions>
