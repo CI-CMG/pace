@@ -4,7 +4,7 @@ import edu.colorado.cires.pace.data.object.base.AbstractObject;
 import edu.colorado.cires.pace.data.object.base.ObjectWithUniqueField;
 import jakarta.validation.ConstraintViolation;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
-import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.hibernate.validator.internal.engine.path.MutablePath;
 
 /**
  * ConstraintViolationFactory creates a checker for constraint violations
@@ -28,7 +28,7 @@ final class ConstraintViolationFactory {
         null,
         null,
         null,
-        PathImpl.createPathFromString(path),
+        MutablePath.createPathFromString(path),
         null,
         null
     );
