@@ -138,6 +138,9 @@
             <artifactId>dependency-check-maven</artifactId>
             <configuration>
               <failBuildOnCVSS>0</failBuildOnCVSS>
+              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+              <ossIndexUsername>${env.OSS_INDEX_USERNAME}</ossIndexUsername>
+              <ossIndexPassword>${env.OSS_INDEX_PASSWORD}</ossIndexPassword>
               <suppressionFiles>
                 <suppressionFile>${project-root}/owasp-dep-check-suppression.xml</suppressionFile>
               </suppressionFiles>
