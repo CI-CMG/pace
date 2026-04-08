@@ -60,6 +60,14 @@ class Packager {
 
   protected static void writeTagManifestFile(Path bagInfoFile, Path bagitFile, Path manifestFile, Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
     Path outputFile = outputDir.resolve("tagmanifest-md5.txt");
+    File outputFileActual = new File(String.valueOf(outputFile));
+    if (outputFileActual.exists()) {
+      boolean deleted = outputFileActual.delete();
+      if (!deleted) {
+        throw new PackagingException("failed to delete" + outputFile.toString(), new Throwable("deletion failed"));
+      }
+    }
+
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       FileUtils.appendChecksumToManifest(writer, bagInfoFile, outputDir);
       logger.info("Appended {} checksum to {}", bagInfoFile, outputFile);
@@ -183,6 +191,13 @@ class Packager {
 
   protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn, Logger logger, List<Package> packages, List<Person> people) throws PackagingException {
     Path bagInfoFile = outputDir.resolve("bag-info.txt");
+    File outputFileActual = new File(String.valueOf(bagInfoFile));
+    if (outputFileActual.exists()) {
+      boolean deleted = outputFileActual.delete();
+      if (!deleted) {
+        throw new PackagingException("failed to delete" + bagInfoFile.toString(), new Throwable("deletion failed"));
+      }
+    }
     
     try (FileWriter writer = new FileWriter(bagInfoFile.toFile(), StandardCharsets.UTF_8, true)) {
       LocalDate localDate = LocalDate.now();
@@ -235,6 +250,13 @@ class Packager {
   
   protected static Path writeBagItFile(Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
     Path bagitFile = outputDir.resolve("bagit.txt");
+    File outputFileActual = new File(String.valueOf(bagitFile));
+    if (outputFileActual.exists()) {
+      boolean deleted = outputFileActual.delete();
+      if (!deleted) {
+        throw new PackagingException("failed to delete" + bagitFile.toString(), new Throwable("deletion failed"));
+      }
+    }
     
     try (FileWriter writer = new FileWriter(bagitFile.toFile(), StandardCharsets.UTF_8, true)) {
       writer.append("BagIt-Version: 0.97\n");
