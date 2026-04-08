@@ -136,7 +136,6 @@
           <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>12.1.5</version>
             <configuration>
               <failBuildOnCVSS>0</failBuildOnCVSS>
               <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
