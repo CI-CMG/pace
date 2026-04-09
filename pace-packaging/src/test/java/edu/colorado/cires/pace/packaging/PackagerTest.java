@@ -175,6 +175,73 @@ class PackagerTest {
     }
     
     verify(progressIndicator, times(packageInstructions.size() + 4)).incrementProcessedRecords();
+
+    ProgressIndicator secondProgressIndicator = mock(ProgressIndicator.class);
+    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), secondProgressIndicator);
+
+    lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
+    assertEquals(2, lines.size());
+    assertEquals("BagIt-Version: 0.97", lines.get(0));
+    assertEquals(String.format(
+        "Tag-File-Character-Encoding: %s", StandardCharsets.UTF_8.displayName()
+    ), lines.get(1));
+
+    lines = FileUtils.readLines(bagInfoFile.toFile(), StandardCharsets.UTF_8);
+    assertEquals(8, lines.size());
+
+    assertEquals(
+        "Source-Organization: organization-1",
+        lines.get(0)
+    );
+
+    lines = FileUtils.readLines(manifestFile.toFile(), StandardCharsets.UTF_8);
+    assertEquals(10, lines.size());
+
+    for (String line : lines) {
+      String[] lineParts = line.split(" {2}");
+      String relativePath = lineParts[0];
+      String checksum = lineParts[1];
+
+      assertTrue(relativePath.startsWith("data"));
+
+      Path targetFile = TARGET_DIR.resolve(relativePath);
+      assertTrue(targetFile.toFile().exists());
+      assertTrue(targetFile.toFile().isFile());
+
+      Path sourceFile = SOURCE_DIR.resolve(targetFile.toFile().getName());
+      assertTrue(sourceFile.toFile().exists());
+      assertTrue(sourceFile.toFile().isFile());
+
+      try (InputStream inputStream = new FileInputStream(sourceFile.toFile())) {
+        String expectedChecksum = DigestUtils.md5Hex(inputStream);
+        assertEquals(expectedChecksum, checksum);
+      }
+    }
+
+    lines = FileUtils.readLines(tagmanifestFile.toFile(), StandardCharsets.UTF_8);
+    assertEquals(3, lines.size());
+
+    for (String line : lines) {
+      String[] lineParts = line.split(" {2}");
+      String relativePath = lineParts[0];
+      String checksum = lineParts[1];
+
+      assertFalse(relativePath.contains(File.separator));
+
+      Path targetFile = TARGET_DIR.resolve(relativePath);
+      assertTrue(targetFile.toFile().exists());
+      assertTrue(targetFile.toFile().isFile());
+
+      Path sourceFile = SOURCE_DIR.resolve(targetFile.toFile().getName());
+      assertFalse(sourceFile.toFile().exists());
+
+      try (InputStream inputStream = new FileInputStream(targetFile.toFile())) {
+        String expectedChecksum = DigestUtils.md5Hex(inputStream);
+        assertEquals(expectedChecksum, checksum);
+      }
+    }
+
+    verify(progressIndicator, times(packageInstructions.size() + 4)).incrementProcessedRecords();
   }
 
   private Person buildPerson() {
