@@ -27,6 +27,9 @@
     
     <log4j.version>2.25.4</log4j.version>
     <project-root>${project.basedir}</project-root>
+    <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+    <ossIndexUsername>${env.OSS_INDEX_USERNAME}</ossIndexUsername>
+    <ossIndexPassword>${env.OSS_INDEX_PASSWORD}</ossIndexPassword>
   </properties>
 
   <scm>
