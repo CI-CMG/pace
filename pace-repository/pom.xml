@@ -14,9 +14,6 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project-root>${project.parent.basedir}</project-root>
-    <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
-    <ossIndexUsername>${env.OSS_INDEX_USERNAME}</ossIndexUsername>
-    <ossIndexPassword>${env.OSS_INDEX_PASSWORD}</ossIndexPassword>
   </properties>
   
   <dependencies>
