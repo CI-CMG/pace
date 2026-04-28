@@ -3,6 +3,7 @@ package edu.colorado.cires.pace.data.object.dataset.detections;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.TimeRange;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class DetectionsPackage extends Package implements BaseDetectionsPackage<
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
   @Builder.Default
-  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
+  private final List<@Valid DataQualityEntry> qualityEntries = Collections.emptyList();
   private final String softwareNames;
   private final String softwareVersions;
   private final String softwareProtocolCitation;

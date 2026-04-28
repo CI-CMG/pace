@@ -2,6 +2,7 @@ package edu.colorado.cires.pace.data.object.dataset.soundLevelMetrics;
 
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ public class SoundLevelMetricsPackage extends Package implements BaseSoundLevelM
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
   @Builder.Default
-  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
+  private final List<@Valid DataQualityEntry> qualityEntries = Collections.emptyList();
   private final Integer analysisTimeZone;
   private final Integer analysisEffort;
   private final Float sampleRate;
