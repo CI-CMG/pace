@@ -41,7 +41,7 @@ public class AudioDataPackage extends Package implements BaseAudioDataPackage<St
   private final String qualityAnalysisMethod;
   private final String qualityAssessmentDescription;
   @Builder.Default
-  private final List<DataQualityEntry> qualityEntries = Collections.emptyList();
+  private final List<@Valid DataQualityEntry> qualityEntries = Collections.emptyList();
 
   /**
    * Returns a new AudioDataPackage with the provided channels
