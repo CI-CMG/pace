@@ -98,7 +98,7 @@ class Packager {
     
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions
-          .filter(packageInstruction -> (!packageInstruction.target().toString().contains("acoustic_files/") || !packageInstruction.target().toString().contains("acoustic_files\\"))
+          .filter(packageInstruction -> (!packageInstruction.target().toString().contains("acoustic_files/") && !packageInstruction.target().toString().contains("acoustic_files\\"))
               || isAudioFile(packageInstruction.target().getFileName()))
           .forEach(packageInstruction -> {
             int i = 0;

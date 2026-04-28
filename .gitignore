@@ -2,6 +2,7 @@ docs/*.csv
 docs/**/*.json
 docs/**/*.txt
 docs/**/*.log
+map_dot.png
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
