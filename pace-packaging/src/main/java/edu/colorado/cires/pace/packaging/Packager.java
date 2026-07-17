@@ -217,15 +217,21 @@ class Packager {
       writer.append(String.format(
          "Bagging-Date: %s%n", formattedDateString
       ));
-      writer.append(String.format(
-          "Contact-Name: %s%n", packager
-      ));
-      writer.append(String.format(
-          "Contact-Phone: %s%n", person.getPhone()
-      ));
-      writer.append(String.format(
-          "Contact-Email: %s%n", person.getEmail()
-      ));
+      if (person != null) {
+        writer.append(String.format(
+            "Contact-Name: %s%n", packager
+        ));
+        writer.append(String.format(
+            "Contact-Phone: %s%n", person.getPhone()
+        ));
+        writer.append(String.format(
+            "Contact-Email: %s%n", person.getEmail()
+        ));
+      } else {
+        writer.append(String.format("Contact-Name:%n"));
+        writer.append(String.format("Contact-Phone:%n"));
+        writer.append(String.format("Contact-Email:%n"));
+      }
       writer.append(String.format(
           "External-Description: %s%n", packages.get(0).getDeploymentTitle()
       ));
