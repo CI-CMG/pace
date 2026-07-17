@@ -3,7 +3,7 @@
   <parent>
     <artifactId>pace</artifactId>
     <groupId>io.github.ci-cmg</groupId>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>pace-gui</artifactId>
@@ -121,6 +121,10 @@
       <version>5.11.0</version>
       <scope>test</scope>
       <exclusions>
+        <exclusion>
+          <artifactId>byte-buddy</artifactId>
+          <groupId>net.bytebuddy</groupId>
+        </exclusion>
         <exclusion>
           <artifactId>byte-buddy-agent</artifactId>
           <groupId>net.bytebuddy</groupId>
