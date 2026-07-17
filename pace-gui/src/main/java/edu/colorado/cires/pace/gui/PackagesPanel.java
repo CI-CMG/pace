@@ -567,8 +567,8 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     yMax += margin;
     if (xMin < 0) { xMin = 0; }
     if (yMin < 0) { yMin = 0; }
-    if (xMax > mapWidth) { xMax = mapWidth; }
-    if (yMax > mapHeight) { yMax = mapHeight; }
+    if (xMax > mapWidth) { xMax = mapWidth-1; }
+    if (yMax > mapHeight) { yMax = mapHeight-1; }
 
     myPicture = myPicture.getSubimage(xMin, yMin, xMax-xMin, yMax-yMin);
 

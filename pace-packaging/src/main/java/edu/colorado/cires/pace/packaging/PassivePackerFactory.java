@@ -486,6 +486,9 @@ public class PassivePackerFactory {
   }
 
   private PassivePackerPerson getPerson(String name) throws NotFoundException, DatastoreException {
+    if (name == null) {
+      return null;
+    }
     Person person = personRepository.getByUniqueField(name);
     return PassivePackerPerson.builder()
         .uuid(person.getUuid())
