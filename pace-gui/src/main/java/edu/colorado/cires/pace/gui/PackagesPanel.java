@@ -269,7 +269,11 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     
     JPanel submitDestinationPanel = new JPanel(new BorderLayout());
     JButton submitDestinationButton = new JButton("Verify Directory");
-    submitDestinationPanel.add(submitDestinationButton, BorderLayout.EAST);
+    JButton submitDestinationSkipVerify = new JButton("Skip Verify (CAUTION)");
+    JPanel submitDestButtons = new JPanel();
+    submitDestButtons.add(submitDestinationSkipVerify);
+    submitDestButtons.add(submitDestinationButton);
+    submitDestinationPanel.add(submitDestButtons, BorderLayout.EAST);
 
     JButton metadataButton = new JButton("Metadata Only");
     submitDestinationPanel.add(metadataButton, BorderLayout.WEST);
@@ -343,6 +347,58 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
         verifyMap.setLocationRelativeTo(chooseDestinationDialog);
         chooseDestinationDialog.setVisible(false);
         verifyMap.setVisible(true);
+      }
+    });
+
+    submitDestinationSkipVerify.addActionListener((e) -> {
+      String destinationText = destinationField.getText();
+      if (StringUtils.isBlank(destinationText)) {
+        JOptionPane.showMessageDialog(this, "Choose a destination directory", "Error", JOptionPane.ERROR_MESSAGE);
+      } else {
+        actionButton.setEnabled(false);
+        selectAllButton.setEnabled(false);
+        deselectAllButton.setEnabled(false);
+
+        new Thread(() -> {
+          GUIProgressIndicator progressIndicator = new GUIProgressIndicator(progressBar);
+
+          try {
+            PackageProcessor packageProcessor = new PackageProcessor(
+                objectMapper,
+                personRepository.findAll().toList(),
+                organizationRepository.findAll().toList(),
+                projectRepository.findAll().toList(),
+                packages,
+                Paths.get(destinationField.getText()),
+                passivePackerFactory,
+                progressIndicator
+            );
+
+            ProcessSet pSet = packageProcessor.process();
+            List<Package> processedPackages = pSet.processedPackages.stream()
+                .filter(p -> Objects.nonNull(p.getUuid()))
+                .toList();
+            for (Package processedPackage : processedPackages) {
+              repository.update(processedPackage.getUuid(), processedPackage);
+            }
+            for (int i = 0; i < pSet.zeroBytePackages.size(); i++) {
+              Package unprocessedPackage = pSet.zeroBytePackages.get(i);
+              String message = "Error processing "+ unprocessedPackage.getDataCollectionName() + " due to zero byte "
+                  + pSet.zeroByteLists.get(i);
+              JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+          } catch (DatastoreException | IOException | PackagingException | ConflictException | NotFoundException | BadArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          } finally {
+            progressIndicator.indicateStatus(0);
+            resetTable();
+            actionButton.setEnabled(true);
+            selectAllButton.setEnabled(true);
+            deselectAllButton.setEnabled(true);
+            searchData();
+          }
+
+        }).start();
       }
     });
 
