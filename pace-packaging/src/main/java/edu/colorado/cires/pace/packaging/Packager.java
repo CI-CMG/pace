@@ -1,7 +1,10 @@
 package edu.colorado.cires.pace.packaging;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
+import edu.colorado.cires.pace.data.object.instrument.Instrument;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.passivePacker.data.PassivePackerPerson;
 import java.io.File;
@@ -13,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
@@ -95,11 +99,12 @@ class Packager {
         throw new PackagingException("failed to delete" + outputFile.toString(), new Throwable("deletion failed"));
       }
     }
-    
+    List<String> audioExtensions = getAudioExtensions();
+
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions
           .filter(packageInstruction -> (!packageInstruction.target().toString().contains("acoustic_files/") && !packageInstruction.target().toString().contains("acoustic_files\\"))
-              || isAudioFile(packageInstruction.target().getFileName()))
+              || isAudioFile(packageInstruction.target().getFileName(), audioExtensions))
           .forEach(packageInstruction -> {
             int i = 0;
             while(true){
@@ -156,6 +161,28 @@ class Packager {
     return outputFile;
   }
 
+  private static List<String> getAudioExtensions() {
+    List<String> audioExtensions = new ArrayList<>();
+    ObjectMapper mapper = new ObjectMapper();
+    Path fileTypeDir = Paths.get(System.getProperty("user.home")).resolve(".pace/data/file-types");
+    try (Stream<Path> paths = Files.list(Paths.get(fileTypeDir.toUri()))) {
+      paths.filter(Files::isRegularFile)
+          .filter(path -> path.toString().endsWith(".json"))
+          .forEach(path -> {
+            try {
+              FileType fileType = mapper.readValue(path.toFile(), FileType.class);
+              audioExtensions.add(fileType.getType());
+            } catch (IOException e) {
+              System.err.println("Failed to parse JSON file: " + path.getFileName());
+              System.err.println(e.getMessage());
+            }
+          });
+    } catch (IOException e) {
+      System.err.println("Failed to read directory: " + e.getMessage());
+    }
+    return audioExtensions;
+  }
+
   private static IOException appendToManifestAttempt(PackageInstruction packageInstruction, Logger logger, FileWriter writer, Path outputDir,
       Path outputFile, Runnable incrementProgressFn) throws InterruptedException {
     try {
@@ -182,11 +209,13 @@ class Packager {
     }
   }
 
-  private static boolean isAudioFile(Path fileName) {
-    return fileName.toString().endsWith(".aif") ||
-        fileName.toString().endsWith(".wav") ||
-        fileName.toString().endsWith(".flac") ||
-        fileName.toString().endsWith(".aiff");
+  private static boolean isAudioFile(Path fileName, List<String> audioExtensions) {
+    for (String extension : audioExtensions) {
+      if (fileName.toString().endsWith(extension)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   protected static Path writeBagInfoFile(Path outputDir, Runnable incrementProgressFn, Logger logger, List<Package> packages, List<Person> people) throws PackagingException {
