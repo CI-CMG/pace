@@ -152,7 +152,8 @@ public class DataPanelFactory {
         organizationRepository,
         projectRepository,
         sensorRepository,
-        detectionTypeRepository
+        detectionTypeRepository,
+        fileTypeRepository
     ) {
       @Override
       protected List<String> getHiddenColumns() {

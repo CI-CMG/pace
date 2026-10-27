@@ -2,9 +2,13 @@ package edu.colorado.cires.pace.packaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.dataset.audio.AudioDataPackage;
+import edu.colorado.cires.pace.data.object.dataset.base.BasePackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.instrument.Instrument;
+import edu.colorado.cires.pace.datastore.DatastoreException;
+import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
 import edu.colorado.cires.passivePacker.data.PassivePackerPerson;
 import java.io.File;
@@ -36,14 +40,15 @@ class Packager {
    * @param progressIndicators tracks progress of packaging
    * @throws PackagingException thrown in case of error to indicate packaging error
    */
-  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, List<Package> packages, List<Person> people, Logger logger, ProgressIndicator... progressIndicators) throws PackagingException {
+  public static void run(Stream<PackageInstruction> moveInstructions, Path outputDir, List<Package> packages, List<Person> people, List<FileType> fileTypes, Logger logger, ProgressIndicator... progressIndicators)
+      throws PackagingException, DatastoreException {
     mkdir(outputDir);
     logger.info("Created output directory: {}", outputDir);
     
     Runnable incrementProgressFn = () -> incrementProgress(progressIndicators);
-    
+
     Path manifestFile = copyFilesAndWriteManifest(
-        moveInstructions, outputDir, incrementProgressFn, logger
+        moveInstructions, outputDir, incrementProgressFn, logger, fileTypes
     );
     
     Path bagInfoFile = writeBagInfoFile(outputDir, incrementProgressFn, logger, packages, people);
@@ -90,7 +95,7 @@ class Packager {
     logger.info("Wrote {}", outputFile);
   }
 
-  protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir, Runnable incrementProgressFn, Logger logger) throws PackagingException {
+  protected static Path copyFilesAndWriteManifest(Stream<PackageInstruction> moveInstructions, Path outputDir, Runnable incrementProgressFn, Logger logger, List<FileType> fileTypes) throws PackagingException {
     Path outputFile = outputDir.resolve("manifest-md5.txt");
     File outputFileActual = new File(String.valueOf(outputFile));
     if (outputFileActual.exists()) {
@@ -99,7 +104,24 @@ class Packager {
         throw new PackagingException("failed to delete" + outputFile.toString(), new Throwable("deletion failed"));
       }
     }
-    List<String> audioExtensions = getAudioExtensions();
+
+    List<String> audioExtensions = new ArrayList<>();
+
+    for (FileType fileType : fileTypes){
+      audioExtensions.add(fileType.getType());
+    }
+    if (!audioExtensions.contains("wav")) {
+      audioExtensions.add("wav");
+    }
+    if (!audioExtensions.contains("flac")) {
+      audioExtensions.add("flac");
+    }
+    if (!audioExtensions.contains("aiff")) {
+      audioExtensions.add("aiff");
+    }
+    if (!audioExtensions.contains("aif")) {
+      audioExtensions.add("aif");
+    }
 
     try (FileWriter writer = new FileWriter(outputFile.toFile(), StandardCharsets.UTF_8, true)) {
       moveInstructions
@@ -159,28 +181,6 @@ class Packager {
     logger.info("Wrote {}", outputFile);
     
     return outputFile;
-  }
-
-  private static List<String> getAudioExtensions() {
-    List<String> audioExtensions = new ArrayList<>();
-    ObjectMapper mapper = new ObjectMapper();
-    Path fileTypeDir = Paths.get(System.getProperty("user.home")).resolve(".pace/data/file-types");
-    try (Stream<Path> paths = Files.list(Paths.get(fileTypeDir.toUri()))) {
-      paths.filter(Files::isRegularFile)
-          .filter(path -> path.toString().endsWith(".json"))
-          .forEach(path -> {
-            try {
-              FileType fileType = mapper.readValue(path.toFile(), FileType.class);
-              audioExtensions.add(fileType.getType());
-            } catch (IOException e) {
-              System.err.println("Failed to parse JSON file: " + path.getFileName());
-              System.err.println(e.getMessage());
-            }
-          });
-    } catch (IOException e) {
-      System.err.println("Failed to read directory: " + e.getMessage());
-    }
-    return audioExtensions;
   }
 
   private static IOException appendToManifestAttempt(PackageInstruction packageInstruction, Logger logger, FileWriter writer, Path outputDir,

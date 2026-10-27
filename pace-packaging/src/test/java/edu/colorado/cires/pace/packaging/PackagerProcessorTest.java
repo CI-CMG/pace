@@ -25,6 +25,7 @@ import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
@@ -99,6 +100,10 @@ class PackagerProcessorTest {
   private static final List<Project> PROJECTS = List.of(Project.builder()
           .name("project")
       .build());
+
+  private static final List<FileType> FILE_TYPES = List.of(FileType.builder()
+      .type("wav")
+      .build());
   
   private final PersonRepository personRepository = mock(PersonRepository.class);
   private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
@@ -134,7 +139,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, FILE_TYPES, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -237,7 +242,7 @@ class PackagerProcessorTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     List<Package> packages = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, FILE_TYPES, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process().processedPackages;
     assertTrue(packages.stream().noneMatch(Package::isVisible));
     verify(progressIndicator, times(expectedNumberOfInvocations +8)).incrementProcessedRecords();

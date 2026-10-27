@@ -27,6 +27,7 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.LocationDetail;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.position.Position;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.sensor.audio.AudioSensor;
@@ -100,6 +101,10 @@ class PackagerProcessorNullQualityAnalystTest {
   private static final List<Project> PROJECTS = List.of(Project.builder()
           .name("project")
       .build());
+
+  private static final List<FileType> FILE_TYPES = List.of(FileType.builder()
+          .type("wav")
+      .build());
   
   private final PersonRepository personRepository = mock(PersonRepository.class);
   private final OrganizationRepository organizationRepository = mock(OrganizationRepository.class);
@@ -135,7 +140,7 @@ class PackagerProcessorNullQualityAnalystTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, FILE_TYPES, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process());
     assertEquals(String.format(
         "%s validation failed", Package.class.getSimpleName()
@@ -238,7 +243,7 @@ class PackagerProcessorNullQualityAnalystTest {
     
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     ProcessSet packagesSet = new PackageProcessor(
-        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
+        objectMapper, PEOPLE, ORGANIZATIONS, PROJECTS, FILE_TYPES, Collections.singletonList(packingJob), testOutputPath, passivePackerFactory, progressIndicator
     ).process();
     List<Package> packages = new ArrayList<>();
     packages.addAll(packagesSet.processedPackages);

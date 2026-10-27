@@ -21,10 +21,12 @@ import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.GetByUUID;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Pack;
 import edu.colorado.cires.pace.cli.command.dataset.PackageCommand.Update;
 import edu.colorado.cires.pace.cli.command.detectionType.DetectionTypeRepositoryFactory;
+import edu.colorado.cires.pace.cli.command.fileType.FileTypeRepositoryFactory;
 import edu.colorado.cires.pace.cli.command.sensor.SensorRepositoryFactory;
 import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.data.object.dataset.base.translator.PackageTranslator;
 import edu.colorado.cires.pace.datastore.DatastoreException;
@@ -34,6 +36,7 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
@@ -283,10 +286,12 @@ public class PackageCommand {
         ProjectRepository projectRepository = ProjectRepositoryFactory.createJsonRepository(workDir, objectMapper);
         SensorRepository sensorRepository = SensorRepositoryFactory.createJsonRepository(workDir, objectMapper);
         DetectionTypeRepository detectionTypeRepository = DetectionTypeRepositoryFactory.createJsonRepository(workDir, objectMapper);
+        FileTypeRepository fileTypeRepository = FileTypeRepositoryFactory.createJsonRepository(workDir, objectMapper);
         
         List<Person> people = personRepository.findAll().toList();
         List<Organization> organizations = organizationRepository.findAll().toList();
         List<Project> projects = projectRepository.findAll().toList();
+        List<FileType> fileTypes = fileTypeRepository.findAll().toList();
 
         Path outputPath = outputDirectory.toPath();
         
@@ -312,7 +317,7 @@ public class PackageCommand {
         );
 
         PackageProcessor packageProcessor = new PackageProcessor(
-            objectMapper, people, organizations, projects, packages, outputPath, passivePackerFactory, progressIndicators
+            objectMapper, people, organizations, projects, fileTypes, packages, outputPath, passivePackerFactory, progressIndicators
         );
 
         List<Package> processedPackages = packageProcessor.process().processedPackages.stream()

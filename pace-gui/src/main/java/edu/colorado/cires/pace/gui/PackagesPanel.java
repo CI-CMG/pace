@@ -23,6 +23,7 @@ import edu.colorado.cires.pace.repository.BadArgumentException;
 import edu.colorado.cires.pace.repository.CRUDRepository;
 import edu.colorado.cires.pace.repository.ConflictException;
 import edu.colorado.cires.pace.repository.DetectionTypeRepository;
+import edu.colorado.cires.pace.repository.FileTypeRepository;
 import edu.colorado.cires.pace.repository.NotFoundException;
 import edu.colorado.cires.pace.repository.OrganizationRepository;
 import edu.colorado.cires.pace.repository.PersonRepository;
@@ -83,6 +84,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
   private final ProjectRepository projectRepository;
   private final SensorRepository sensorRepository;
   private final DetectionTypeRepository detectionTypeRepository;
+  private final FileTypeRepository fileTypeRepository;
 
   /**
    * Creates a packages panel
@@ -106,7 +108,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
       TranslatorRepository translatorRepository,
       Converter<PackageTranslator, Package> converter, PersonRepository personRepository, OrganizationRepository organizationRepository,
       ProjectRepository projectRepository,
-      SensorRepository sensorRepository, DetectionTypeRepository detectionTypeRepository) {
+      SensorRepository sensorRepository, DetectionTypeRepository detectionTypeRepository, FileTypeRepository fileTypeRepository) {
     super("packagesPanel", repository, headers, objectConversion, clazz, translatorRepository, converter, PackageTranslator.class);
     
     this.objectMapper = objectMapper;
@@ -115,6 +117,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
     this.projectRepository = projectRepository;
     this.sensorRepository = sensorRepository;
     this.detectionTypeRepository = detectionTypeRepository;
+    this.fileTypeRepository = fileTypeRepository;
   }
 
   @Override
@@ -368,6 +371,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
                 personRepository.findAll().toList(),
                 organizationRepository.findAll().toList(),
                 projectRepository.findAll().toList(),
+                fileTypeRepository.findAll().toList(),
                 packages,
                 Paths.get(destinationField.getText()),
                 passivePackerFactory,
@@ -420,6 +424,7 @@ public class PackagesPanel extends TranslatePanel<Package, PackageTranslator> {
                 personRepository.findAll().toList(),
                 organizationRepository.findAll().toList(),
                 projectRepository.findAll().toList(),
+                fileTypeRepository.findAll().toList(),
                 packages,
                 Paths.get(destinationField.getText()),
                 passivePackerFactory,

@@ -5,6 +5,7 @@ import edu.colorado.cires.pace.data.object.contact.organization.Organization;
 import edu.colorado.cires.pace.data.object.dataset.base.BasePackage;
 import edu.colorado.cires.pace.data.object.dataset.base.Package;
 import edu.colorado.cires.pace.data.object.contact.person.Person;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.project.Project;
 import edu.colorado.cires.pace.datastore.DatastoreException;
 import edu.colorado.cires.pace.repository.NotFoundException;
@@ -44,6 +45,7 @@ public class PackageProcessor {
   private final Validator validator;
   private final List<Person> people;
   private final List<Organization> organizations;
+  private final List<FileType> fileTypes;
   private final List<Project> projects;
   private final ProgressIndicator[] progressIndicators;
   private final List<Package> packages;
@@ -61,13 +63,14 @@ public class PackageProcessor {
    * @param passivePackerFactory creates passive packer schema out of package data
    * @param progressIndicators tracks the progress of processing the packages
    */
-  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects,
+  public PackageProcessor(ObjectMapper objectMapper, List<Person> people, List<Organization> organizations, List<Project> projects, List<FileType> fileTypes,
       List<Package> packages, Path outputDir, PassivePackerFactory passivePackerFactory,
       ProgressIndicator... progressIndicators) {
     this.objectMapper = objectMapper;
     this.people = Collections.unmodifiableList(people);
     this.organizations = Collections.unmodifiableList(organizations);
     this.projects = Collections.unmodifiableList(projects);
+    this.fileTypes = fileTypes;
     this.packages = packages;
     this.outputDir = outputDir;
     this.passivePackerFactory = passivePackerFactory;
@@ -113,7 +116,7 @@ public class PackageProcessor {
 
       Logger logger = (Logger) LogManager.getLogger("edu.colorado.cires.pace");
       logger.addAppender(writerAppender);
-      processPackage(aPackage, packageOutputDir, people, logger);
+      processPackage(aPackage, packageOutputDir, people, fileTypes, logger);
       logger.removeAppender(writerAppender);
 
       processedPackages.add(aPackage.setVisible(false));
@@ -140,7 +143,7 @@ public class PackageProcessor {
     }
   }
 
-  private void processPackage(Package packingJob, Path packageOutputDir, List<Person> people, Logger logger)
+  private void processPackage(Package packingJob, Path packageOutputDir, List<Person> people, List<FileType> fileTypes, Logger logger)
       throws PackagingException, IOException, NotFoundException, DatastoreException {
     validatePackingJob(packingJob);
     
@@ -161,6 +164,7 @@ public class PackageProcessor {
         packageOutputDir,
         packages,
         people,
+        fileTypes,
         logger,
         progressIndicators
     );

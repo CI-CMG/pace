@@ -21,7 +21,9 @@ import edu.colorado.cires.pace.data.object.dataset.base.metadata.PackageSensor;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.QualityLevel;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.location.MobileMarineLocation;
 import edu.colorado.cires.pace.data.object.dataset.base.metadata.translator.DataQualityEntry;
+import edu.colorado.cires.pace.data.object.fileType.FileType;
 import edu.colorado.cires.pace.data.object.position.Position;
+import edu.colorado.cires.pace.datastore.DatastoreException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -95,15 +97,16 @@ class PackagerTest {
   }
   
   @Test
-  void testRun() throws IOException, PackagingException {
+  void testRun() throws IOException, PackagingException, DatastoreException {
     List<PackageInstruction> packageInstructions = getInstructionForSourceDir().toList();
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     List<Package> packages = new ArrayList<Package>();
     packages.add(buildPackage());
     List<Person> people = new ArrayList<Person>();
+    List<FileType> fileTypes = new ArrayList<FileType>();
     people.add(buildPerson());
     
-    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), progressIndicator);
+    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, fileTypes, LogManager.getLogger("test"), progressIndicator);
     
     Path bagitFile = TARGET_DIR.resolve("bagit.txt");
     List<String> lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
@@ -177,7 +180,7 @@ class PackagerTest {
     verify(progressIndicator, times(packageInstructions.size() + 4)).incrementProcessedRecords();
 
     ProgressIndicator secondProgressIndicator = mock(ProgressIndicator.class);
-    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), secondProgressIndicator);
+    Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, Collections.emptyList(), LogManager.getLogger("test"), secondProgressIndicator);
 
     lines = FileUtils.readLines(bagitFile.toFile(), StandardCharsets.UTF_8);
     assertEquals(2, lines.size());
@@ -320,7 +323,7 @@ class PackagerTest {
       
       ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
 
-      Exception packagingException = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, LogManager.getLogger("test"), progressIndicator));
+      Exception packagingException = assertThrows(PackagingException.class, () -> Packager.run(packageInstructions.stream(), TARGET_DIR, packages, people, Collections.emptyList(), LogManager.getLogger("test"), progressIndicator));
       assertEquals(String.format(
           "Packaging failed: java.io.IOException: %s", exception.getMessage()
       ), packagingException.getMessage());
@@ -333,7 +336,7 @@ class PackagerTest {
   void testWriteManifestDirectoryDoesNotExist() {
     ProgressIndicator progressIndicator = mock(ProgressIndicator.class);
     
-    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test")));
+    Exception exception = assertThrows(PackagingException.class, () -> Packager.copyFilesAndWriteManifest(Stream.empty(), TARGET_DIR, progressIndicator::incrementProcessedRecords, LogManager.getLogger("test"), Collections.emptyList()));
     assertEquals(String.format(
         "Packaging failed: %s (No such file or directory)", TARGET_DIR.resolve("manifest-md5.txt")
     ), exception.getMessage());
